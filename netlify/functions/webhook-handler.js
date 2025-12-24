@@ -3,6 +3,16 @@
 
 const crypto = require('crypto');
 
+/**
+ * Mascara endereço para logs
+ */
+function maskAddress(address) {
+  if (!address || address.length < 10) {
+    return '[REDACTED]';
+  }
+  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+}
+
 exports.handler = async (event, context) => {
   // CORS headers específicos por ambiente
   const allowedOrigins = {
@@ -86,18 +96,96 @@ exports.handler = async (event, context) => {
 
       // Extrair informações adicionais
       const wallet = charge.additionalInfo?.find(info => info.key === 'wallet')?.value;
-      const moeda = charge.additionalInfo?.find(info => info.key === 'moeda')?.value;
+      const moeda = charge.additionalInfo?.find(info => info.key === 'moeda')?.value || 'USDT';
+      const chainId = charge.additionalInfo?.find(info => info.key === 'chainId')?.value || '137'; // Polygon por padrão
 
       if (wallet) {
-        console.log('🎯 Wallet para conversão:', wallet);
-        
-        // TODO: Implementar conversão para cripto
-        // 1. Verificar saldo da conta Woovi
-        // 2. Fazer transferência para wallet do usuário
-        // 3. Registrar transação no blockchain
-        
-        // Por enquanto, apenas log
-        console.log('🚀 Iniciando conversão PIX -> Crypto para wallet:', wallet);
+        console.log('🎯 Wallet para liquidação:', wallet);
+        console.log('💰 Valor PIX confirmado:', charge.value);
+        console.log('🪙 Moeda destino:', moeda);
+        console.log('⛓️ Chain ID:', chainId);
+
+        try {
+          // LIQUIDAÇÃO ASSISTIDA: Criar ordem pendente (não executar automaticamente)
+          console.log('🔄 PIX CONFIRMED - Criando ordem de liquidação...');
+
+          // Importar serviços
+          const { getLiquidityProvider } = require('../../services/crypto/liquidity-provider');
+          const { createSettlementOrder } = require('./settlement-orders');
+
+          // Extrair userId
+          const userId = charge.additionalInfo?.find(info => info.key === 'userId')?.value || 
+                        charge.customer?.name || 
+                        `user_${charge.correlationID}`;
+
+          const amountBRL = parseFloat(charge.value) / 100; // Converter centavos para reais
+
+          // Criar ordem de liquidação (pendente de aprovação)
+          const liquidityProvider = getLiquidityProvider();
+          const orderResult = await liquidityProvider.createSettlementOrder({
+            amountBRL,
+            userId,
+            correlationId: charge.correlationID,
+            targetAsset: moeda || 'USDT'
+          });
+
+          // Registrar ordem no sistema
+          const order = createSettlementOrder({
+            orderId: orderResult.order.orderId,
+            userId,
+            correlationId: charge.correlationID,
+            amountBRL,
+            targetAsset: moeda || 'USDT',
+            estimatedAmount: orderResult.order.estimatedAmount,
+            estimatedRate: orderResult.order.estimatedRate,
+            walletAddress: wallet,
+            network: chainId === '1' ? 'ethereum' : chainId === '137' ? 'polygon' : 'bsc'
+          });
+
+          console.log('✅ Ordem de liquidação criada (pendente de revisão):', {
+            orderId: order.orderId,
+            correlationId: charge.correlationID,
+            amountBRL,
+            estimatedUSDT: orderResult.order.estimatedAmount
+          });
+
+          // Retornar sucesso (ordem criada, aguardando aprovação)
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+              success: true,
+              message: 'PIX confirmado. Ordem de liquidação criada (pendente de aprovação)',
+              charge_id: charge.correlationID,
+              status: charge.status,
+              settlement: {
+                orderId: order.orderId,
+                status: 'PENDING_REVIEW',
+                amountBRL,
+                estimatedAmount: orderResult.order.estimatedAmount,
+                estimatedRate: orderResult.order.estimatedRate,
+                wallet: maskAddress(wallet)
+              }
+            })
+          };
+
+        } catch (error) {
+          console.error('❌ Erro ao criar ordem de liquidação:', error);
+
+          // Retornar erro, mas manter o webhook como processado
+          // (para evitar retentativas infinitas)
+          return {
+            statusCode: 200, // 200 para não gerar retentativas
+            headers,
+            body: JSON.stringify({
+              success: false,
+              message: 'PIX confirmado, mas falha ao criar ordem de liquidação',
+              charge_id: charge.correlationID,
+              status: charge.status,
+              error: error.message
+            })
+          };
+        }
       }
 
       // Retornar sucesso

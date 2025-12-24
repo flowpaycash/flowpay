@@ -12,6 +12,8 @@
 [context.production.environment]
   # WOOVI_API_KEY deve ser configurada via Netlify UI
   # WOOVI_WEBHOOK_SECRET deve ser configurada via Netlify UI
+  # SERVER_WALLET_PRIVATE_KEY deve ser configurada via Netlify UI (chave privada da wallet do servidor)
+  # BRL_TO_USD_RATE deve ser configurada via Netlify UI (taxa de conversão BRL/USD, padrão: 5.0)
   WOOVI_API_URL = "https://api.woovi.com"
   NODE_ENV = "production"
   URL = "https://flowpaypix.netlify.app"
@@ -21,6 +23,8 @@
 [context.deploy-preview.environment]
   # WOOVI_API_KEY deve ser configurada via Netlify UI
   # WOOVI_WEBHOOK_SECRET deve ser configurada via Netlify UI
+  # SERVER_WALLET_PRIVATE_KEY deve ser configurada via Netlify UI (chave privada da wallet do servidor)
+  # BRL_TO_USD_RATE deve ser configurada via Netlify UI (taxa de conversão BRL/USD, padrão: 5.0)
   WOOVI_API_URL = "https://api.woovi.com"
   NODE_ENV = "staging"
   ADMIN_PASSWORD = "flowpay2024"

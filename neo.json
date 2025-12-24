@@ -65,10 +65,10 @@
       "model": "self-custody",
       "wallets_supported": ["injected", "walletconnect", "ledger"],
       "web3auth": {
-        "enabled": false,
+        "enabled": true,
         "client_id_ref": "ENV:WEB3AUTH_CLIENT_ID",
         "network": "mainnet",
-        "notes": "Ativar apenas em modo híbrido e comunicar tradeoffs. Padrão NΞØ = auto-custódia."
+        "notes": "Web3Auth ativo para conexão de carteiras Web3. Suporta MetaMask, WalletConnect e outros métodos de autenticação. Auto-custódia mantida via Web3Auth DAPP mode."
       }
     },
     "payments": {

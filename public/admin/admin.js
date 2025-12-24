@@ -13,6 +13,7 @@ let statusFilter, moedaFilter, refreshBtn, downloadBtn, logoutBtn;
 
 // Estado da aplicação
 let transactions = [];
+let settlementOrders = []; // Ordens de liquidação pendentes
 let isAuthenticated = false;
 
 // Inicialização
@@ -27,7 +28,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isAuthenticated) {
         showAdminPanel();
         loadTransactions();
+        loadSettlementOrders();
         startAutoRefresh();
+        // Auto-refresh também para ordens de liquidação
+        setInterval(loadSettlementOrders, 30000); // A cada 30 segundos
     }
 });
 
@@ -139,6 +143,123 @@ async function loadTransactions() {
         showLoading(false);
     }
 }
+
+// Carregar ordens de liquidação pendentes
+async function loadSettlementOrders() {
+    try {
+        const response = await fetch('/.netlify/functions/settlement-orders');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        settlementOrders = data.success ? (data.orders || []) : [];
+        
+        renderSettlementOrders();
+        
+    } catch (error) {
+        console.error('Erro ao carregar ordens de liquidação:', error);
+        settlementOrders = [];
+    }
+}
+
+// Renderizar ordens de liquidação pendentes
+function renderSettlementOrders() {
+    const container = document.getElementById('settlement-orders-container');
+    if (!container) return;
+    
+    if (settlementOrders.length === 0) {
+        container.innerHTML = '<p class="no-orders">Nenhuma ordem de liquidação pendente</p>';
+        return;
+    }
+    
+    container.innerHTML = settlementOrders.map(order => `
+        <div class="settlement-order-card">
+            <div class="order-header">
+                <span class="order-id">${order.orderId}</span>
+                <span class="order-status pending">Pendente</span>
+            </div>
+            <div class="order-details">
+                <div class="detail-row">
+                    <span class="label">PIX ID:</span>
+                    <span class="value">${order.correlationId}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Valor BRL:</span>
+                    <span class="value">R$ ${order.amountBRL.toFixed(2)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Estimado USDT:</span>
+                    <span class="value">${order.estimatedAmount.toFixed(6)} USDT</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Taxa:</span>
+                    <span class="value">${order.estimatedRate.toFixed(4)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Wallet:</span>
+                    <span class="value code">${order.walletAddress ? order.walletAddress.slice(0, 6) + '...' + order.walletAddress.slice(-4) : 'N/A'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Rede:</span>
+                    <span class="value">${order.network || 'ethereum'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Criado em:</span>
+                    <span class="value">${new Date(order.createdAt).toLocaleString('pt-BR')}</span>
+                </div>
+            </div>
+            <div class="order-actions">
+                <button class="btn-settle" onclick="executeSettlement('${order.orderId}', '${order.walletAddress}', '${order.network || 'ethereum'}')">
+                    Liquidar Agora
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Executar liquidação
+async function executeSettlement(orderId, walletAddress, network) {
+    if (!confirm(`Confirmar liquidação da ordem ${orderId}?\n\nWallet: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}\nRede: ${network}`)) {
+        return;
+    }
+    
+    try {
+        showLoading(true);
+        
+        const response = await fetch('/.netlify/functions/settlement-orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                orderId,
+                walletAddress,
+                network
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('✅ Liquidação executada com sucesso!', 'success');
+            loadSettlementOrders(); // Recarregar lista
+            loadTransactions(); // Recarregar transações
+        } else {
+            showNotification(`❌ Erro: ${data.error}`, 'error');
+        }
+        
+    } catch (error) {
+        console.error('Erro ao executar liquidação:', error);
+        showNotification('❌ Erro ao executar liquidação', 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Expor função globalmente
+window.executeSettlement = executeSettlement;
 
 // Gerar dados mock para demonstração
 function generateMockData() {

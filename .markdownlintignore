@@ -1,0 +1,6 @@
+node_modules
+**/node_modules/**
+~/Desktop/FLOWPAY_BACKUP_*/
+**/*.backup.md
+**/*.bak.md
+
