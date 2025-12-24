@@ -1,0 +1,202 @@
+/* 🚀 FLOWPay - Progress Indicator CSS */
+
+/* Progress Bar Container */
+.nf-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* Progress Bar Fill */
+.nf-bar {
+    height: 100%;
+    overflow: hidden;
+}
+
+.nf-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff007a, #00d4ff);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 0 2px 2px 0;
+}
+
+/* Progress Dots */
+.nf-dots {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.nf-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.nf-dot:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.2);
+}
+
+.nf-dot.is-active {
+    background: #ff007a;
+    transform: scale(1.2);
+    box-shadow: 0 0 8px rgba(255, 0, 122, 0.5);
+}
+
+.nf-dot.is-done {
+    background: #00d4ff;
+    transform: scale(1.1);
+}
+
+/* Loading Overlay */
+.nf-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: grid;
+    place-items: center;
+    z-index: 9999;
+}
+
+.nf-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.nf-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top: 3px solid #ff007a;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.nf-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Toast Notifications */
+.nf-toasts {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nf-toast {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 300px;
+    animation: slideIn 0.3s ease;
+    border-left: 4px solid #ff007a;
+}
+
+.nf-toast.is-success {
+    border-left-color: #00d4ff;
+}
+
+.nf-toast.is-error {
+    border-left-color: #ff4757;
+}
+
+.nf-toast.is-info {
+    border-left-color: #ffa502;
+}
+
+.nf-toast span {
+    flex: 1;
+    color: #333;
+    font-weight: 500;
+}
+
+.nf-x {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.nf-x:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #666;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nf-dots {
+        top: 6px;
+        gap: 6px;
+    }
+    
+    .nf-dot {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .nf-toast {
+        min-width: 280px;
+        right: 10px;
+        left: 10px;
+    }
+}

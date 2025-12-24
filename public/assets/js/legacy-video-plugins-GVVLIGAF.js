@@ -1,0 +1,1 @@
+import{d as i,e as n}from"./chunk-U5CWZESK.js";import"./chunk-BG6P72OF.js";function u(e){return i(this,void 0,void 0,function(){var r;return n(this,function(t){switch(t.label){case 0:return[4,import("./index.umd-EDAB64OA.js")];case 1:return r=t.sent(),e._plugins=r,[2]}})})}export{u as loadLegacyVideoPlugins};

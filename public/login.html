@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Entrar — FLOWPay</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="card auth-card">
+      <h1>Entrar</h1>
+      <p class="muted">Sem senha. Você escolhe o acesso.</p>
+
+      <form id="magic-form" class="grid">
+        <label>E-mail
+          <input type="email" name="email" autocomplete="email" placeholder="voce@exemplo.com" required />
+        </label>
+        <button class="primary" type="submit">Receber link seguro</button>
+      </form>
+
+      <div class="divider"><span>ou</span></div>
+
+      <button class="ghost" id="wallet-login">Entrar com carteira</button>
+
+      <p class="tiny muted">Ao entrar, você concorda com sessão local e política de transparência sem PII.</p>
+    </section>
+  </main>
+
+  <div id="nf-toasts" class="nf-toasts"></div>
+
+  <script type="module" src="/assets/js/login.js"></script>
+</body>
+</html>

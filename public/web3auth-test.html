@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3Auth Test - FLOWPay</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status.info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Web3Auth Test - FLOWPay</h1>
+        <p>Teste de integração do Web3Auth com import map e CSP otimizada.</p>
+        
+        <div id="status" class="status info">
+            🔄 Inicializando...
+        </div>
+        
+        <div>
+            <button id="init-btn" onclick="testInit()">🚀 Inicializar Web3Auth</button>
+            <button id="connect-btn" onclick="testConnect()" disabled>🔗 Conectar Carteira</button>
+            <button id="disconnect-btn" onclick="testDisconnect()" disabled>🔌 Desconectar</button>
+        </div>
+        
+        <div class="log" id="log">
+            Log de eventos aparecerá aqui...
+        </div>
+    </div>
+
+    <!-- Import Map para Web3Auth -->
+    <!-- Web3Auth - Bundle local -->
+
+    <!-- CSP Config -->
+    <script src="csp-config.js"></script>
+
+    <script type="module">
+        // Teste de importação
+        try {
+            console.log('🧪 Testando importação do Web3Auth...');
+            
+            const { Web3Auth } = await import('@web3auth/modal');
+            console.log('✅ Web3Auth importado com sucesso:', Web3Auth);
+            
+            // Teste de importação do Web3
+            const Web3 = (await import('web3')).default;
+            console.log('✅ Web3 importado com sucesso:', Web3);
+            
+            // Configuração de teste
+            const testConfig = {
+                clientId: '9afb8749df8f4370aded1dce851d13f4',
+                web3AuthNetwork: 'testnet',
+                chainConfig: {
+                    chainNamespace: "eip155",
+                    chainId: "0x5", // Goerli testnet
+                    rpcTarget: "https://rpc.ankr.com/eth_goerli",
+                    displayName: "Ethereum Goerli",
+                    blockExplorer: "https://goerli.etherscan.io",
+                    ticker: "ETH",
+                    tickerName: "Ethereum"
+                }
+            };
+            
+            // Criar instância
+            const web3auth = new Web3Auth(testConfig);
+            console.log('✅ Instância Web3Auth criada:', web3auth);
+            
+            // Inicializar
+            await web3auth.initModal();
+            console.log('✅ Web3Auth inicializado com sucesso!');
+            
+            // Exportar para uso global
+            window.web3auth = web3auth;
+            window.testConfig = testConfig;
+            
+            // Atualizar status
+            document.getElementById('status').className = 'status success';
+            document.getElementById('status').textContent = '✅ Web3Auth inicializado com sucesso!';
+            document.getElementById('init-btn').disabled = true;
+            document.getElementById('connect-btn').disabled = false;
+            
+            addLog('✅ Web3Auth inicializado com sucesso!');
+            
+        } catch (error) {
+            console.error('❌ Erro na inicialização:', error);
+            
+            document.getElementById('status').className = 'status error';
+            document.getElementById('status').textContent = `❌ Erro: ${error.message}`;
+            
+            addLog(`❌ Erro na inicialização: ${error.message}`);
+        }
+        
+        // Função para adicionar logs
+        function addLog(message) {
+            const log = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            log.innerHTML += `[${timestamp}] ${message}\n`;
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        // Exportar função de log
+        window.addLog = addLog;
+    </script>
+
+    <script>
+        // Funções de teste
+        async function testInit() {
+            addLog('🚀 Testando inicialização...');
+            // A inicialização já foi feita no módulo
+        }
+        
+        async function testConnect() {
+            try {
+                addLog('🔗 Tentando conectar carteira...');
+                
+                if (!window.web3auth) {
+                    throw new Error('Web3Auth não inicializado');
+                }
+                
+                const provider = await window.web3auth.connect();
+                addLog('✅ Carteira conectada!');
+                
+                // Obter informações do usuário
+                const user = await window.web3auth.getUserInfo();
+                addLog(`👤 Usuário: ${JSON.stringify(user, null, 2)}`);
+                
+                document.getElementById('connect-btn').disabled = true;
+                document.getElementById('disconnect-btn').disabled = false;
+                
+            } catch (error) {
+                addLog(`❌ Erro na conexão: ${error.message}`);
+            }
+        }
+        
+        async function testDisconnect() {
+            try {
+                addLog('🔌 Desconectando carteira...');
+                
+                if (window.web3auth) {
+                    await window.web3auth.logout();
+                    addLog('✅ Carteira desconectada!');
+                    
+                    document.getElementById('connect-btn').disabled = false;
+                    document.getElementById('disconnect-btn').disabled = true;
+                }
+                
+            } catch (error) {
+                addLog(`❌ Erro na desconexão: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>

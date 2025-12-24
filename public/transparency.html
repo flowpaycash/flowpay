@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOWPay Gateway - Transparência e Confiança</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/transparency.css">
+    <!-- Font Awesome removido - usar ícones locais ou CSS puro -->
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ff007a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="FLOWPay Transparência">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="logo">
+                <a href="/">
+                    <img src="img/flowpay-logo.png" alt="FLOWPay" class="header-logo">
+                    <span class="logo-text">FLOWPay</span>
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="/" class="nav-link">Início</a></li>
+                    <li><a href="/checkout" class="nav-link">Checkout</a></li>
+                    <li><a href="/transparency" class="nav-link active">Transparência</a></li>
+                    <li><a href="/admin" class="nav-link admin-link">
+                        <i class="fas fa-chart-line"></i> Admin
+                    </a></li>
+                </ul>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="transparency-hero">
+        <div class="hero-content">
+            <div class="hero-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1>Promessa é ruído. A gente entrega prova.</h1>
+            <p>Logs abertos, eventos assinados, e operação auditável.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="transparency-main">
+        <!-- Blocos de Transparência -->
+        <section class="transparency-section">
+            <div class="container">
+                <h2><i class="fas fa-eye"></i> Blocos de Transparência</h2>
+                <div class="how-it-works">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Publicamos</h3>
+                        <p>Status, timestamps, valores, provedor, ref_hash. Dados mínimos, liberdade máxima.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Não Publicamos</h3>
+                        <p>Dados pessoais, chaves, segredos, payload bruto. Privacidade por padrão.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Provas de Pagamento</h3>
+                        <p>PIX: BR‑Code + assinatura digital. Cripto: hash em blockchain pública.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3>SLOs Declarados</h3>
+                        <p>Uptime: 99.9%. Checkout p95: < 4000ms. MTTR: < 10min.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTAs de Transparência -->
+        <section class="transparency-section">
+            <div class="container">
+                <h2><i class="fas fa-link"></i> CTAs de Transparência</h2>
+                <div class="validations-grid">
+                    <div class="validation-card">
+                        <div class="validation-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3>Ver Transações</h3>
+                        <p>Acesse o arquivo público de todas as transações processadas</p>
+                        <a href="/pix_orders.json" class="btn btn-secondary btn-small">Ver transações</a>
+                    </div>
+                    <div class="validation-card">
+                        <div class="validation-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h3>Checar Status</h3>
+                        <p>Verifique o status da plataforma e dependências</p>
+                        <a href="/.netlify/functions/env" class="btn btn-secondary btn-small">Checar status</a>
+                    </div>
+                    <div class="validation-card">
+                        <div class="validation-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Open Source</h3>
+                        <p>Código público e auditável no GitHub</p>
+                        <a href="https://github.com/flowpaycash/flowpay" target="_blank" class="btn btn-secondary btn-small">Ver código</a>
+                    </div>
+                    <div class="validation-card">
+                        <div class="validation-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Segurança</h3>
+                        <p>Política de divulgação responsável e contato</p>
+                        <a href="/.well-known/security.txt" class="btn btn-secondary btn-small">Ver segurança</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Código Aberto -->
+        <section class="transparency-section">
+            <div class="container">
+                <h2><i class="fas fa-github"></i> Código Aberto</h2>
+                <div class="open-source-content">
+                    <div class="github-card">
+                        <h3>Repositório Público</h3>
+                        <p>Todo o código do FLOWPay está disponível publicamente para auditoria</p>
+                        <a href="https://github.com/flowpaycash/flowpay" target="_blank" class="github-btn">
+                            <i class="fab fa-github"></i>
+                            Ver no GitHub
+                        </a>
+                    </div>
+                    <div class="tech-stack">
+                        <h3>Stack Tecnológico</h3>
+                        <ul>
+                            <li><i class="fas fa-code"></i> HTML5, CSS3, JavaScript</li>
+                            <li><i class="fas fa-server"></i> Netlify Functions (serverless)</li>
+                            <li><i class="fas fa-link"></i> API Woovi oficial</li>
+                            <li><i class="fas fa-mobile-alt"></i> PWA mobile-first</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Suporte -->
+        <section class="transparency-section">
+            <div class="container">
+                <h2><i class="fas fa-headset"></i> Suporte e Contato</h2>
+                <div class="support-content">
+                    <div class="support-card">
+                        <h3>Precisa de Ajuda?</h3>
+                        <p>Nossa equipe está disponível para esclarecer qualquer dúvida sobre segurança e transparência</p>
+                        <div class="support-buttons">
+                            <a href="https://t.me/flowpay_support" target="_blank" class="support-btn telegram">
+                                <i class="fab fa-telegram"></i>
+                                Telegram
+                            </a>
+                            <a href="mailto:suporte@flowpay.com" class="support-btn email">
+                                <i class="fas fa-envelope"></i>
+                                Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="neo-footer site-footer" aria-label="Rodapé">
+        <div class="neo-footer__grid container">
+          <div class="neo-footer__brand">
+            <a class="neo-footer__logo" href="/">FLOWPay</a>
+            <p class="neo-footer__tag">Checkout invisível • Auto-custódia • Transparência</p>
+          </div>
+      
+          <nav class="neo-footer__nav" aria-label="Navegação útil">
+            <div class="neo-footer__col">
+              <h3>Produto</h3>
+              <ul>
+                <li><a href="/checkout">Checkout</a></li>
+                <li><a href="/transparency">Transparência</a></li>
+                <li><a href="/admin">Admin</a></li>
+              </ul>
+            </div>
+            <div class="neo-footer__col">
+              <h3>Open NΞØ</h3>
+              <ul>
+                <li><a href="https://github.com/flowpaycash/flowpay" target="_blank" rel="noopener">GitHub</a></li>
+                <li><a href="/pix_orders.json">Transações públicas</a></li>
+                <!-- se tiver security.txt, descomente -->
+                <!-- <li><a href="/.well-known/security.txt">Segurança</a></li> -->
+              </ul>
+            </div>
+            <div class="neo-footer__col">
+              <h3>Status</h3>
+              <ul>
+                <li><a class="neo-footer__pill" href="/transparency">Auditar</a></li>
+                <!-- se criar um ping depois, troque o link abaixo -->
+                <!-- <li><a class="neo-footer__pill" href="/.netlify/functions/ping">Status</a></li> -->
+              </ul>
+              <p class="neo-footer__note">Sem PII. Log redigido.</p>
+            </div>
+          </nav>
+        </div>
+      
+        <div class="neo-footer__meta">
+          <div class="container neo-footer__meta__row">
+            <p>🌊 FLOWPay — protocolo NΞØ</p>
+            <p class="neo-footer__links">
+              <a href="https://github.com/flowpaycash/flowpay" target="_blank" rel="noopener">github</a>
+              <span>•</span>
+              <a href="/checkout">checkout</a>
+              <span>•</span>
+              <a href="/transparency">transparência</a>
+              <span>•</span>
+              <a href="/admin">admin</a>
+            </p>
+          </div>
+        </div>
+      </footer>
+
+    <!-- Scripts -->
+    <script src="csp-config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const navList = document.querySelector('.nav-list');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                navList.classList.toggle('active');
+                mobileMenuToggle.classList.toggle('active');
+            });
+
+            // Smooth scrolling para links internos
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

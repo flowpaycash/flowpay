@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teste de Login — FLOWPay</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    .test-info {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    
+    .test-info h3 {
+      margin-top: 0;
+      color: #495057;
+    }
+    
+    .test-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    
+    .test-links a {
+      background: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .test-links a:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="card auth-card">
+      <h1>🧪 Teste do Sistema de Login</h1>
+      <p class="muted">Página para testar todas as funcionalidades de autenticação</p>
+
+      <div class="test-info">
+        <h3>📋 Funcionalidades Implementadas</h3>
+        <ul>
+          <li>✅ Página de login com magic link</li>
+          <li>✅ Sistema de notificações (toasts)</li>
+          <li>✅ Funções Netlify para autenticação</li>
+          <li>✅ Página de verificação de token</li>
+          <li>✅ Página do cliente após login</li>
+          <li>✅ Estilos responsivos e dark mode</li>
+        </ul>
+      </div>
+
+      <div class="test-links">
+        <a href="/login">🔐 Testar Login</a>
+        <a href="/client">👤 Ver Painel Cliente</a>
+        <a href="/auth/verify?token=test123">🔍 Testar Verificação</a>
+      </div>
+
+      <div class="test-info">
+        <h3>🧪 Como Testar</h3>
+        <ol>
+          <li>Acesse <a href="/login">/login</a></li>
+          <li>Insira um e-mail válido</li>
+          <li>Verifique o console para o magic link</li>
+          <li>Copie o link e teste em nova aba</li>
+          <li>Verifique se redireciona para /client</li>
+        </ol>
+      </div>
+
+      <div class="test-info">
+        <h3>🔧 Funções Netlify</h3>
+        <ul>
+          <li><code>/.netlify/functions/auth-magic-start</code> - Inicia magic link</li>
+          <li><code>/.netlify/functions/auth-magic-verify</code> - Verifica token</li>
+        </ul>
+      </div>
+
+      <div class="test-info">
+        <h3>📁 Arquivos Criados</h3>
+        <ul>
+          <li><code>public/login.html</code> - Página de login</li>
+          <li><code>public/css/styles.css</code> - Estilos de autenticação</li>
+          <li><code>public/assets/js/login.js</code> - Lógica de login</li>
+          <li><code>public/auth/verify.html</code> - Verificação</li>
+          <li><code>public/client.html</code> - Painel cliente</li>
+          <li><code>netlify/functions/auth-magic-*.js</code> - Backend</li>
+        </ul>
+      </div>
+
+      <button class="primary" onclick="window.location.href='/login'">
+        🚀 Ir para Login
+      </button>
+    </section>
+  </main>
+
+  <div id="nf-toasts" class="nf-toasts"></div>
+
+  <script>
+    // Teste do sistema de notificações
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const toast = (msg, type='info') => {
+          let holder = document.getElementById('nf-toasts');
+          if (!holder) { 
+            holder = document.createElement('div'); 
+            holder.id='nf-toasts'; 
+            holder.className='nf-toasts'; 
+            document.body.appendChild(holder); 
+          }
+          const n = document.createElement('div');
+          n.className = `nf-toast is-${type}`;
+          n.innerHTML = `<span>${msg}</span><button class="nf-x" aria-label="Fechar">×</button>`;
+          holder.appendChild(n);
+          n.querySelector('.nf-x').onclick = () => n.remove();
+          setTimeout(()=>n.remove(), 4200);
+        };
+
+        toast('🎉 Sistema de login carregado com sucesso!', 'success');
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

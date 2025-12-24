@@ -1,0 +1,22 @@
+[
+  {
+    "id": "pix_1756066678919_efso2p1r6",
+    "status": "PENDING",
+    "amount": 100,
+    "currency": "USDT",
+    "provider": "pix",
+    "ref_hash": "sha256:fc970e6c3ba4064e9ff95e9e8174c64880896cc1d6a6b4e281ace75094ab0cd2",
+    "createdAt": "2025-08-24T20:19:56.354Z",
+    "updatedAt": null
+  },
+  {
+    "id": "test_123",
+    "status": "PENDING",
+    "amount": 100.5,
+    "currency": "USDT",
+    "provider": "pix",
+    "ref_hash": "sha256:8058fad0797d5f09426009c4a1fc703c9fe14a7b506808baa59f0ce0a0c28677",
+    "createdAt": "2025-08-24T20:04:26.098Z",
+    "updatedAt": null
+  }
+]

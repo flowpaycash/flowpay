@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOWPay - Teste</title>
+    <link rel="stylesheet" href="css/checkout-minimal.css">
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .test-button {
+            background: #ff007a;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background: #e6006a;
+        }
+        .status {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .error {
+            background: #ff4444;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #44ff44;
+            color: black;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 FLOWPay - Teste de Funcionalidade</h1>
+        
+        <div class="status">
+            <h3>Status do Sistema</h3>
+            <div id="status-content">Carregando...</div>
+        </div>
+        
+        <div>
+            <button class="test-button" onclick="testBasicFunctionality()">Testar Funcionalidade Básica</button>
+            <button class="test-button" onclick="testMachine()">Testar Máquina de Estados</button>
+            <button class="test-button" onclick="testCopy()">Testar Carregamento de Copy</button>
+            <button class="test-button" onclick="clearStatus()">Limpar Status</button>
+        </div>
+        
+        <div class="status">
+            <h3>Console de Log</h3>
+            <div id="console-log" style="font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Função para logar no console visual
+        function log(message, type = 'info') {
+            const consoleDiv = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.style.color = type === 'error' ? '#ff4444' : type === 'success' ? '#44ff44' : '#ffffff';
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            consoleDiv.appendChild(logEntry);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            
+            // Também logar no console do navegador
+            console.log(`[${timestamp}] ${message}`);
+        }
+
+        // Função para atualizar status
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status-content');
+            statusDiv.innerHTML = message;
+            statusDiv.className = type;
+        }
+
+        // Teste básico de funcionalidade
+        function testBasicFunctionality() {
+            log('🧪 Testando funcionalidade básica...');
+            
+            try {
+                // Testar se o DOM está funcionando
+                const testElement = document.createElement('div');
+                testElement.textContent = 'Teste DOM';
+                document.body.appendChild(testElement);
+                document.body.removeChild(testElement);
+                
+                // Testar se o CSS está carregado
+                const computedStyle = window.getComputedStyle(document.body);
+                const backgroundColor = computedStyle.backgroundColor;
+                
+                log(`✅ DOM funcionando, CSS carregado (background: ${backgroundColor})`, 'success');
+                updateStatus('✅ Funcionalidade básica OK', 'success');
+                
+            } catch (error) {
+                log(`❌ Erro na funcionalidade básica: ${error.message}`, 'error');
+                updateStatus(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // Teste da máquina de estados
+        async function testMachine() {
+            log('🚀 Testando máquina de estados...');
+            
+            try {
+                // Tentar importar a máquina
+                const { startCheckout } = await import('/assets/js/navigation-flow.machine.js');
+                log('✅ Máquina importada com sucesso', 'success');
+                
+                // Testar criação da máquina
+                const machine = startCheckout({
+                    copy: { test: true },
+                    services: {
+                        createPix: () => Promise.resolve('test'),
+                        submitCrypto: () => Promise.resolve('test'),
+                        connect: () => Promise.resolve('test'),
+                        disconnect: () => Promise.resolve('test')
+                    }
+                });
+                
+                log('✅ Máquina criada com sucesso', 'success');
+                updateStatus('✅ Máquina de estados funcionando', 'success');
+                
+            } catch (error) {
+                log(`❌ Erro na máquina de estados: ${error.message}`, 'error');
+                updateStatus(`❌ Erro na máquina: ${error.message}`, 'error');
+            }
+        }
+
+        // Teste de carregamento de copy
+        async function testCopy() {
+            log('📝 Testando carregamento de copy...');
+            
+            try {
+                const response = await fetch('/ui.copy.pt.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const copy = await response.json();
+                log(`✅ Copy carregado: ${JSON.stringify(copy).substring(0, 100)}...`, 'success');
+                updateStatus('✅ Copy carregado com sucesso', 'success');
+                
+            } catch (error) {
+                log(`❌ Erro ao carregar copy: ${error.message}`, 'error');
+                updateStatus(`❌ Erro no copy: ${error.message}`, 'error');
+            }
+        }
+
+        // Limpar status
+        function clearStatus() {
+            document.getElementById('status-content').innerHTML = 'Status limpo';
+            document.getElementById('console-log').innerHTML = '';
+            log('🧹 Status e console limpos');
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🚀 Página carregada, iniciando testes...');
+            updateStatus('🔄 Pronto para testes', 'info');
+            
+            // Teste automático básico
+            setTimeout(() => {
+                testBasicFunctionality();
+            }, 1000);
+        });
+
+        // Capturar erros globais
+        window.addEventListener('error', (event) => {
+            log(`❌ Erro global: ${event.error?.message || event.message}`, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            log(`❌ Promise rejeitada: ${event.reason}`, 'error');
+        });
+    </script>
+</body>
+</html>

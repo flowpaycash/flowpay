@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Painel do Cliente — FLOWPay</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    .client-header {
+      background: #ff007a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .client-content {
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .welcome-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    }
+    
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .logout-btn:hover {
+      background: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <header class="client-header">
+    <h1>Painel do Cliente</h1>
+    <button class="logout-btn" onclick="logout()">Sair</button>
+  </header>
+
+  <main class="client-content">
+    <div class="welcome-card">
+      <h2>Bem-vindo ao FLOWPay!</h2>
+      <p>Você foi autenticado com sucesso via magic link.</p>
+      <p>Esta é uma página de exemplo. Em produção, você implementaria:</p>
+      <ul>
+        <li>Dashboard com estatísticas</li>
+        <li>Histórico de transações</li>
+        <li>Configurações da conta</li>
+        <li>Integrações com carteiras</li>
+      </ul>
+    </div>
+
+    <div class="welcome-card">
+      <h3>Próximos Passos</h3>
+      <p>Para completar a implementação:</p>
+      <ol>
+        <li>Implementar envio real de e-mails</li>
+        <li>Adicionar banco de dados para tokens</li>
+        <li>Implementar autenticação SIWE para carteiras</li>
+        <li>Adicionar middleware de autenticação</li>
+        <li>Criar sistema de sessões persistente</li>
+      </ol>
+    </div>
+  </main>
+
+  <div id="nf-toasts" class="nf-toasts"></div>
+
+  <script>
+    function logout() {
+      // Em produção, você invalidaria a sessão no servidor
+      // Por enquanto, apenas redireciona
+      if (confirm('Tem certeza que deseja sair?')) {
+        window.location.href = '/login';
+      }
+    }
+
+    // Verificar se o usuário está autenticado
+    // Em produção, você verificaria o token de sessão
+    document.addEventListener('DOMContentLoaded', () => {
+      // TODO: Implementar verificação de sessão
+      console.log('Usuário autenticado - sessão válida');
+    });
+  </script>
+</body>
+</html>

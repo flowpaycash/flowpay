@@ -1,0 +1,49 @@
+{
+  "routes": {
+    "/checkout": {
+      "active_variant": "A",
+      "hero_options": [
+        {
+          "id": "A",
+          "headline": "Escolha como quer receber: PIX ou Cripto",
+          "subheadline": "Selecione seu modo preferido de recebimento"
+        },
+        {
+          "id": "B",
+          "headline": "Recebimento direto. Sem rodeios.",
+          "subheadline": "PIX instantâneo ou cripto na blockchain"
+        }
+      ],
+      "messages": {
+        "footnote": [
+          "Transações seguras e transparentes",
+          "Suporte 24/7 via Telegram",
+          "Zero taxas ocultas"
+        ]
+      }
+    }
+  },
+  "ui": {
+    "copy": {
+      "routes": {
+        "/checkout": {
+          "active_variant": "A",
+          "hero_options": [
+            {
+              "id": "A",
+              "headline": "Escolha como quer receber: PIX ou Cripto",
+              "subheadline": "Selecione seu modo preferido de recebimento"
+            }
+          ],
+          "messages": {
+            "footnote": [
+              "Transações seguras e transparentes",
+              "Suporte 24/7 via Telegram",
+              "Zero taxas ocultas"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

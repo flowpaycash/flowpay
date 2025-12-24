@@ -1,0 +1,31 @@
+#!/bin/bash
+
+echo "🔧 Build Web3Auth LIGHT (no-modal)..."
+
+# Configurações para versão light
+npx esbuild public/assets/js/web3auth.light.ts \
+  --bundle \
+  --format=esm \
+  --target=es2022 \
+  --minify \
+  --tree-shaking=true \
+  --metafile=public/assets/js/web3auth.light.meta.json \
+  --analyze \
+  --outfile=public/assets/js/web3auth.light.js
+
+echo "✅ Bundle light gerado: public/assets/js/web3auth.light.js"
+echo "📊 Tamanho atual:"
+ls -lh public/assets/js/web3auth.light.js
+
+echo ""
+echo "🔍 Comparação de tamanhos:"
+echo "Original:  $(ls -lh public/assets/js/web3auth.js | awk '{print $5}')"
+echo "Minimal:   $(ls -lh public/assets/js/web3auth.minimal.js | awk '{print $5}')"
+echo "Light:     $(ls -lh public/assets/js/web3auth.light.js | awk '{print $5}')"
+
+echo ""
+echo "🚀 Para usar a versão light, atualize checkout.html:"
+echo "   <script src=\"/assets/neo.config.js\"></script>"
+echo "   <script type=\"module\" src=\"/assets/js/web3auth.light.js\"></script>"
+echo ""
+echo "⚠️  NOTA: Versão light não tem modal UI - apenas funcionalidade core"

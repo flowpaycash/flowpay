@@ -1,0 +1,31 @@
+# Cursor Rules - FLOWPay
+
+Este projeto segue os padrões definidos em `standards/`.
+
+## Referências
+
+- `standards/ai.rules.md` - Regras para IAs e assistentes
+- `standards/markdown.rules.md` - Regras de formatação Markdown
+- `standards/readme.template.md` - Template para README
+- `standards/zshrc.rules.md` - Padrões para configuração shell
+
+## Regras Principais
+
+1. **SEMPRE** siga os padrões de Markdown (linha em branco após headers)
+2. **SEMPRE** use 2 espaços para indentação
+3. **SEMPRE** remova trailing whitespace
+4. **SEMPRE** adicione newline final
+5. **SEMPRE** use LF line endings (Unix)
+6. **NUNCA** use emojis em documentação ou código
+
+## Estrutura Protegida
+
+⚠️ NUNCA modifique pastas, renomeie arquivos ou sugira reorganização estrutural, a menos que tenha autorização direta de Mellø.
+
+---
+
+Author: MELLØ // POST-HUMAN
+
+This project follows my personal working standards.
+Changes are allowed, inconsistency is not.
+

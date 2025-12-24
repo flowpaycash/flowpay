@@ -1,0 +1,383 @@
+/* NAVBAR CSS - GLASSMORPHISM NEON DARKNET ELITE */
+
+/* Variáveis para navbar */
+:root {
+    --navbar-bg: rgba(10, 10, 10, 0.8);
+    --navbar-border: rgba(255, 255, 255, 0.1);
+    --navbar-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --logo-glow: rgba(255, 0, 122, 0.5);
+    --link-hover: rgba(255, 0, 122, 0.1);
+    --wallet-bg: rgba(0, 0, 0, 0.3);
+    
+    /* Mobile-first heights */
+    --safe-area-top: env(safe-area-inset-top);
+    --safe-area-bottom: env(safe-area-inset-bottom);
+    --navbar-height-mobile: 50px;
+    --navbar-height-desktop: 60px;
+}
+
+/* Navbar principal */
+.neo-navbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 10000 !important;
+    background: var(--navbar-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid var(--navbar-border) !important;
+    box-shadow: var(--navbar-shadow) !important;
+    width: 100% !important;
+    height: var(--navbar-height-mobile) !important; /* Mobile first */
+    
+    /* Safe area para iOS */
+    padding-top: var(--safe-area-top);
+}
+
+/* CSS de emergência para garantir visibilidade */
+.neo-navbar {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--navbar-height-mobile); /* Mobile first */
+}
+
+/* Logo e branding */
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.logo-glow {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    width: auto;
+    height: 40px;
+    max-width: 50px;
+    filter: drop-shadow(0 0 10px var(--logo-glow));
+    transition: all 0.3s ease;
+    object-fit: contain;
+}
+
+.logo-aura {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle, var(--logo-glow) 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: logo-pulse 2s ease-in-out infinite;
+}
+
+
+
+/* Menu de navegação */
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link:hover {
+    color: #ffffff;
+    background: var(--link-hover);
+}
+
+.link-underline {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(45deg, #ff007a, #00d4ff);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover .link-underline {
+    width: 100%;
+}
+
+/* Link admin especial */
+.admin-link {
+    background: rgba(255, 0, 122, 0.1);
+    border: 1px solid rgba(255, 0, 122, 0.3);
+}
+
+.admin-link:hover {
+    background: rgba(255, 0, 122, 0.2);
+    border-color: rgba(255, 0, 122, 0.5);
+}
+
+.admin-glow {
+    background: linear-gradient(45deg, #ff007a, #ff1a8c);
+    box-shadow: 0 0 10px rgba(255, 0, 122, 0.5);
+}
+
+/* Status da carteira */
+.nav-wallet {
+    display: flex;
+    align-items: center;
+}
+
+.wallet-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--wallet-bg);
+    border-radius: 20px;
+    border: 1px solid var(--navbar-border);
+    transition: all 0.3s ease;
+}
+
+.wallet-indicator.connected {
+    border-color: #00ff88;
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.wallet-indicator.connecting {
+    border-color: #ffaa00;
+    background: rgba(255, 170, 0, 0.1);
+}
+
+.wallet-indicator.disconnected {
+    border-color: #666;
+}
+
+.indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #666;
+    transition: all 0.3s ease;
+}
+
+.wallet-indicator.connected .indicator-dot {
+    background: #00ff88;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.wallet-indicator.connecting .indicator-dot {
+    background: #ffaa00;
+    box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+}
+
+.status-text {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+/* Botão Ativar Flow */
+.activate-flow-btn {
+    background: linear-gradient(45deg, #ff007a, #00d4ff);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.activate-flow-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255, 0, 122, 0.3);
+}
+
+.activate-flow-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.activate-flow-btn:hover::before {
+    left: 100%;
+}
+
+/* Menu mobile */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #ffffff;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 24px;
+    height: 18px;
+}
+
+.hamburger span {
+    width: 100%;
+    height: 2px;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    border-radius: 1px;
+}
+
+/* Animações */
+@keyframes logo-pulse {
+    0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .nav-menu, .nav-wallet, .activate-flow-btn {
+        display: none;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .nav-container {
+        padding: 0 1rem;
+    }
+    
+    /* Menu mobile ativo */
+    .nav-menu.active {
+        display: flex !important;
+        flex-direction: column;
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+        gap: 0.5rem;
+        z-index: 9999;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    .nav-menu.active .nav-item {
+        width: 100%;
+    }
+    
+    .nav-menu.active .nav-link {
+        padding: 1rem;
+        border-radius: 8px;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-menu.active .nav-link:last-child {
+        border-bottom: none;
+    }
+    
+    /* Hamburger ativo */
+    .mobile-menu-toggle.active .hamburger span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .mobile-menu-toggle.active .hamburger span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .mobile-menu-toggle.active .hamburger span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+}
+
+/* Mobile first - já aplicado acima */
+
+/* Desktop adjustments */
+@media (min-width: 768px) {
+    .neo-navbar {
+        height: var(--navbar-height-desktop) !important;
+    }
+    
+    .nav-container {
+        height: var(--navbar-height-desktop);
+    }
+    
+    .logo-img {
+        height: 50px;
+        max-width: 70px;
+    }
+    
+    .logo-aura {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* Mobile específico */
+@media (max-width: 480px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+    
+    .logo-img {
+        height: 32px;
+        max-width: 40px;
+    }
+    
+    .logo-aura {
+        width: 60px;
+        height: 60px;
+    }
+}

@@ -1,0 +1,178 @@
+{
+    "neo_version": "1.0.0",
+    "project": {
+      "name": "FLOWPay",
+      "tagline": "Checkout invisível. Auto-custódia. Transparência por padrão.",
+      "version": "2.2.0",
+      "protocol": "NEØ",
+      "license": "MIT",
+      "repository": "https://github.com/flowpaycash/flowpay",
+      "homepage": "https://github.com/flowpaycash/flowpay#readme",
+      "issues": "https://github.com/flowpaycash/flowpay/issues"
+    },
+    "domains": {
+      "production": { "url": "https://flowpaypix.netlify.app", "environment": "prod" },
+      "staging":    { "url": "https://flowpaypix-staging.netlify.app", "environment": "stage" },
+      "development":{ "url": "http://localhost:8000", "environment": "dev" }
+    },
+    "hosting": {
+      "provider": "Netlify",
+      "type": "serverless",
+      "build": {
+        "publish": "public",
+        "functions": ".netlify/functions",
+        "node_version": "18"
+      },
+      "redirects": [
+        { "from": "/checkout", "to": "/pix-checkout.html", "status": 200 },
+        { "from": "/admin", "to": "/admin/index.html", "status": 200 },
+        { "from": "/api/*", "to": "/.netlify/functions/:splat", "status": 200 }
+      ]
+    },
+    "routes": {
+      "critical": [
+        { "path": "/",              "function": "Landing principal",         "type": "static" },
+        { "path": "/checkout",      "function": "Checkout (PIX/Cripto)",     "type": "redirect" },
+        { "path": "/transparency",  "function": "Transparência e auditoria", "type": "static" },
+        { "path": "/admin",         "function": "Painel administrativo",     "type": "redirect" },
+        { "path": "/pix_orders.json","function": "Histórico de transações",  "type": "static" }
+      ],
+      "api": [
+        { "path": "/.netlify/functions/create-pix-charge", "method": "POST", "function": "Cria cobrança Pix", "timeout": 30 },
+        { "path": "/.netlify/functions/webhook-handler",   "method": "POST", "function": "Webhook Pix + HMAC", "timeout": 30 },
+        { "path": "/.netlify/functions/pix-orders",        "method": "GET",  "function": "Lista transações JSON", "timeout": 30 }
+      ]
+    },
+    "security": {
+      "csp": {
+        "mode": "strict",
+        "allow_cdn": false,
+        "header": "default-src 'self'; script-src 'self' 'nonce-{{NONCE}}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.woovi.com https://api.woovi-sandbox.com https://rpc.ankr.com https://mainnet.infura.io; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'",
+        "dev_overrides": {
+          "allow_cdn": true,
+          "script_src_extra": ["https://cdn.jsdelivr.net"],
+          "notes": "Somente desenvolvimento. Produção deve self-host/bundler."
+        }
+      },
+      "integrity": { "sri_required": true },
+      "disclosure": {
+        "policy": "coordinated",
+        "security_txt": "/.well-known/security.txt",
+        "contact": "security@flowpay.example"
+      }
+    },
+    "custody": {
+      "model": "self-custody",
+      "wallets_supported": ["injected", "walletconnect", "ledger"],
+      "web3auth": {
+        "enabled": false,
+        "client_id_ref": "ENV:WEB3AUTH_CLIENT_ID",
+        "network": "mainnet",
+        "notes": "Ativar apenas em modo híbrido e comunicar tradeoffs. Padrão NΞØ = auto-custódia."
+      }
+    },
+    "payments": {
+      "currency_default": "BRL",
+      "providers": {
+        "pix": {
+          "enabled": true,
+          "vendor": "woovi",
+          "api_url": "https://api.woovi.com",
+          "sandbox_url": "https://api.woovi-sandbox.com",
+          "api_key_ref": "ENV:WOOVI_API_KEY",
+          "webhook_secret_header": "x-woovi-signature",
+          "webhook_secret_ref": "ENV:WOOVI_WEBHOOK_SECRET",
+          "events": ["OPENPIX:CHARGE_COMPLETED","OPENPIX:CHARGE_EXPIRED","OPENPIX:CHARGE_OVERDUE"]
+        },
+        "crypto": {
+          "enabled": true,
+          "chains": [
+            {
+              "name": "Ethereum",
+              "type": "EVM",
+              "chain_id": 1,
+              "rpc": ["https://rpc.ankr.com/eth", "https://mainnet.infura.io/v3/${INFURA_KEY}"],
+              "assets": ["ETH","USDC","USDT"],
+              "explorer": "https://etherscan.io"
+            },
+            {
+              "name": "Polygon",
+              "type": "EVM",
+              "chain_id": 137,
+              "rpc": ["https://rpc.ankr.com/polygon"],
+              "assets": ["MATIC","USDC"],
+              "explorer": "https://polygonscan.com"
+            }
+          ],
+          "walletconnect": {
+            "enabled": true,
+            "project_id_ref": "ENV:WALLETCONNECT_PROJECT_ID"
+          }
+        }
+      }
+    },
+    "webhooks": {
+      "pix": {
+        "endpoint": "/.netlify/functions/webhook-handler",
+        "method": "POST",
+        "provider": "woovi",
+        "signature_header": "x-woovi-signature",
+        "algorithm": "HMAC-SHA256",
+        "retries": { "max": 6, "backoff": "exponential", "base_ms": 500, "jitter": true },
+        "idempotency": { "key": "charge.correlationID", "ttl_sec": 86400 }
+      }
+    },
+    "transparency": {
+      "public_data": {
+        "transactions": {
+          "file": "pix_orders.json",
+          "fields": ["id","status","amount","currency","provider","ref_hash","createdAt","updatedAt"],
+          "redacted": true
+        },
+        "webhooks": {
+          "file": "webhook_events.json",
+          "fields": ["receivedAt","event","ref_hash"],
+          "redacted": true
+        }
+      },
+      "proofs": {
+        "pix": { "br_code": "present", "qr_signature": "ed25519", "correlation_id": "custom" },
+        "crypto": { "tx_hash": "0x...", "explorer_tpl": "https://etherscan.io/tx/{hash}", "wallet_address": "0x..." }
+      },
+      "status": {
+        "health_checks": [
+          { "url": "/.netlify/functions/ping", "purpose": "Liveness", "expected_ms": 150 }
+        ],
+        "slos": { "uptime": "99.9%", "checkout_p95_ms": 4000, "webhook_mttr_min": 10 },
+        "dependencies": ["woovi_api","netlify_functions","rpc_mainnet","walletconnect"]
+      }
+    },
+    "ui": {
+      "routes": { "checkout": "/checkout", "transparency": "/transparency" },
+      "flags": { "show_crypto": true, "sandbox_mode": true },
+      "i18n": ["pt-BR","en-US"]
+    },
+    "integration": {
+      "examples": {
+        "vanilla": { "checkout": "/checkout", "admin": "/admin", "api": "/.netlify/functions/*" },
+        "nextjs": "planned",
+        "react": "planned"
+      },
+      "telemetry": { "enabled": false, "anonymized": true, "storage": "local" }
+    },
+    "environment": {
+      "required": ["WOOVI_API_KEY","WOOVI_WEBHOOK_SECRET"],
+      "optional": ["WEB3AUTH_CLIENT_ID","WALLETCONNECT_PROJECT_ID","INFURA_KEY","TELEGRAM_BOT_TOKEN","TELEGRAM_CHAT_ID"],
+      "notes": "Não commit de segredos. Usar variables do Netlify/CI."
+    },
+    "signing": {
+      "config_signature": "auto",
+      "algorithm": "ed25519"
+    },
+    "metadata": {
+      "generated_by": "NEØ Protocol Composer",
+      "generated_at": "2025-08-24T00:00:00Z",
+      "format": "NEØ Protocol Specification"
+    }
+  }
+  

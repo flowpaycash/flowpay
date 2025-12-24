@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Verificar Acesso — FLOWPay</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="card auth-card">
+      <h1>Verificando Acesso</h1>
+      <p class="muted">Aguarde enquanto validamos seu link...</p>
+      
+      <div id="verification-status">
+        <p>Verificando token...</p>
+      </div>
+
+      <div id="verification-result" style="display: none;">
+        <div id="success-message" style="display: none;">
+          <p style="color: #28a745;">✅ Acesso verificado com sucesso!</p>
+          <p>Redirecionando para o painel...</p>
+        </div>
+        
+        <div id="error-message" style="display: none;">
+          <p style="color: #dc3545;">❌ Falha na verificação</p>
+          <p id="error-details"></p>
+          <button class="primary" onclick="window.location.href='/login'">Voltar ao Login</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="nf-toasts" class="nf-toasts"></div>
+
+  <script type="module" src="/assets/js/auth-verify.js"></script>
+</body>
+</html>

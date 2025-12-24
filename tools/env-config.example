@@ -1,0 +1,22 @@
+# 🚀 FLOWPay - Configuração de Ambiente
+# Copie este arquivo para .env e configure suas chaves
+
+# Woovi API Configuration
+WOOVI_API_KEY=your_woovi_api_key_here
+WOOVI_API_URL=https://api.woovi.com
+
+# Para ambiente de sandbox/teste
+# WOOVI_API_URL=https://api.woovi-sandbox.com
+
+# Outras configurações
+NODE_ENV=development
+URL=http://localhost:8888
+
+# Exemplo de API Key da Woovi:
+# WOOVI_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# Como configurar:
+# 1. Copie este arquivo para .env na raiz do projeto
+# 2. Configure sua WOOVI_API_KEY real
+# 3. Execute: source .env
+# 4. Ou configure no seu shell: export WOOVI_API_KEY='sua_chave'
