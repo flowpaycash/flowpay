@@ -86,3 +86,8 @@
   from = "/login-test"
   to = "/login-test.html"
   status = 200
+
+[[redirects]]
+  from = "/auth/magic"
+  to = "/.netlify/functions/auth-magic-verify"
+  status = 200

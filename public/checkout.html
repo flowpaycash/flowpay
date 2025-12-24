@@ -179,11 +179,17 @@
         <div class="neo-footer__meta">
             <div class="neo-footer__meta__row">
                 <p>&copy; 2024 FLOWPay. Todos os direitos reservados.</p>
-                <div class="neo-footer__links">
-                    <a href="/">Início</a>
-                    <a href="#" id="help-link">Ajuda</a>
-                    <a href="/transparency">Transparência</a>
-                </div>
+                <p class="neo-footer__links">
+                    <a href="https://github.com/flowpaycash/flowpay" target="_blank" rel="noopener">github</a>
+                    <span>•</span>
+                    <a href="/checkout">checkout</a>
+                    <span>•</span>
+                    <a href="/transparency">transparência</a>
+                    <span>•</span>
+                    <a href="/client">cliente</a>
+                    <span>•</span>
+                    <a href="/admin">admin</a>
+                </p>
             </div>
         </div>
     </footer>
@@ -642,16 +648,47 @@
                                     body: JSON.stringify(p)
                                 });
                                 
+                                const responseData = await response.json();
+                                
                                 if (!response.ok) {
-                                    const errorData = await response.json();
-                                    throw new Error(errorData.error || 'Erro na API Woovi');
+                                    // Extrair mensagem de erro mais específica
+                                    let errorMessage = 'Erro ao criar cobrança PIX';
+                                    
+                                    if (responseData.error) {
+                                        errorMessage = responseData.error;
+                                    } else if (responseData.details && responseData.details.apiError) {
+                                        errorMessage = responseData.details.apiError.message || responseData.details.apiError;
+                                    } else if (responseData.message) {
+                                        errorMessage = responseData.message;
+                                    }
+                                    
+                                    // Log detalhado para debug
+                                    console.error("❌ Error creating PIX charge:", {
+                                        status: response.status,
+                                        statusText: response.statusText,
+                                        error: errorMessage,
+                                        details: responseData.details,
+                                        fullResponse: responseData
+                                    });
+                                    
+                                    const error = new Error(errorMessage);
+                                    error.status = response.status;
+                                    error.details = responseData.details;
+                                    throw error;
                                 }
                                 
-                                const result = await response.json();
-                                console.log("✅ PIX charge created successfully:", result);
-                                return result;
+                                console.log("✅ PIX charge created successfully:", responseData);
+                                return responseData;
                             } catch (error) {
-                                console.error("❌ Error creating PIX charge:", error);
+                                // Log completo do erro para debug
+                                console.error("❌ Error creating PIX charge:", {
+                                    message: error.message,
+                                    status: error.status,
+                                    details: error.details,
+                                    stack: error.stack
+                                });
+                                
+                                // Re-throw com mensagem amigável
                                 throw error;
                             }
                         },
