@@ -1,4 +1,4 @@
-# 🔗 QuickNode REST APIs - Exemplos de Uso
+#  QuickNode REST APIs - Exemplos de Uso
 
 ## 📋 Resumo das APIs
 
@@ -12,7 +12,7 @@
 
 ---
 
-## 🎯 Casos de Uso Práticos
+##  Casos de Uso Práticos
 
 ### 1. Armazenar Prova Completa no IPFS
 
@@ -122,7 +122,7 @@ console.log('Arquivo IPFS:', archive.gatewayUrl);
 
 ---
 
-## 🔄 Integração com Fluxo Existente
+##  Integração com Fluxo Existente
 
 ### No settlement-orders.js
 
@@ -155,7 +155,7 @@ await integration.storeProofWithIPFS({
 
 ---
 
-## ⚙️ Configuração Mínima
+##  Configuração Mínima
 
 Para começar, configure apenas:
 
@@ -168,7 +168,7 @@ Isso já habilita armazenamento de provas no IPFS.
 
 ---
 
-## 🚀 Próximos Passos
+## Próximos Passos
 
 1. **Configurar API Key** no QuickNode Dashboard
 2. **Testar IPFS** com uma prova simples

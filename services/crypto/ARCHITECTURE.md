@@ -1,15 +1,15 @@
-# 🏗️ FLOWPay - Arquitetura do Núcleo Cripto
+# FLOWPay - Arquitetura do Núcleo Cripto
 
-## 📐 Princípios Arquiteturais
+## Princípios Arquiteturais
 
 ### 1. Bounded Context Isolado
 
 O módulo `services/crypto/` é um **bounded context** completo:
 
-- ✅ Responsabilidades claras e delimitadas
-- ✅ Pode evoluir sem contaminar o gateway PIX
-- ✅ Interface bem definida com o resto do sistema
-- ✅ Testável de forma independente
+- Responsabilidades claras e delimitadas
+- Pode evoluir sem contaminar o gateway PIX
+- Interface bem definida com o resto do sistema
+- Testável de forma independente
 
 **Isso não é hype. É arquitetura adulta.**
 
@@ -19,14 +19,15 @@ O módulo `services/crypto/` é um **bounded context** completo:
 
 O fluxo está correto **do ponto de vista lógico**:
 
-```
+```text
 PIX confirmado → liquidação → transferência → prova → retorno
 ```
 
 **Não misturamos:**
-- ❌ Prova com liquidação
-- ❌ Identidade com UX
-- ❌ Regras de negócio com detalhes técnicos
+
+- Prova com liquidação
+- Identidade com UX
+- Regras de negócio com detalhes técnicos
 
 Cada coisa no seu lugar. Isso evita bugs jurídicos e bugs mentais.
 
@@ -36,10 +37,10 @@ Cada coisa no seu lugar. Isso evita bugs jurídicos e bugs mentais.
 
 Tratar wallet como entidade própria (não detalhe técnico) é essencial para:
 
-- ✅ Recorrência
-- ✅ Contratos
-- ✅ Rastreabilidade
-- ✅ Prova posterior
+- Recorrência
+- Contratos
+- Rastreabilidade
+- Prova posterior
 
 Isso casa perfeitamente com a ideia de **pagamento como assinatura**.
 
@@ -58,7 +59,7 @@ Isso casa perfeitamente com a ideia de **pagamento como assinatura**.
 ### Diferença Fundamental
 
 | Conversão Automática | Liquidação Programável |
-|---------------------|------------------------|
+| -------------------- | ---------------------- |
 | Implica automação perfeita | Admite estratégias flexíveis |
 | Risco regulatório alto | Regras claras e auditáveis |
 | Dependência de liquidez perfeita | Suporta janelas e delegação |
@@ -66,23 +67,26 @@ Isso casa perfeitamente com a ideia de **pagamento como assinatura**.
 
 ---
 
-## 🔄 Estratégias de Liquidação
+## Estratégias de Liquidação
 
 O sistema suporta três estratégias:
 
 ### 1. `auto` (Automática)
+
 - Liquidação imediata
 - Requer liquidez disponível
 - Para volumes pequenos/médios
 - Risco: Dependência de provedor
 
 ### 2. `manual` (Manual)
+
 - Aguarda aprovação humana
 - Para volumes maiores
 - Controle de compliance
 - Risco: Latência operacional
 
 ### 3. `deferred` (Agendada)
+
 - Liquidação em janelas específicas
 - Otimização de custos
 - Batching de transações
@@ -90,7 +94,7 @@ O sistema suporta três estratégias:
 
 ---
 
-## 🎯 Ponto Único de Integração
+## Ponto Único de Integração
 
 Tudo entra em um único lugar:
 
@@ -135,6 +139,7 @@ if (pix.status === 'CONFIRMED') {
 **`settle ≠ transfer`**
 
 Isso te salva em 100 cenários futuros:
+
 - Liquidação pode estar pronta mas transferência aguardar
 - Transferência pode falhar mas liquidação estar registrada
 - Prova pode ser escrita independente do status da transferência
@@ -159,9 +164,10 @@ A frase "Liquida BRL → USDT" não é apenas código. É:
 O v0 do FlowPay **não pode depender de liquidação automática perfeita**.
 
 Deve suportar:
-- ✅ Liquidação assistida
-- ✅ Liquidação em janelas
-- ✅ Liquidação delegada
+
+- Liquidação assistida
+- Liquidação em janelas
+- Liquidação delegada
 
 **O código já está preparado. A narrativa precisa refletir.**
 
@@ -172,14 +178,16 @@ SERVICE_WALLET_PRIVATE_KEY=0x...
 ```
 
 Aceitável apenas como:
-- ✅ Protótipo controlado
-- ✅ Volume baixo
-- ✅ Wallet de serviço isolada
-- ✅ Limites rígidos
+
+- Protótipo controlado
+- Volume baixo
+- Wallet de serviço isolada
+- Limites rígidos
 
 **Arquiteturalmente, você já fez o certo ao centralizar isso num módulo.**
 
 Depois troca por:
+
 - HSM
 - Custodian
 - MPC
@@ -189,28 +197,30 @@ Depois troca por:
 
 ---
 
-## ✅ O que você tem agora (Verdade Objetiva)
+## O que você tem agora (Verdade Objetiva)
 
-### Você TEM:
+### Você TEM
 
-- ✅ Gateway PIX funcional
-- ✅ Núcleo cripto coerente
-- ✅ Manifesto alinhado com execução
-- ✅ Arquitetura que pode operar em silêncio
-- ✅ Separação de domínios madura
-- ✅ Fluxo lógico correto
 
-### Você NÃO TEM ainda:
+- Gateway PIX funcional
+- Núcleo cripto coerente
+- Manifesto alinhado com execução
+- Arquitetura que pode operar em silêncio
+- Separação de domínios madura
+- Fluxo lógico correto
 
-- ❌ Escala
-- ❌ Automação total
-- ❌ Blindagem regulatória completa
+### Você NÃO TEM ainda
+
+
+- Escala
+- Automação total
+- Blindagem regulatória completa
 
 **E isso é absolutamente normal para um v0 real.**
 
 ---
 
-## 🚀 Próximos Passos Arquiteturais
+## Próximos Passos Arquiteturais
 
 1. **Implementar estratégias de liquidação** (auto/manual/deferred)
 2. **Adicionar janelas de liquidação** (batching)

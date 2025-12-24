@@ -1,23 +1,23 @@
-// 📝 FLOWPay - Write Proof Service
+// FLOWPay - Write Proof Service
 // Escreve eventos/provas on-chain sem tocar em dinheiro
+// Usa Base (EVM) via QuickNode - função: registrar fatos, confirmar estados, auditar
 
-const { getQuickNodeClient } = require('./quicknode');
-const { getQuickNodeIntegration } = require('./quicknode-integration');
+const { getQuickNodeBase } = require('./quicknode-base');
 const { secureLog } = require('../../netlify/functions/config');
 const crypto = require('crypto');
 
 class WriteProof {
   constructor() {
-    this.quicknode = getQuickNodeClient();
-    this.integration = getQuickNodeIntegration();
-    
+    // QuickNode Base endpoint (proof layer)
+    this.quicknodeBase = getQuickNodeBase();
+
     // Endereço do contrato de prova (se existir)
     // Em produção, deployar um contrato simples para registrar eventos
     this.proofContractAddress = process.env.PROOF_CONTRACT_ADDRESS || '';
-    
-    // Usar IPFS para armazenar provas completas (opcional)
-    this.useIPFS = process.env.QUICKNODE_IPFS_REST ? true : false;
-    
+
+    // IPFS desabilitado no v0 (não usar agora)
+    this.useIPFS = false;
+
     // ABI mínimo para escrita de eventos
     this.proofContractABI = [
       {
@@ -48,14 +48,27 @@ class WriteProof {
   /**
    * Escreve prova on-chain (evento)
    * @param {object} proofData - Dados da prova
-   * @param {string} proofData.pixChargeId - ID da cobrança PIX
-   * @param {string} proofData.txHash - Hash da transação USDT
-   * @param {string} proofData.recipientWallet - Wallet do destinatário
-   * @param {number} proofData.amountBRL - Valor em BRL
-   * @param {number} proofData.amountUSDT - Valor em USDT
-   * @param {string} proofData.network - Rede blockchain
-   * @param {object} proofData.metadata - Metadados adicionais
-   * @returns {object} Resultado com tx hash da prova
+   * @param {string} proofData.pixChargeId - ID da cobrança PIX (obrigatório)
+   * @param {string} proofData.txHash - Hash da transação USDT (obrigatório, formato 0x...)
+   * @param {string} proofData.recipientWallet - Wallet do destinatário (obrigatório, formato 0x...)
+   * @param {number} [proofData.amountBRL] - Valor em BRL (opcional)
+   * @param {number} [proofData.amountUSDT] - Valor em USDT (opcional)
+   * @param {string} [proofData.network='ethereum'] - Rede blockchain
+   * @param {object} [proofData.metadata={}] - Metadados adicionais
+   * @returns {Promise<object>} Resultado com tx hash da prova
+   * @returns {object.success} boolean - Indica sucesso da operação
+   * @returns {object.proof} object - Dados da prova registrada
+   * @returns {object.proof.id} string - ID único da prova
+   * @returns {object.proof.txHash} string - Hash da transação de prova
+   * @returns {object.proof.pixChargeId} string - ID da cobrança PIX
+   * @returns {object.proof.usdtTxHash} string - Hash da transação USDT original
+   * @returns {object.proof.recipientWallet} string - Wallet do destinatário (mascarado)
+   * @returns {object.proof.network} string - Rede blockchain ('base')
+   * @returns {object.proof.chainId} number - Chain ID (8453 para Base)
+   * @returns {object.proof.blockNumber} string - Número do bloco
+   * @returns {object.proof.timestamp} string - Timestamp ISO
+   * @throws {Error} Se pixChargeId, txHash ou recipientWallet forem inválidos
+   * @throws {Error} Se formato de endereço ou hash for inválido
    */
   async writeProof(proofData) {
     try {
@@ -80,6 +93,17 @@ class WriteProof {
 
       if (!recipientWallet) {
         throw new Error('recipientWallet é obrigatório');
+      }
+
+      // Validar formato de endereço Ethereum
+      const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+      if (!ethAddressRegex.test(recipientWallet)) {
+        throw new Error('recipientWallet inválido. Deve ser um endereço Ethereum válido (0x...)');
+      }
+
+      // Validar formato de txHash
+      if (!txHash.startsWith('0x') || txHash.length !== 66) {
+        throw new Error('txHash inválido. Deve ser um hash de transação válido (0x seguido de 64 caracteres hexadecimais)');
       }
 
       secureLog('info', 'Iniciando escrita de prova on-chain', {
@@ -115,32 +139,16 @@ class WriteProof {
         network
       );
 
-      // Opcional: Armazenar prova completa no IPFS
-      let ipfsResult = null;
-      if (this.useIPFS) {
-        try {
-          ipfsResult = await this.integration.storeProofWithIPFS({
-            pixChargeId,
-            txHash,
-            recipientWallet,
-            amountBRL,
-            amountUSDT,
-            network,
-            metadata
-          });
-        } catch (ipfsError) {
-          // Não falhar se IPFS falhar
-          secureLog('warn', 'Erro ao armazenar no IPFS (não crítico)', {
-            error: ipfsError.message
-          });
-        }
-      }
+      // IPFS desabilitado no v0 (não usar agora)
+      // NOTA: Se IPFS for necessário no futuro, usar quicknode-rest.js diretamente,
+      // não quicknode-integration.js, para evitar dependência circular:
+      // - quicknode-integration.js já usa write-proof.js
+      // - write-proof.js não deve usar quicknode-integration.js
 
       secureLog('info', 'Prova escrita on-chain com sucesso', {
         proofId,
         proofTxHash: result.txHash,
-        network,
-        ipfsHash: ipfsResult?.ipfs?.ipfsHash || null
+        network: 'base'
       });
 
       return {
@@ -151,14 +159,10 @@ class WriteProof {
           pixChargeId,
           usdtTxHash: txHash,
           recipientWallet: this.maskAddress(recipientWallet),
-          network,
+          network: 'base',
+          chainId: 8453,
           blockNumber: result.blockNumber,
-          timestamp: new Date().toISOString(),
-          ipfs: ipfsResult ? {
-            hash: ipfsResult.ipfs.ipfsHash,
-            url: ipfsResult.ipfs.ipfsUrl,
-            gatewayUrl: ipfsResult.ipfs.gatewayUrl
-          } : null
+          timestamp: new Date().toISOString()
         }
       };
 
@@ -183,13 +187,16 @@ class WriteProof {
    */
   async writeToBlockchain(proofId, pixChargeId, txHash, metadata, network) {
     try {
+      // SEMPRE usar Base para provas (independente da rede de liquidação)
+      const networkForProof = 'base';
+
       // Se não houver contrato configurado, usar método alternativo
       if (!this.proofContractAddress || process.env.NODE_ENV === 'development') {
-        return await this.writeProofAlternative(proofId, pixChargeId, txHash, metadata, network);
+        return await this.writeProofAlternative(proofId, pixChargeId, txHash, metadata, networkForProof);
       }
 
-      // Modo produção: escrever em smart contract
-      const walletClient = this.quicknode.getWalletClient(network);
+      // Modo produção: escrever em smart contract na Base
+      const walletClient = this.quicknodeBase.getWalletClient();
 
       // Converter proofId para bytes32
       const proofIdBytes = `0x${proofId.substring(0, 64)}`;
@@ -205,7 +212,7 @@ class WriteProof {
       });
 
       // Aguardar confirmação
-      const publicClient = this.quicknode.getPublicClient(network);
+      const publicClient = this.quicknodeBase.getPublicClient();
       const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
       return {
@@ -217,7 +224,7 @@ class WriteProof {
     } catch (error) {
       secureLog('error', 'Erro ao escrever na blockchain', {
         error: error.message,
-        network
+        network: 'base'
       });
       throw error;
     }
@@ -237,11 +244,11 @@ class WriteProof {
     try {
       secureLog('info', 'Usando método alternativo de escrita (desenvolvimento)', {
         proofId,
-        network
+        network: 'base'
       });
 
       // Em desenvolvimento, apenas simular
-      // Em produção, pode usar um contrato simples ou armazenar em IPFS/Arweave
+      // Em produção, deployar contrato simples na Base
       const mockTxHash = `0x${crypto.randomBytes(32).toString('hex')}`;
 
       // Log estruturado da prova (pode ser indexado depois)
@@ -287,14 +294,15 @@ class WriteProof {
         };
       }
 
-      const publicClient = this.quicknode.getPublicClient(network);
+      const publicClient = this.quicknodeBase.getPublicClient();
 
-      // Buscar evento ProofRecorded
+      // Buscar evento ProofRecorded na Base
       // TODO: Implementar busca de eventos do contrato
-      
+
       return {
         found: false,
-        message: 'Verificação de prova não implementada'
+        message: 'Verificação de prova não implementada',
+        network: 'base'
       };
 
     } catch (error) {

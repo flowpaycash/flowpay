@@ -1,17 +1,20 @@
-# 🔗 FLOWPay - QuickNode REST APIs Integration
+# FLOWPay - QuickNode REST APIs Integration
 
-## 📦 APIs Disponíveis
+## APIs Disponíveis
 
 ### 1. IPFS_REST
+
 **Uso**: Armazenamento descentralizado de metadados e provas
 
 **Aplicações no FlowPay:**
-- ✅ Armazenar provas completas de forma imutável
-- ✅ Backup de transações
-- ✅ Metadados de liquidações
-- ✅ Histórico auditável
+
+- Armazenar provas completas de forma imutável
+- Backup de transações
+- Metadados de liquidações
+- Histórico auditável
 
 **Exemplo:**
+
 ```javascript
 const { getQuickNodeREST } = require('./quicknode-rest');
 
@@ -29,15 +32,18 @@ const result = await rest.storeInIPFS({
 ---
 
 ### 2. KV_REST
+
 **Uso**: Key-Value storage para cache e estado temporário
 
 **Aplicações no FlowPay:**
-- ✅ Cache de ordens de liquidação
-- ✅ Estado temporário de transações
-- ✅ Configurações por usuário
-- ✅ Rate limiting data
+
+- Cache de ordens de liquidação
+- Estado temporário de transações
+- Configurações por usuário
+- Rate limiting data
 
 **Exemplo:**
+
 ```javascript
 // Armazenar
 await rest.setKV('settlement_order:abc123', orderData, 86400); // 24h TTL
@@ -49,15 +55,18 @@ const order = await rest.getKV('settlement_order:abc123');
 ---
 
 ### 3. STREAMS_REST
+
 **Uso**: Monitorar eventos blockchain em tempo real
 
 **Aplicações no FlowPay:**
-- ✅ Monitorar transferências USDT
-- ✅ Confirmar transações automaticamente
-- ✅ Detectar eventos de contratos
-- ✅ Atualizar status em tempo real
+
+- Monitorar transferências USDT
+- Confirmar transações automaticamente
+- Detectar eventos de contratos
+- Atualizar status em tempo real
 
 **Exemplo:**
+
 ```javascript
 // Monitorar transferências USDT
 await rest.monitorUSDTTransfers(
@@ -70,15 +79,18 @@ await rest.monitorUSDTTransfers(
 ---
 
 ### 4. WEBHOOKS_REST
+
 **Uso**: Receber notificações de eventos blockchain
 
 **Aplicações no FlowPay:**
-- ✅ Notificar quando transação confirmada
-- ✅ Alertar sobre falhas
-- ✅ Atualizar status de ordens
-- ✅ Sincronizar estado
+
+- Notificar quando transação confirmada
+- Alertar sobre falhas
+- Atualizar status de ordens
+- Sincronizar estado
 
 **Exemplo:**
+
 ```javascript
 // Criar webhook para eventos de transferência
 await rest.createWebhook({
@@ -92,13 +104,14 @@ await rest.createWebhook({
 ---
 
 ### 5. FUNCTIONS_REST
+
 **Uso**: Funções personalizadas (⚠️ Descontinuado em breve)
 
 **Nota**: Esta API está sendo descontinuada. Não recomendado para novos projetos.
 
 ---
 
-## 🎯 Casos de Uso no FlowPay
+## Casos de Uso no FlowPay
 
 ### Caso 1: Prova Completa com IPFS
 
@@ -155,7 +168,7 @@ await integration.archiveTransactions(transactions);
 
 ---
 
-## ⚙️ Configuração
+## Configuração
 
 ### Variáveis de Ambiente
 
@@ -175,9 +188,9 @@ URL=https://flowpaypix.netlify.app
 
 ---
 
-## 🔄 Fluxo Integrado
+## Fluxo Integrado
 
-```
+```text
 1. PIX confirmado
    ↓
 2. Criar ordem de liquidação
@@ -201,35 +214,39 @@ URL=https://flowpaypix.netlify.app
 
 ---
 
-## ✅ Benefícios
+## Benefícios
 
 ### IPFS
-- ✅ Provas imutáveis e descentralizadas
-- ✅ Backup automático
-- ✅ Acesso via gateway público
-- ✅ Histórico completo
+
+- Provas imutáveis e descentralizadas
+- Backup automático
+- Acesso via gateway público
+- Histórico completo
 
 ### KV
-- ✅ Cache rápido
-- ✅ Estado temporário
-- ✅ TTL automático
-- ✅ Baixa latência
+
+- Cache rápido
+- Estado temporário
+- TTL automático
+- Baixa latência
 
 ### Streams
-- ✅ Monitoramento em tempo real
-- ✅ Confirmações automáticas
-- ✅ Sem polling
-- ✅ Eficiente
+
+- Monitoramento em tempo real
+- Confirmações automáticas
+- Sem polling
+- Eficiente
 
 ### Webhooks
-- ✅ Notificações instantâneas
-- ✅ Atualização automática
-- ✅ Sincronização de estado
-- ✅ Reduz carga no servidor
+
+- Notificações instantâneas
+- Atualização automática
+- Sincronização de estado
+- Reduz carga no servidor
 
 ---
 
-## 🚀 Próximos Passos
+## Próximos Passos
 
 - [ ] Configurar variáveis de ambiente
 - [ ] Testar armazenamento IPFS

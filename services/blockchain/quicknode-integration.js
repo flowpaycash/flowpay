@@ -1,4 +1,4 @@
-// 🔗 FLOWPay - QuickNode Integration Service
+// FLOWPay - QuickNode Integration Service
 // Integra todas as APIs REST do QuickNode para uso no FlowPay
 
 const { getQuickNodeREST } = require('./quicknode-rest');
@@ -64,7 +64,7 @@ class QuickNodeIntegration {
   async cacheSettlementOrder(orderId, orderData, ttl = 86400) {
     try {
       const key = `settlement_order:${orderId}`;
-      
+
       await this.rest.setKV(key, orderData, ttl);
 
       secureLog('info', 'Ordem de liquidação armazenada no KV', {

@@ -1,6 +1,6 @@
-# ✅ Núcleo Cripto - Implementação Completa
+#  Núcleo Cripto - Implementação Completa
 
-## 📦 Arquivos Criados
+##  Arquivos Criados
 
 ### 1. `wallet-registry.js` ✅
 - Gerencia registro de wallets de usuários
@@ -27,7 +27,7 @@
 - Método: POST
 - Integra todos os serviços
 
-## 🔄 Fluxo Implementado
+##  Fluxo Implementado
 
 ```
 1. Recebe instrução de valor (BRL)
@@ -41,7 +41,7 @@
 5. Retorna resultado completo
 ```
 
-## 📝 Próximos Passos
+##  Próximos Passos
 
 ### Webhook Handler
 O arquivo `netlify/functions/webhook-handler.js` precisa ser atualizado para usar os novos serviços.
@@ -96,7 +96,7 @@ try {
 }
 ```
 
-## ⚙️ Variáveis de Ambiente Necessárias
+##  Variáveis de Ambiente Necessárias
 
 Adicionar ao `.env.example`:
 
@@ -116,7 +116,7 @@ POLYGON_RPC_URL=https://polygon-rpc.com
 BSC_RPC_URL=https://bsc-dataseed.binance.org
 ```
 
-## ✅ Status
+##  Status
 
 - [x] Estrutura criada
 - [x] Wallet Registry implementado

@@ -1,51 +1,73 @@
-// 💸 FLOWPay - USDT Transfer Service
+// FLOWPay - USDT Transfer Service
 // Envia USDT para wallets cadastradas dos usuários
+// Usa QuickNode Settlement endpoint (Polygon OU BSC) - função: liquidação USDT
 
+const crypto = require('crypto');
 const { secureLog, logAPIError } = require('../../netlify/functions/config');
 const { getWalletRegistry } = require('./wallet-registry');
+const { getQuickNodeSettlement } = require('../blockchain/quicknode-settlement');
 
 class USDTTransfer {
   constructor() {
-    // Configurações de rede USDT
+    // QuickNode Settlement endpoint (Polygon OU BSC)
+    this.quicknodeSettlement = getQuickNodeSettlement();
+
+    // Rede de liquidação (configurada via USDT_SETTLEMENT_NETWORK)
+    this.settlementNetwork = this.quicknodeSettlement.getNetwork();
+
+    // Configurações de rede USDT (apenas para referência)
     this.networks = {
-      ethereum: {
-        name: 'Ethereum',
-        chainId: 1,
-        contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT on Ethereum
-        decimals: 6,
-        rpcUrl: process.env.ETHEREUM_RPC_URL || 'https://mainnet.infura.io/v3/' + (process.env.INFURA_KEY || '')
-      },
       polygon: {
         name: 'Polygon',
         chainId: 137,
         contractAddress: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', // USDT on Polygon
-        decimals: 6,
-        rpcUrl: process.env.POLYGON_RPC_URL || 'https://polygon-rpc.com'
+        decimals: 6
       },
       bsc: {
         name: 'BSC',
         chainId: 56,
         contractAddress: '0x55d398326f99059fF775485246999027B3197955', // USDT on BSC
-        decimals: 18,
-        rpcUrl: process.env.BSC_RPC_URL || 'https://bsc-dataseed.binance.org'
+        decimals: 18
       }
     };
 
     // Wallet do serviço (hot wallet para envios)
     this.serviceWallet = {
       address: process.env.SERVICE_WALLET_ADDRESS || '',
-      privateKey: process.env.SERVICE_WALLET_PRIVATE_KEY || '' // Em produção, usar gerenciamento seguro
+      privateKey: process.env.SERVICE_WALLET_PRIVATE_KEY || ''
     };
+
+    // Validar formato do endereço da wallet do serviço (se configurado)
+    if (this.serviceWallet.address) {
+      const walletRegistry = getWalletRegistry();
+      if (!walletRegistry.isValidAddress(this.serviceWallet.address)) {
+        secureLog('warn', 'Endereço da wallet do serviço inválido. Verifique SERVICE_WALLET_ADDRESS');
+      }
+    }
   }
 
   /**
    * Transfere USDT para wallet do usuário
    * @param {string} userId - ID do usuário
-   * @param {string} toAddress - Endereço de destino
-   * @param {number} amountUSDT - Quantidade de USDT
-   * @param {string} network - Rede blockchain (ethereum, polygon, bsc)
-   * @param {string} correlationId - ID de correlação da transação
-   * @returns {object} Resultado da transferência
+   * @param {string} toAddress - Endereço Ethereum de destino (0x...)
+   * @param {number} amountUSDT - Quantidade de USDT (deve ser > 0)
+   * @param {string} [network='ethereum'] - Rede blockchain (ethereum, polygon, bsc)
+   * @param {string} [correlationId] - ID de correlação da transação PIX
+   * @returns {Promise<object>} Resultado da transferência
+   * @returns {object.success} boolean - Indica sucesso da operação
+   * @returns {object.transaction} object - Dados da transação
+   * @returns {object.transaction.hash} string - Hash da transação
+   * @returns {object.transaction.from} string - Endereço de origem (mascarado)
+   * @returns {object.transaction.to} string - Endereço de destino (mascarado)
+   * @returns {object.transaction.amount} number - Quantidade de USDT
+   * @returns {object.transaction.currency} string - Moeda ('USDT')
+   * @returns {object.transaction.network} string - Rede blockchain
+   * @returns {object.transaction.status} string - Status da transação
+   * @returns {object.transaction.timestamp} string - Timestamp ISO
+   * @returns {object.transaction.correlationId} string - ID de correlação
+   * @throws {Error} Se validações falharem (userId, endereço, quantidade, rede)
+   * @throws {Error} Se wallet não estiver registrada ou não pertencer ao usuário
+   * @throws {Error} Se wallet do serviço não estiver configurada
    */
   async transferUSDT(userId, toAddress, amountUSDT, network = 'ethereum', correlationId = null) {
     try {
@@ -58,20 +80,30 @@ class USDTTransfer {
         throw new Error('Endereço de destino é obrigatório');
       }
 
+      // Validar formato de endereço Ethereum
+      const walletRegistry = getWalletRegistry();
+      if (!walletRegistry.isValidAddress(toAddress)) {
+        throw new Error('Endereço de destino inválido. Deve ser um endereço Ethereum válido (0x...)');
+      }
+
       if (!amountUSDT || amountUSDT <= 0) {
         throw new Error('Quantidade de USDT deve ser maior que zero');
       }
 
-      // Validar rede
-      const networkConfig = this.networks[network.toLowerCase()];
+      // Validar rede (deve ser a rede de liquidação configurada)
+      const requestedNetwork = network.toLowerCase();
+      if (requestedNetwork !== this.settlementNetwork) {
+        throw new Error(`Rede de liquidação configurada é ${this.settlementNetwork}, mas foi solicitado ${network}`);
+      }
+
+      const networkConfig = this.networks[this.settlementNetwork];
       if (!networkConfig) {
-        throw new Error(`Rede não suportada: ${network}. Suportadas: ${Object.keys(this.networks).join(', ')}`);
+        throw new Error(`Rede de liquidação não suportada: ${this.settlementNetwork}`);
       }
 
       // Validar wallet do usuário
-      const walletRegistry = getWalletRegistry();
       const isValidWallet = await walletRegistry.validateUserWallet(userId, toAddress);
-      
+
       if (!isValidWallet) {
         throw new Error('Wallet não registrada ou não pertence ao usuário');
       }
@@ -79,6 +111,11 @@ class USDTTransfer {
       // Validar wallet do serviço
       if (!this.serviceWallet.address || !this.serviceWallet.privateKey) {
         throw new Error('Wallet do serviço não configurada');
+      }
+
+      // Validar formato do endereço da wallet do serviço
+      if (!walletRegistry.isValidAddress(this.serviceWallet.address)) {
+        throw new Error('Endereço da wallet do serviço inválido');
       }
 
       secureLog('info', 'Iniciando transferência USDT', {
@@ -89,7 +126,7 @@ class USDTTransfer {
         correlationId
       });
 
-      // Executar transferência
+      // Executar transferência usando QuickNode Settlement
       const transferResult = await this.executeTransfer(
         toAddress,
         amountUSDT,
@@ -104,7 +141,7 @@ class USDTTransfer {
       try {
         const { getWriteProof } = require('../blockchain/write-proof');
         const writeProof = getWriteProof();
-        
+
         await writeProof.writeProof({
           pixChargeId: correlationId || `transfer_${Date.now()}`,
           txHash: transferResult.txHash,
@@ -171,15 +208,14 @@ class USDTTransfer {
    */
   async executeTransfer(toAddress, amountUSDT, networkConfig, correlationId) {
     try {
-      // Em produção, usar biblioteca Web3 ou ethers.js
-      // Por enquanto, simular transferência
-      
+      // Usar QuickNode Settlement endpoint para transferência
+
       if (process.env.NODE_ENV === 'development' || !this.serviceWallet.privateKey) {
         // Modo desenvolvimento: simular transferência
         secureLog('info', 'Simulando transferência USDT (modo desenvolvimento)', {
           toAddress: this.maskAddress(toAddress),
           amountUSDT,
-          network: networkConfig.name
+          network: this.settlementNetwork
         });
 
         // Gerar hash simulado
@@ -188,48 +224,13 @@ class USDTTransfer {
         return {
           txHash: mockTxHash,
           status: 'simulated',
-          network: networkConfig.name
+          network: this.settlementNetwork
         };
       }
 
-      // Modo produção: executar transferência real
-      // TODO: Implementar com Web3/ethers.js
-      /*
-      const Web3 = require('web3');
-      const web3 = new Web3(networkConfig.rpcUrl);
-      
-      // Carregar contrato USDT (ERC-20)
-      const contractABI = [/* ABI do contrato USDT */];
-      const contract = new web3.eth.Contract(contractABI, networkConfig.contractAddress);
-      
-      // Converter amount para wei/smallest unit
-      const amount = web3.utils.toBN(amountUSDT * Math.pow(10, networkConfig.decimals));
-      
-      // Criar transação
-      const account = web3.eth.accounts.privateKeyToAccount(this.serviceWallet.privateKey);
-      web3.eth.accounts.wallet.add(account);
-      
-      const tx = contract.methods.transfer(toAddress, amount);
-      const gas = await tx.estimateGas({ from: account.address });
-      const gasPrice = await web3.eth.getGasPrice();
-      
-      const txData = tx.encodeABI();
-      const signedTx = await web3.eth.accounts.signTransaction({
-        to: networkConfig.contractAddress,
-        data: txData,
-        gas,
-        gasPrice,
-        nonce: await web3.eth.getTransactionCount(account.address)
-      }, this.serviceWallet.privateKey);
-      
-      const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-      
-      return {
-        txHash: receipt.transactionHash,
-        status: 'completed',
-        network: networkConfig.name
-      };
-      */
+      // Modo produção: executar transferência real via QuickNode Settlement
+      // TODO: Implementar com viem para interagir com contrato USDT
+      // Por enquanto, lançar erro para forçar implementação
 
       throw new Error('Transferência real não implementada. Configure SERVICE_WALLET_PRIVATE_KEY para produção.');
 
@@ -249,29 +250,25 @@ class USDTTransfer {
    * @param {string} network - Rede blockchain
    * @returns {object} Status da transação
    */
-  async getTransactionStatus(txHash, network = 'ethereum') {
+  async getTransactionStatus(txHash, network = null) {
     try {
-      const networkConfig = this.networks[network.toLowerCase()];
-      if (!networkConfig) {
-        throw new Error(`Rede não suportada: ${network}`);
+      // Usar rede de liquidação configurada
+      const checkNetwork = network || this.settlementNetwork;
+
+      if (checkNetwork !== this.settlementNetwork) {
+        throw new Error(`Rede de liquidação configurada é ${this.settlementNetwork}, mas foi solicitado ${checkNetwork}`);
       }
 
-      // Em produção, consultar blockchain
-      // Por enquanto, retornar status mockado
-      
-      secureLog('info', 'Verificando status da transação', {
+      // Consultar status via QuickNode Settlement
+      const status = await this.quicknodeSettlement.getTransactionStatus(txHash);
+
+      secureLog('info', 'Status da transação verificado', {
         txHash: this.maskAddress(txHash),
-        network
+        network: this.settlementNetwork,
+        status: status.status
       });
 
-      // Mock: sempre confirmada em desenvolvimento
-      return {
-        hash: txHash,
-        status: 'confirmed',
-        confirmations: 12,
-        network,
-        timestamp: new Date().toISOString()
-      };
+      return status;
 
     } catch (error) {
       secureLog('error', 'Erro ao verificar status da transação', {
@@ -297,7 +294,7 @@ class USDTTransfer {
 
       // Em produção, consultar blockchain
       // Por enquanto, retornar saldo mockado
-      
+
       secureLog('info', 'Verificando saldo da wallet do serviço', {
         network,
         address: this.maskAddress(this.serviceWallet.address)

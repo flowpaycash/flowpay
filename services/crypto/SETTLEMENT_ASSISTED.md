@@ -1,21 +1,21 @@
 # 💼 FLOWPay - Liquidação Assistida
 
-## 🎯 Conceito
+##  Conceito
 
 **Liquidação assistida não é gambiarra. É controle consciente do risco no momento certo do projeto.**
 
 ### O que significa
 
-- ✅ PIX entra automaticamente
-- ✅ Pagamento confirmado automaticamente
-- ✅ **Intenção de liquidação** registrada automaticamente
-- ✅ **Execução da conversão e envio** acontece com validação humana
+- PIX entra automaticamente
+- Pagamento confirmado automaticamente
+- **Intenção de liquidação** registrada automaticamente
+- **Execução da conversão e envio** acontece com validação humana
 
 **O sistema decide quando pode decidir sozinho.**
 
 ---
 
-## 🔄 Fluxo Real
+##  Fluxo Real
 
 ```
 1. PIX confirmado (webhook)
@@ -109,7 +109,7 @@ Body:
 
 ---
 
-## ✅ Por que isso funciona
+##  Por que isso funciona
 
 ### 1. Não trava
 - Sistema continua funcionando mesmo sem liquidação imediata
@@ -128,7 +128,7 @@ Body:
 
 ---
 
-## 🚀 Próximos Passos
+## Próximos Passos
 
 - [ ] Persistência em banco (atualmente em memória)
 - [ ] Notificações quando nova ordem criada

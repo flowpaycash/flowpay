@@ -1,4 +1,4 @@
-// 🔗 FLOWPay - QuickNode Client
+// FLOWPay - QuickNode Client
 // Cliente para conexão com blockchains via QuickNode RPC
 
 const { createPublicClient, createWalletClient, http } = require('viem');
@@ -43,7 +43,7 @@ class QuickNodeClient {
    */
   getPublicClient(network = 'ethereum') {
     const networkKey = network.toLowerCase();
-    
+
     if (this.clients[`public_${networkKey}`]) {
       return this.clients[`public_${networkKey}`];
     }
@@ -64,7 +64,7 @@ class QuickNodeClient {
     });
 
     this.clients[`public_${networkKey}`] = client;
-    
+
     secureLog('info', 'Cliente QuickNode público criado', {
       network,
       rpcUrl: this.maskUrl(rpcUrl)
@@ -80,7 +80,7 @@ class QuickNodeClient {
    */
   getWalletClient(network = 'ethereum') {
     const networkKey = network.toLowerCase();
-    
+
     if (this.clients[`wallet_${networkKey}`]) {
       return this.clients[`wallet_${networkKey}`];
     }
@@ -108,7 +108,7 @@ class QuickNodeClient {
     });
 
     this.clients[`wallet_${networkKey}`] = client;
-    
+
     secureLog('info', 'Cliente QuickNode wallet criado', {
       network,
       address: this.maskAddress(account.address),
@@ -210,7 +210,7 @@ class QuickNodeClient {
    */
   maskUrl(url) {
     if (!url) return '[REDACTED]';
-    
+
     try {
       const urlObj = new URL(url);
       const masked = `${urlObj.protocol}//${urlObj.hostname.substring(0, 10)}...${urlObj.pathname}`;

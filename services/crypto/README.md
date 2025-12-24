@@ -1,10 +1,10 @@
-# 🔐 FLOWPay - Núcleo Cripto
+# FLOWPay - Núcleo Cripto
 
 **Liquidação programável de pagamentos em cripto.**
 
 Serviços isolados para processar liquidação de pagamentos PIX em USDT conforme regras claras e auditáveis.
 
-## 📦 Estrutura
+## Estrutura
 
 ```text
 services/crypto/
@@ -14,7 +14,7 @@ services/crypto/
 └── README.md               # Esta documentação
 ```
 
-## 🎯 Responsabilidades
+## Responsabilidades
 
 ### 1. Wallet Registry (`wallet-registry.js`)
 
@@ -39,7 +39,7 @@ services/crypto/
 - Valida wallets antes de transferir
 - Rastreia status de transações
 
-## 🔄 Fluxo Completo
+## Fluxo Completo
 
 ```text
 1. PIX confirmado
@@ -59,7 +59,7 @@ services/crypto/
 
 **Importante**: `settle ≠ transfer`. Liquidação e transferência são etapas distintas.
 
-## 📝 Uso
+## Uso
 
 ### Via Webhook (Liquidação Programável)
 
@@ -104,7 +104,7 @@ if (settlement.ready) {
 }
 ```
 
-## ⚙️ Configuração
+## Configuração
 
 ### Variáveis de Ambiente
 
@@ -124,7 +124,7 @@ POLYGON_RPC_URL=https://polygon-rpc.com
 BSC_RPC_URL=https://bsc-dataseed.binance.org
 ```
 
-## 🔒 Segurança
+## Segurança
 
 - Wallets e chaves privadas nunca são logadas
 - Endereços são mascarados em logs
@@ -132,7 +132,7 @@ BSC_RPC_URL=https://bsc-dataseed.binance.org
 - Rate limiting aplicado
 - Dados sensíveis redatados
 
-## 🚀 Próximos Passos
+## Próximos Passos
 
 - [ ] Integração real com provedor de liquidez
 - [ ] Implementação de transferências reais na blockchain

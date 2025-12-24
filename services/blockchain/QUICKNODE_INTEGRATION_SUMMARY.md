@@ -1,6 +1,6 @@
-# ✅ FLOWPay - QuickNode Integration Summary
+#  FLOWPay - QuickNode Integration Summary
 
-## 🎯 O Que Foi Implementado
+##  O Que Foi Implementado
 
 ### 1. API REST Client (`quicknode-rest.js`)
 
@@ -85,7 +85,7 @@ await rest.monitorWallets(
 
 ---
 
-## 🔄 Fluxo Completo
+##  Fluxo Completo
 
 ```
 1. PIX confirmado (Woovi webhook)
@@ -107,7 +107,7 @@ await rest.monitorWallets(
 
 ---
 
-## ⚙️ Variáveis de Ambiente
+##  Variáveis de Ambiente
 
 ```bash
 # QuickNode API Key (obrigatório)
@@ -184,7 +184,7 @@ curl -X POST https://flowpaypix.netlify.app/.netlify/functions/quicknode-webhook
 
 ---
 
-## ✅ Checklist de Implementação
+##  Checklist de Implementação
 
 - [x] Cliente REST para todas as APIs
 - [x] Templates de webhooks implementados

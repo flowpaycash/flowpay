@@ -1,10 +1,10 @@
-# 🔗 FLOWPay - Blockchain Registry
+# FLOWPay - Blockchain Registry
 
 Módulo para registro de eventos/provas on-chain usando QuickNode.
 
-## 📦 Estrutura
+## Estrutura
 
-```
+```text
 services/blockchain/
 ├── quicknode.js              # Cliente QuickNode RPC
 ├── quicknode-rest.js         # Cliente QuickNode REST APIs
@@ -15,9 +15,10 @@ services/blockchain/
 └── USAGE_EXAMPLES.md         # Exemplos práticos
 ```
 
-## 🎯 Responsabilidades
+## Responsabilidades
 
 ### 1. QuickNode Client (`quicknode.js`)
+
 - Conexão com blockchains via QuickNode RPC
 - Clientes públicos (read-only)
 - Clientes de wallet (read-write)
@@ -25,12 +26,14 @@ services/blockchain/
 - Verificação de status de transações
 
 ### 2. QuickNode REST (`quicknode-rest.js`)
+
 - **IPFS_REST**: Armazenamento descentralizado de provas
 - **KV_REST**: Cache e estado temporário
 - **STREAMS_REST**: Monitoramento de eventos em tempo real
 - **WEBHOOKS_REST**: Notificações de eventos blockchain
 
 ### 3. QuickNode Integration (`quicknode-integration.js`)
+
 - Serviço de alto nível que combina APIs
 - `storeProofWithIPFS()`: IPFS + on-chain
 - `cacheSettlementOrder()`: Cache de ordens
@@ -38,20 +41,21 @@ services/blockchain/
 - `archiveTransactions()`: Backup no IPFS
 
 ### 4. Write Proof (`write-proof.js`)
+
 - Escreve eventos/provas on-chain
 - Guarda tx hash
 - **Não toca em dinheiro** (apenas registro)
 - Suporta smart contract ou método alternativo
 - Integrado com IPFS (armazena provas completas)
 
-## 🔒 Princípios
+## Princípios
 
-- ✅ **Apenas registro**: Não transfere tokens ou valores
-- ✅ **Imutável**: Provas registradas na blockchain
-- ✅ **Verificável**: Qualquer um pode verificar
-- ✅ **Transparente**: Dados públicos e auditáveis
+- **Apenas registro**: Não transfere tokens ou valores
+- **Imutável**: Provas registradas na blockchain
+- **Verificável**: Qualquer um pode verificar
+- **Transparente**: Dados públicos e auditáveis
 
-## 📝 Uso
+## Uso
 
 ### Escrever Prova On-Chain
 
@@ -91,7 +95,7 @@ const status = await quicknode.getTransactionStatus(
 console.log('Status:', status);
 ```
 
-## ⚙️ Configuração
+## Configuração
 
 ### Variáveis de Ambiente
 
@@ -118,9 +122,9 @@ BLOCKCHAIN_WRITER_PRIVATE_KEY=0x...
 PROOF_CONTRACT_ADDRESS=0x...
 ```
 
-## 🔄 Fluxo de Registro
+## Fluxo de Registro
 
-```
+```text
 1. Transação USDT executada
    ↓
 2. Recebe tx hash da transação USDT
@@ -134,7 +138,7 @@ PROOF_CONTRACT_ADDRESS=0x...
 6. Prova imutável e verificável
 ```
 
-## 🏗️ Smart Contract (Opcional)
+## Smart Contract (Opcional)
 
 Para produção, pode deployar um contrato simples:
 
@@ -166,7 +170,7 @@ contract FlowPayProof {
 }
 ```
 
-## ✅ Status
+## Status
 
 - [x] QuickNode client implementado
 - [x] Write Proof implementado
@@ -177,9 +181,10 @@ contract FlowPayProof {
 - [ ] Verificação de provas implementada
 - [ ] Indexação de eventos
 
-## 🔗 Integração
+## Integração
 
 Este módulo é usado por:
+
 - `services/crypto/usdt-transfer.js` - Após transferir USDT, registra prova
 - `netlify/functions/webhook-handler.js` - Após processar PIX, registra prova
 - `netlify/functions/crypto-processor.js` - Após conversão, registra prova

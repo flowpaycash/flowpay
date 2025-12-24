@@ -1,4 +1,4 @@
-// 💰 FLOWPay - USDT Service
+// FLOWPay - USDT Service
 // Serviço para conversão de PIX para USDT e envio para wallets
 
 const { createWalletClient, createPublicClient, http, formatUnits, parseUnits } = require('viem');
@@ -51,7 +51,7 @@ const ERC20_ABI = [
  */
 async function convertToUSDT(brlValue, chainId = '137') {
   try {
-    console.log('🔄 Convertendo BRL para USDT:', { brlValue, chainId });
+    console.log('Convertendo BRL para USDT:', { brlValue, chainId });
 
     // TODO: Integrar com API de conversão real (CoinGecko, Binance, etc)
     // Por enquanto, usando taxa fixa para desenvolvimento
@@ -62,7 +62,7 @@ async function convertToUSDT(brlValue, chainId = '137') {
     const decimals = 6; // Ethereum e Polygon USDT têm 6 decimais
     const usdtAmount = parseUnits(usdValue.toFixed(decimals), decimals);
 
-    console.log('✅ Conversão realizada:', {
+    console.log('Conversão realizada:', {
       brlValue,
       usdValue,
       usdtAmount: formatUnits(usdtAmount, decimals),
@@ -80,7 +80,7 @@ async function convertToUSDT(brlValue, chainId = '137') {
     };
 
   } catch (error) {
-    console.error('❌ Erro ao converter BRL para USDT:', error);
+    console.error('Erro ao converter BRL para USDT:', error);
     throw new Error(`Falha na conversão: ${error.message}`);
   }
 }
@@ -94,7 +94,7 @@ async function convertToUSDT(brlValue, chainId = '137') {
  */
 async function sendUSDT(recipientWallet, usdtAmount, chainId = '137') {
   try {
-    console.log('📤 Enviando USDT:', {
+    console.log('Enviando USDT:', {
       recipient: recipientWallet,
       amount: usdtAmount,
       chainId
@@ -136,7 +136,7 @@ async function sendUSDT(recipientWallet, usdtAmount, chainId = '137') {
       args: [account.address]
     });
 
-    console.log('💰 Saldo disponível:', formatUnits(balance, 6));
+    console.log('Saldo disponível:', formatUnits(balance, 6));
 
     if (BigInt(balance) < BigInt(usdtAmount)) {
       throw new Error('Saldo insuficiente na wallet do servidor');
@@ -150,12 +150,12 @@ async function sendUSDT(recipientWallet, usdtAmount, chainId = '137') {
       args: [recipientWallet, usdtAmount]
     });
 
-    console.log('✅ USDT enviado com sucesso:', { hash });
+    console.log('USDT enviado com sucesso:', { hash });
 
     // Aguardar confirmação
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
-    console.log('✅ Transação confirmada:', {
+    console.log('Transação confirmada:', {
       hash,
       blockNumber: receipt.blockNumber,
       status: receipt.status
@@ -171,7 +171,7 @@ async function sendUSDT(recipientWallet, usdtAmount, chainId = '137') {
     };
 
   } catch (error) {
-    console.error('❌ Erro ao enviar USDT:', error);
+    console.error('Erro ao enviar USDT:', error);
     throw new Error(`Falha no envio de USDT: ${error.message}`);
   }
 }
@@ -188,7 +188,7 @@ async function sendUSDT(recipientWallet, usdtAmount, chainId = '137') {
  */
 async function writeOnChainProof(transactionHash, pixChargeId, brlValue, usdtAmount, recipientWallet, chainId = '137') {
   try {
-    console.log('📝 Registrando prova on-chain:', {
+    console.log('Registrando prova on-chain:', {
       transactionHash,
       pixChargeId,
       brlValue,
@@ -211,7 +211,7 @@ async function writeOnChainProof(transactionHash, pixChargeId, brlValue, usdtAmo
 
     // TODO: Em produção, salvar em banco de dados ou registrar em smart contract
     // Por enquanto, apenas log estruturado
-    console.log('✅ Prova registrada:', JSON.stringify(proof, null, 2));
+    console.log('Prova registrada:', JSON.stringify(proof, null, 2));
 
     return {
       success: true,
@@ -220,7 +220,7 @@ async function writeOnChainProof(transactionHash, pixChargeId, brlValue, usdtAmo
     };
 
   } catch (error) {
-    console.error('❌ Erro ao registrar prova on-chain:', error);
+    console.error('Erro ao registrar prova on-chain:', error);
     throw new Error(`Falha no registro da prova: ${error.message}`);
   }
 }

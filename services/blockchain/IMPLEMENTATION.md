@@ -1,6 +1,6 @@
-# ✅ Blockchain Registry - Implementação Completa
+#  Blockchain Registry - Implementação Completa
 
-## 📦 Arquivos Criados
+##  Arquivos Criados
 
 ### 1. `quicknode.js` ✅
 - Cliente QuickNode para conexão RPC
@@ -16,13 +16,13 @@
 - Suporta smart contract ou método alternativo
 - Integrado com `usdt-transfer.js`
 
-## 🎯 Responsabilidades
+##  Responsabilidades
 
 ✅ **Escrever evento on-chain** - Registra provas imutáveis
 ✅ **Guardar tx hash** - Retorna hash da transação de prova
 ✅ **Não tocar em dinheiro** - Apenas registro, sem transferências
 
-## ⚙️ Variáveis de Ambiente Necessárias
+##  Variáveis de Ambiente Necessárias
 
 Adicionar ao `.env.example`:
 
@@ -43,12 +43,12 @@ BLOCKCHAIN_WRITER_PRIVATE_KEY=0x...
 PROOF_CONTRACT_ADDRESS=0x...
 ```
 
-## 🔄 Integração
+##  Integração
 
 O módulo já está integrado com:
-- ✅ `services/crypto/usdt-transfer.js` - Registra prova após transferir USDT
+- `services/crypto/usdt-transfer.js` - Registra prova após transferir USDT
 
-## 📝 Uso
+##  Uso
 
 ### Escrever Prova On-Chain
 
@@ -69,7 +69,7 @@ const result = await writeProof.writeProof({
 console.log('Prova registrada:', result.proof.txHash);
 ```
 
-## ✅ Status
+##  Status
 
 - [x] QuickNode client implementado
 - [x] Write Proof implementado
@@ -81,7 +81,7 @@ console.log('Prova registrada:', result.proof.txHash);
 - [ ] Smart contract deployado (opcional)
 - [ ] Verificação de provas implementada
 
-## 🔗 QuickNode Setup
+##  QuickNode Setup
 
 1. Criar conta em https://www.quicknode.com
 2. Criar endpoints para as redes desejadas

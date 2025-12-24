@@ -56,7 +56,7 @@ Monitora contratos usando ABI
 
 ---
 
-## 🚀 Setup Rápido
+## Setup Rápido
 
 ### 1. Testar API Key
 
@@ -87,7 +87,7 @@ console.log(webhooks);
 
 ---
 
-## 📝 Endpoints da API
+##  Endpoints da API
 
 ### Criar Webhook (Template)
 ```
@@ -127,7 +127,7 @@ Headers:
 
 ---
 
-## 🔄 Fluxo de Eventos
+##  Fluxo de Eventos
 
 ```
 1. Transferência USDT detectada na blockchain
@@ -143,7 +143,7 @@ Headers:
 
 ---
 
-## ✅ Checklist de Setup
+##  Checklist de Setup
 
 - [ ] API Key configurada (`QUICKNODE_API_KEY`)
 - [ ] URL do webhook configurada (`URL` no ambiente)

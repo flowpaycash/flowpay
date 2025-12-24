@@ -1,4 +1,4 @@
-// 💱 FLOWPay - Liquidity Provider Service
+// FLOWPay - Liquidity Provider Service
 // Liquidação programável: Fiat (BRL) → USDT via parceiros/OTC/exchanges
 // Suporta estratégias: auto, manual, deferred
 
@@ -24,18 +24,24 @@ class LiquidityProvider {
       }
     };
 
-    // Cache de taxas (TTL: 5 minutos)
+    // Cache de taxas com estratégia stale-while-revalidate
+    // TTL principal: 5 minutos, stale permitido: até 10 minutos
     this.rateCache = {
       data: null,
       expiresAt: null,
-      ttl: 5 * 60 * 1000 // 5 minutos
+      staleAt: null,
+      ttl: 5 * 60 * 1000, // 5 minutos (cache válido)
+      staleTtl: 10 * 60 * 1000, // 10 minutos (pode usar stale)
+      refreshPromise: null // Promise de refresh em andamento
     };
   }
 
   /**
    * Obtém taxa de conversão BRL → USDT
+   * Usa estratégia stale-while-revalidate para melhor performance
    * @param {number} amountBRL - Valor em BRL
-   * @returns {object} Taxa de conversão e valor em USDT
+   * @returns {Promise<object>} Taxa de conversão e valor em USDT
+   * @returns {object} Objeto com { rate: number, amountUSDT: number, fees: object }
    */
   async getConversionRate(amountBRL) {
     try {
@@ -43,25 +49,48 @@ class LiquidityProvider {
         throw new Error('Valor em BRL deve ser maior que zero');
       }
 
-      // Verificar cache
-      if (this.rateCache.data && this.rateCache.expiresAt > Date.now()) {
-        secureLog('info', 'Taxa de conversão obtida do cache', {
+      const now = Date.now();
+
+      // Cache válido: retornar imediatamente
+      if (this.rateCache.data && this.rateCache.expiresAt > now) {
+        secureLog('info', 'Taxa de conversão obtida do cache (fresco)', {
           amountBRL,
           rate: this.rateCache.data.rate
         });
         return this.calculateUSDT(amountBRL, this.rateCache.data.rate);
       }
 
-      // Buscar taxa atual
+      // Cache stale mas ainda válido: retornar e atualizar em background
+      if (this.rateCache.data && this.rateCache.staleAt > now) {
+        secureLog('info', 'Taxa de conversão obtida do cache (stale, atualizando em background)', {
+          amountBRL,
+          rate: this.rateCache.data.rate
+        });
+
+        // Atualizar em background (não bloquear resposta)
+        this.refreshCacheInBackground();
+
+        return this.calculateUSDT(amountBRL, this.rateCache.data.rate);
+      }
+
+      // Cache expirado ou inexistente: buscar nova taxa
       const rate = await this.fetchConversionRate();
 
       // Atualizar cache
-      this.rateCache.data = { rate, timestamp: new Date().toISOString() };
-      this.rateCache.expiresAt = Date.now() + this.rateCache.ttl;
+      this.updateCache(rate);
 
       return this.calculateUSDT(amountBRL, rate);
 
     } catch (error) {
+      // Em caso de erro, tentar usar cache stale se disponível
+      if (this.rateCache.data && this.rateCache.staleAt > Date.now()) {
+        secureLog('warn', 'Erro ao buscar taxa, usando cache stale', {
+          error: error.message,
+          rate: this.rateCache.data.rate
+        });
+        return this.calculateUSDT(amountBRL, this.rateCache.data.rate);
+      }
+
       secureLog('error', 'Erro ao obter taxa de conversão', {
         error: error.message,
         amountBRL
@@ -71,18 +100,58 @@ class LiquidityProvider {
   }
 
   /**
+   * Atualiza cache com nova taxa
+   * @param {number} rate - Taxa de conversão
+   * @private
+   */
+  updateCache(rate) {
+    const now = Date.now();
+    this.rateCache.data = { rate, timestamp: new Date().toISOString() };
+    this.rateCache.expiresAt = now + this.rateCache.ttl;
+    this.rateCache.staleAt = now + this.rateCache.staleTtl;
+    this.rateCache.refreshPromise = null;
+  }
+
+  /**
+   * Atualiza cache em background (não bloqueia)
+   * @private
+   */
+  async refreshCacheInBackground() {
+    // Evitar múltiplas requisições simultâneas
+    if (this.rateCache.refreshPromise) {
+      return this.rateCache.refreshPromise;
+    }
+
+    this.rateCache.refreshPromise = (async () => {
+      try {
+        const rate = await this.fetchConversionRate();
+        this.updateCache(rate);
+        secureLog('info', 'Cache de taxa atualizado em background', { rate });
+      } catch (error) {
+        secureLog('warn', 'Erro ao atualizar cache em background', {
+          error: error.message
+        });
+        this.rateCache.refreshPromise = null;
+      }
+    })();
+
+    return this.rateCache.refreshPromise;
+  }
+
+  /**
    * Busca taxa de conversão do provedor
-   * @returns {number} Taxa BRL/USDT
+   * @returns {Promise<number>} Taxa BRL/USDT
+   * @throws {Error} Se não conseguir obter taxa de nenhum provedor
    */
   async fetchConversionRate() {
     try {
       // Em produção, integrar com provedor real
       // Por enquanto, usar taxa mockada baseada em dados reais aproximados
-      
+
       if (this.providers.primary.type === 'mock' || !this.providers.primary.apiUrl) {
         // Modo desenvolvimento: usar taxa mockada
         secureLog('info', 'Usando taxa mockada para desenvolvimento', {});
-        
+
         // Taxa aproximada: ~5.50 BRL/USDT (exemplo)
         // Em produção, buscar de API real
         const mockRate = 5.50;
@@ -135,7 +204,7 @@ class LiquidityProvider {
       secureLog('info', 'Usando taxa do provedor fallback', {
         provider: this.providers.fallback.name
       });
-      
+
       return 5.50; // Mock
 
     } catch (error) {
@@ -249,7 +318,7 @@ class LiquidityProvider {
       strategy = 'auto'
     } = settlementParams;
 
-    return await this.convertFiatToUSDT(amountBRL, userId, correlationId, strategy);
+    return await this.convertFiatToUSDT(amountBRL, userId, correlationId, strategy, target);
   }
 
   /**
@@ -258,9 +327,10 @@ class LiquidityProvider {
    * @param {string} userId - ID do usuário
    * @param {string} correlationId - ID de correlação da transação PIX
    * @param {string} strategy - Estratégia de liquidação: 'auto'|'manual'|'deferred'
+   * @param {string} target - Moeda destino (default: 'USDT')
    * @returns {object} Resultado da conversão
    */
-  async convertFiatToUSDT(amountBRL, userId, correlationId, strategy = 'auto') {
+  async convertFiatToUSDT(amountBRL, userId, correlationId, strategy = 'auto', target = 'USDT') {
     try {
       if (!amountBRL || amountBRL <= 0) {
         throw new Error('Valor em BRL deve ser maior que zero');
@@ -292,7 +362,7 @@ class LiquidityProvider {
       // - 'auto': Liquidação imediata (requer liquidez disponível)
       // - 'manual': Aguarda aprovação manual (para volumes maiores)
       // - 'deferred': Agendada para janela específica (otimização de custos)
-      
+
       // Por enquanto, simular liquidação (modo desenvolvimento)
       const conversionResult = {
         success: true,
@@ -302,7 +372,7 @@ class LiquidityProvider {
           amount: amountBRL
         },
         to: {
-          currency: target || 'USDT',
+          currency: target,
           amount: amountUSDT
         },
         rate,
@@ -346,10 +416,10 @@ class LiquidityProvider {
     // Taxa de serviço (0.5% por padrão)
     const serviceFeePercent = parseFloat(process.env.CONVERSION_FEE_PERCENT || '0.5');
     const serviceFee = (amountBRL * serviceFeePercent) / 100;
-    
+
     // Valor líquido após taxa
     const netAmountBRL = amountBRL - serviceFee;
-    
+
     // Valor em USDT
     const amountUSDT = netAmountBRL / rate;
 
@@ -368,7 +438,8 @@ class LiquidityProvider {
    * Chama API do provedor de liquidez
    * @param {string} endpoint - Endpoint da API
    * @param {object} params - Parâmetros da requisição
-   * @returns {object} Resposta da API
+   * @returns {Promise<object>} Resposta da API
+   * @throws {Error} Se a API retornar erro ou status não OK
    */
   async callProviderAPI(endpoint, params = {}) {
     try {
@@ -416,7 +487,7 @@ class LiquidityProvider {
     try {
       // Em produção, verificar saldo disponível do provedor
       // Por enquanto, sempre retornar true (modo desenvolvimento)
-      
+
       secureLog('info', 'Verificando disponibilidade de liquidez', {
         amountUSDT
       });

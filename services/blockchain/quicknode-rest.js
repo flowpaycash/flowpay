@@ -1,14 +1,15 @@
-// 🔗 FLOWPay - QuickNode REST APIs Client
+// FLOWPay - QuickNode REST APIs Client
 // Cliente para APIs REST do QuickNode: IPFS, KV, Streams, Webhooks
 
 const { secureLog } = require('../../netlify/functions/config');
+const { getAPIRateLimiter } = require('../utils/api-rate-limiter');
 const crypto = require('crypto');
 
 class QuickNodeREST {
   constructor() {
     // API Key do QuickNode (obrigatória para REST APIs)
     this.apiKey = process.env.QUICKNODE_API_KEY || '';
-    
+
     // Base URLs das APIs REST
     this.baseUrls = {
       functions: process.env.QUICKNODE_FUNCTIONS_REST || '',
@@ -23,13 +24,23 @@ class QuickNodeREST {
       'Content-Type': 'application/json',
       'x-api-key': this.apiKey
     };
+
+    // Rate limiter para chamadas de API
+    this.rateLimiter = getAPIRateLimiter();
   }
 
   /**
    * IPFS REST - Armazenar metadados de provas de forma descentralizada
    * @param {object} data - Dados para armazenar no IPFS
-   * @param {string} filename - Nome do arquivo (opcional)
-   * @returns {object} Hash IPFS e URL
+   * @param {string} [filename] - Nome do arquivo (opcional)
+   * @returns {Promise<object>} Hash IPFS e URL
+   * @returns {object.success} boolean - Indica sucesso da operação
+   * @returns {object.ipfsHash} string - Hash IPFS (CID)
+   * @returns {object.ipfsUrl} string - URL IPFS (ipfs://...)
+   * @returns {object.gatewayUrl} string - URL do gateway IPFS
+   * @returns {object.timestamp} string - Timestamp ISO da operação
+   * @throws {Error} Se QUICKNODE_IPFS_REST ou QUICKNODE_API_KEY não estiverem configurados
+   * @throws {Error} Se a API retornar erro ou rate limit for excedido
    */
   async storeInIPFS(data, filename = null) {
     try {
@@ -42,19 +53,26 @@ class QuickNodeREST {
       }
 
       const url = `${this.baseUrls.ipfs}/upload`;
-      
-      // Preparar dados para upload (formato JSON para QuickNode IPFS API)
-      const response = await fetch(url, {
+
+      // Aplicar rate limiting
+      const response = await this.rateLimiter.withRateLimit(
+        'quicknode',
+        'ipfs-upload',
+        async () => {
+          // Preparar dados para upload (formato JSON para QuickNode IPFS API)
+          return await fetch(url, {
         method: 'POST',
         headers: {
           'x-api-key': this.apiKey,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          data: JSON.stringify(data),
-          filename: filename || `proof_${Date.now()}.json`
-        })
-      });
+            body: JSON.stringify({
+              data: JSON.stringify(data),
+              filename: filename || `proof_${Date.now()}.json`
+            })
+          });
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`IPFS API retornou status ${response.status}`);
@@ -109,7 +127,7 @@ class QuickNodeREST {
       }
 
       const url = `${this.baseUrls.kv}/set`;
-      
+
       const response = await fetch(url, {
         method: 'POST',
         headers: this.headers,
@@ -162,7 +180,7 @@ class QuickNodeREST {
       }
 
       const url = `${this.baseUrls.kv}/get/${encodeURIComponent(key)}`;
-      
+
       const response = await fetch(url, {
         method: 'GET',
         headers: this.headers
@@ -219,7 +237,7 @@ class QuickNodeREST {
       // Usar base URL padrão se não configurado
       const baseUrl = this.baseUrls.streams || 'https://api.quicknode.com';
       const url = `${baseUrl}/v0/streams`;
-      
+
       const response = await fetch(url, {
         method: 'POST',
         headers: this.headers,
@@ -276,7 +294,7 @@ class QuickNodeREST {
       const url = `${baseUrl}/v0/webhooks/template/${templateId}`;
 
       // Webhook URL padrão
-      const defaultWebhookUrl = webhookUrl || 
+      const defaultWebhookUrl = webhookUrl ||
         (process.env.URL ? `${process.env.URL}/.netlify/functions/quicknode-webhook` : null);
 
       if (!defaultWebhookUrl) {
@@ -486,7 +504,7 @@ class QuickNodeREST {
       const transferEventHash = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
 
       // Webhook URL padrão (endpoint Netlify)
-      const defaultWebhookUrl = webhookUrl || 
+      const defaultWebhookUrl = webhookUrl ||
         (process.env.URL ? `${process.env.URL}/.netlify/functions/quicknode-webhook` : null);
 
       if (!defaultWebhookUrl) {
@@ -527,7 +545,7 @@ class QuickNodeREST {
         throw new Error('walletAddresses deve ser um array não vazio');
       }
 
-      const defaultWebhookUrl = webhookUrl || 
+      const defaultWebhookUrl = webhookUrl ||
         (process.env.URL ? `${process.env.URL}/.netlify/functions/quicknode-webhook` : null);
 
       if (!defaultWebhookUrl) {

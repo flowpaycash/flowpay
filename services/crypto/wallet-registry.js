@@ -1,4 +1,4 @@
-// 🔐 FLOWPay - Wallet Registry Service
+// FLOWPay - Wallet Registry Service
 // Gerencia o registro e validação de wallets de usuários
 
 const crypto = require('crypto');
@@ -140,7 +140,7 @@ class WalletRegistry {
     if (!address) return null;
 
     const normalizedAddress = address.toLowerCase();
-    
+
     for (const [id, wallet] of this.wallets.entries()) {
       if (wallet.address === normalizedAddress) {
         return wallet;
@@ -163,7 +163,7 @@ class WalletRegistry {
       }
 
       const wallet = this.getWalletByAddress(address);
-      
+
       if (!wallet) {
         secureLog('warn', 'Wallet não encontrada', {
           userId: '[REDACTED]',
@@ -203,7 +203,7 @@ class WalletRegistry {
         wallet.lastUsedAt = new Date().toISOString();
         wallet.transactionCount = (wallet.transactionCount || 0) + 1;
         wallet.updatedAt = new Date().toISOString();
-        
+
         secureLog('info', 'Wallet atualizada', {
           address: this.maskAddress(address),
           transactionCount: wallet.transactionCount
@@ -226,7 +226,7 @@ class WalletRegistry {
   async removeWallet(userId, address) {
     try {
       const wallet = this.getWalletByAddress(address);
-      
+
       if (!wallet || wallet.userId !== userId) {
         return false;
       }
