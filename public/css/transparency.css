@@ -225,11 +225,6 @@
     padding: var(--spacing-xs) 0;
 }
 
-.tech-stack li i {
-    color: var(--primary);
-    width: 20px;
-}
-
 /* Support Content */
 .support-content {
     text-align: center;

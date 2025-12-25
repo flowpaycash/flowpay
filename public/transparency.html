@@ -12,6 +12,7 @@
     
     <!-- PWA Support -->
     <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="assets/icons/apple-icon-180.png">
     <meta name="theme-color" content="#ff007a">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,11 +34,11 @@
                     <li><a href="/checkout" class="nav-link">Checkout</a></li>
                     <li><a href="/transparency" class="nav-link active">Transparência</a></li>
                     <li><a href="/admin" class="nav-link admin-link">
-                        <i class="fas fa-chart-line"></i> Admin
+                        📊 Admin
                     </a></li>
                 </ul>
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Abrir menu de navegação">
+                  <span class="icon-bars" aria-hidden="true"></span>
                 </button>
             </nav>
         </div>
@@ -47,7 +48,7 @@
     <section class="transparency-hero">
         <div class="hero-content">
             <div class="hero-icon">
-                <i class="fas fa-shield-alt"></i>
+                🛡️
             </div>
             <h1>Promessa é ruído. A gente entrega prova.</h1>
             <p>Logs abertos, eventos assinados, e operação auditável.</p>
@@ -59,7 +60,7 @@
         <!-- Blocos de Transparência -->
         <section class="transparency-section">
             <div class="container">
-                <h2><i class="fas fa-eye"></i> Blocos de Transparência</h2>
+                <h2>👁️ Blocos de Transparência</h2>
                 <div class="how-it-works">
                     <div class="step-card">
                         <div class="step-number">1</div>
@@ -88,11 +89,11 @@
         <!-- CTAs de Transparência -->
         <section class="transparency-section">
             <div class="container">
-                <h2><i class="fas fa-link"></i> CTAs de Transparência</h2>
+                <h2>🔗 CTAs de Transparência</h2>
                 <div class="validations-grid">
                     <div class="validation-card">
                         <div class="validation-icon">
-                            <i class="fas fa-file-alt"></i>
+                            📄
                         </div>
                         <h3>Ver Transações</h3>
                         <p>Acesse o arquivo público de todas as transações processadas</p>
@@ -100,7 +101,7 @@
                     </div>
                     <div class="validation-card">
                         <div class="validation-icon">
-                            <i class="fas fa-heartbeat"></i>
+                            💓
                         </div>
                         <h3>Checar Status</h3>
                         <p>Verifique o status da plataforma e dependências</p>
@@ -108,15 +109,15 @@
                     </div>
                     <div class="validation-card">
                         <div class="validation-icon">
-                            <i class="fas fa-code"></i>
+                            💻
                         </div>
                         <h3>Open Source</h3>
                         <p>Código público e auditável no GitHub</p>
-                        <a href="https://github.com/flowpaycash/flowpay" target="_blank" class="btn btn-secondary btn-small">Ver código</a>
+                        <a href="https://github.com/flowpaycash/flowpay" target="_blank" rel="noopener" class="btn btn-secondary btn-small">Ver código</a>
                     </div>
                     <div class="validation-card">
                         <div class="validation-icon">
-                            <i class="fas fa-shield-alt"></i>
+                            🛡️
                         </div>
                         <h3>Segurança</h3>
                         <p>Política de divulgação responsável e contato</p>
@@ -129,23 +130,22 @@
         <!-- Código Aberto -->
         <section class="transparency-section">
             <div class="container">
-                <h2><i class="fas fa-github"></i> Código Aberto</h2>
+                <h2>🔧 Código Aberto</h2>
                 <div class="open-source-content">
                     <div class="github-card">
                         <h3>Repositório Público</h3>
                         <p>Todo o código do FLOWPay está disponível publicamente para auditoria</p>
-                        <a href="https://github.com/flowpaycash/flowpay" target="_blank" class="github-btn">
-                            <i class="fab fa-github"></i>
-                            Ver no GitHub
+                        <a href="https://github.com/flowpaycash/flowpay" target="_blank" rel="noopener" class="github-btn">
+                            🔗 Ver no GitHub
                         </a>
                     </div>
                     <div class="tech-stack">
                         <h3>Stack Tecnológico</h3>
                         <ul>
-                            <li><i class="fas fa-code"></i> HTML5, CSS3, JavaScript</li>
-                            <li><i class="fas fa-server"></i> Netlify Functions (serverless)</li>
-                            <li><i class="fas fa-link"></i> API Woovi oficial</li>
-                            <li><i class="fas fa-mobile-alt"></i> PWA mobile-first</li>
+                            <li>💻 HTML5, CSS3, JavaScript</li>
+                            <li>☁️ Netlify Functions (serverless)</li>
+                            <li>🔗 API Woovi oficial</li>
+                            <li>📱 PWA mobile-first</li>
                         </ul>
                     </div>
                 </div>
@@ -155,19 +155,17 @@
         <!-- Suporte -->
         <section class="transparency-section">
             <div class="container">
-                <h2><i class="fas fa-headset"></i> Suporte e Contato</h2>
+                <h2>💬 Suporte e Contato</h2>
                 <div class="support-content">
                     <div class="support-card">
                         <h3>Precisa de Ajuda?</h3>
                         <p>Nossa equipe está disponível para esclarecer qualquer dúvida sobre segurança e transparência</p>
                         <div class="support-buttons">
-                            <a href="https://t.me/flowpay_support" target="_blank" class="support-btn telegram">
-                                <i class="fab fa-telegram"></i>
-                                Telegram
+                            <a href="https://t.me/flowpay_support" target="_blank" rel="noopener" class="support-btn telegram">
+                                ✈️ Telegram
                             </a>
                             <a href="mailto:suporte@flowpay.com" class="support-btn email">
-                                <i class="fas fa-envelope"></i>
-                                Email
+                                ✉️ Email
                             </a>
                         </div>
                     </div>
