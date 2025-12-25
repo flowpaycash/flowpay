@@ -2,8 +2,8 @@
 # Configuração simplificada para desenvolvimento local
 
 [build]
-  publish = "public"
-  command = "echo 'Build não necessário - arquivos estáticos'"
+  publish = "dist"
+  command = "npm run build"
 
 [functions]
   directory = "netlify/functions"

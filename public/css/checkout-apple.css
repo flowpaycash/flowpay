@@ -1,0 +1,895 @@
+/* 🍎 FLOWPay - Checkout Apple Design */
+
+/* ============================================
+   SOBRESCREVER CSS CONFLITANTE - PRIORIDADE MÁXIMA
+   ============================================ */
+
+body.checkout-body,
+body:has(.checkout-main) {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+  background: #f2f2f7 !important;
+  background-color: #f2f2f7 !important;
+  color: #1d1d1f !important;
+  line-height: 1.6 !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  min-height: 100vh !important;
+  overflow-x: hidden !important;
+  margin: 0 !important;
+  padding-top: calc(50px + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+@media (min-width: 768px) {
+  body.checkout-body,
+  body:has(.checkout-main) {
+    padding-top: calc(60px + env(safe-area-inset-top, 0px)) !important;
+  }
+}
+
+/* Garantir que html também tenha fundo claro */
+html:has(body.checkout-body),
+html:has(.checkout-main) {
+  background: #f2f2f7 !important;
+  background-color: #f2f2f7 !important;
+}
+
+/* ============================================
+   VARIÁVEIS ESTILO APPLE
+   ============================================ */
+
+:root {
+  /* Cores iOS Light */
+  --ios-bg: #f2f2f7;
+  --ios-bg-secondary: #ffffff;
+  --ios-bg-tertiary: #f9f9f9;
+  
+  /* Texto */
+  --ios-text: #1d1d1f;
+  --ios-text-secondary: #6e6e73;
+  --ios-text-tertiary: #86868b;
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  
+  /* Cores FLOWPay suaves */
+  --primary: #ff007a;
+  --primary-light: rgba(255, 0, 122, 0.1);
+  --secondary: #00d4ff;
+  --secondary-light: rgba(0, 212, 255, 0.1);
+  
+  /* Espaçamentos */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  
+  /* Bordas */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  
+  /* Sombras sutis */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.08);
+  
+  /* Transições suaves */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   RESET E BASE - SOBRESCREVER TUDO
+   ============================================ */
+
+body.checkout-body *,
+body:has(.checkout-main) * {
+  box-sizing: border-box;
+}
+
+/* Resetar apenas para elementos do checkout */
+body.checkout-body .checkout-header,
+body.checkout-body .checkout-main,
+body.checkout-body .card,
+body.checkout-body .flow-step {
+  margin: 0;
+  padding: 0;
+}
+
+/* Removido - já está no topo */
+
+/* ============================================
+   NAVBAR ESTILO APPLE NO CHECKOUT
+   ============================================ */
+
+body.checkout-body .neo-navbar,
+body:has(.checkout-main) .neo-navbar,
+.checkout-body .neo-navbar {
+  background: rgba(255, 255, 255, 0.7) !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+body.checkout-body .logo-link,
+body:has(.checkout-main) .logo-link,
+.checkout-body .logo-link {
+  color: #1d1d1f !important;
+}
+
+body.checkout-body .nav-link,
+body:has(.checkout-main) .nav-link,
+.checkout-body .nav-link {
+  color: #6e6e73 !important;
+}
+
+body.checkout-body .nav-link:hover,
+body:has(.checkout-main) .nav-link:hover,
+.checkout-body .nav-link:hover {
+  color: #1d1d1f !important;
+}
+
+/* ============================================
+   HEADER ESTILO APPLE
+   ============================================ */
+
+.checkout-header {
+  background: transparent;
+  padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg);
+  position: relative;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.hero h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--ios-text);
+  margin: 0 0 var(--spacing-sm);
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+}
+
+.hero p {
+  font-size: 1rem;
+  color: var(--ios-text-secondary);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ============================================
+   BREADCRUMB MINIMALISTA
+   ============================================ */
+
+.checkout-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.breadcrumb-step {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.step-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--ios-bg-tertiary);
+  color: var(--ios-text-secondary);
+  transition: var(--transition);
+}
+
+.breadcrumb-step.is-active .step-number {
+  background: var(--primary);
+  color: white;
+}
+
+.breadcrumb-step.is-done .step-number {
+  background: var(--ios-text-secondary);
+  color: white;
+}
+
+.step-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ios-text-secondary);
+}
+
+.breadcrumb-step.is-active .step-label {
+  color: var(--ios-text);
+  font-weight: 600;
+}
+
+.breadcrumb-arrow {
+  color: var(--ios-text-tertiary);
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+
+.nf-progress {
+  margin-top: var(--spacing-md);
+}
+
+.nf-bar {
+  height: 3px;
+  background: var(--ios-bg-tertiary);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.nf-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--radius-sm);
+}
+
+.nf-dots {
+  display: flex;
+  gap: var(--spacing-xs);
+  justify-content: center;
+  margin-top: var(--spacing-sm);
+}
+
+.nf-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ios-bg-tertiary);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  padding: 0;
+}
+
+.nf-dot.is-active {
+  background: var(--primary);
+  width: 24px;
+  border-radius: var(--radius-sm);
+}
+
+.nf-dot.is-done {
+  background: var(--ios-text-secondary);
+}
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+
+.checkout-main {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md) var(--spacing-2xl);
+  min-height: calc(100vh - 200px);
+}
+
+/* Ajuste para garantir espaçamento do topo */
+body.checkout-body,
+body:has(.checkout-main) {
+  padding-top: calc(50px + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: 0 !important;
+}
+
+@media (min-width: 768px) {
+  body.checkout-body,
+  body:has(.checkout-main) {
+    padding-top: calc(60px + env(safe-area-inset-top, 0px)) !important;
+  }
+}
+
+/* Garantir que elementos principais tenham cores corretas */
+body.checkout-body *,
+body:has(.checkout-main) * {
+  box-sizing: border-box;
+}
+
+/* Sobrescrever qualquer background escuro */
+body.checkout-body .checkout-header,
+body:has(.checkout-main) .checkout-header,
+body.checkout-body .checkout-main,
+body:has(.checkout-main) .checkout-main {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* ============================================
+   MODE CHOOSER - GLASSMORPHISM
+   ============================================ */
+
+.mode-chooser {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin: var(--spacing-2xl) 0;
+}
+
+.tab-button {
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--ios-text);
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transition: left 0.5s;
+}
+
+.tab-button:hover::before {
+  left: 100%;
+}
+
+.tab-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-md);
+}
+
+.tab-button[data-mode="pix"].active {
+  background: linear-gradient(135deg, var(--secondary), #0099cc);
+}
+
+.ghost {
+  background: transparent;
+  border: 1.5px solid var(--ios-text-tertiary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ios-text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.ghost:hover {
+  border-color: var(--ios-text);
+  color: var(--ios-text);
+  background: var(--ios-bg-tertiary);
+}
+
+/* ============================================
+   CARDS GLASSMORPHISM
+   ============================================ */
+
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+  margin: var(--spacing-lg) 0;
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.card.success {
+  background: rgba(52, 199, 89, 0.1);
+  border-color: rgba(52, 199, 89, 0.2);
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--ios-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.card p {
+  color: var(--ios-text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ============================================
+   FORMULÁRIOS ESTILO APPLE
+   ============================================ */
+
+.grid {
+  display: grid;
+  gap: var(--spacing-lg);
+  grid-template-columns: 1fr;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ios-text);
+}
+
+input {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--ios-bg-secondary);
+  color: var(--ios-text);
+  transition: var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-light);
+  background: white;
+}
+
+input::placeholder {
+  color: var(--ios-text-tertiary);
+}
+
+input.valid {
+  border-color: #34c759;
+  box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.1);
+}
+
+input.invalid {
+  border-color: #ff3b30;
+  box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.1);
+}
+
+.field-error {
+  color: #ff3b30;
+  font-size: 0.875rem;
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(255, 59, 48, 0.1);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #ff3b30;
+}
+
+/* ============================================
+   BOTÕES ESTILO APPLE
+   ============================================ */
+
+.actions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.primary,
+.text {
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  box-shadow: var(--shadow-sm);
+  flex: 1;
+  min-width: 140px;
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.primary:active {
+  transform: translateY(0);
+}
+
+.text {
+  background: transparent;
+  color: var(--ios-text-secondary);
+  padding: var(--spacing-md);
+}
+
+.text:hover {
+  color: var(--ios-text);
+  background: var(--ios-bg-tertiary);
+}
+
+/* ============================================
+   FLOW STEPS
+   ============================================ */
+
+.flow-step {
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flow-step[hidden] {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mode-section {
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mode-section[hidden] {
+  display: none !important;
+}
+
+/* ============================================
+   TOASTS ESTILO APPLE
+   ============================================ */
+
+.nf-toasts {
+  position: fixed;
+  right: var(--spacing-md);
+  bottom: var(--spacing-md);
+  display: grid;
+  gap: var(--spacing-sm);
+  z-index: 10000;
+  max-width: 400px;
+}
+
+.nf-toast {
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.9375rem;
+  color: var(--ios-text);
+}
+
+.nf-toast.is-success {
+  background: rgba(52, 199, 89, 0.1);
+  border-color: rgba(52, 199, 89, 0.3);
+  color: #1d8e3e;
+}
+
+.nf-toast.is-error {
+  background: rgba(255, 59, 48, 0.1);
+  border-color: rgba(255, 59, 48, 0.3);
+  color: #d70015;
+}
+
+.nf-toast .nf-x {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.nf-toast .nf-x:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+
+.nf-loading {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(242, 242, 247, 0.8);
+  z-index: 9999;
+}
+
+.nf-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  justify-items: center;
+  gap: var(--spacing-md);
+  min-width: 200px;
+}
+
+.nf-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.nf-title {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ios-text);
+  margin: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   FOOTER ESTILO APPLE
+   ============================================ */
+
+.neo-footer {
+  background: var(--ios-bg-secondary);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--ios-text);
+  margin-top: var(--spacing-2xl);
+  padding: var(--spacing-2xl) 0;
+}
+
+.neo-footer .container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.neo-footer__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr;
+  gap: var(--spacing-xl);
+  align-items: start;
+}
+
+.neo-footer__brand {
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.neo-footer__logo {
+  font-weight: 600;
+  font-size: 1.125rem;
+  text-decoration: none;
+  color: var(--ios-text);
+  letter-spacing: -0.5px;
+}
+
+.neo-footer__tag {
+  margin: 0;
+  opacity: 0.7;
+  font-size: 0.9375rem;
+  color: var(--ios-text-secondary);
+}
+
+.neo-footer__pill {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+  text-decoration: none;
+  color: var(--ios-text);
+  transition: var(--transition);
+}
+
+.neo-footer__pill:hover {
+  background: var(--ios-bg-tertiary);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.neo-footer__col h3 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin: 0 0 var(--spacing-sm);
+  color: var(--ios-text);
+  letter-spacing: -0.3px;
+}
+
+.neo-footer__col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--spacing-xs);
+}
+
+.neo-footer__col a {
+  color: var(--ios-text-secondary);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: var(--transition-fast);
+}
+
+.neo-footer__col a:hover {
+  color: var(--ios-text);
+}
+
+.neo-footer__note {
+  margin: var(--spacing-lg) 0 0;
+  opacity: 0.6;
+  font-size: 0.875rem;
+  color: var(--ios-text-secondary);
+}
+
+.neo-footer__meta {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+}
+
+.neo-footer__meta__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.neo-footer__meta p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ios-text-secondary);
+}
+
+.neo-footer__links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.neo-footer__links a {
+  color: var(--ios-text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: var(--transition-fast);
+}
+
+.neo-footer__links a:hover {
+  color: var(--ios-text);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 820px) {
+  .neo-footer__grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 620px) {
+  .neo-footer__meta__row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .nf-toasts {
+    right: var(--spacing-sm);
+    left: var(--spacing-sm);
+    max-width: none;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .primary {
+    width: 100%;
+  }
+  
+  .checkout-breadcrumb {
+    flex-wrap: wrap;
+  }
+  
+  .breadcrumb-arrow {
+    display: none;
+  }
+}
+

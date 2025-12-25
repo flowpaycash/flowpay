@@ -23,24 +23,31 @@ help: ## Mostra esta ajuda
 
 install: ## Instala dependências necessárias
 	@echo "$(GREEN)Instalando dependências...$(NC)"
-	@if ! command -v netlify &> /dev/null; then \
-		echo "$(YELLOW)Instalando Netlify CLI...$(NC)"; \
-		npm install -g netlify-cli; \
-	fi
-	@if ! command -v http-server &> /dev/null; then \
-		echo "$(YELLOW)Instalando http-server...$(NC)"; \
-		npm install -g http-server; \
-	fi
+	@echo "$(YELLOW)Instalando dependências do projeto...$(NC)"
+	@npm install
 	@echo "$(GREEN)Dependências instaladas!$(NC)"
+	@echo "$(YELLOW)Nota: Use 'npx netlify' ou 'npm run dev:netlify' para comandos Netlify$(NC)"
 
 dev: ## Inicia servidor de desenvolvimento local
 	@echo "$(GREEN)Iniciando servidor de desenvolvimento...$(NC)"
-	@if command -v netlify &> /dev/null; then \
+	@if [ -f "astro.config.mjs" ] || [ -f "astro.config.ts" ]; then \
+		echo "$(YELLOW)Usando Astro Dev...$(NC)"; \
+		npm run dev; \
+	elif command -v netlify &> /dev/null; then \
 		echo "$(YELLOW)Usando Netlify Dev...$(NC)"; \
 		netlify dev --port 8888; \
-	else \
+	elif command -v npx &> /dev/null && [ -f "package.json" ]; then \
+		echo "$(YELLOW)Usando Netlify Dev via npx...$(NC)"; \
+		npx netlify dev --port 8888; \
+	elif command -v http-server &> /dev/null; then \
 		echo "$(YELLOW)Usando http-server...$(NC)"; \
 		cd public && http-server -p 8000 -o; \
+	elif command -v npx &> /dev/null; then \
+		echo "$(YELLOW)Usando http-server via npx...$(NC)"; \
+		cd public && npx -y http-server -p 8000 -o; \
+	else \
+		echo "$(YELLOW)Usando servidor Python...$(NC)"; \
+		cd public && python3 -m http.server 8000 || python -m SimpleHTTPServer 8000; \
 	fi
 
 dev-simple: ## Inicia servidor HTTP simples
@@ -49,19 +56,29 @@ dev-simple: ## Inicia servidor HTTP simples
 
 build: ## Prepara arquivos para produção
 	@echo "$(GREEN)Preparando build...$(NC)"
-	@if [ ! -d "public" ]; then \
-		echo "$(RED)Erro: Pasta 'public' não encontrada!$(NC)"; \
-		exit 1; \
+	@if [ -f "astro.config.mjs" ] || [ -f "astro.config.ts" ]; then \
+		echo "$(YELLOW)Usando Astro Build...$(NC)"; \
+		if command -v npm &> /dev/null; then \
+			npm run build; \
+		else \
+			echo "$(RED)Erro: npm não encontrado!$(NC)"; \
+			exit 1; \
+		fi; \
+	else \
+		if [ ! -d "public" ]; then \
+			echo "$(RED)Erro: Pasta 'public' não encontrada!$(NC)"; \
+			exit 1; \
+		fi; \
+		if [ ! -f "public/index.html" ]; then \
+			echo "$(YELLOW)Movendo index.html para pasta public...$(NC)"; \
+			cp index.html public/; \
+		fi; \
+		if [ ! -f "public/favicon.ico" ] && [ -f "favicon.ico" ]; then \
+			echo "$(YELLOW)Movendo favicon.ico para pasta public...$(NC)"; \
+			cp favicon.ico public/; \
+		fi; \
+		echo "$(GREEN)Build preparado na pasta 'public'$(NC)"; \
 	fi
-	@if [ ! -f "public/index.html" ]; then \
-		echo "$(YELLOW)Movendo index.html para pasta public...$(NC)"; \
-		cp index.html public/; \
-	fi
-	@if [ ! -f "public/favicon.ico" ] && [ -f "favicon.ico" ]; then \
-		echo "$(YELLOW)Movendo favicon.ico para pasta public...$(NC)"; \
-		cp favicon.ico public/; \
-	fi
-	@echo "$(GREEN)Build preparado na pasta 'public'$(NC)"
 
 test: ## Executa testes básicos
 	@echo "$(GREEN)Executando testes...$(NC)"
@@ -132,21 +149,49 @@ deploy: ## Faz deploy para produção no Netlify
 		echo "$(YELLOW)Configure em .netlify/token ou use: make deploy-setup$(NC)"; \
 		exit 1; \
 	fi
-	@netlify deploy --prod --dir=public --site=$(NETLIFY_SITE_ID)
+	@if command -v npx &> /dev/null; then \
+		npx netlify deploy --prod --dir=dist --site=$(NETLIFY_SITE_ID); \
+	elif [ -f "node_modules/.bin/netlify" ]; then \
+		./node_modules/.bin/netlify deploy --prod --dir=dist --site=$(NETLIFY_SITE_ID); \
+	else \
+		echo "$(RED)Erro: Netlify CLI não encontrado!$(NC)"; \
+		echo "$(YELLOW)Instale dependências com: npm install$(NC)"; \
+		exit 1; \
+	fi
 
 deploy-setup: ## Configura credenciais do Netlify para deploy
 	@echo "$(GREEN)Configurando credenciais do Netlify...$(NC)"
 	@mkdir -p .netlify
-	@netlify login
-	@echo "$(YELLOW)Criando site no Netlify...$(NC)"
-	@netlify sites:create --name $(PROJECT_NAME)
-	@echo "$(YELLOW)Vinculando projeto ao site...$(NC)"
-	@netlify link --name $(PROJECT_NAME)
+	@if command -v npx &> /dev/null; then \
+		npx netlify login; \
+		echo "$(YELLOW)Criando site no Netlify...$(NC)"; \
+		npx netlify sites:create --name $(PROJECT_NAME); \
+		echo "$(YELLOW)Vinculando projeto ao site...$(NC)"; \
+		npx netlify link --name $(PROJECT_NAME); \
+	elif [ -f "node_modules/.bin/netlify" ]; then \
+		./node_modules/.bin/netlify login; \
+		echo "$(YELLOW)Criando site no Netlify...$(NC)"; \
+		./node_modules/.bin/netlify sites:create --name $(PROJECT_NAME); \
+		echo "$(YELLOW)Vinculando projeto ao site...$(NC)"; \
+		./node_modules/.bin/netlify link --name $(PROJECT_NAME); \
+	else \
+		echo "$(RED)Erro: Netlify CLI não encontrado!$(NC)"; \
+		echo "$(YELLOW)Instale dependências com: npm install$(NC)"; \
+		exit 1; \
+	fi
 	@echo "$(GREEN)Configuração concluída!$(NC)"
 
 preview: ## Cria preview do deploy
 	@echo "$(GREEN)Criando preview...$(NC)"
-	@netlify deploy --dir=public
+	@if command -v npx &> /dev/null; then \
+		npx netlify deploy --dir=dist; \
+	elif [ -f "node_modules/.bin/netlify" ]; then \
+		./node_modules/.bin/netlify deploy --dir=dist; \
+	else \
+		echo "$(RED)Erro: Netlify CLI não encontrado!$(NC)"; \
+		echo "$(YELLOW)Instale dependências com: npm install$(NC)"; \
+		exit 1; \
+	fi
 
 status: ## Mostra status do projeto
 	@echo "$(GREEN)Status do projeto:$(NC)"
@@ -211,7 +256,15 @@ install-woovi: ## Instala dependências para integração Woovi
 
 dev-woovi: ## Inicia servidor com funções Netlify
 	@echo "$(GREEN)Iniciando servidor Netlify com funções...$(NC)"
-	@netlify dev
+	@if command -v npx &> /dev/null; then \
+		npx netlify dev; \
+	elif [ -f "node_modules/.bin/netlify" ]; then \
+		./node_modules/.bin/netlify dev; \
+	else \
+		echo "$(RED)Erro: Netlify CLI não encontrado!$(NC)"; \
+		echo "$(YELLOW)Instale dependências com: npm install$(NC)"; \
+		exit 1; \
+	fi
 
 test-woovi: ## Testa integração Woovi
 	@echo "$(GREEN)Testando integração Woovi...$(NC)"
@@ -231,7 +284,15 @@ test-woovi: ## Testa integração Woovi
 deploy-woovi: ## Deploy com funções Netlify
 	@echo "$(GREEN)Fazendo deploy com funções Woovi...$(NC)"
 	@make build
-	@netlify deploy --prod
+	@if command -v npx &> /dev/null; then \
+		npx netlify deploy --prod; \
+	elif [ -f "node_modules/.bin/netlify" ]; then \
+		./node_modules/.bin/netlify deploy --prod; \
+	else \
+		echo "$(RED)Erro: Netlify CLI não encontrado!$(NC)"; \
+		echo "$(YELLOW)Instale dependências com: npm install$(NC)"; \
+		exit 1; \
+	fi
 
 organize: ## Organiza estrutura do projeto movendo arquivos para public/
 	@echo "$(GREEN)Organizando estrutura do projeto...$(NC)"

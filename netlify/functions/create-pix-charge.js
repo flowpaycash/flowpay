@@ -99,15 +99,28 @@ async function createPixChargeHandler(event, context) {
     });
 
     if (!wooviResponse.ok) {
-      const errorText = await wooviResponse.text();
+      // Tentar parsear resposta como JSON primeiro
+      let errorResponse = null;
+      let errorText = '';
+      
+      try {
+        errorText = await wooviResponse.text();
+        errorResponse = JSON.parse(errorText);
+      } catch (e) {
+        // Se não for JSON, usar texto como está
+        errorResponse = errorText;
+      }
+      
       logAPIError('error', 'Erro na API Woovi', {
         service: 'Woovi',
         statusCode: wooviResponse.status,
         endpoint: '/api/v1/charge',
         method: 'POST',
-        response: errorText
+        response: errorText,
+        parsedResponse: errorResponse
       });
-      throw handleExternalAPIError('Woovi', wooviResponse.status, errorText);
+      
+      throw handleExternalAPIError('Woovi', wooviResponse.status, errorResponse, null);
     }
 
     const wooviData = await wooviResponse.json();

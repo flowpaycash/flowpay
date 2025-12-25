@@ -1,0 +1,122 @@
+---
+---
+
+<section id="blockchain" class="home-highlight">
+  <div class="home-highlight-container">
+    <div class="home-highlight-content">
+      <h2>Integração em Múltiplas Blockchains</h2>
+      <p class="home-highlight-text">
+        A FLOWPay suporta uma ampla variedade de redes blockchain, incluindo Ethereum, Polygon,
+        Linea, Base, Mantle, opBNB e Unichain, permitindo que você tenha flexibilidade para receber
+        pagamentos em diferentes ecossistemas cripto.
+      </p>
+      <div class="blockchain-logos">
+        <div class="blockchain-logo ethereum pulse-slow" onclick="showBlockchainInfo('ethereum')">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
+            <path d="M16 0L6 8v8l10 8 10-8V8L16 0z" />
+            <path d="M6 20l10 8 10-8v8l-10 8L6 28v-8z" />
+          </svg>
+          <span>Ethereum</span>
+        </div>
+        <div class="blockchain-logo polygon pulse-slow" onclick="showBlockchainInfo('polygon')">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
+            <polygon points="16,2 30,8 30,24 16,30 2,24 2,8" />
+          </svg>
+          <span>Polygon</span>
+        </div>
+        <div class="blockchain-logo linea pulse-slow" onclick="showBlockchainInfo('linea')">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
+            <path d="M16 2L2 8v16l14 6 14-6V8L16 2z" />
+          </svg>
+          <span>Linea</span>
+        </div>
+        <div class="blockchain-logo base pulse-slow" onclick="showBlockchainInfo('base')">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
+            <rect x="4" y="4" width="24" height="24" rx="4" />
+          </svg>
+          <span>Base</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  if (typeof window !== 'undefined') {
+    window.showBlockchainInfo = function (blockchain: string) {
+      const info: Record<string, any> = {
+        ethereum: {
+          name: 'Ethereum',
+          description: 'Rede principal com maior liquidez e segurança',
+          features: ['Smart Contracts', 'DeFi', 'NFTs', 'Layer 2'],
+          gas: 'Médio-Alto',
+          speed: '~15 segundos',
+        },
+        polygon: {
+          name: 'Polygon',
+          description: 'Sidechain Ethereum com baixas taxas',
+          features: ['Baixo Custo', 'Compatibilidade EVM', 'Escalabilidade'],
+          gas: 'Baixo',
+          speed: '~2 segundos',
+        },
+        linea: {
+          name: 'Linea',
+          description: 'Layer 2 Ethereum com rollups ZK',
+          features: ['Zero-Knowledge', 'Baixo Custo', 'Segurança Ethereum'],
+          gas: 'Baixo',
+          speed: '~5 segundos',
+        },
+        base: {
+          name: 'Base',
+          description: 'Layer 2 da Coinbase com segurança máxima',
+          features: ['Coinbase Backed', 'Segurança', 'Baixo Custo'],
+          gas: 'Baixo',
+          speed: '~2 segundos',
+        },
+      };
+
+      const blockchainData = info[blockchain];
+      if (!blockchainData) return;
+
+      const modal = document.createElement('div');
+      modal.className = 'blockchain-modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>${blockchainData.name}</h3>
+            <button class="modal-close" onclick="this.closest('.blockchain-modal').remove()">×</button>
+          </div>
+          <div class="modal-body">
+            <p class="modal-description">${blockchainData.description}</p>
+            <div class="modal-features">
+              <h4>Características:</h4>
+              <ul>
+                ${blockchainData.features.map((f: string) => `<li>${f}</li>`).join('')}
+              </ul>
+            </div>
+            <div class="modal-stats">
+              <div class="stat">
+                <span class="stat-label">Gas:</span>
+                <span class="stat-value">${blockchainData.gas}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Velocidade:</span>
+                <span class="stat-value">${blockchainData.speed}</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="/checkout" class="btn btn-primary">Usar ${blockchainData.name}</a>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+      });
+    };
+  }
+</script>
+

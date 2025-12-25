@@ -1,0 +1,164 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="FLOWPay Admin | Painel de Controle">
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link rel="stylesheet" href="/css/navbar.css" />
+
+  <!-- NEO Layout Injector -->
+  <script is:inline src="/js/layout-injector.js"></script>
+
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-container">
+      <div class="login-header">
+        <div class="login-logo">🛡️</div>
+        <h1>FLOWPay Admin</h1>
+        <p>Painel de Controle</p>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <div class="input-group">
+          <label for="password">Senha de Acesso</label>
+          <input type="password" id="password" placeholder="Digite a senha" required />
+        </div>
+
+        <button type="submit" class="login-btn">🔓 Acessar Painel</button>
+      </form>
+
+      <div class="login-footer">
+        <a href="/" class="back-link">⬅️ Voltar ao Site</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="admin-panel" class="admin-panel" style="display: none;">
+    <!-- Sidebar será injetada dinamicamente via NEO Layout Injector -->
+    <div id="neo-sidebar-placeholder"></div>
+
+    <div class="admin-main">
+      <div class="main-header">
+        <div class="header-title">Dashboard FLOWPay</div>
+        <div class="header-actions">
+          <button id="refresh-btn" class="btn-admin btn-admin-primary">🔄 Atualizar</button>
+          <button id="download-btn" class="btn-admin btn-admin-secondary">⬇️ Baixar JSON</button>
+          <button id="logout-btn" class="btn-admin btn-admin-secondary">🚪 Sair</button>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div class="card-title">Transações Pendentes</div>
+            <div class="card-icon">⏰</div>
+          </div>
+          <div class="card-value" id="pending-count">0</div>
+          <div class="card-change">Aguardando pagamento</div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div class="card-title">Transações Pagas</div>
+            <div class="card-icon">✅</div>
+          </div>
+          <div class="card-value" id="paid-count">0</div>
+          <div class="card-change">Confirmadas</div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div class="card-title">Transações Processadas</div>
+            <div class="card-icon">🚀</div>
+          </div>
+          <div class="card-value" id="processed-count">0</div>
+          <div class="card-change">Em processamento</div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div class="card-title">Valor Total</div>
+            <div class="card-icon">💰</div>
+          </div>
+          <div class="card-value" id="total-value">R$ 0,00</div>
+          <div class="card-change">Volume processado</div>
+        </div>
+      </div>
+
+      <!-- Liquidações Pendentes -->
+      <div class="admin-content">
+        <div class="content-header">
+          <h2>💰 Liquidações Pendentes</h2>
+          <div class="header-actions">
+            <button onclick="loadSettlementOrders()" class="btn-admin btn-admin-secondary">
+              🔄 Atualizar
+            </button>
+          </div>
+        </div>
+        <div id="settlement-orders-container" class="settlement-orders-container">
+          <!-- Ordens serão inseridas aqui -->
+        </div>
+      </div>
+
+      <div class="admin-content">
+        <div class="content-header">
+          <h2>📋 Transações</h2>
+          <div class="filters">
+            <select id="status-filter" class="filter-select">
+              <option value="">Todos os Status</option>
+              <option value="PENDING">Pendentes</option>
+              <option value="PAID">Pagas</option>
+              <option value="CRYPTO_PROCESSED">Processadas</option>
+            </select>
+
+            <select id="moeda-filter" class="filter-select">
+              <option value="">Todas as Moedas</option>
+              <option value="BRL">Real (BRL)</option>
+              <option value="USD">Dólar (USD)</option>
+              <option value="EUR">Euro (EUR)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table id="transactions-table" class="transactions-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Moeda</th>
+                <th>Valor</th>
+                <th>Wallet</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-tbody">
+              <!-- Transações serão inseridas aqui -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner">
+      <div style="font-size: 2rem; margin-bottom: 1rem">⏳</div>
+      <p>Carregando...</p>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div id="notification" class="notification" style="display: none;">
+    <span class="notification-icon"></span>
+    <span class="notification-text"></span>
+  </div>
+
+  <script is:inline src="/csp-config.js"></script>
+  <script is:inline src="/admin/admin.js"></script>
+</Layout>
+

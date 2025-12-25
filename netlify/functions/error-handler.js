@@ -56,13 +56,55 @@ function handleValidationError(field, message, value = null) {
 
 // Função para tratar erros de API externa
 function handleExternalAPIError(service, statusCode, response, originalError = null) {
-  return createError(ERROR_TYPES.EXTERNAL_API_ERROR, `Erro na API externa: ${service}`, {
+  // Tentar extrair mensagem específica da resposta
+  let errorMessage = `Erro na API externa: ${service}`;
+  let errorDetails = {
     service,
     statusCode,
-    response: response ? String(response).substring(0, 200) : null,
+    response: response ? String(response).substring(0, 500) : null,
     originalError: originalError ? originalError.message : null,
     timestamp: new Date().toISOString()
-  });
+  };
+
+  // Tentar parsear resposta JSON para extrair mensagem específica
+  if (response) {
+    try {
+      const parsedResponse = typeof response === 'string' ? JSON.parse(response) : response;
+      
+      // Extrair mensagem de erro da API Woovi
+      if (parsedResponse.errors && Array.isArray(parsedResponse.errors) && parsedResponse.errors.length > 0) {
+        const firstError = parsedResponse.errors[0];
+        errorMessage = firstError.message || errorMessage;
+        errorDetails.apiError = firstError;
+      } else if (parsedResponse.message) {
+        errorMessage = parsedResponse.message;
+        errorDetails.apiMessage = parsedResponse.message;
+      } else if (parsedResponse.error) {
+        errorMessage = parsedResponse.error;
+        errorDetails.apiError = parsedResponse.error;
+      }
+    } catch (e) {
+      // Se não for JSON, usar resposta como está
+      if (typeof response === 'string' && response.length < 200) {
+        errorMessage = response;
+      }
+    }
+  }
+
+  // Mensagens amigáveis baseadas no status code
+  if (statusCode === 401) {
+    errorMessage = 'Erro de autenticação na API. Verifique suas credenciais.';
+  } else if (statusCode === 403) {
+    errorMessage = 'Acesso negado pela API. Verifique suas permissões.';
+  } else if (statusCode === 404) {
+    errorMessage = 'Endpoint não encontrado na API.';
+  } else if (statusCode === 429) {
+    errorMessage = 'Muitas requisições. Tente novamente em alguns instantes.';
+  } else if (statusCode >= 500) {
+    errorMessage = 'Serviço temporariamente indisponível. Tente novamente em alguns instantes.';
+  }
+
+  return createError(ERROR_TYPES.EXTERNAL_API_ERROR, errorMessage, errorDetails);
 }
 
 // Função para tratar erros de autenticação
@@ -116,9 +158,26 @@ function errorHandler(error, event, context) {
   if (isOperational) {
     // Erro operacional - retornar detalhes controlados
     statusCode = error.statusCode;
+    
+    // Mensagem amigável para o usuário
+    let userMessage = error.message;
+    
+    // Melhorar mensagens baseadas no tipo de erro
+    if (error.type === ERROR_TYPES.EXTERNAL_API_ERROR) {
+      // Mensagem já vem amigável do handleExternalAPIError
+      userMessage = error.message;
+    } else if (error.type === ERROR_TYPES.VALIDATION_ERROR) {
+      userMessage = error.message || 'Dados inválidos. Verifique os campos informados.';
+    } else if (error.type === ERROR_TYPES.AUTHENTICATION_ERROR) {
+      userMessage = 'Erro de autenticação. Verifique suas credenciais.';
+    } else if (error.type === ERROR_TYPES.RATE_LIMIT_ERROR) {
+      userMessage = 'Muitas requisições. Aguarde alguns instantes e tente novamente.';
+    }
+    
     responseBody = {
-      error: error.type,
-      message: error.message,
+      success: false,
+      error: userMessage,
+      errorType: error.type,
       details: config.environment === 'development' ? error.details : undefined,
       timestamp: error.timestamp
     };
@@ -129,6 +188,13 @@ function errorHandler(error, event, context) {
       stack: error.stack,
       event: event.httpMethod + ' ' + event.path
     });
+    
+    responseBody = {
+      success: false,
+      error: 'Erro interno do servidor',
+      message: 'Ocorreu um erro inesperado. Tente novamente em alguns instantes.',
+      timestamp: new Date().toISOString()
+    };
   }
 
   // Headers de resposta

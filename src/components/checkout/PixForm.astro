@@ -1,0 +1,27 @@
+---
+---
+
+<section id="pix-mode" class="mode-section">
+  <form id="pix-form" class="card">
+    <div class="grid">
+      <label>
+        Wallet (referência interna)
+        <input name="wallet" id="wallet" placeholder="0x..." autocomplete="off" />
+      </label>
+      <label>
+        Valor
+        <input name="valor" id="valor" type="number" step="0.01" min="0.01" placeholder="100.00" />
+      </label>
+      <label>
+        Moeda
+        <input name="moeda" id="moeda" value="BRL" />
+      </label>
+      <input type="hidden" name="id_transacao" />
+    </div>
+    <div class="actions">
+      <button class="primary" type="submit">Gerar cobrança PIX</button>
+      <button class="text" type="button" data-action="reset">Voltar</button>
+    </div>
+  </form>
+</section>
+

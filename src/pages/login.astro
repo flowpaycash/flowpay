@@ -1,19 +1,18 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Entrar — FLOWPay</title>
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Entrar — FLOWPay">
   <link rel="stylesheet" href="/css/styles.css" />
-</head>
-<body>
+
   <main class="auth-shell">
     <section class="card auth-card">
       <h1>Entrar</h1>
       <p class="muted">Sem senha. Você escolhe o acesso.</p>
 
       <form id="magic-form" class="grid">
-        <label>E-mail
+        <label>
+          E-mail
           <input type="email" name="email" autocomplete="email" placeholder="voce@exemplo.com" required />
         </label>
         <button class="primary" type="submit">Receber link seguro</button>
@@ -30,5 +29,5 @@
   <div id="nf-toasts" class="nf-toasts"></div>
 
   <script type="module" src="/assets/js/login.js"></script>
-</body>
-</html>
+</Layout>
+

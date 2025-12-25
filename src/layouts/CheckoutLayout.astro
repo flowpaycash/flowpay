@@ -1,0 +1,67 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'FLOWPay Gateway Web3 - PIX ou Cripto',
+  description = 'Checkout invisível. Auto‑custódia. Transparente por padrão.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+
+    <!-- PWA Support -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#f2f2f7" />
+    <meta name="msapplication-TileColor" content="#ff007a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="FLOWPay" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="196x196" href="/assets/icons/favicon-196.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-196.png" />
+    <link rel="shortcut icon" href="/assets/icons/favicon.ico" />
+
+    <!-- CSS Apple Design -->
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/checkout-apple.css" />
+    <link rel="stylesheet" href="/css/checkout-apple-override.css" />
+
+    <!-- NEO Layout Injector -->
+    <script is:inline src="/js/layout-injector.js"></script>
+  </head>
+  <body class="checkout-body">
+    <slot />
+    
+    <!-- Wallet Boot Loader NΞØ -->
+    <script is:inline>
+      (async () => {
+        try {
+          const r = await fetch('/.netlify/functions/neo-config', { cache: 'no-store' });
+          if (r.ok) window.NEO_CONFIG = await r.json();
+        } catch {}
+      })();
+    </script>
+  </body>
+</html>
+
+<style>
+  /* Garantir fundo claro no body */
+  body.checkout-body {
+    background: #f2f2f7 !important;
+    background-color: #f2f2f7 !important;
+    color: #1d1d1f !important;
+  }
+</style>
+

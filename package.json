@@ -4,9 +4,13 @@
   "description": "FLOWPay - Integração com Woovi API para pagamentos Pix",
   "main": "index.js",
   "scripts": {
-    "dev": "netlify dev",
-    "build": "netlify build",
-    "deploy": "netlify deploy --prod",
+    "dev": "astro dev",
+    "dev:netlify": "netlify dev",
+    "build": "astro build",
+    "build:netlify": "astro build && netlify build",
+    "preview": "npm run build && npx serve dist -p 4321",
+    "deploy": "npm run build && netlify deploy --prod",
+    "astro": "astro",
     "functions:dev": "netlify functions:serve",
     "functions:build": "netlify functions:build",
     "setup": "npm install && echo '✅ Dependências instaladas!'",
@@ -20,6 +24,8 @@
     "test:coverage": "jest --coverage",
     "test:error-handler": "jest tests/error-handler.test.js",
     "test:validation": "jest tests/validation-middleware.test.js",
+    "test:openpix": "jest tests/openpix.test.js",
+    "test:openpix:watch": "jest tests/openpix.test.js --watch",
     "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore '~/Desktop/**' --config .markdownlint.json",
     "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore '~/Desktop/**' --config .markdownlint.json --fix"
   },
@@ -30,15 +36,20 @@
     "viem": "^2.43.3"
   },
   "devDependencies": {
+    "@astrojs/netlify": "^6.6.3",
+    "@astrojs/react": "^4.4.2",
     "@netlify/functions": "^5.1.2",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
+    "astro": "^5.16.6",
     "esbuild": "^0.27.2",
     "jest": "^30.2.0",
     "markdownlint-cli": "^0.47.0",
     "netlify-cli": "^23.13.0",
     "prettier": "^3.7.4",
-    "pwa-asset-generator": "^8.1.2"
+    "pwa-asset-generator": "^8.1.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "keywords": [
     "flowpay",
@@ -55,6 +66,9 @@
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "overrides": {
+    "jws": ">=3.2.3"
   },
   "repository": {
     "type": "git",

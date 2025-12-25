@@ -1,0 +1,88 @@
+/* 🍎 FLOWPay - Checkout Apple Design OVERRIDE */
+/* Este arquivo sobrescreve qualquer CSS conflitante */
+
+/* FORÇAR FUNDO CLARO NO BODY */
+body.checkout-body {
+  background: #f2f2f7 !important;
+  background-color: #f2f2f7 !important;
+  background-image: none !important;
+  color: #1d1d1f !important;
+}
+
+html:has(body.checkout-body) {
+  background: #f2f2f7 !important;
+  background-color: #f2f2f7 !important;
+}
+
+/* FORÇAR NAVBAR CLARA */
+body.checkout-body .neo-navbar {
+  background: rgba(255, 255, 255, 0.7) !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+body.checkout-body .logo-link,
+body.checkout-body .nav-link {
+  color: #1d1d1f !important;
+}
+
+body.checkout-body .nav-link:hover {
+  color: #1d1d1f !important;
+}
+
+/* FORÇAR HEADER TRANSPARENTE */
+body.checkout-body .checkout-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* FORÇAR MAIN TRANSPARENTE */
+body.checkout-body .checkout-main {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* GARANTIR QUE CARDS TENHAM FUNDO CLARO */
+body.checkout-body .card {
+  background: rgba(255, 255, 255, 0.7) !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+}
+
+/* GARANTIR QUE INPUTS TENHAM FUNDO BRANCO */
+body.checkout-body input,
+body.checkout-body textarea,
+body.checkout-body select {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #1d1d1f !important;
+}
+
+body.checkout-body input:focus,
+body.checkout-body textarea:focus,
+body.checkout-body select:focus {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #1d1d1f !important;
+}
+
+/* GARANTIR QUE LABELS TENHAM COR ESCURA */
+body.checkout-body label {
+  color: #1d1d1f !important;
+}
+
+/* GARANTIR QUE TEXTOS TENHAM COR ESCURA */
+body.checkout-body .hero h1,
+body.checkout-body .hero p,
+body.checkout-body h1,
+body.checkout-body h2,
+body.checkout-body h3,
+body.checkout-body p {
+  color: #1d1d1f !important;
+}
+

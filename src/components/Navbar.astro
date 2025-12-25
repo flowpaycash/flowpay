@@ -1,0 +1,97 @@
+---
+---
+
+<nav class="neo-navbar" data-neo-component="navbar">
+  <div class="nav-container">
+    <!-- Logo com glow neon -->
+    <div class="nav-logo">
+      <a href="/" class="logo-link">
+        <div class="logo-glow">
+          <img src="/img/logos/flowpay-header-logo.png" alt="FLOWPay" class="logo-img" />
+          <div class="logo-aura"></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Menu principal com efeitos hover -->
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="/" class="nav-link" data-neo-ripple>
+          <span class="link-text">Início</span>
+          <div class="link-underline"></div>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/checkout" class="nav-link" data-neo-ripple>
+          <span class="link-text">Checkout</span>
+          <div class="link-underline"></div>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/transparency" class="nav-link" data-neo-ripple>
+          <span class="link-text">Transparência</span>
+          <div class="link-underline"></div>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#features" class="nav-link" data-neo-ripple>
+          <span class="link-text">Recursos</span>
+          <div class="link-underline"></div>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#blockchain" class="nav-link" data-neo-ripple>
+          <span class="link-text">Blockchain</span>
+          <div class="link-underline"></div>
+        </a>
+      </li>
+      <li class="nav-item admin-item">
+        <a href="/admin" class="nav-link admin-link" data-neo-ripple>
+          <span class="link-text">Admin</span>
+          <div class="link-underline admin-glow"></div>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/login" class="nav-link" data-neo-ripple>
+          <span class="link-text">Entrar</span>
+          <div class="link-underline"></div>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Status da carteira -->
+    <div class="nav-wallet" id="nav-wallet-status">
+      <div class="wallet-indicator disconnected">
+        <div class="indicator-dot"></div>
+        <span class="status-text">Desconectado</span>
+      </div>
+    </div>
+
+    <!-- Botão Ativar Flow -->
+    <button class="activate-flow-btn plasma-btn">
+      <span>Ativar Flow</span>
+    </button>
+
+    <!-- Menu mobile com animação -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" data-neo-ripple>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </button>
+  </div>
+</nav>
+
+<script>
+  // NEO Layout Injector compatibility
+  if (typeof window !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+      const navbar = document.querySelector('.neo-navbar');
+      if (navbar) {
+        navbar.setAttribute('data-neo-component', 'navbar');
+      }
+    });
+  }
+</script>
+
