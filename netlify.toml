@@ -5,6 +5,9 @@
   publish = "dist"
   command = "npm run build"
 
+[build.environment]
+  NPM_CONFIG_PRODUCTION = "false"
+
 [functions]
   directory = "netlify/functions"
 

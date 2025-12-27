@@ -25,25 +25,25 @@
     "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore '~/Desktop/**' --config .markdownlint.json --fix"
   },
   "dependencies": {
+    "@astrojs/netlify": "^6.6.3",
+    "@astrojs/react": "^4.4.2",
     "@web3auth/ethereum-provider": "^9.7.0",
     "@web3auth/modal": "^10.10.0",
+    "astro": "^5.16.6",
     "axios": "^1.13.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "viem": "^2.43.3"
   },
   "devDependencies": {
-    "@astrojs/netlify": "^6.6.3",
-    "@astrojs/react": "^4.4.2",
     "@netlify/functions": "^5.1.2",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
-    "astro": "^5.16.6",
     "esbuild": "^0.27.2",
     "jest": "^30.2.0",
     "markdownlint-cli": "^0.47.0",
     "prettier": "^3.7.4",
-    "pwa-asset-generator": "^8.1.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "pwa-asset-generator": "^8.1.2"
   },
   "keywords": [
     "flowpay",
