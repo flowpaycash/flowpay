@@ -86,3 +86,143 @@ body.checkout-body p {
   color: #1d1d1f !important;
 }
 
+/* GARANTIR QUE FOOTER TENHA ESTILOS CORRETOS */
+body.checkout-body .neo-footer {
+  background: var(--ios-bg-secondary, #ffffff) !important;
+  background-color: var(--ios-bg-secondary, #ffffff) !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+  color: var(--ios-text, #1d1d1f) !important;
+  margin-top: var(--spacing-2xl, 3rem) !important;
+  padding: var(--spacing-2xl, 3rem) 0 !important;
+}
+
+body.checkout-body .neo-footer .container {
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  padding: 0 var(--spacing-md, 1rem) !important;
+}
+
+body.checkout-body .neo-footer__grid {
+  display: grid !important;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr !important;
+  gap: var(--spacing-xl, 2rem) !important;
+  align-items: start !important;
+}
+
+body.checkout-body .neo-footer__brand {
+  display: grid !important;
+  gap: var(--spacing-sm, 0.75rem) !important;
+}
+
+body.checkout-body .neo-footer__logo {
+  font-weight: 600 !important;
+  font-size: 1.125rem !important;
+  text-decoration: none !important;
+  color: var(--ios-text, #1d1d1f) !important;
+  letter-spacing: -0.5px !important;
+}
+
+body.checkout-body .neo-footer__tag {
+  margin: 0 !important;
+  opacity: 0.7 !important;
+  font-size: 0.9375rem !important;
+  color: var(--ios-text-secondary, #6e6e73) !important;
+}
+
+body.checkout-body .neo-footer__pill {
+  display: inline-block !important;
+  padding: var(--spacing-xs, 0.5rem) var(--spacing-md, 1rem) !important;
+  border-radius: var(--radius-sm, 10px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  font-size: 0.875rem !important;
+  text-decoration: none !important;
+  color: var(--ios-text, #1d1d1f) !important;
+  transition: var(--transition, all 0.3s cubic-bezier(0.4, 0, 0.2, 1)) !important;
+}
+
+body.checkout-body .neo-footer__col h3 {
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  margin: 0 0 var(--spacing-sm, 0.75rem) !important;
+  color: var(--ios-text, #1d1d1f) !important;
+  letter-spacing: -0.3px !important;
+}
+
+body.checkout-body .neo-footer__col ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: grid !important;
+  gap: var(--spacing-xs, 0.5rem) !important;
+}
+
+body.checkout-body .neo-footer__col a {
+  color: var(--ios-text-secondary, #6e6e73) !important;
+  text-decoration: none !important;
+  font-size: 0.9375rem !important;
+  transition: var(--transition-fast, all 0.2s cubic-bezier(0.4, 0, 0.2, 1)) !important;
+}
+
+body.checkout-body .neo-footer__col a:hover {
+  color: var(--ios-text, #1d1d1f) !important;
+}
+
+body.checkout-body .neo-footer__note {
+  margin: var(--spacing-lg, 1.5rem) 0 0 !important;
+  opacity: 0.6 !important;
+  font-size: 0.875rem !important;
+  color: var(--ios-text-secondary, #6e6e73) !important;
+}
+
+body.checkout-body .neo-footer__meta {
+  border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+  margin-top: var(--spacing-xl, 2rem) !important;
+  padding-top: var(--spacing-lg, 1.5rem) !important;
+}
+
+body.checkout-body .neo-footer__meta__row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: var(--spacing-md, 1rem) !important;
+  flex-wrap: wrap !important;
+}
+
+body.checkout-body .neo-footer__meta p {
+  margin: 0 !important;
+  font-size: 0.875rem !important;
+  color: var(--ios-text-secondary, #6e6e73) !important;
+}
+
+body.checkout-body .neo-footer__links {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-sm, 0.75rem) !important;
+  flex-wrap: wrap !important;
+}
+
+body.checkout-body .neo-footer__links a {
+  color: var(--ios-text-secondary, #6e6e73) !important;
+  text-decoration: none !important;
+  font-size: 0.875rem !important;
+  transition: var(--transition-fast, all 0.2s cubic-bezier(0.4, 0, 0.2, 1)) !important;
+}
+
+body.checkout-body .neo-footer__links a:hover {
+  color: var(--ios-text, #1d1d1f) !important;
+}
+
+@media (max-width: 820px) {
+  body.checkout-body .neo-footer__grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-lg, 1.5rem) !important;
+  }
+}
+
+@media (max-width: 620px) {
+  body.checkout-body .neo-footer__meta__row {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+}
+

@@ -43,7 +43,24 @@ async function createPixChargeHandler(event, context) {
     }
 
     // Validar e sanitizar dados de entrada
-    const { data: requestBody } = validateJSON('createPixCharge')(event, context);
+    let requestBody;
+    try {
+      const validationResult = validateJSON('createPixCharge')(event, context);
+      requestBody = validationResult.data;
+    } catch (validationError) {
+      // Se a validação falhar, retornar erro formatado
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          error: validationError.message || 'Erro de validação',
+          errorType: 'VALIDATION_ERROR',
+          details: validationError.details || {}
+        })
+      };
+    }
+    
     const sanitizedData = sanitizeData(requestBody);
     
     const { wallet, valor, moeda, id_transacao } = sanitizedData;

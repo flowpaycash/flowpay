@@ -111,7 +111,36 @@ import CheckoutFooter from '../components/checkout/CheckoutFooter.astro';
                 body: JSON.stringify(p),
               });
 
-              const responseData = await response.json();
+              // Verificar se a resposta é JSON válido
+              let responseData;
+              const contentType = response.headers.get('content-type');
+              
+              if (contentType && contentType.includes('application/json')) {
+                try {
+                  responseData = await response.json();
+                } catch (jsonError) {
+                  // Se falhar ao parsear JSON, tentar ler como texto
+                  const textResponse = await response.text();
+                  console.error('❌ Failed to parse JSON response:', {
+                    status: response.status,
+                    contentType,
+                    textResponse: textResponse.substring(0, 200),
+                    jsonError: jsonError.message
+                  });
+                  
+                  throw new Error(`Erro ao processar resposta do servidor: ${textResponse.substring(0, 100)}`);
+                }
+              } else {
+                // Se não for JSON, ler como texto
+                const textResponse = await response.text();
+                console.error('❌ Non-JSON response received:', {
+                  status: response.status,
+                  contentType,
+                  textResponse: textResponse.substring(0, 200)
+                });
+                
+                throw new Error(`Resposta inválida do servidor: ${textResponse.substring(0, 100)}`);
+              }
 
               if (!response.ok) {
                 let errorMessage = 'Erro ao criar cobrança PIX';
