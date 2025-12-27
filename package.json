@@ -5,14 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "astro dev",
-    "dev:netlify": "netlify dev",
     "build": "astro build",
-    "build:netlify": "astro build && netlify build",
     "preview": "npm run build && npx serve dist -p 4321",
-    "deploy": "npm run build && netlify deploy --prod",
     "astro": "astro",
-    "functions:dev": "netlify functions:serve",
-    "functions:build": "netlify functions:build",
     "setup": "npm install && echo '✅ Dependências instaladas!'",
     "neo:cfg": "node tools/neo-generate-config.mjs",
     "neo:build:wallet": "npx esbuild public/assets/js/web3auth.init.ts --bundle --format=esm --target=es2022 --minify --outfile=public/assets/js/web3auth.js",
@@ -45,7 +40,6 @@
     "esbuild": "^0.27.2",
     "jest": "^30.2.0",
     "markdownlint-cli": "^0.47.0",
-    "netlify-cli": "^23.13.0",
     "prettier": "^3.7.4",
     "pwa-asset-generator": "^8.1.2",
     "react": "^18.3.1",
@@ -66,9 +60,6 @@
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
-  },
-  "overrides": {
-    "jws": ">=3.2.3"
   },
   "repository": {
     "type": "git",

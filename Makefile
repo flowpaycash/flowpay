@@ -26,7 +26,7 @@ install: ## Instala dependências necessárias
 	@echo "$(YELLOW)Instalando dependências do projeto...$(NC)"
 	@npm install
 	@echo "$(GREEN)Dependências instaladas!$(NC)"
-	@echo "$(YELLOW)Nota: Use 'npx netlify' ou 'npm run dev:netlify' para comandos Netlify$(NC)"
+	@echo "$(YELLOW)Nota: Use 'npx netlify' para comandos Netlify$(NC)"
 
 dev: ## Inicia servidor de desenvolvimento local
 	@echo "$(GREEN)Iniciando servidor de desenvolvimento...$(NC)"
@@ -130,8 +130,37 @@ format: ## Formata código (se ferramentas disponíveis)
 		echo "$(YELLOW)Prettier não instalado. Instale com: npm install -g prettier$(NC)"; \
 	fi
 
-clean: ## Remove arquivos temporários
-	@echo "$(GREEN)Limpando arquivos temporários...$(NC)"
+clean: ## Remove arquivos temporários e dependências
+	@echo "$(GREEN)Limpando arquivos temporários e gerados...$(NC)"
+	@if [ -d "node_modules" ]; then \
+		echo "$(YELLOW)⚠️  ATENÇÃO: Removendo node_modules/...$(NC)"; \
+		echo "$(YELLOW)   Use 'make clean-safe' para limpar sem remover node_modules$(NC)"; \
+		rm -rf node_modules; \
+	fi
+	@if [ -d "dist" ]; then \
+		echo "$(YELLOW)Removendo dist/...$(NC)"; \
+		rm -rf dist; \
+	fi
+	@if [ -d ".astro" ]; then \
+		echo "$(YELLOW)Removendo .astro/...$(NC)"; \
+		rm -rf .astro; \
+	fi
+	@find . -name "*.tmp" -delete
+	@find . -name "*.log" -delete
+	@find . -name ".DS_Store" -delete
+	@echo "$(GREEN)Limpeza concluída!$(NC)"
+	@echo "$(YELLOW)Execute 'make install' para reinstalar dependências$(NC)"
+
+clean-safe: ## Remove apenas arquivos temporários (preserva node_modules)
+	@echo "$(GREEN)Limpando arquivos temporários (preservando node_modules)...$(NC)"
+	@if [ -d "dist" ]; then \
+		echo "$(YELLOW)Removendo dist/...$(NC)"; \
+		rm -rf dist; \
+	fi
+	@if [ -d ".astro" ]; then \
+		echo "$(YELLOW)Removendo .astro/...$(NC)"; \
+		rm -rf .astro; \
+	fi
 	@find . -name "*.tmp" -delete
 	@find . -name "*.log" -delete
 	@find . -name ".DS_Store" -delete
