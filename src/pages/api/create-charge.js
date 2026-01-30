@@ -50,7 +50,7 @@ export const POST = async ({ request, clientAddress }) => {
             throw new Error('Configuração da API Woovi não encontrada');
         }
 
-        const cleanApiKey = WOOVI_API_KEY.split(':')[0];
+        const cleanApiKey = WOOVI_API_KEY;
 
         const pixData = {
             correlationID: id_transacao,
