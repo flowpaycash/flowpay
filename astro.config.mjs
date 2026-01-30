@@ -9,7 +9,7 @@ export default defineConfig({
     mode: 'standalone'
   }),
   server: {
-    port: 8080,
+    port: process.env.PORT ? parseInt(process.env.PORT) : 8080,
     host: true
   },
   build: {
