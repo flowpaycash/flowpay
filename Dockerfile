@@ -11,7 +11,7 @@ COPY package.json ./
 COPY server-simple.js ./
 
 # Variáveis padrão (Railway sobrescreve PORT, mas bom ter check)
-ENV PORT=8080
-EXPOSE 8080
+ENV PORT=3000
+EXPOSE 3000
 
 CMD ["node", "server-simple.js"]

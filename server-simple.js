@@ -1,7 +1,7 @@
 import http from 'http';
 
-const port = process.env.PORT || 8080;
-const host = process.env.HOST || '0.0.0.0';
+const port = 3000;
+const host = '0.0.0.0';
 
 console.log(`Starting simple server on ${host}:${port}...`);
 
