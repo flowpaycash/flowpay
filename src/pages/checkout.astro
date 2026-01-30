@@ -200,10 +200,20 @@ import CheckoutFooter from '../components/checkout/CheckoutFooter.astro';
           }
           const n = document.createElement('div');
           n.className = `nf-toast is-${type || 'info'}`;
-          n.innerHTML = `<span>${msg}</span><button class="nf-x" aria-label="Fechar">×</button>`;
+          
+          const textSpan = document.createElement('span');
+          textSpan.textContent = msg;
+          n.appendChild(textSpan);
+          
+          const closeBtn = document.createElement('button');
+          closeBtn.className = 'nf-x';
+          closeBtn.setAttribute('aria-label', 'Fechar');
+          closeBtn.textContent = '×';
+          closeBtn.onclick = () => n.remove();
+          n.appendChild(closeBtn);
+          
           holder.appendChild(n);
-          n.querySelector('.nf-x').onclick = () => n.remove();
-          setTimeout(() => n.remove(), 4200);
+          setTimeout(() => { if(n.parentNode) n.remove(); }, 5000);
         },
       });
 
@@ -230,7 +240,8 @@ import CheckoutFooter from '../components/checkout/CheckoutFooter.astro';
       if (walletField) {
         walletField.addEventListener('input', function () {
           const value = this.value.trim();
-          const isValid = value.length > 0 && value.startsWith('0x') && value.length === 42;
+          // Validação mais rigorosa: 0x + 40 hex chars
+          const isValid = /^0x[a-fA-F0-9]{40}$/.test(value);
 
           this.classList.toggle('valid', isValid);
           this.classList.toggle('invalid', !isValid && value.length > 0);

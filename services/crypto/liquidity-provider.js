@@ -131,6 +131,7 @@ class LiquidityProvider {
         secureLog('warn', 'Erro ao atualizar cache em background', {
           error: error.message
         });
+      } finally {
         this.rateCache.refreshPromise = null;
       }
     })();
@@ -415,21 +416,29 @@ class LiquidityProvider {
   calculateUSDT(amountBRL, rate) {
     // Taxa de serviço (0.5% por padrão)
     const serviceFeePercent = parseFloat(process.env.CONVERSION_FEE_PERCENT || '0.5');
-    const serviceFee = (amountBRL * serviceFeePercent) / 100;
 
-    // Valor líquido após taxa
-    const netAmountBRL = amountBRL - serviceFee;
+    // Usar centavos para evitar erros de ponto flutuante em BRL
+    const amountCents = Math.round(amountBRL * 100);
+    // Calcular feeCents usando BigInt para evitar problemas de ponto flutuante
+    // Multiplicar por 100 para manter a precisão do percentual, depois dividir por 100
+    const feeCents = Number(BigInt(amountCents) * BigInt(Math.round(serviceFeePercent * 100)) / BigInt(100));
+    const netAmountCents = amountCents - feeCents;
 
-    // Valor em USDT
+    // Converter de volta para decimal BRL
+    const netAmountBRL = netAmountCents / 100;
+    const serviceFee = feeCents / 100;
+
+    // Calcular USDT com alta precisão antes de arredondar
+    // USDT normalmente tem 6 decimais
     const amountUSDT = netAmountBRL / rate;
 
     return {
       rate,
-      amountUSDT: parseFloat(amountUSDT.toFixed(6)), // 6 casas decimais para USDT
+      amountUSDT: Number(amountUSDT.toFixed(6)),
       fees: {
-        serviceFee: parseFloat(serviceFee.toFixed(2)),
+        serviceFee: Number(serviceFee.toFixed(2)),
         serviceFeePercent,
-        netAmountBRL: parseFloat(netAmountBRL.toFixed(2))
+        netAmountBRL: Number(netAmountBRL.toFixed(2))
       }
     };
   }

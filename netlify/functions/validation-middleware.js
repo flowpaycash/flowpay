@@ -32,7 +32,7 @@ const VALIDATION_SCHEMAS = {
       }
     }
   },
-  
+
   // Validação para webhook
   webhook: {
     required: ['event', 'data'],
@@ -48,7 +48,7 @@ const VALIDATION_SCHEMAS = {
       }
     }
   },
-  
+
   // Validação para autenticação
   auth: {
     required: ['email'],
@@ -73,7 +73,7 @@ function validateType(value, type, fieldName) {
         });
       }
       break;
-      
+
     case 'number':
       if (typeof value !== 'number' && !Number.isFinite(parseFloat(value))) {
         throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser um número`, {
@@ -83,7 +83,7 @@ function validateType(value, type, fieldName) {
         });
       }
       break;
-      
+
     case 'object':
       if (typeof value !== 'object' || value === null || Array.isArray(value)) {
         throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser um objeto`, {
@@ -93,7 +93,7 @@ function validateType(value, type, fieldName) {
         });
       }
       break;
-      
+
     case 'email':
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(value)) {
@@ -103,16 +103,23 @@ function validateType(value, type, fieldName) {
         });
       }
       break;
-      
+
     case 'ethereum_address':
-      if (!value || !value.startsWith('0x') || value.length !== 42) {
-        throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser um endereço Ethereum válido`, {
-          field: fieldName,
-          value: value
-        });
+      try {
+        const { isAddress } = require('viem');
+        if (!isAddress(value)) {
+          throw new Error('Endereço Ethereum inválido');
+        }
+      } catch (e) {
+        if (!value || !value.startsWith('0x') || !/^0x[a-fA-F0-9]{40}$/.test(value)) {
+          throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser um endereço Ethereum válido`, {
+            field: fieldName,
+            value: value
+          });
+        }
       }
       break;
-      
+
     case 'monetary_value':
       const numValue = parseFloat(value);
       if (isNaN(numValue) || numValue <= 0) {
@@ -122,7 +129,7 @@ function validateType(value, type, fieldName) {
         });
       }
       break;
-      
+
     case 'currency_code':
       const allowedCurrencies = ['BRL', 'USD', 'EUR'];
       if (!allowedCurrencies.includes(value)) {
@@ -145,7 +152,7 @@ function validateLength(value, minLength, maxLength, fieldName) {
       actualLength: value.length
     });
   }
-  
+
   if (maxLength !== undefined && value.length > maxLength) {
     throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ter no máximo ${maxLength} caracteres`, {
       field: fieldName,
@@ -158,7 +165,7 @@ function validateLength(value, minLength, maxLength, fieldName) {
 // Função para validar valores numéricos
 function validateNumericRange(value, min, max, fieldName) {
   const numValue = parseFloat(value);
-  
+
   if (min !== undefined && numValue < min) {
     throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser pelo menos ${min}`, {
       field: fieldName,
@@ -166,7 +173,7 @@ function validateNumericRange(value, min, max, fieldName) {
       actualValue: numValue
     });
   }
-  
+
   if (max !== undefined && numValue > max) {
     throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser no máximo ${max}`, {
       field: fieldName,
@@ -190,11 +197,11 @@ function validateAllowedValues(value, allowed, fieldName) {
 // Função principal de validação
 function validateData(data, schemaName) {
   const schema = VALIDATION_SCHEMAS[schemaName];
-  
+
   if (!schema) {
     throw createError(ERROR_TYPES.VALIDATION_ERROR, `Esquema de validação '${schemaName}' não encontrado`);
   }
-  
+
   // Verificar campos obrigatórios
   const missingFields = schema.required.filter(field => !(field in data));
   if (missingFields.length > 0) {
@@ -203,11 +210,11 @@ function validateData(data, schemaName) {
       provided: Object.keys(data)
     });
   }
-  
+
   // Validar cada campo
   for (const [fieldName, fieldConfig] of Object.entries(schema.validations)) {
     const value = data[fieldName];
-    
+
     // Pular se campo não fornecido e não obrigatório
     if (value === undefined || value === null) {
       if (fieldConfig.required) {
@@ -215,28 +222,28 @@ function validateData(data, schemaName) {
       }
       continue;
     }
-    
+
     // Validar tipo
     if (fieldConfig.type) {
       validateType(value, fieldConfig.type, fieldName);
     }
-    
+
     // Validar comprimento (para strings)
     if (fieldConfig.type === 'string' && (fieldConfig.minLength !== undefined || fieldConfig.maxLength !== undefined)) {
       validateLength(value, fieldConfig.minLength, fieldConfig.maxLength, fieldName);
     }
-    
+
     // Validar range numérico
     if (fieldConfig.type === 'monetary_value' && (fieldConfig.min !== undefined || fieldConfig.max !== undefined)) {
       validateNumericRange(value, fieldConfig.min, fieldConfig.max, fieldName);
     }
-    
+
     // Validar valores permitidos
     if (fieldConfig.allowed) {
       validateAllowedValues(value, fieldConfig.allowed, fieldName);
     }
   }
-  
+
   return true;
 }
 
@@ -268,7 +275,7 @@ function validateQueryParams(schemaName) {
 // Função para sanitizar dados
 function sanitizeData(data) {
   const sanitized = {};
-  
+
   for (const [key, value] of Object.entries(data)) {
     if (typeof value === 'string') {
       // Remover caracteres perigosos
@@ -286,7 +293,7 @@ function sanitizeData(data) {
       sanitized[key] = value;
     }
   }
-  
+
   return sanitized;
 }
 

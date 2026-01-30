@@ -266,9 +266,15 @@ class WalletRegistry {
       return false;
     }
 
-    // Formato básico: 0x seguido de 40 caracteres hexadecimais
-    const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
-    return ethAddressRegex.test(address);
+    try {
+      // Usar viem para validação robusta (incluindo checksum)
+      const { isAddress } = require('viem');
+      return isAddress(address);
+    } catch (e) {
+      // Fallback para regex básico se viem falhar
+      const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+      return ethAddressRegex.test(address);
+    }
   }
 
   /**

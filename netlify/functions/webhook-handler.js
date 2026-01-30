@@ -20,11 +20,11 @@ exports.handler = async (event, context) => {
     staging: ['https://flowpaypix-staging.netlify.app'],
     development: ['http://localhost:8888', 'http://localhost:8000', 'http://127.0.0.1:8888']
   };
-  
+
   const environment = process.env.NODE_ENV || 'development';
   const origin = event.headers.origin || event.headers.Origin;
   const isAllowedOrigin = allowedOrigins[environment]?.includes(origin) || false;
-  
+
   const headers = {
     'Access-Control-Allow-Origin': isAllowedOrigin ? origin : 'null',
     'Access-Control-Allow-Headers': 'Content-Type, x-woovi-signature',
@@ -54,7 +54,7 @@ exports.handler = async (event, context) => {
     // Verificar assinatura HMAC da Woovi
     const wooviSignature = event.headers['x-woovi-signature'];
     const webhookSecret = process.env.WOOVI_WEBHOOK_SECRET;
-    
+
     if (!wooviSignature || !webhookSecret) {
       console.error('❌ Assinatura ou secret não encontrados');
       return {
@@ -65,17 +65,27 @@ exports.handler = async (event, context) => {
     }
 
     // Calcular HMAC para verificar autenticidade
-    const expectedSignature = crypto
-      .createHmac('sha256', webhookSecret)
-      .update(event.body, 'utf8')
-      .digest('hex');
+    // Usar timingSafeEqual para prevenir timing attacks
+    const hmac = crypto.createHmac('sha256', webhookSecret);
+    const bodyString = event.body || '';
+    hmac.update(bodyString, 'utf8');
+    const expectedSignature = hmac.digest('hex');
 
-    if (wooviSignature !== expectedSignature) {
-      console.error('❌ Assinatura HMAC inválida');
+    try {
+      if (!crypto.timingSafeEqual(Buffer.from(wooviSignature, 'utf8'), Buffer.from(expectedSignature, 'utf8'))) {
+        console.error('❌ Assinatura HMAC inválida (timing safe check failed)');
+        return {
+          statusCode: 401,
+          headers,
+          body: JSON.stringify({ error: 'Assinatura inválida' })
+        };
+      }
+    } catch (e) {
+      console.error('❌ Erro na comparação de assinaturas:', e.message);
       return {
         statusCode: 401,
         headers,
-        body: JSON.stringify({ error: 'Assinatura inválida' })
+        body: JSON.stringify({ error: 'Erro de validação de assinatura' })
       };
     }
 
@@ -86,7 +96,7 @@ exports.handler = async (event, context) => {
     // Verificar se é uma confirmação de pagamento
     if (webhookData.event === 'charge.paid' || webhookData.event === 'charge.confirmed') {
       const charge = webhookData.data;
-      
+
       console.log('💰 Pagamento PIX confirmado:', {
         correlation_id: charge.correlationID,
         value: charge.value,
@@ -114,9 +124,9 @@ exports.handler = async (event, context) => {
           const { createSettlementOrder } = require('./settlement-orders');
 
           // Extrair userId
-          const userId = charge.additionalInfo?.find(info => info.key === 'userId')?.value || 
-                        charge.customer?.name || 
-                        `user_${charge.correlationID}`;
+          const userId = charge.additionalInfo?.find(info => info.key === 'userId')?.value ||
+            charge.customer?.name ||
+            `user_${charge.correlationID}`;
 
           const amountBRL = parseFloat(charge.value) / 100; // Converter centavos para reais
 
@@ -192,7 +202,7 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           success: true,
           message: 'Webhook processado com sucesso',
           charge_id: charge.correlationID,
@@ -203,11 +213,11 @@ exports.handler = async (event, context) => {
 
     // Outros tipos de webhook
     console.log('ℹ️ Webhook não relacionado a pagamento:', webhookData.event);
-    
+
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         success: true,
         message: 'Webhook recebido',
         event: webhookData.event
@@ -216,11 +226,11 @@ exports.handler = async (event, context) => {
 
   } catch (error) {
     console.error('❌ Erro ao processar webhook:', error);
-    
+
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         error: 'Erro interno do servidor',
         message: error.message
       })

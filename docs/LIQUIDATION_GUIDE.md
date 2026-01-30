@@ -1,41 +1,46 @@
 <!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
 ```text
 ========================================
-       RELATÓRIO DE AUDITORIA
+     GUIA DE LIQUIDAÇÃO ASSISTIDA
 ========================================
-Protocol: FLOWPay
-Status: HARDENED
-Last Review: JAN/2026
+Estratégia: PIX -> USDT
+Status: IMPLEMENTADO
 ========================================
 ```
 
-▓▓▓ VULNERABILIDADES FIXADAS
+▓▓▓ CONCEITO
 ────────────────────────────────────────
-[####] XSS (innerHTML) ............ OK
-[####] Timing Attacks (HMAC) ...... OK
-[####] Environment Leak ........... OK
-[####] Precision Errors ........... OK
-[####] Address Checksum ........... OK
+Liquidação assistida não é gambiarra. 
+É controle consciente do risco no 
+momento certo do projeto.
 
-▓▓▓ ANÁLISE DE DEPENDÊNCIAS
+└─ Fluxo:
+   1. PIX confirmado (webhook)
+   2. Ordem criada (PENDING_REVIEW)
+   3. Admin valida taxa/liquidez
+   4. Admin clica em "Liquidar Agora"
+   5. Execução on-chain automática
+
+▓▓▓ OPERAÇÃO
 ────────────────────────────────────────
-└─ Pacote: jws < 3.2.3
-   Status: ACEITÁVEL (DevOnly)
-   Risco: Baixo (Apenas netlify-cli)
-   Não afeta o build de produção.
+O sistema decide quando pode decidir 
+sozinho. Atualmente, a execução exige 
+assinatura da Hot Wallet do serviço.
 
-▓▓▓ RECOMENDAÇÕES PERMANENTES
+└─ Endpoints:
+   GET  /settlement-orders (Listar)
+   POST /settlement-orders (Executar)
+
+▓▓▓ POR QUE FUNCIONA
 ────────────────────────────────────────
-1. Nunca use innerHTML para dados de
-   usuário ou mensagens de toast.
-2. Use sempre timingSafeEqual para
-   validação de tokens externos.
-3. Mantenha debug-env bloqueado em
-   ambiente de produção.
-4. Valide checksums de wallets tanto
-   no front quanto no back.
+[####] Não trava ................. OK
+[####] Não mente ................. OK
+[####] Não se expõe .............. OK
 
-Audit signed by: Antigravity AI
+1. O PIX é confirmado imediatamente.
+2. O produto é liberado (Unlock).
+3. A liquidação blockchain acontece 
+   em background sob supervisão.
 
 ▓▓▓ NΞØ MELLØ
 ────────────────────────────────────────

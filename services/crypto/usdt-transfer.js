@@ -208,37 +208,101 @@ class USDTTransfer {
    */
   async executeTransfer(toAddress, amountUSDT, networkConfig, correlationId) {
     try {
-      // Usar QuickNode Settlement endpoint para transferência
+      const isDev = process.env.NODE_ENV === 'development';
+      const hasKey = !!this.serviceWallet.privateKey;
 
-      if (process.env.NODE_ENV === 'development' || !this.serviceWallet.privateKey) {
-        // Modo desenvolvimento: simular transferência
+      if (isDev && !hasKey) {
+        // Modo desenvolvimento sem chave: simular transferência
         secureLog('info', 'Simulando transferência USDT (modo desenvolvimento)', {
           toAddress: this.maskAddress(toAddress),
           amountUSDT,
           network: this.settlementNetwork
         });
 
-        // Gerar hash simulado
         const mockTxHash = `0x${crypto.randomBytes(32).toString('hex')}`;
-
-        return {
-          txHash: mockTxHash,
-          status: 'simulated',
-          network: this.settlementNetwork
-        };
+        return { txHash: mockTxHash, status: 'simulated' };
       }
 
-      // Modo produção: executar transferência real via QuickNode Settlement
-      // TODO: Implementar com viem para interagir com contrato USDT
-      // Por enquanto, lançar erro para forçar implementação
+      if (!hasKey) {
+        throw new Error('SERVICE_WALLET_PRIVATE_KEY não configurada para ambiente de produção');
+      }
 
-      throw new Error('Transferência real não implementada. Configure SERVICE_WALLET_PRIVATE_KEY para produção.');
+      // Modo produção ou dev com chave: executar transferência real
+      const { createPublicClient, createWalletClient, http, parseUnits } = require('viem');
+      const { privateKeyToAccount } = require('viem/accounts');
+      const { polygon, bsc } = require('viem/chains');
+
+      const chain = this.settlementNetwork === 'polygon' ? polygon : bsc;
+      const rpcUrl = this.quicknodeSettlement.rpcUrls[this.settlementNetwork];
+
+      const account = privateKeyToAccount(this.serviceWallet.privateKey);
+
+      const publicClient = createPublicClient({ chain, transport: http(rpcUrl) });
+      const walletClient = createWalletClient({ account, chain, transport: http(rpcUrl) });
+
+      const usdtContract = networkConfig.contractAddress;
+      const decimals = networkConfig.decimals;
+      const amountWei = parseUnits(amountUSDT.toString(), decimals);
+
+      // ABI mínimo para transferência
+      const abi = [{
+        name: 'transfer',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'recipient', type: 'address' }, { name: 'amount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'bool' }],
+      }];
+
+      // 1. Verificar saldo
+      const balance = await publicClient.readContract({
+        address: usdtContract,
+        abi,
+        functionName: 'balanceOf',
+        args: [account.address]
+      });
+
+      if (BigInt(balance) < amountWei) {
+        throw new Error(`Saldo insuficiente na wallet de serviço. Necessário: ${amountUSDT}, Disponível: ${balance}`);
+      }
+
+      // 2. Enviar transferência
+      secureLog('info', 'Enviando transação real de USDT', {
+        to: this.maskAddress(toAddress),
+        amount: amountUSDT,
+        network: this.settlementNetwork
+      });
+
+      const hash = await walletClient.writeContract({
+        address: usdtContract,
+        abi,
+        functionName: 'transfer',
+        args: [toAddress, amountWei],
+      });
+
+      // 3. Aguardar confirmação (não bloqueamos muito tempo, mas o suficiente para garantir submissão)
+      // Em contextos serverless (Netlify), temos limite de tempo, então usamos um timeout razoável
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash,
+        confirmations: 1,
+        timeout: 30000 // 30 segundos
+      });
+
+      if (receipt.status !== 'success') {
+        throw new Error(`Transação falhou na blockchain: ${hash}`);
+      }
+
+      return {
+        txHash: hash,
+        status: 'confirmed',
+        blockNumber: receipt.blockNumber.toString()
+      };
 
     } catch (error) {
-      logAPIError('error', 'Erro ao executar transferência', {
+      logAPIError('error', 'Falha crítica na execução da transferência blockchain', {
         service: 'usdt-transfer',
         network: networkConfig.name,
-        error: error.message
+        error: error.message,
+        correlationId
       });
       throw error;
     }

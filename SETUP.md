@@ -1,41 +1,54 @@
 <!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
 ```text
 ========================================
-       RELATÓRIO DE AUDITORIA
+       FLOWPay - TECHNICAL SETUP
 ========================================
-Protocol: FLOWPay
-Status: HARDENED
-Last Review: JAN/2026
+Environment: Node.js / Astro
+Deploy: Netlify Functions (Astro)
 ========================================
 ```
 
-▓▓▓ VULNERABILIDADES FIXADAS
+▓▓▓ REQUIREMENTS
 ────────────────────────────────────────
-[####] XSS (innerHTML) ............ OK
-[####] Timing Attacks (HMAC) ...... OK
-[####] Environment Leak ........... OK
-[####] Precision Errors ........... OK
-[####] Address Checksum ........... OK
+└─ Node.js >= 18.0.0
+└─ Netlify CLI (for local functions)
+└─ API Keys (WooVi, QuickNode)
 
-▓▓▓ ANÁLISE DE DEPENDÊNCIAS
+▓▓▓ QUICK START
 ────────────────────────────────────────
-└─ Pacote: jws < 3.2.3
-   Status: ACEITÁVEL (DevOnly)
-   Risco: Baixo (Apenas netlify-cli)
-   Não afeta o build de produção.
+1. Install dependencies:
+   ```bash
+   npm run setup
+   ```
 
-▓▓▓ RECOMENDAÇÕES PERMANENTES
+2. Generate local config:
+   ```bash
+   npm run neo:cfg
+   ```
+
+3. Run in Dev Mode:
+   ```bash
+   # Full stack (Frontend + Functions)
+   netlify dev
+
+   # Pure Frontend (Astro only)
+   npm run dev
+   ```
+
+▓▓▓ COMMAND REFERENCE
 ────────────────────────────────────────
-1. Nunca use innerHTML para dados de
-   usuário ou mensagens de toast.
-2. Use sempre timingSafeEqual para
-   validação de tokens externos.
-3. Mantenha debug-env bloqueado em
-   ambiente de produção.
-4. Valide checksums de wallets tanto
-   no front quanto no back.
+[####] npm run build ......... Build app
+[####] npm run test .......... Run tests
+[####] npm run neo:build ..... NEO Assets
+[####] npm run preview ....... Local preview
 
-Audit signed by: Antigravity AI
+▓▓▓ ENVIRONMENT VARIABLES (.env)
+────────────────────────────────────────
+└─ WOOVI_API_KEY
+└─ WOOVI_WEBHOOK_SECRET
+└─ QUICKNODE_POLYGON_RPC
+└─ SERVICE_WALLET_PRIVATE_KEY
+└─ ADMIN_PASSWORD
 
 ▓▓▓ NΞØ MELLØ
 ────────────────────────────────────────
