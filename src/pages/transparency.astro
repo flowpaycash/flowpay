@@ -3,211 +3,180 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 ---
 
-<Layout title="FLOWPay Gateway - Transparência e Confiança">
-  <!-- CSS específico da transparência -->
-  <link rel="stylesheet" href="/css/styles.css" />
-  <link rel="stylesheet" href="/css/transparency.css" />
-
+<Layout title="FLOWPay - Transparência Radical">
   <Navbar />
 
-  <!-- Hero Section -->
-  <section class="transparency-hero">
-    <div class="hero-content">
-      <div class="hero-icon">🛡️</div>
-      <h1>Promessa é ruído. A gente entrega prova.</h1>
-      <p>Logs abertos, eventos assinados, e operação auditável.</p>
+  <main class="premium-page">
+    <header class="page-header">
+      <div class="glow-sphere"></div>
+      <h1 class="premium-title">Provas, não <span class="gradient-text">Promessas</span>.</h1>
+      <p class="premium-subtitle">Operação auditável em tempo real. Privacidade por padrão, transparência por design.</p>
+    </header>
+
+    <div class="premium-grid container">
+      <div class="premium-card">
+        <div class="card-icon">👁️</div>
+        <h3>O que é Público</h3>
+        <p>Status da rede, volumes transacionados e hashes de liquidação blockchain.</p>
+        <ul class="premium-list">
+          <li>Timestamps Reais</li>
+          <li>ID de Correlação</li>
+          <li>Status de Liquidação</li>
+        </ul>
+      </div>
+
+      <div class="premium-card">
+        <div class="card-icon">🛡️</div>
+        <h3>O que é Privado</h3>
+        <p>Seus dados são seus. Não armazenamos PII (Personally Identifiable Information).</p>
+        <ul class="premium-list">
+          <li>Sem KYC Intrusivo</li>
+          <li>Sem Registro de IPs</li>
+          <li>Payloads Redigidos</li>
+        </ul>
+      </div>
+
+      <div class="premium-card highlight">
+        <div class="card-icon">💻</div>
+        <h3>Código Aberto</h3>
+        <p>Soberania exige auditoria. Todo o núcleo do FLOWPay está no GitHub.</p>
+        <a href="https://github.com/flowpaycash/flowpay" target="_blank" class="btn-premium secondary full">Ver Repositório</a>
+      </div>
     </div>
-  </section>
 
-  <!-- Main Content -->
-  <main class="transparency-main">
-    <!-- Blocos de Transparência -->
-    <section class="transparency-section">
-      <div class="container">
-        <h2>👁️ Blocos de Transparência</h2>
-        <div class="how-it-works">
-          <div class="step-card">
-            <div class="step-number">1</div>
-            <h3>Publicamos</h3>
-            <p>
-              Status, timestamps, valores, provedor, ref_hash. Dados mínimos, liberdade máxima.
-            </p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">2</div>
-            <h3>Não Publicamos</h3>
-            <p>Dados pessoais, chaves, segredos, payload bruto. Privacidade por padrão.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">3</div>
-            <h3>Provas de Pagamento</h3>
-            <p>PIX: BR‑Code + assinatura digital. Cripto: hash em blockchain pública.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">4</div>
-            <h3>SLOs Declarados</h3>
-            <p>Uptime: 99.9%. Checkout p95: &lt; 4000ms. MTTR: &lt; 10min.</p>
-          </div>
+    <section class="api-status-section container">
+      <div class="status-card">
+        <div class="status-header">
+          <div class="pulse-icon online"></div>
+          <h4>Sistema Operacional</h4>
         </div>
-      </div>
-    </section>
-
-    <!-- CTAs de Transparência -->
-    <section class="transparency-section">
-      <div class="container">
-        <h2>🔗 CTAs de Transparência</h2>
-        <div class="validations-grid">
-          <div class="validation-card">
-            <div class="validation-icon">📄</div>
-            <h3>Ver Transações</h3>
-            <p>Acesse o arquivo público de todas as transações processadas</p>
-            <a href="/pix_orders.json" class="btn btn-secondary btn-small">Ver transações</a>
+        <div class="status-metrics">
+          <div class="metric">
+            <span class="m-label">Uptime</span>
+            <span class="m-value">99.9%</span>
           </div>
-          <div class="validation-card">
-            <div class="validation-icon">💓</div>
-            <h3>Checar Status</h3>
-            <p>Verifique o status da plataforma e dependências</p>
-            <a href="/.netlify/functions/env" class="btn btn-secondary btn-small">Checar status</a>
-          </div>
-          <div class="validation-card">
-            <div class="validation-icon">💻</div>
-            <h3>Open Source</h3>
-            <p>Código público e auditável no GitHub</p>
-            <a
-              href="https://github.com/flowpaycash/flowpay"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-secondary btn-small"
-            >
-              Ver código
-            </a>
-          </div>
-          <div class="validation-card">
-            <div class="validation-icon">🛡️</div>
-            <h3>Segurança</h3>
-            <p>Política de divulgação responsável e contato</p>
-            <a href="/.well-known/security.txt" class="btn btn-secondary btn-small">Ver segurança</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Código Aberto -->
-    <section class="transparency-section">
-      <div class="container">
-        <h2>🔧 Código Aberto</h2>
-        <div class="open-source-content">
-          <div class="github-card">
-            <h3>Repositório Público</h3>
-            <p>Todo o código do FLOWPay está disponível publicamente para auditoria</p>
-            <a
-              href="https://github.com/flowpaycash/flowpay"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="github-btn"
-            >
-              🔗 Ver no GitHub
-            </a>
-          </div>
-          <div class="tech-stack">
-            <h3>Stack Tecnológico</h3>
-            <ul>
-              <li>💻 HTML5, CSS3, JavaScript</li>
-              <li>☁️ Netlify Functions (serverless)</li>
-              <li>🔗 API Woovi oficial</li>
-              <li>📱 PWA mobile-first</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Suporte -->
-    <section class="transparency-section">
-      <div class="container">
-        <h2>💬 Suporte e Contato</h2>
-        <div class="support-content">
-          <div class="support-card">
-            <h3>Precisa de Ajuda?</h3>
-            <p>
-              Nossa equipe está disponível para esclarecer qualquer dúvida sobre segurança e
-              transparência
-            </p>
-            <div class="support-buttons">
-              <a
-                href="https://t.me/flowpay_support"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="support-btn telegram"
-              >
-                ✈️ Telegram
-              </a>
-              <a href="mailto:suporte@flowpay.com" class="support-btn email">✉️ Email</a>
-            </div>
+          <div class="metric">
+            <span class="m-label">P95 Latency</span>
+            <span class="m-value">< 1.2s</span>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="neo-footer site-footer" aria-label="Rodapé">
-    <div class="neo-footer__grid container">
-      <div class="neo-footer__brand">
-        <a class="neo-footer__logo" href="/">FLOWPay</a>
-        <p class="neo-footer__tag">Checkout invisível • Auto-custódia • Transparência</p>
-      </div>
-
-      <nav class="neo-footer__nav" aria-label="Navegação útil">
-        <div class="neo-footer__col">
-          <h3>Produto</h3>
-          <ul>
-            <li><a href="/checkout">Checkout</a></li>
-            <li><a href="/transparency">Transparência</a></li>
-            <li><a href="/admin">Admin</a></li>
-          </ul>
-        </div>
-        <div class="neo-footer__col">
-          <h3>Open NΞØ</h3>
-          <ul>
-            <li>
-              <a href="https://github.com/flowpaycash/flowpay" target="_blank" rel="noopener noreferrer">
-                GitHub
-              </a>
-            </li>
-            <li><a href="/pix_orders.json">Transações públicas</a></li>
-          </ul>
-        </div>
-        <div class="neo-footer__col">
-          <h3>Status</h3>
-          <ul>
-            <li>
-              <a class="neo-footer__pill" href="/transparency">Auditar</a>
-            </li>
-          </ul>
-          <p class="neo-footer__note">Sem PII. Log redigido.</p>
-        </div>
-      </nav>
-    </div>
-
-    <div class="neo-footer__meta">
-      <div class="container neo-footer__meta__row">
-        <p>🌊 FLOWPay — protocolo NΞØ</p>
-        <p class="neo-footer__links">
-          <a href="https://github.com/flowpaycash/flowpay" target="_blank" rel="noopener noreferrer">
-            github
-          </a>
-          <span>•</span>
-          <a href="/checkout">checkout</a>
-          <span>•</span>
-          <a href="/transparency">transparência</a>
-          <span>•</span>
-          <a href="/client">cliente</a>
-          <span>•</span>
-          <a href="/admin">admin</a>
-        </p>
-      </div>
-    </div>
-  </footer>
+  <style>
+    .premium-page {
+      padding-top: 120px;
+      padding-bottom: 80px;
+      background: #f7f8fa;
+      min-height: 100vh;
+    }
+    .page-header {
+      text-align: center;
+      margin-bottom: 80px;
+      position: relative;
+    }
+    .glow-sphere {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255, 0, 122, 0.05) 0%, transparent 70%);
+      z-index: 0;
+    }
+    .premium-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 64px;
+    }
+    .premium-card {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 32px;
+      border: 1px solid #edeef2;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+      transition: transform 0.2s;
+    }
+    .premium-card:hover {
+      transform: translateY(-4px);
+    }
+    .premium-card.highlight {
+      border-color: #ff007a40;
+      background: linear-gradient(180deg, #ffffff 0%, #fff0f7 100%);
+    }
+    .card-icon {
+      font-size: 40px;
+      margin-bottom: 24px;
+    }
+    .premium-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 24px;
+    }
+    .premium-list li {
+      padding: 8px 0;
+      color: #707070;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .premium-list li::before {
+      content: '✓';
+      color: #ff007a;
+      font-weight: 800;
+    }
+    .status-card {
+      background: #1d1d1f;
+      color: white;
+      padding: 32px;
+      border-radius: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 32px;
+    }
+    .status-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .pulse-icon.online {
+      width: 12px;
+      height: 12px;
+      background: #00ff88;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #00ff88;
+      animation: pulse 2s infinite;
+    }
+    .status-metrics {
+      display: flex;
+      gap: 48px;
+    }
+    .metric {
+      display: flex;
+      flex-direction: column;
+    }
+    .m-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: #888;
+      letter-spacing: 0.1em;
+    }
+    .m-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
 
   <!-- CSP Configuration -->
   <script is:inline src="/csp-config.js"></script>
