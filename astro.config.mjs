@@ -20,7 +20,7 @@ export default defineConfig({
       assetsInlineLimit: 0,
     },
     ssr: {
-      noExternal: ['better-sqlite3']
+      external: ['better-sqlite3']
     }
   },
   publicDir: 'public',
