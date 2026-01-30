@@ -9,9 +9,8 @@
     "deploy": {
         "runtime": "V2",
         "numReplicas": 1,
-        "startCommand": "node ./dist/server/entry.mjs",
+        "startCommand": "node server.mjs",
         "sleepApplication": false,
-        "useLegacyStacker": false,
         "restartPolicyType": "ON_FAILURE",
         "restartPolicyMaxRetries": 3,
         "healthcheckPath": "/api/health",
