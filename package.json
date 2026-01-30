@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "npm run build && npx serve dist -p 4321",
     "astro": "astro",
-    "start": "node ./dist/server/entry.mjs",
+    "start": "node server.mjs",
     "setup": "npm install && echo '✅ Dependências instaladas!'",
     "neo:cfg": "node tools/neo-generate-config.mjs",
     "neo:build:wallet": "npx esbuild public/assets/js/web3auth.init.ts --bundle --format=esm --target=es2022 --minify --outfile=public/assets/js/web3auth.js",
@@ -61,7 +61,7 @@
   "author": "FLOWPay Team",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   },
   "repository": {
     "type": "git",
