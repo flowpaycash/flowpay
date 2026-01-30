@@ -19,8 +19,17 @@ const getDatabasePaths = () => {
 const { DATA_DIR, DB_PATH, SCHEMA_PATH } = getDatabasePaths();
 
 // Ensure data directory exists
-if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+try {
+    if (!fs.existsSync(DATA_DIR)) {
+        console.log(`[FlowPay DB] Creating directory: ${DATA_DIR}`);
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+} catch (err) {
+    console.error(`[FlowPay DB] CRITICAL ERROR creating directory ${DATA_DIR}:`, err);
+    // Fallback to current directory if /app/data fails
+    const fallbackDir = path.join(process.cwd(), "data", "flowpay");
+    console.log(`[FlowPay DB] Falling back to: ${fallbackDir}`);
+    fs.mkdirSync(fallbackDir, { recursive: true });
 }
 
 // Initialize database
@@ -28,15 +37,20 @@ let db = null;
 
 export function getDatabase() {
     if (!db) {
-        console.log(`[FlowPay DB] Opening database at: ${DB_PATH}`);
-        const newDb = new Database(DB_PATH);
-        newDb.pragma("journal_mode = WAL");
-        newDb.pragma("foreign_keys = ON");
+        try {
+            console.log(`[FlowPay DB] Opening database at: ${DB_PATH}`);
+            const newDb = new Database(DB_PATH);
+            newDb.pragma("journal_mode = WAL");
+            newDb.pragma("foreign_keys = ON");
 
-        db = newDb;
+            db = newDb;
 
-        // Initialize schema if needed
-        initializeSchema();
+            // Initialize schema if needed
+            initializeSchema();
+        } catch (err) {
+            console.error(`[FlowPay DB] CRITICAL ERROR opening database:`, err);
+            throw err;
+        }
     }
 
     return db;
