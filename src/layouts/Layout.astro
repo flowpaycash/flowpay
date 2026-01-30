@@ -104,9 +104,19 @@ const {
     <meta name="msapplication-config" content="/browserconfig.xml" />
 
     <!-- CSS -->
-    <link rel="stylesheet" href="/css/landing.css" />
+    <link rel="stylesheet" href="/css/design-system.css" />
     <link rel="stylesheet" href="/css/navbar.css" />
-    <link rel="stylesheet" href="/css/legacy.css" />
+    <style is:global>
+      :root {
+        --primary: #ff007a;
+        --primary-gradient: linear-gradient(90deg, #ff007a 0%, #ff7a00 100%);
+      }
+      body {
+        background-color: #f7f8fa;
+        color: #1d1d1f;
+        font-family: 'Inter', -apple-system, sans-serif;
+      }
+    </style>
   </head>
   <body>
     <!-- NEO Layout Injector -->
