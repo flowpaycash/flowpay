@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://flowpay-production-10d8.up.railway.app/sitemap.xml
