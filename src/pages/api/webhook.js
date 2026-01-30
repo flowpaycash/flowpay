@@ -21,8 +21,11 @@ export const POST = async ({ request, clientAddress }) => {
         const WEBHOOK_SECRET = process.env.WOOVI_WEBHOOK_SECRET;
 
         if (!signature || !WEBHOOK_SECRET) {
-            secureLog('warn', 'Astro Webhook: Missing signature or secret');
-            return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers });
+            secureLog('info', 'Astro Webhook: Ping ou falta de secret - retornando 200 para validação');
+            return new Response(JSON.stringify({ status: 'ready' }), {
+                status: 200,
+                headers: { ...headers, 'Content-Type': 'application/json' }
+            });
         }
 
         // 1. HMAC Validation
