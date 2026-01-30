@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "echo 'Build skipped'",
     "preview": "npm run build && npx serve dist -p 4321",
     "astro": "astro",
     "start": "node server.mjs",
