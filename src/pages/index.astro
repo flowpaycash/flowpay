@@ -75,13 +75,13 @@ import Footer from '../components/Footer.astro';
         indicator.className = 'pull-indicator';
         document.body.appendChild(indicator);
       }
-      indicator.style.opacity = '1';
+      (indicator as HTMLElement).style.opacity = '1';
     }
 
     function hidePullIndicator() {
       const indicator = document.querySelector('.pull-indicator');
       if (indicator) {
-        indicator.style.opacity = '0';
+        (indicator as HTMLElement).style.opacity = '0';
       }
     }
   </script>
