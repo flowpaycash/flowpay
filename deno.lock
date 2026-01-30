@@ -11,18 +11,22 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@astrojs/netlify@^6.6.3",
+        "npm:@astrojs/react@^4.4.2",
         "npm:@netlify/functions@^5.1.2",
         "npm:@web3auth/ethereum-provider@^9.7.0",
         "npm:@web3auth/modal@^10.10.0",
         "npm:ajv-formats@^3.0.1",
         "npm:ajv@^8.17.1",
+        "npm:astro@^5.16.6",
         "npm:axios@^1.13.2",
         "npm:esbuild@~0.27.2",
         "npm:jest@^30.2.0",
         "npm:markdownlint-cli@0.47",
-        "npm:netlify-cli@^23.13.0",
         "npm:prettier@^3.7.4",
         "npm:pwa-asset-generator@^8.1.2",
+        "npm:react-dom@^18.3.1",
+        "npm:react@^18.3.1",
         "npm:viem@^2.43.3"
       ]
     }

@@ -1,12 +1,12 @@
 import { defineConfig } from 'astro/config';
-import netlify from '@astrojs/netlify';
+import node from '@astrojs/node';
 import react from '@astrojs/react';
 
 export default defineConfig({
-  output: 'static',
+  output: 'server',
   integrations: [react()],
-  adapter: netlify({
-    functionPerRoute: false,
+  adapter: node({
+    mode: 'standalone'
   }),
   build: {
     assets: 'assets',
@@ -15,10 +15,10 @@ export default defineConfig({
     build: {
       assetsInlineLimit: 0,
     },
+    ssr: {
+      noExternal: ['better-sqlite3']
+    }
   },
-  // Public dir será copiado para dist durante o build
   publicDir: 'public',
-  // Output para dist (padrão do Astro)
   outDir: 'dist',
 });
-

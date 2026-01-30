@@ -1,15 +1,21 @@
 <!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
 ```text
 ========================================
-             F L O W P a y
+             F l o w P a y
 ========================================
 PIX-FIRST PAYMENT GATEWAY FOR WEB3
 Access first. Settle later.
 ========================================
-Status: v2.2.0 [STABLE]
+========================================
+Status: v3.0.0 [SOVEREIGN]
 Audit: JAN/2026 (NΞØ Protocol)
+Stack: Astro + SQLite + Node (Railway)
 ========================================
 ```
+
+> **⚠️ SOVEREIGN NODE:** Esta versão utiliza persistência local SQLite 
+> para total soberania dos dados. No deploy (Railway), utilize 
+> Volumes montados em `/app/data` para persistência real.
 
 ▓▓▓ MISSION
 ────────────────────────────────────────

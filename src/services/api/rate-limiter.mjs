@@ -1,18 +1,18 @@
 // 🚦 FLOWPay - Rate Limiter Middleware
 // Implementa rate limiting básico para proteção contra spam/abuso
 
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 // Store simples em memória (em produção, usar Redis ou similar)
 const requestCounts = new Map();
 
 // Configurações de rate limiting
-const RATE_LIMITS = {
+export const RATE_LIMITS = {
   // APIs críticas - mais restritivas
   'create-pix-charge': { windowMs: 15 * 60 * 1000, maxRequests: 10 }, // 10 requests por 15min
   'webhook-handler': { windowMs: 60 * 1000, maxRequests: 100 }, // 100 requests por minuto
   'auth-magic-start': { windowMs: 15 * 60 * 1000, maxRequests: 5 }, // 5 requests por 15min
-  
+
   // APIs menos críticas
   'pix-orders': { windowMs: 60 * 1000, maxRequests: 30 }, // 30 requests por minuto
   'debug-env': { windowMs: 60 * 1000, maxRequests: 10 }, // 10 requests por minuto
@@ -20,30 +20,30 @@ const RATE_LIMITS = {
 };
 
 // Função para obter IP do cliente
-function getClientIP(event) {
-  return event.headers['x-forwarded-for'] || 
-         event.headers['x-real-ip'] || 
-         event.headers['x-client-ip'] || 
-         event.context?.clientIP || 
-         'unknown';
+export function getClientIP(event) {
+  return event.headers['x-forwarded-for'] ||
+    event.headers['x-real-ip'] ||
+    event.headers['x-client-ip'] ||
+    event.context?.clientIP ||
+    'unknown';
 }
 
 // Função para gerar chave única para rate limiting
-function generateRateLimitKey(ip, endpoint) {
+export function generateRateLimitKey(ip, endpoint) {
   return crypto.createHash('sha256')
     .update(`${ip}:${endpoint}`)
     .digest('hex');
 }
 
 // Função principal de rate limiting
-function checkRateLimit(event, endpoint) {
+export function checkRateLimit(event, endpoint) {
   const ip = getClientIP(event);
   const key = generateRateLimitKey(ip, endpoint);
   const now = Date.now();
-  
+
   // Obter configuração do endpoint
   const config = RATE_LIMITS[endpoint] || { windowMs: 60 * 1000, maxRequests: 30 };
-  
+
   // Limpar entradas expiradas
   if (requestCounts.has(key)) {
     const entry = requestCounts.get(key);
@@ -51,7 +51,7 @@ function checkRateLimit(event, endpoint) {
       requestCounts.delete(key);
     }
   }
-  
+
   // Verificar se existe entrada para este IP/endpoint
   if (!requestCounts.has(key)) {
     requestCounts.set(key, {
@@ -61,25 +61,25 @@ function checkRateLimit(event, endpoint) {
     });
     return { allowed: true, remaining: config.maxRequests - 1 };
   }
-  
+
   const entry = requestCounts.get(key);
-  
+
   // Verificar se ainda está na janela de tempo
   if (now - entry.firstRequest <= config.windowMs) {
     if (entry.count >= config.maxRequests) {
-      return { 
-        allowed: false, 
+      return {
+        allowed: false,
         remaining: 0,
         resetTime: entry.firstRequest + config.windowMs,
         retryAfter: Math.ceil((entry.firstRequest + config.windowMs - now) / 1000)
       };
     }
-    
+
     // Incrementar contador
     entry.count++;
     entry.lastRequest = now;
-    return { 
-      allowed: true, 
+    return {
+      allowed: true,
       remaining: config.maxRequests - entry.count,
       resetTime: entry.firstRequest + config.windowMs
     };
@@ -95,10 +95,10 @@ function checkRateLimit(event, endpoint) {
 }
 
 // Middleware para aplicar rate limiting
-function applyRateLimit(endpoint) {
+export function applyRateLimit(endpoint) {
   return (event, context) => {
     const result = checkRateLimit(event, endpoint);
-    
+
     if (!result.allowed) {
       return {
         statusCode: 429,
@@ -116,19 +116,12 @@ function applyRateLimit(endpoint) {
         })
       };
     }
-    
+
     return null; // Continua com a execução normal
   };
 }
 
 // Função para limpar cache de rate limiting (para testes)
-function clearRateLimitCache() {
+export function clearRateLimitCache() {
   requestCounts.clear();
 }
-
-module.exports = {
-  checkRateLimit,
-  applyRateLimit,
-  clearRateLimitCache,
-  getClientIP
-};

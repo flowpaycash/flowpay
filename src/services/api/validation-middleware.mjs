@@ -1,10 +1,10 @@
 // 🔧 FLOWPay - Validation Middleware
 // Middleware reutilizável para validações de entrada
 
-const { createError, ERROR_TYPES } = require('./error-handler');
+import { createError, ERROR_TYPES } from './error-handler.mjs';
 
 // Esquemas de validação
-const VALIDATION_SCHEMAS = {
+export const VALIDATION_SCHEMAS = {
   // Validação para criação de cobrança PIX
   createPixCharge: {
     required: ['wallet', 'valor', 'moeda', 'id_transacao'],
@@ -62,7 +62,7 @@ const VALIDATION_SCHEMAS = {
 };
 
 // Função para validar tipo de dados
-function validateType(value, type, fieldName) {
+export function validateType(value, type, fieldName) {
   switch (type) {
     case 'string':
       if (typeof value !== 'string') {
@@ -105,18 +105,11 @@ function validateType(value, type, fieldName) {
       break;
 
     case 'ethereum_address':
-      try {
-        const { isAddress } = require('viem');
-        if (!isAddress(value)) {
-          throw new Error('Endereço Ethereum inválido');
-        }
-      } catch (e) {
-        if (!value || !value.startsWith('0x') || !/^0x[a-fA-F0-9]{40}$/.test(value)) {
-          throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser um endereço Ethereum válido`, {
-            field: fieldName,
-            value: value
-          });
-        }
+      if (!value || !value.startsWith('0x') || !/^0x[a-fA-F0-9]{40}$/.test(value)) {
+        throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser um endereço Ethereum válido`, {
+          field: fieldName,
+          value: value
+        });
       }
       break;
 
@@ -144,7 +137,7 @@ function validateType(value, type, fieldName) {
 }
 
 // Função para validar comprimento
-function validateLength(value, minLength, maxLength, fieldName) {
+export function validateLength(value, minLength, maxLength, fieldName) {
   if (minLength !== undefined && value.length < minLength) {
     throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ter pelo menos ${minLength} caracteres`, {
       field: fieldName,
@@ -163,7 +156,7 @@ function validateLength(value, minLength, maxLength, fieldName) {
 }
 
 // Função para validar valores numéricos
-function validateNumericRange(value, min, max, fieldName) {
+export function validateNumericRange(value, min, max, fieldName) {
   const numValue = parseFloat(value);
 
   if (min !== undefined && numValue < min) {
@@ -184,7 +177,7 @@ function validateNumericRange(value, min, max, fieldName) {
 }
 
 // Função para validar valores permitidos
-function validateAllowedValues(value, allowed, fieldName) {
+export function validateAllowedValues(value, allowed, fieldName) {
   if (!allowed.includes(value)) {
     throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser um dos valores permitidos`, {
       field: fieldName,
@@ -195,7 +188,7 @@ function validateAllowedValues(value, allowed, fieldName) {
 }
 
 // Função principal de validação
-function validateData(data, schemaName) {
+export function validateData(data, schemaName) {
   const schema = VALIDATION_SCHEMAS[schemaName];
 
   if (!schema) {
@@ -248,7 +241,7 @@ function validateData(data, schemaName) {
 }
 
 // Middleware para validação de JSON
-function validateJSON(schemaName) {
+export function validateJSON(schemaName) {
   return (event, context) => {
     try {
       const data = JSON.parse(event.body || '{}');
@@ -264,7 +257,7 @@ function validateJSON(schemaName) {
 }
 
 // Middleware para validação de query parameters
-function validateQueryParams(schemaName) {
+export function validateQueryParams(schemaName) {
   return (event, context) => {
     const queryParams = event.queryStringParameters || {};
     validateData(queryParams, schemaName);
@@ -273,7 +266,7 @@ function validateQueryParams(schemaName) {
 }
 
 // Função para sanitizar dados
-function sanitizeData(data) {
+export function sanitizeData(data) {
   const sanitized = {};
 
   for (const [key, value] of Object.entries(data)) {
@@ -296,15 +289,3 @@ function sanitizeData(data) {
 
   return sanitized;
 }
-
-module.exports = {
-  VALIDATION_SCHEMAS,
-  validateData,
-  validateJSON,
-  validateQueryParams,
-  sanitizeData,
-  validateType,
-  validateLength,
-  validateNumericRange,
-  validateAllowedValues
-};

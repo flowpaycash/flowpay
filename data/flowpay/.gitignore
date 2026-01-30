@@ -1,0 +1,25 @@
+# FlowPay Data (Local, Never Commit)
+# This folder contains sensitive payment data
+
+# SQLite databases
+*.db
+*.db-shm
+*.db-wal
+
+# JSON data files
+orders/*.json
+receipts/*.json
+products/*.json
+
+# Logs
+*.log
+
+# Backups
+backups/*.zip
+backups/*.tar.gz
+
+# Keep structure
+!.gitkeep
+!orders/.gitkeep
+!receipts/.gitkeep
+!products/.gitkeep

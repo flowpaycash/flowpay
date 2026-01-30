@@ -1,0 +1,30 @@
+[
+    {
+        "id": "basic_pass",
+        "name": "NEØ Basic Access",
+        "description": "Acesso básico ao ecossistema FlowPay. Inclui 1 wallet monitorada.",
+        "price_brl": 49.90,
+        "icon": "🛡️"
+    },
+    {
+        "id": "pro_agent",
+        "name": "NEØ Pro Agent",
+        "description": "Poder total de automação. Inclui Neobot Pro e 5 wallets monitoradas.",
+        "price_brl": 149.90,
+        "icon": "🤖"
+    },
+    {
+        "id": "enterprise_protocol",
+        "name": "NEØ Enterprise",
+        "description": "Acesso root ao protocolo. Suporte prioritário e governança ilimitada.",
+        "price_brl": 499.90,
+        "icon": "⚡"
+    },
+    {
+        "id": "dev_sdk",
+        "name": "Developer SDK Pass",
+        "description": "Acesso antecipado a novas features e SDK para desenvolvimento de agents.",
+        "price_brl": 249.90,
+        "icon": "⚙️"
+    }
+]

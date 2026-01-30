@@ -1,10 +1,10 @@
 // 🔧 FLOWPay - Error Handler Middleware
 // Sistema padronizado de tratamento de erros
 
-const { config, secureLog } = require('./config');
+import { config, secureLog } from './config.mjs';
 
 // Tipos de erro padronizados
-const ERROR_TYPES = {
+export const ERROR_TYPES = {
   VALIDATION_ERROR: 'VALIDATION_ERROR',
   AUTHENTICATION_ERROR: 'AUTHENTICATION_ERROR',
   AUTHORIZATION_ERROR: 'AUTHORIZATION_ERROR',
@@ -16,7 +16,7 @@ const ERROR_TYPES = {
 };
 
 // Códigos de status HTTP mapeados
-const HTTP_STATUS = {
+export const HTTP_STATUS = {
   [ERROR_TYPES.VALIDATION_ERROR]: 400,
   [ERROR_TYPES.AUTHENTICATION_ERROR]: 401,
   [ERROR_TYPES.AUTHORIZATION_ERROR]: 403,
@@ -28,7 +28,7 @@ const HTTP_STATUS = {
 };
 
 // Classe de erro customizada
-class FlowPayError extends Error {
+export class FlowPayError extends Error {
   constructor(type, message, details = {}, statusCode = null) {
     super(message);
     this.name = 'FlowPayError';
@@ -41,12 +41,12 @@ class FlowPayError extends Error {
 }
 
 // Função para criar erros padronizados
-function createError(type, message, details = {}) {
+export function createError(type, message, details = {}) {
   return new FlowPayError(type, message, details);
 }
 
 // Função para tratar erros de validação
-function handleValidationError(field, message, value = null) {
+export function handleValidationError(field, message, value = null) {
   return createError(ERROR_TYPES.VALIDATION_ERROR, `Erro de validação: ${message}`, {
     field,
     value: value ? String(value).substring(0, 100) : null,
@@ -55,7 +55,7 @@ function handleValidationError(field, message, value = null) {
 }
 
 // Função para tratar erros de API externa
-function handleExternalAPIError(service, statusCode, response, originalError = null) {
+export function handleExternalAPIError(service, statusCode, response, originalError = null) {
   // Tentar extrair mensagem específica da resposta
   let errorMessage = `Erro na API externa: ${service}`;
   let errorDetails = {
@@ -70,7 +70,7 @@ function handleExternalAPIError(service, statusCode, response, originalError = n
   if (response) {
     try {
       const parsedResponse = typeof response === 'string' ? JSON.parse(response) : response;
-      
+
       // Extrair mensagem de erro da API Woovi
       if (parsedResponse.errors && Array.isArray(parsedResponse.errors) && parsedResponse.errors.length > 0) {
         const firstError = parsedResponse.errors[0];
@@ -108,7 +108,7 @@ function handleExternalAPIError(service, statusCode, response, originalError = n
 }
 
 // Função para tratar erros de autenticação
-function handleAuthError(message, details = {}) {
+export function handleAuthError(message, details = {}) {
   return createError(ERROR_TYPES.AUTHENTICATION_ERROR, message, {
     ...details,
     timestamp: new Date().toISOString()
@@ -116,7 +116,7 @@ function handleAuthError(message, details = {}) {
 }
 
 // Função para tratar erros de rate limiting
-function handleRateLimitError(limit, remaining, resetTime) {
+export function handleRateLimitError(limit, remaining, resetTime) {
   return createError(ERROR_TYPES.RATE_LIMIT_ERROR, 'Rate limit excedido', {
     limit,
     remaining,
@@ -127,7 +127,7 @@ function handleRateLimitError(limit, remaining, resetTime) {
 }
 
 // Middleware principal de tratamento de erro
-function errorHandler(error, event, context) {
+export function errorHandler(error, event, context) {
   // Log do erro de forma segura
   secureLog('error', 'Erro capturado pelo error handler', {
     errorType: error.type || 'UNKNOWN',
@@ -146,7 +146,7 @@ function errorHandler(error, event, context) {
 
   // Determinar se é erro operacional ou programático
   const isOperational = error instanceof FlowPayError && error.isOperational;
-  
+
   // Preparar resposta baseada no tipo de erro
   let statusCode = 500;
   let responseBody = {
@@ -158,10 +158,10 @@ function errorHandler(error, event, context) {
   if (isOperational) {
     // Erro operacional - retornar detalhes controlados
     statusCode = error.statusCode;
-    
+
     // Mensagem amigável para o usuário
     let userMessage = error.message;
-    
+
     // Melhorar mensagens baseadas no tipo de erro
     if (error.type === ERROR_TYPES.EXTERNAL_API_ERROR) {
       // Mensagem já vem amigável do handleExternalAPIError
@@ -173,7 +173,7 @@ function errorHandler(error, event, context) {
     } else if (error.type === ERROR_TYPES.RATE_LIMIT_ERROR) {
       userMessage = 'Muitas requisições. Aguarde alguns instantes e tente novamente.';
     }
-    
+
     responseBody = {
       success: false,
       error: userMessage,
@@ -188,7 +188,7 @@ function errorHandler(error, event, context) {
       stack: error.stack,
       event: event.httpMethod + ' ' + event.path
     });
-    
+
     responseBody = {
       success: false,
       error: 'Erro interno do servidor',
@@ -220,7 +220,7 @@ function errorHandler(error, event, context) {
 }
 
 // Função para wrapper de funções com tratamento de erro
-function withErrorHandling(handler) {
+export function withErrorHandling(handler) {
   return async (event, context) => {
     try {
       return await handler(event, context);
@@ -231,9 +231,9 @@ function withErrorHandling(handler) {
 }
 
 // Função para validar parâmetros obrigatórios
-function validateRequiredParams(params, requiredFields) {
+export function validateRequiredParams(params, requiredFields) {
   const missing = requiredFields.filter(field => !params[field]);
-  
+
   if (missing.length > 0) {
     throw handleValidationError(
       'required_params',
@@ -244,7 +244,7 @@ function validateRequiredParams(params, requiredFields) {
 }
 
 // Função para validar formato de email
-function validateEmail(email) {
+export function validateEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailRegex.test(email)) {
     throw handleValidationError('email', 'Formato de email inválido', { email });
@@ -252,34 +252,17 @@ function validateEmail(email) {
 }
 
 // Função para validar endereço Ethereum
-function validateEthereumAddress(address) {
+export function validateEthereumAddress(address) {
   if (!address || !address.startsWith('0x') || address.length !== 42) {
     throw handleValidationError('wallet', 'Endereço Ethereum inválido', { address });
   }
 }
 
 // Função para validar valor monetário
-function validateMonetaryValue(value, fieldName = 'valor') {
+export function validateMonetaryValue(value, fieldName = 'valor') {
   const numValue = parseFloat(value);
   if (isNaN(numValue) || numValue <= 0) {
     throw handleValidationError(fieldName, 'Valor deve ser um número positivo', { value });
   }
   return numValue;
 }
-
-module.exports = {
-  FlowPayError,
-  ERROR_TYPES,
-  HTTP_STATUS,
-  createError,
-  handleValidationError,
-  handleExternalAPIError,
-  handleAuthError,
-  handleRateLimitError,
-  errorHandler,
-  withErrorHandling,
-  validateRequiredParams,
-  validateEmail,
-  validateEthereumAddress,
-  validateMonetaryValue
-};

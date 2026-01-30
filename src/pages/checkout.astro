@@ -4,13 +4,12 @@ import CheckoutHeader from '../components/checkout/CheckoutHeader.astro';
 import ModeChooser from '../components/checkout/ModeChooser.astro';
 import PixForm from '../components/checkout/PixForm.astro';
 import CryptoForm from '../components/checkout/CryptoForm.astro';
-import CheckoutFooter from '../components/checkout/CheckoutFooter.astro';
 ---
 
 <CheckoutLayout>
-  <CheckoutHeader />
-
   <main class="checkout-main">
+    <CheckoutHeader />
+    
     <ModeChooser />
 
     <section class="flow-step" data-state="details" id="step-details" hidden>
@@ -20,327 +19,82 @@ import CheckoutFooter from '../components/checkout/CheckoutFooter.astro';
 
     <section class="flow-step" data-state="confirm" id="step-confirm" hidden>
       <div class="card success">
-        <h3>Pagamento em processamento</h3>
-        <p>Registrando prova e atualizando status…</p>
-        <ul id="footnote" class="foot"></ul>
-        <div class="actions">
-          <a class="primary" href="/transparency">Ver transparência</a>
-          <button class="text" data-action="reset">Iniciar novo fluxo</button>
+        <h3>Sucesso!</h3>
+        <p>Seu pagamento está sendo processado no NΞØ PROTOCOL.</p>
+        <div style="margin-top: 24px;">
+          <button class="primary" data-action="reset">Novo Pagamento</button>
         </div>
       </div>
     </section>
+
+    <footer style="text-align: center; margin-top: 32px; opacity: 0.5; font-size: 12px;">
+      <p>&copy; 2026 FLOWPay Sovereign Systems</p>
+    </footer>
   </main>
-
-  <!-- Loading overlay -->
-  <div id="nf-loading" class="nf-loading" style="display:none">
-    <div class="nf-card">
-      <div class="nf-spinner" aria-hidden="true"></div>
-      <p class="nf-title">Carregando…</p>
-    </div>
-  </div>
-
-  <!-- Toasts -->
-  <div id="nf-toasts" class="nf-toasts"></div>
-
-  <CheckoutFooter />
 </CheckoutLayout>
 
-<!-- Wallet Boot Loader NΞØ -->
-<script is:inline>
-  (async () => {
-    try {
-      const r = await fetch('/.netlify/functions/neo-config', { cache: 'no-store' });
-      if (r.ok) window.NEO_CONFIG = await r.json();
-    } catch {}
-  })();
-</script>
-
-<!-- Scripts principais -->
-<script type="module" src="/assets/js/wallet.boot.js"></script>
-<script type="module" src="/assets/js/navigation-flow.machine.js"></script>
-
-<!-- Checkout initialization script -->
 <script type="module">
   import { startCheckout } from '/assets/js/navigation-flow.machine.js';
 
   document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Initializing FLOWPay...');
-
-    // Mount progress bar
-    const header = document.querySelector('.checkout-header');
-    if (header) {
-      const el = document.createElement('div');
-      el.className = 'nf-progress';
-      el.innerHTML = `
-        <div class="nf-bar">
-          <div class="nf-fill" id="nf-fill"></div>
-        </div>
-        <div class="nf-dots">
-          <button class="nf-dot" data-action="goto" data-step="0" aria-label="Escolha"></button>
-          <button class="nf-dot" data-action="goto" data-step="1" aria-label="Detalhes"></button>
-          <button class="nf-dot" data-action="goto" data-step="2" aria-label="Confirmar"></button>
-        </div>
-      `;
-      header.appendChild(el);
-    }
+    console.log('🚀 Initializing FLOWPay Sovereign UI...');
 
     // Load copy
     let copy = {};
     try {
       const res = await fetch('/ui.copy.pt.json', { cache: 'no-store' });
       if (res.ok) copy = await res.json();
-      console.log('✅ Copy loaded:', copy);
     } catch (error) {
-      console.warn('⚠️ Copy loading failed:', error);
+      console.warn('⚠️ Copy loading failed');
     }
 
-    let svc;
-    try {
-      svc = startCheckout({
-        copy,
-        services: {
-          createPix: async (ctx, p) => {
-            console.log('🔄 Creating PIX charge via Woovi API:', p);
+    let svc = startCheckout({
+      copy,
+      services: {
+        createPix: async (ctx, p) => {
+          const response = await fetch('/api/create-charge', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(p),
+          });
 
-            try {
-              const response = await fetch('/.netlify/functions/create-pix-charge', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(p),
-              });
-
-              // Verificar se a resposta é JSON válido
-              let responseData;
-              const contentType = response.headers.get('content-type');
-              
-              if (contentType && contentType.includes('application/json')) {
-                try {
-                  responseData = await response.json();
-                } catch (jsonError) {
-                  // Se falhar ao parsear JSON, tentar ler como texto
-                  const textResponse = await response.text();
-                  console.error('❌ Failed to parse JSON response:', {
-                    status: response.status,
-                    contentType,
-                    textResponse: textResponse.substring(0, 200),
-                    jsonError: jsonError.message
-                  });
-                  
-                  throw new Error(`Erro ao processar resposta do servidor: ${textResponse.substring(0, 100)}`);
-                }
-              } else {
-                // Se não for JSON, ler como texto
-                const textResponse = await response.text();
-                console.error('❌ Non-JSON response received:', {
-                  status: response.status,
-                  contentType,
-                  textResponse: textResponse.substring(0, 200)
-                });
-                
-                throw new Error(`Resposta inválida do servidor: ${textResponse.substring(0, 100)}`);
-              }
-
-              if (!response.ok) {
-                let errorMessage = 'Erro ao criar cobrança PIX';
-
-                if (responseData.error) {
-                  errorMessage = responseData.error;
-                } else if (responseData.details && responseData.details.apiError) {
-                  errorMessage =
-                    responseData.details.apiError.message || responseData.details.apiError;
-                } else if (responseData.message) {
-                  errorMessage = responseData.message;
-                }
-
-                console.error('❌ Error creating PIX charge:', {
-                  status: response.status,
-                  statusText: response.statusText,
-                  error: errorMessage,
-                  details: responseData.details,
-                  fullResponse: responseData,
-                });
-
-                const error = new Error(errorMessage);
-                error.status = response.status;
-                error.details = responseData.details;
-                throw error;
-              }
-
-              console.log('✅ PIX charge created successfully:', responseData);
-              return responseData;
-            } catch (error) {
-              console.error('❌ Error creating PIX charge:', {
-                message: error.message,
-                status: error.status,
-                details: error.details,
-                stack: error.stack,
-              });
-              throw error;
-            }
-          },
-          submitCrypto: (ctx, p) => {
-            console.log('🔄 Submitting crypto:', p);
-            return Promise.resolve({
-              success: true,
-              hash: `0x${Math.random().toString(16).slice(2)}`,
-            });
-          },
-          connect: () => window.connectWallet?.(),
-          disconnect: () => window.disconnectWallet?.(),
-        },
-        onToast: (msg, type) => {
-          let holder = document.getElementById('nf-toasts');
-          if (!holder) {
-            holder = document.createElement('div');
-            holder.id = 'nf-toasts';
-            holder.className = 'nf-toasts';
-            document.body.appendChild(holder);
+          if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.error || 'Erro ao criar PIX');
           }
-          const n = document.createElement('div');
-          n.className = `nf-toast is-${type || 'info'}`;
-          
-          const textSpan = document.createElement('span');
-          textSpan.textContent = msg;
-          n.appendChild(textSpan);
-          
-          const closeBtn = document.createElement('button');
-          closeBtn.className = 'nf-x';
-          closeBtn.setAttribute('aria-label', 'Fechar');
-          closeBtn.textContent = '×';
-          closeBtn.onclick = () => n.remove();
-          n.appendChild(closeBtn);
-          
-          holder.appendChild(n);
-          setTimeout(() => { if(n.parentNode) n.remove(); }, 5000);
+          return await response.json();
         },
-      });
+        submitCrypto: (ctx, p) => Promise.resolve({ success: true, hash: '0x...' }),
+        connect: () => window.connectWallet?.(),
+        disconnect: () => window.disconnectWallet?.(),
+      },
+      onToast: (msg, type) => {
+        const holder = document.getElementById('nf-toasts');
+        const n = document.createElement('div');
+        n.className = `nf-toast is-${type || 'info'}`;
+        n.innerHTML = `<span>${msg}</span><button class="nf-x" onclick="this.parentElement.remove()">×</button>`;
+        holder.appendChild(n);
+        setTimeout(() => n.remove(), 5000);
+      },
+    });
 
-      console.log('🎯 startCheckout executado com sucesso');
-    } catch (error) {
-      console.error('❌ Erro ao executar startCheckout:', error);
-      svc = null;
-    }
-
-    if (svc && typeof svc === 'object') {
+    if (svc) {
       window.checkoutService = svc;
-      window.machineService = svc;
-      console.log('✅ Checkout Machine ready!');
-      console.log('🎯 Estado atual:', svc.state);
-    }
-
-    // Setup validation
-    function setupRealTimeValidation() {
-      const walletField = document.getElementById('wallet');
-      const valorField = document.getElementById('valor');
-      const cryptoAmountField = document.getElementById('crypto-amount');
-      const cryptoToField = document.getElementById('crypto-to');
-
-      if (walletField) {
-        walletField.addEventListener('input', function () {
-          const value = this.value.trim();
-          // Validação mais rigorosa: 0x + 40 hex chars
-          const isValid = /^0x[a-fA-F0-9]{40}$/.test(value);
-
-          this.classList.toggle('valid', isValid);
-          this.classList.toggle('invalid', !isValid && value.length > 0);
-
-          let errorMsg = this.parentNode.querySelector('.field-error');
-          if (!errorMsg && !isValid && value.length > 0) {
-            errorMsg = document.createElement('div');
-            errorMsg.className = 'field-error';
-            errorMsg.textContent = 'Wallet deve ser um endereço Ethereum válido (0x...)';
-            this.parentNode.appendChild(errorMsg);
-          } else if (errorMsg && isValid) {
-            errorMsg.remove();
-          }
-        });
-      }
-
-      if (valorField) {
-        valorField.addEventListener('input', function () {
-          const value = parseFloat(this.value);
-          const isValid = value > 0;
-
-          this.classList.toggle('valid', isValid);
-          this.classList.toggle('invalid', !isValid && this.value.length > 0);
-
-          let errorMsg = this.parentNode.querySelector('.field-error');
-          if (!errorMsg && !isValid && this.value.length > 0) {
-            errorMsg = document.createElement('div');
-            errorMsg.className = 'field-error';
-            errorMsg.textContent = 'Valor deve ser maior que zero';
-            this.parentNode.appendChild(errorMsg);
-          } else if (errorMsg && isValid) {
-            errorMsg.remove();
-          }
-        });
-      }
-
-      if (cryptoAmountField) {
-        cryptoAmountField.addEventListener('input', function () {
-          const value = parseFloat(this.value);
-          const isValid = value > 0;
-          this.classList.toggle('valid', isValid);
-          this.classList.toggle('invalid', !isValid && this.value.length > 0);
-        });
-      }
-
-      if (cryptoToField) {
-        cryptoToField.addEventListener('input', function () {
-          const value = this.value.trim();
-          const isValid = value.length > 0 && value.startsWith('0x') && value.length === 42;
-          this.classList.toggle('valid', isValid);
-          this.classList.toggle('invalid', !isValid && value.length > 0);
-        });
-      }
-    }
-
-    function setupKeyboardNavigation() {
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' && e.target.matches('input')) {
-          e.preventDefault();
-
-          const currentForm = e.target.closest('form');
-          if (currentForm) {
-            const inputs = Array.from(currentForm.querySelectorAll('input'));
-            const currentIndex = inputs.indexOf(e.target);
-
-            if (currentIndex < inputs.length - 1) {
-              inputs[currentIndex + 1].focus();
-            } else {
-              currentForm.requestSubmit();
-            }
-          }
-        }
-
-        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-          e.preventDefault();
-          const inputs = Array.from(document.querySelectorAll('input:not([type="hidden"])'));
-          const currentIndex = inputs.indexOf(document.activeElement);
-
-          if (e.key === 'ArrowDown' && currentIndex < inputs.length - 1) {
-            inputs[currentIndex + 1].focus();
-          } else if (e.key === 'ArrowUp' && currentIndex > 0) {
-            inputs[currentIndex - 1].focus();
-          }
+      // Progress Sync
+      svc.subscribe(state => {
+        const fill = document.getElementById('nf-fill');
+        if (fill) {
+          if (state.matches('choose')) fill.style.width = '33%';
+          if (state.matches('details')) fill.style.width = '66%';
+          if (state.matches('confirm')) fill.style.width = '100%';
         }
       });
     }
 
-    // Preencher ID da transação automaticamente
+    // ID Transação
     const idField = document.getElementById('id_transacao');
     if (idField) {
-      idField.value = `pix_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+      idField.value = `pix_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     }
-
-    // Auto-focus no primeiro campo
-    const walletField = document.getElementById('wallet');
-    if (walletField) walletField.focus();
-
-    // Setup
-    setupRealTimeValidation();
-    setupKeyboardNavigation();
   });
 </script>

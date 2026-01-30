@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "npm run build && npx serve dist -p 4321",
     "astro": "astro",
+    "start": "node ./dist/server/entry.mjs",
     "setup": "npm install && echo '✅ Dependências instaladas!'",
     "neo:cfg": "node tools/neo-generate-config.mjs",
     "neo:build:wallet": "npx esbuild public/assets/js/web3auth.init.ts --bundle --format=esm --target=es2022 --minify --outfile=public/assets/js/web3auth.js",
@@ -25,18 +26,19 @@
     "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore '~/Desktop/**' --config .markdownlint.json --fix"
   },
   "dependencies": {
-    "@astrojs/netlify": "^6.6.3",
+    "@astrojs/node": "^9.5.2",
     "@astrojs/react": "^4.4.2",
     "@web3auth/ethereum-provider": "^9.7.0",
     "@web3auth/modal": "^10.10.0",
     "astro": "^5.16.6",
     "axios": "^1.13.2",
+    "better-sqlite3": "^12.6.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "viem": "^2.43.3"
   },
   "devDependencies": {
-    "@netlify/functions": "^5.1.2",
+    "@types/better-sqlite3": "^7.6.13",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "esbuild": "^0.27.2",
