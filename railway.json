@@ -4,14 +4,12 @@
         "builder": "RAILPACK",
         "watchPatterns": [
             "/app/data"
-        ],
-        "buildEnvironment": "V3"
+        ]
     },
     "deploy": {
         "runtime": "V2",
         "numReplicas": 1,
         "sleepApplication": false,
-        "useLegacyStacker": false,
         "multiRegionConfig": {
             "us-west2": {
                 "numReplicas": 1
