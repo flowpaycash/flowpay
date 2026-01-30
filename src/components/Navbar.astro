@@ -1,87 +1,137 @@
 ---
 ---
 
-<nav class="neo-navbar" data-neo-component="navbar">
-  <div class="nav-container">
-    <!-- Logo com glow neon -->
-    <div class="nav-logo">
-      <a href="/" class="logo-link">
-        <div class="logo-glow">
-          <img src="/img/logos/flowpay-header-logo.png" alt="FLOWPay" class="logo-img" />
-          <div class="logo-aura"></div>
-        </div>
+<nav class="premium-nav">
+  <div class="nav-wrapper">
+    <div class="nav-left">
+      <a href="/" class="brand-logo">
+        <img src="/img/flowpay-logo.png" alt="FLOWPay" />
       </a>
-    </div>
-
-    <!-- Menu principal com efeitos hover -->
-    <ul class="nav-menu">
-      <li class="nav-item">
-        <a href="/" class="nav-link" data-neo-ripple>
-          <span class="link-text">Início</span>
-          <div class="link-underline"></div>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="/checkout" class="nav-link" data-neo-ripple>
-          <span class="link-text">Checkout</span>
-          <div class="link-underline"></div>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="/transparency" class="nav-link" data-neo-ripple>
-          <span class="link-text">Transparência</span>
-          <div class="link-underline"></div>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="#features" class="nav-link" data-neo-ripple>
-          <span class="link-text">Recursos</span>
-          <div class="link-underline"></div>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="#blockchain" class="nav-link" data-neo-ripple>
-          <span class="link-text">Blockchain</span>
-          <div class="link-underline"></div>
-        </a>
-      </li>
-      <li class="nav-item admin-item">
-        <a href="/admin" class="nav-link admin-link" data-neo-ripple>
-          <span class="link-text">Admin</span>
-          <div class="link-underline admin-glow"></div>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="/login" class="nav-link" data-neo-ripple>
-          <span class="link-text">Entrar</span>
-          <div class="link-underline"></div>
-        </a>
-      </li>
-    </ul>
-
-    <!-- Status da carteira -->
-    <div class="nav-wallet" id="nav-wallet-status">
-      <div class="wallet-indicator disconnected">
-        <div class="indicator-dot"></div>
-        <span class="status-text">Desconectado</span>
+      <div class="nav-links">
+        <a href="/checkout" class="nav-item">Checkout</a>
+        <a href="/transparency" class="nav-item">Transparência</a>
+        <a href="/admin" class="nav-item admin">Admin</a>
       </div>
     </div>
 
-    <!-- Botão Ativar Flow -->
-    <button class="activate-flow-btn plasma-btn">
-      <span>Ativar Flow</span>
-    </button>
-
-    <!-- Menu mobile com animação -->
-    <button class="mobile-menu-toggle" id="mobile-menu-toggle" data-neo-ripple>
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
+    <div class="nav-right">
+      <div id="wallet-status" class="wallet-pill">
+        <div class="dot"></div>
+        <span>Mainnet</span>
       </div>
-    </button>
+      <a href="/login" class="btn-nav primary">Acessar</a>
+    </div>
   </div>
 </nav>
+
+<style>
+  .premium-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid #edeef2;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+  }
+
+  .nav-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .brand-logo img {
+    height: 32px;
+    width: auto;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .nav-item {
+    text-decoration: none;
+    color: #707070;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .nav-item:hover {
+    color: #1d1d1f;
+  }
+
+  .nav-item.admin {
+    color: #ff007a;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .wallet-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f5f6fc;
+    padding: 8px 16px;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ff007a;
+    border: 1px solid #ff007a20;
+  }
+
+  .wallet-pill .dot {
+    width: 6px;
+    height: 6px;
+    background: #ff007a;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #ff007a;
+  }
+
+  .btn-nav {
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.1s;
+  }
+
+  .btn-nav.primary {
+    background: #1d1d1f;
+    color: white;
+  }
+
+  .btn-nav.primary:hover {
+    transform: scale(1.02);
+  }
+
+  @media (max-width: 768px) {
+    .nav-links, .wallet-pill {
+      display: none;
+    }
+  }
+</style>
 
 <script>
   // NEO Layout Injector compatibility
