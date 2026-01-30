@@ -10,7 +10,7 @@ export default defineConfig({
   }),
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 8080,
-    host: true
+    host: '0.0.0.0'
   },
   build: {
     assets: 'assets',
