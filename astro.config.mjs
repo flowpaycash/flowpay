@@ -9,8 +9,8 @@ export default defineConfig({
     mode: 'standalone'
   }),
   server: {
-    port: process.env.PORT ? parseInt(process.env.PORT) : 8080,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    port: parseInt(process.env.PORT || '3000')
   },
   build: {
     assets: 'assets',
@@ -19,6 +19,7 @@ export default defineConfig({
     build: {
       assetsInlineLimit: 0,
     },
+    // Mantendo externalização do better-sqlite3 por segurança
     ssr: {
       external: ['better-sqlite3']
     }
