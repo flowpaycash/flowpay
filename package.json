@@ -1,74 +1,12 @@
 {
-  "name": "flowpay",
-  "version": "1.0.0",
-  "description": "FLOWPay - Integração com Woovi API para pagamentos Pix",
-  "main": "index.js",
+  "name": "flowpay-debug",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "build": "echo 'Build skipped'",
-    "preview": "npm run build && npx serve dist -p 4321",
-    "astro": "astro",
-    "start": "node server.mjs",
-    "setup": "npm install && echo '✅ Dependências instaladas!'",
-    "neo:cfg": "node tools/neo-generate-config.mjs",
-    "neo:build:wallet": "npx esbuild public/assets/js/web3auth.init.ts --bundle --format=esm --target=es2022 --minify --outfile=public/assets/js/web3auth.js",
-    "neo:build:smart": "./scripts/build-web3auth-smart.sh",
-    "neo:build:minimal": "./scripts/build-web3auth-minimal.sh",
-    "neo:build": "npm run neo:cfg && npm run neo:build:smart",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:error-handler": "jest tests/error-handler.test.js",
-    "test:validation": "jest tests/validation-middleware.test.js",
-    "test:openpix": "jest tests/openpix.test.js",
-    "test:openpix:watch": "jest tests/openpix.test.js --watch",
-    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore '~/Desktop/**' --config .markdownlint.json",
-    "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore '~/Desktop/**' --config .markdownlint.json --fix"
+    "start": "node server-simple.js",
+    "build": "echo 'Skipped'"
   },
-  "dependencies": {
-    "@astrojs/node": "^9.5.2",
-    "@astrojs/react": "^4.4.2",
-    "@web3auth/ethereum-provider": "^9.7.0",
-    "@web3auth/modal": "^10.10.0",
-    "astro": "^5.16.6",
-    "axios": "^1.13.2",
-    "better-sqlite3": "^12.6.2",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "viem": "^2.43.3"
-  },
-  "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1",
-    "esbuild": "^0.27.2",
-    "jest": "^30.2.0",
-    "markdownlint-cli": "^0.47.0",
-    "prettier": "^3.7.4",
-    "pwa-asset-generator": "^8.1.2"
-  },
-  "keywords": [
-    "flowpay",
-    "pix",
-    "woovi",
-    "openpix",
-    "cryptocurrency",
-    "payment",
-    "pwa",
-    "ios",
-    "mobile-first"
-  ],
-  "author": "FLOWPay Team",
-  "license": "MIT",
   "engines": {
     "node": "20.x"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/flowpaycash/flowpay.git"
-  },
-  "bugs": {
-    "url": "https://github.com/flowpaycash/flowpay/issues"
-  },
-  "homepage": "https://github.com/flowpaycash/flowpay#readme"
+  }
 }
