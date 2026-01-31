@@ -7,7 +7,7 @@ export const config = {
 
   // URLs permitidas por ambiente
   allowedOrigins: {
-    production: ['https://flowpaypix.netlify.app'],
+    production: ['https://flowpaypix.netlify.app', 'https://flowpay-production-10d8.up.railway.app'],
     staging: ['https://flowpaypix-staging.netlify.app'],
     development: ['http://localhost:8888', 'http://localhost:8000', 'http://127.0.0.1:8888']
   },
