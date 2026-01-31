@@ -19,12 +19,9 @@ Stack: Astro + SQLite + Node (Railway)
 
 ▓▓▓ MISSION
 ────────────────────────────────────────
-O FLOWPay inverte a lógica do Web3
-tradicional. Em vez de exigir que o
-usuário entenda crypto antes de usar,
-nós usamos o PIX para liberar acesso
-imediato, movendo a complexidade para
-uma camada de liquidação interna.
+O **FLOWPay** é uma solução de pagamento baseada em Pix (via Woovi/OpenPix) e integrações Web3, projetada para oferecer uma experiência fluida e soberana.
+
+> **Status:** 🚀 Em Produção (Railway)
 
 PIX → Permission (Access Unlock)
 
