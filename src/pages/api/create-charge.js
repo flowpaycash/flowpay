@@ -77,7 +77,7 @@ export const POST = async ({ request, clientAddress }) => {
         const wooviResponse = await fetch(`${WOOVI_API_URL}/api/v1/charge`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${cleanApiKey}`,
+                'Authorization': cleanApiKey,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(pixData)
