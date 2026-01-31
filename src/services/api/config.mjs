@@ -16,7 +16,9 @@ export const config = {
   woovi: {
     apiKey: process.env.WOOVI_API_KEY,
     webhookSecret: process.env.WOOVI_WEBHOOK_SECRET,
-    apiUrl: process.env.WOOVI_API_URL || 'https://api.woovi.com'
+    apiUrl: process.env.WOOVI_API_URL || 'https://api.woovi.com',
+    // IPs oficiais da Woovi para webhooks (https://developers.woovi.com/docs/webhook/api/webhook-api)
+    allowedIPs: ['179.190.27.5', '179.190.27.6', '186.224.205.214']
   },
 
   // Configurações de autenticação

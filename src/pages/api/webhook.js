@@ -15,8 +15,25 @@ export const POST = async ({ request, clientAddress }) => {
         if (rateLimitResult && rateLimitResult.statusCode === 429) {
             return new Response(rateLimitResult.body, { status: 429, headers });
         }
+        const clientIP = clientAddress;
+
+        // Validação de IP da Woovi
+        // Em dev localhost é permitido, em prod apenas IPs da Woovi
+        if (process.env.NODE_ENV === 'production') {
+            // Normaliza IP (remove prefixo ::ffff: se existir)
+            const normalizedIP = clientIP.replace('::ffff:', '');
+
+            // Importa config aqui para garantir acesso
+            const { config } = await import('../../services/api/config.mjs');
+
+            if (!config.woovi.allowedIPs.includes(normalizedIP)) {
+                secureLog('warn', `Astro Webhook bloqueado: IP não autorizado (${normalizedIP})`);
+                return new Response(JSON.stringify({ error: 'Unauthorized IP' }), { status: 403, headers });
+            }
+        }
 
         const rawBody = await request.text();
+
         const signature = request.headers.get('x-woovi-signature');
         const WEBHOOK_SECRET = process.env.WOOVI_WEBHOOK_SECRET;
 
