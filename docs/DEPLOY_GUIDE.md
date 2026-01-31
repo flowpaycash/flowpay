@@ -1,119 +1,79 @@
-# 🚀 Guia de Deploy - FLOWPay
+# 🚀 Guia de Deploy - Railway
 
-## 📋 Pré-requisitos
+Este guia cobre o processo de deploy da aplicação **FlowPay** na plataforma **Railway**.
 
-- Conta no [Netlify](https://netlify.com)
-- Repositório GitHub configurado
-- Variável `FLOWPAY_URL` definida
+## 📋 Visão Geral
 
-## 🔧 Passo a Passo
+- **Plataforma:** Railway (railway.app)
+- **Framework:** Astro (SSR - Server Side Rendering)
+- **Runtime:** Node.js v20+
+- **Build Command:** `npm run build`
+- **Start Command:** `npm run start`
 
-### 1. Conectar ao Netlify
+## ⚙️ Configuração (railway.json)
 
-1. Acesse [app.netlify.com](https://app.netlify.com)
-2. Clique em **"New site from Git"**
-3. Escolha **GitHub** como provedor
-4. Autorize o Netlify a acessar seus repositórios
+O projeto utiliza um arquivo `railway.json` na raiz para controlar o comportamento do deploy.
 
-### 2. Selecionar Repositório
+```json
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "npm run build"
+  },
+  "deploy": {
+    "startCommand": "npm run start",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 5
+  }
+}
+```
 
-1. Procure por `flowpaycash/flowpay`
-2. Clique no repositório
-3. Confirme a branch `main`
+## 🔑 Variáveis de Ambiente (Obrigatórias)
 
-### 3. Configurar Build
+As seguintes variáveis devem ser configuradas no painel do Railway (**Variables**):
 
-**Build settings:**
-- **Build command:** (deixe em branco - site estático)
-- **Publish directory:** `public`
-- **Functions directory:** `.netlify/functions`
+| Variável | Descrição |
+| :--- | :--- |
+| `WOOVI_API_KEY` | Chave de API da Woovi (AppID) |
+| `WOOVI_WEBHOOK_SECRET` | Segredo para validação de Webhooks |
+| `WOOVI_API_URL` | URL da API (ex: `https://api.woovi.com`) |
+| `HOST` | Deve ser `0.0.0.0` para aceitar conexões externas |
+| `PORT` | O Railway define isso automaticamente (ex: `PORT`), mas o Astro deve escutar nesta porta |
 
-### 4. Configurar Variáveis de Ambiente
+> **Nota:** Consulte `docs/WOOVI_INTEGRATION_GUIDE.md` para detalhes dos segredos da Woovi.
 
-1. Vá para **Site settings** > **Environment variables**
-2. Adicione:
-   ```
-   FLOWPAY_URL = https://seuhub.com
-   ```
-3. Substitua `https://seuhub.com` pela URL real do seu Hub
+## 🚀 Como Fazer Deploy
 
-### 5. Deploy
+### Automático (Recomendado)
+O Railway está conectado ao GitHub. Qualquer push na branch `main` dispara um deploy automaticamente.
 
-1. Clique em **"Deploy site"**
-2. Aguarde o build (deve levar menos de 2 minutos)
-3. Seu site estará disponível em `https://random-name.netlify.app`
+1.  Faça suas alterações.
+2.  `git push origin main`
+3.  Acompanhe o build no painel do Railway.
 
-### 6. Configurar Domínio Personalizado (Opcional)
+### Manual (CLI)
+Se precisar testar sem commitar ou forçar um deploy:
 
-1. Vá para **Domain management**
-2. Clique em **"Add custom domain"**
-3. Siga as instruções para configurar DNS
+```bash
+# Login
+railway login
 
-## ✅ Verificação
-
-Após o deploy:
-
-1. Acesse seu site
-2. Verifique se o botão "Ir para o Hub" está funcionando
-3. Teste em diferentes dispositivos
-4. Verifique se as imagens estão carregando
+# Deploy
+railway up
+```
 
 ## 🔍 Troubleshooting
 
-### Botão não funciona
-- Verifique se `FLOWPAY_URL` está configurada
-- Abra o console do navegador para erros
-- Teste a função Netlify em `/.netlify/functions/env`
+**Erro 401 na API Woovi**
+*   Verifique se `WOOVI_API_KEY` no Railway é a string codificada (inicia com `Q2xp...`) e não o AppID legível.
 
-### Imagens não carregam
-- Verifique se os arquivos estão na pasta `public/img/`
-- Confirme se os caminhos no HTML estão corretos
+**Erro de Build**
+*   Verifique os logs na aba "Build Logs".
+*   Geralmente falta de dependências ou erro de sintaxe.
 
-### Erro de build
-- Verifique se a pasta `public` existe
-- Confirme se o `netlify.toml` está correto
-
-## 📱 Teste Local
-
-Para testar antes do deploy:
-
-### Opção 1: Netlify CLI (Recomendado)
-```bash
-# Instalar Netlify CLI globalmente
-npm install -g netlify-cli
-
-# Navegar para o projeto
-cd flowpay
-
-# Iniciar servidor local
-netlify dev
-
-# Acessar em http://localhost:8888
-```
-
-### Opção 2: Servidor HTTP simples
-```bash
-cd flowpay/public
-
-# Python 3
-python3 -m http.server 8000
-
-# Python 2
-python -m SimpleHTTPServer 8000
-
-# Node.js (com http-server)
-npx http-server -p 8000
-
-# Acessar em http://localhost:8000
-```
-
-## 🎯 Próximos Passos
-
-- [ ] Configurar analytics
-- [ ] Adicionar SEO meta tags
-- [ ] Implementar PWA
-- [ ] Adicionar testes automatizados
+**Aplicação não inicia (Crash Loop)**
+*   Verifique se `HOST=0.0.0.0` está definido. O Astro precisa disso para rodar em containers.
 
 ---
-
-**🎉 Parabéns!** Seu FLOWPay está no ar e pronto para receber visitantes!
+**Status Atual (30/01/2026):** ✅ Deploy funcional e estável.
