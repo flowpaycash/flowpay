@@ -1,7 +1,7 @@
 {
   "name": "flowpay",
   "version": "1.0.0",
-  "description": "FLOWPay - Integração com Woovi API para pagamentos Pix",
+  "description": "FlowPay - Integração com Woovi API para pagamentos Pix",
   "main": "index.js",
   "scripts": {
     "dev": "astro dev",
@@ -60,7 +60,7 @@
     "ios",
     "mobile-first"
   ],
-  "author": "FLOWPay Team",
+  "author": "FlowPay Team",
   "license": "MIT",
   "engines": {
     "node": "20.x"
