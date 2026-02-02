@@ -26,7 +26,7 @@ export function interpret(machine, opts = {}) {
 
     // actions (before leaving)
     if (step.actions && Array.isArray(step.actions)) {
-        step.actions.forEach(a => a(svc.state.context, payload))
+      step.actions.forEach(a => a(svc.state.context, payload))
     }
 
     // invoke async service
@@ -156,24 +156,24 @@ export function bindCheckoutUI(service, opts = {}) {
     const routeCopy = service.state.context.copy?.routes?.["/checkout"] || {}
     const variant = routeCopy.active_variant || "A"
     const hero = (routeCopy.hero_options || []).find(h => h.id === variant)
-    $("#hero-headline")    && ( $("#hero-headline").textContent    = hero?.headline    || "Checkout" )
-    $("#hero-subheadline") && ( $("#hero-subheadline").textContent = hero?.subheadline || "" )
+    $("#hero-headline") && ($("#hero-headline").textContent = hero?.headline || "Checkout")
+    $("#hero-subheadline") && ($("#hero-subheadline").textContent = hero?.subheadline || "")
 
     // status footnote
     const foot = routeCopy.messages?.footnote || []
-    $("#footnote") && ( $("#footnote").innerHTML = foot.map(li => `<li>${li}</li>`).join("") )
+    $("#footnote") && ($("#footnote").innerHTML = foot.map(li => `<li>${li}</li>`).join(""))
   }
-  
+
   function applyBreadcrumb(state) {
     const stepsOrder = ["choose", "details", "confirm"]
     const currentStep = state.value
     const currentIndex = stepsOrder.indexOf(currentStep)
-    
+
     // Atualizar breadcrumb visual
     $$(".breadcrumb-step").forEach((step, index) => {
       const stepName = step.dataset.step
       const stepIndex = stepsOrder.indexOf(stepName)
-      
+
       step.classList.toggle("is-active", stepIndex === currentIndex)
       step.classList.toggle("is-done", stepIndex < currentIndex)
       step.classList.toggle("is-pending", stepIndex > currentIndex)
@@ -225,9 +225,18 @@ export function bindCheckoutUI(service, opts = {}) {
     applyCopy(state)
     applyBreadcrumb(state)
 
+    // Sync URL with Mode
+    if (state.context.mode) {
+      const url = new URL(window.location);
+      if (url.searchParams.get('mode') !== state.context.mode) {
+        url.searchParams.set('mode', state.context.mode);
+        window.history.replaceState({}, '', url);
+      }
+    }
+
     // toastish feedback (opcional)
     if (state.value === "confirm") opts.onToast?.("Pagamento confirmado. Registrando prova…", "success")
-    if (state.value === "error")  opts.onToast?.("Falha ao processar. Tente novamente.", "error")
+    if (state.value === "error") opts.onToast?.("Falha ao processar. Tente novamente.", "error")
   })
 }
 
@@ -236,5 +245,12 @@ export function startCheckout({ services, copy, onToast } = {}) {
   const machine = makeCheckoutMachine(services, copy)
   const svc = interpret(machine)
   bindCheckoutUI(svc, { onToast })
+
+  // Auto-restore mode from URL
+  const urlMode = new URLSearchParams(window.location.search).get('mode');
+  if (urlMode === 'pix' || urlMode === 'crypto') {
+    svc.send('SELECT_MODE', { mode: urlMode });
+  }
+
   return svc
 }
