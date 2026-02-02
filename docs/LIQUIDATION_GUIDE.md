@@ -10,8 +10,8 @@ Status: IMPLEMENTADO
 
 ▓▓▓ CONCEITO
 ────────────────────────────────────────
-Liquidação assistida não é gambiarra. 
-É controle consciente do risco no 
+Liquidação assistida não é gambiarra.
+É controle consciente do risco no
 momento certo do projeto.
 
 └─ Fluxo:
@@ -23,8 +23,8 @@ momento certo do projeto.
 
 ▓▓▓ OPERAÇÃO
 ────────────────────────────────────────
-O sistema decide quando pode decidir 
-sozinho. Atualmente, a execução exige 
+O sistema decide quando pode decidir
+sozinho. Atualmente, a execução exige
 assinatura da Hot Wallet do serviço.
 
 └─ Endpoints:
@@ -39,7 +39,7 @@ assinatura da Hot Wallet do serviço.
 
 1. O PIX é confirmado imediatamente.
 2. O produto é liberado (Unlock).
-3. A liquidação blockchain acontece 
+3. A liquidação blockchain acontece
    em background sob supervisão.
 
 ▓▓▓ NΞØ MELLØ

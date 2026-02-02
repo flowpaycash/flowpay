@@ -46,13 +46,15 @@ As seguintes variáveis devem ser configuradas no painel do Railway (**Variables
 ## 🚀 Como Fazer Deploy
 
 ### Automático (Recomendado)
+
 O Railway está conectado ao GitHub. Qualquer push na branch `main` dispara um deploy automaticamente.
 
-1.  Faça suas alterações.
-2.  `git push origin main`
-3.  Acompanhe o build no painel do Railway.
+1. Faça suas alterações.
+2. `git push origin main`
+3. Acompanhe o build no painel do Railway.
 
 ### Manual (CLI)
+
 Se precisar testar sem commitar ou forçar um deploy:
 
 ```bash
@@ -66,14 +68,14 @@ railway up
 ## 🔍 Troubleshooting
 
 **Erro 401 na API Woovi**
-*   Verifique se `WOOVI_API_KEY` no Railway é a string codificada (inicia com `Q2xp...`) e não o AppID legível.
+- Verifique se `WOOVI_API_KEY` no Railway é a string codificada (inicia com `Q2xp...`) e não o AppID legível.
 
 **Erro de Build**
-*   Verifique os logs na aba "Build Logs".
-*   Geralmente falta de dependências ou erro de sintaxe.
+- Verifique os logs na aba "Build Logs".
+- Geralmente falta de dependências ou erro de sintaxe.
 
 **Aplicação não inicia (Crash Loop)**
-*   Verifique se `HOST=0.0.0.0` está definido. O Astro precisa disso para rodar em containers.
+- Verifique se `HOST=0.0.0.0` está definido. O Astro precisa disso para rodar em containers.
 
 ---
 **Status Atual (30/01/2026):** ✅ Deploy funcional e estável.

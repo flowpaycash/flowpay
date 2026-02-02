@@ -16,6 +16,7 @@ O sistema de tratamento de erros do FLOWPay foi projetado para:
 Erro ao comunicar com APIs externas (Woovi, QuickNode, etc).
 
 **Mensagens amigáveis:**
+
 - 401: "Erro de autenticação na API. Verifique suas credenciais."
 - 403: "Acesso negado pela API. Verifique suas permissões."
 - 404: "Endpoint não encontrado na API."
@@ -23,6 +24,7 @@ Erro ao comunicar com APIs externas (Woovi, QuickNode, etc).
 - 500+: "Serviço temporariamente indisponível. Tente novamente em alguns instantes."
 
 **Exemplo de resposta:**
+
 ```json
 {
   "success": false,
@@ -46,6 +48,7 @@ Erro de validação de dados de entrada.
 **Mensagem:** Mensagem específica do campo inválido.
 
 **Exemplo:**
+
 ```json
 {
   "success": false,

@@ -1,25 +1,29 @@
-#  FLOWPay - QuickNode Integration Summary
+# FLOWPay - QuickNode Integration Summary
 
-##  O Que Foi Implementado
+## O Que Foi Implementado
 
 ### 1. API REST Client (`quicknode-rest.js`)
 
 ✅ **IPFS_REST**
+
 - Upload de arquivos para IPFS
 - Armazenamento de provas imutáveis
 - Integração com `write-proof.js`
 
 ✅ **KV_REST**
+
 - Cache key-value
 - TTL automático
 - Estado temporário de ordens
 
 ✅ **STREAMS_REST**
+
 - Monitoramento em tempo real
 - Filtros customizados
 - Webhooks automáticos
 
 ✅ **WEBHOOKS_REST** (NOVO)
+
 - Templates pré-configurados:
   - `evmWalletFilter`: Monitora wallets específicas
   - `evmContractEvents`: Monitora eventos de contratos
@@ -34,6 +38,7 @@
 ### 2. Webhook Handler (`quicknode-webhook.js`)
 
 ✅ **Processamento de Eventos**
+
 - Suporta formato QuickNode (`data` + `metadata`)
 - Processa eventos de contratos (Transfer USDT)
 - Processa transações de wallets
@@ -45,11 +50,13 @@
 ### 3. Scripts de Teste
 
 ✅ **test-quicknode-api.sh**
+
 ```bash
 ./tools/test-quicknode-api.sh QN_5c0bd5ebf5eb4319a5e3c7df48685f93
 ```
 
 ✅ **setup-quicknode-webhooks.js**
+
 ```bash
 node tools/setup-quicknode-webhooks.js
 ```
@@ -59,6 +66,7 @@ node tools/setup-quicknode-webhooks.js
 ## 📋 Templates QuickNode
 
 ### evmContractEvents
+
 **Uso:** Monitorar transferências USDT
 
 ```javascript
@@ -69,11 +77,13 @@ await rest.monitorUSDTTransfers(
 ```
 
 **Event Hash:**
+
 - Transfer: `0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef`
 
 ---
 
 ### evmWalletFilter
+
 **Uso:** Monitorar wallets de usuários
 
 ```javascript
@@ -85,7 +95,7 @@ await rest.monitorWallets(
 
 ---
 
-##  Fluxo Completo
+## Fluxo Completo
 
 ```
 1. PIX confirmado (Woovi webhook)
@@ -107,7 +117,7 @@ await rest.monitorWallets(
 
 ---
 
-##  Variáveis de Ambiente
+## Variáveis de Ambiente
 
 ```bash
 # QuickNode API Key (obrigatório)
@@ -131,11 +141,13 @@ URL=https://flowpaypix.netlify.app
 ## 🧪 Testes
 
 ### 1. Testar API Key
+
 ```bash
 ./tools/test-quicknode-api.sh QN_5c0bd5ebf5eb4319a5e3c7df48685f93
 ```
 
 ### 2. Criar Webhook USDT
+
 ```javascript
 const { getQuickNodeREST } = require('./services/blockchain/quicknode-rest');
 const rest = getQuickNodeREST();
@@ -144,12 +156,14 @@ await rest.monitorUSDTTransfers(null, 'ethereum');
 ```
 
 ### 3. Listar Webhooks
+
 ```javascript
 const webhooks = await rest.listWebhooks();
 console.log(webhooks);
 ```
 
 ### 4. Testar Webhook Handler
+
 ```bash
 curl -X POST https://flowpaypix.netlify.app/.netlify/functions/quicknode-webhook \
   -H "Content-Type: application/json" \
@@ -184,7 +198,7 @@ curl -X POST https://flowpaypix.netlify.app/.netlify/functions/quicknode-webhook
 
 ---
 
-##  Checklist de Implementação
+## Checklist de Implementação
 
 - [x] Cliente REST para todas as APIs
 - [x] Templates de webhooks implementados

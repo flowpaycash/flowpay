@@ -17,16 +17,19 @@ Deploy: Netlify Functions (Astro)
 ▓▓▓ QUICK START
 ────────────────────────────────────────
 1. Install dependencies:
+
    ```bash
    npm run setup
    ```
 
 2. Generate local config:
+
    ```bash
    npm run neo:cfg
    ```
 
 3. Run in Dev Mode:
+
    ```bash
    # Full stack (Frontend + Functions)
    netlify dev

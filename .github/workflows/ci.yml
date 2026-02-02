@@ -28,3 +28,7 @@ jobs:
 
             - name: Build
               run: npm run build
+
+            - name: Security Audit
+              run: npm audit --audit-level=critical
+              continue-on-error: true # Permite alertar sem bloquear por enquanto, mude para false para bloquear

@@ -1,29 +1,27 @@
 <!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
 ```text
 ========================================
-             F l o w P a y
+             F L O W P A Y
 ========================================
-PIX-FIRST PAYMENT GATEWAY FOR WEB3
-Access first. Settle later.
+ PIX-FIRST PAYMENT GATEWAY FOR WEB3
+     Access first. Settle later.
 ========================================
-========================================
-Status: v3.0.0 [SOVEREIGN]
+Status: v2.0.0 [SOBERANIA]
 Audit: JAN/2026 (NΞØ Protocol)
 Stack: Astro + SQLite + Node (Railway)
 ========================================
 ```
 
-> **⚠️ SOVEREIGN NODE:** Esta versão utiliza persistência local SQLite 
-> para total soberania dos dados. No deploy (Railway), utilize 
-> Volumes montados em `/app/data` para persistência real.
-
 ▓▓▓ MISSION
 ────────────────────────────────────────
-O **FLOWPay** é uma solução de pagamento baseada em Pix (via Woovi/OpenPix) e integrações Web3, projetada para oferecer uma experiência fluida e soberana.
+O FLOWPay é um gateway de pagamento
+focado em Pix (via Woovi) e Web3.
+Projetado para oferecer soberania
+total e complexidade invisível.
 
-> **Status:** 🚀 Em Produção (Railway)
-
-PIX → Permission (Access Unlock)
+SOVEREIGN NODE: Esta versão utiliza
+persistência local SQLite. No Railway,
+utilize Volumes em `/app/data`.
 
 ▓▓▓ CORE PRINCIPLES
 ────────────────────────────────────────
@@ -41,21 +39,18 @@ PIX → Permission (Access Unlock)
 [####] Real USDT Delivery ......... OK
 [####] Hardened Anti-Fraud ........ OK
 
-────────────────────────────────────────
-ARCH OVERVIEW
-────────────────────────────────────────
-User pays PIX
-   ↓
-Payment confirmed (Secure Webhook)
-   ↓
-UNLOCK RECEIPT issued (Immediate)
-   ↓
-Access granted (Service/Product)
-   ↓
-On-chain settlement (Async USDT)
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┃ ARCH OVERVIEW
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┃ ░ User pays PIX
+┃ ░ Payment confirmed (Webhook)
+┃ ░ UNLOCK RECEIPT issued
+┃ ░ Access granted (Product)
+┃ ░ On-chain settlement (Async)
 
-Para detalhes técnicos e comandos de
-instalação, consulte: <./SETUP.md>
+────────────────────────────────────────
+TECHNICAL DETAILS: <./SETUP.md>
+────────────────────────────────────────
 
 ▓▓▓ NΞØ MELLØ
 ────────────────────────────────────────
@@ -66,7 +61,7 @@ neo@neoprotocol.space
  chaos becomes protocol."
 
 Security by design.
-Exploits find no refuge here.
+Explits find no refuge here.
 ────────────────────────────────────────
 
 ░█▀█░█▀▀░█▀█░░░█▀█░█▀▄░█▀█░▀█▀░█▀█░█▀▀░█▀█░█░░
@@ -75,7 +70,8 @@ Exploits find no refuge here.
 
      █ 
   ▄███  
- █  █ █ 
- █ █  █ 
+ █  █ █
+ █ █  █
   ███▀  
  █
+

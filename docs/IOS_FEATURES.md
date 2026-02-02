@@ -5,33 +5,39 @@
 Todas as funcionalidades iOS-like foram mantidas na migração para Astro:
 
 ### 1. **Home Indicator iOS**
+
 - Barra inferior estilo iOS
 - Classe `.ios-home-indicator` aplicada
 - Posicionamento fixo na parte inferior
 
 ### 2. **Safe Area Support**
+
 - Suporte para notch e áreas seguras
 - Classe `.safe-area-inset` aplicada no Hero
 - Padding automático baseado em `env(safe-area-inset-*)`
 
 ### 3. **Pull to Refresh**
+
 - Gestos iOS de pull-to-refresh
 - Indicador visual durante o pull
 - Recarrega página quando puxado > 100px
 
 ### 4. **Apple PWA Support**
+
 - Meta tags Apple completas
 - `apple-mobile-web-app-capable`
 - `apple-mobile-web-app-status-bar-style`
 - `apple-touch-fullscreen`
 
 ### 5. **Apple Splash Screens**
+
 - Splash screens para múltiplos dispositivos
 - Portrait e Landscape
 - Diferentes resoluções e pixel ratios
 - Total: 13 splash screens configuradas
 
 ### 6. **iOS-like Animations**
+
 - Animações suaves
 - Transições fluidas
 - Efeitos de toque (tap highlight)
@@ -39,6 +45,7 @@ Todas as funcionalidades iOS-like foram mantidas na migração para Astro:
 ## 📱 Dispositivos Suportados
 
 ### Portrait
+
 - iPhone X/XS (1125x2436)
 - iPhone XR (828x1792)
 - iPhone 8 Plus (1242x2208)
@@ -48,6 +55,7 @@ Todas as funcionalidades iOS-like foram mantidas na migração para Astro:
 - iPad (1536x2048)
 
 ### Landscape
+
 - iPhone X/XS (2436x1125)
 - iPhone XR (1792x828)
 - iPhone 8 Plus (2208x1242)
@@ -60,6 +68,7 @@ Todas as funcionalidades iOS-like foram mantidas na migração para Astro:
 ## 🎨 CSS iOS-like
 
 Os estilos iOS estão em:
+
 - `public/css/landing.css` - Estilos principais
 - `public/css/navbar.css` - Navbar com glassmorphism
 
@@ -104,15 +113,19 @@ if (pullDistance > 100) {
 ## 📝 Localização no Código
 
 ### Layout Base
+
 - `src/layouts/Layout.astro` - Meta tags Apple e Home Indicator
 
 ### Página Principal
+
 - `src/pages/index.astro` - Pull to Refresh e gestos iOS
 
 ### Componentes
+
 - `src/components/Hero.astro` - Safe area inset aplicado
 
 ### CSS
+
 - `public/css/landing.css` - Estilos iOS (linhas 30-80)
 - `public/css/navbar.css` - Navbar iOS-like
 

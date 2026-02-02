@@ -1,14 +1,16 @@
-#  Núcleo Cripto - Implementação Completa
+# Núcleo Cripto - Implementação Completa
 
-##  Arquivos Criados
+## Arquivos Criados
 
 ### 1. `wallet-registry.js` ✅
+
 - Gerencia registro de wallets de usuários
 - Valida endereços blockchain
 - Suporta múltiplas redes (Ethereum, Polygon, BSC)
 - Armazena em memória (pronto para migrar para banco)
 
 ### 2. `liquidity-provider.js` ✅
+
 - Converte BRL → USDT
 - Obtém taxas de conversão
 - Suporta múltiplos provedores (primary + fallback)
@@ -16,18 +18,20 @@
 - Calcula taxas e spreads
 
 ### 3. `usdt-transfer.js` ✅
+
 - Transfere USDT para wallets cadastradas
 - Valida wallets antes de transferir
 - Suporta múltiplas redes
 - Modo desenvolvimento (simulado) e produção (real)
 
 ### 4. `crypto-processor.js` (Netlify Function) ✅
+
 - Orquestra fluxo completo
 - Endpoint: `/.netlify/functions/crypto-processor`
 - Método: POST
 - Integra todos os serviços
 
-##  Fluxo Implementado
+## Fluxo Implementado
 
 ```
 1. Recebe instrução de valor (BRL)
@@ -41,9 +45,10 @@
 5. Retorna resultado completo
 ```
 
-##  Próximos Passos
+## Próximos Passos
 
 ### Webhook Handler
+
 O arquivo `netlify/functions/webhook-handler.js` precisa ser atualizado para usar os novos serviços.
 
 Substituir as linhas 94-100 por:
@@ -96,7 +101,7 @@ try {
 }
 ```
 
-##  Variáveis de Ambiente Necessárias
+## Variáveis de Ambiente Necessárias
 
 Adicionar ao `.env.example`:
 
@@ -116,7 +121,7 @@ POLYGON_RPC_URL=https://polygon-rpc.com
 BSC_RPC_URL=https://bsc-dataseed.binance.org
 ```
 
-##  Status
+## Status
 
 - [x] Estrutura criada
 - [x] Wallet Registry implementado

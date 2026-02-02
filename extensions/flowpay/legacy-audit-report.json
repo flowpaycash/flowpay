@@ -1,0 +1,56 @@
+{
+  "title": "FlowPay Sovereign v3 - Legacy Audit Report",
+  "version": "1.0.0",
+  "date": "2026-02-02",
+  "summary": "Auditoria dos repositórios legados para consolidar ativos no núcleo FlowPay. Três pilares de integração identificados.",
+  "sourcePaths": {
+    "base": "/Users/nettomello/CODIGOS",
+    "delegation-toolkit": "delegation-toolkit/integrate-token-smart-accounts.ts",
+    "neo_one": "neo_systems/neo_one/src/executors/neoflow-executor.js",
+    "flowpay-legacy": "web_apps/projetos_flowpay/FlowPAY/crypto.py"
+  },
+  "note": "Se não tiver acesso a estes repositórios neste Mac, alinhar com responsável da organização NEŌ Protocol (FlowPay faz parte do ecossistema).",
+  "findings": [
+    {
+      "id": "delegation-toolkit",
+      "name": "delegation-toolkit (Mina de Ouro da Soberania)",
+      "sourceFile": "integrate-token-smart-accounts.ts",
+      "sourcePath": "delegation-toolkit/integrate-token-smart-accounts.ts",
+      "value": "Scripts prontos de Account Abstraction. Lógica de criação de Smart Account, Bundler (gasless) e execução de transações.",
+      "action": "Migrar lógica para services/wallet (SmartWalletService). createWallet() e executeTransaction().",
+      "target": "services/wallet/smart-account.js"
+    },
+    {
+      "id": "neo-one",
+      "name": "neo_systems/neo_one (O Cérebro)",
+      "sourceFile": "src/executors/neoflow-executor.js",
+      "sourcePath": "neo_systems/neo_one/src/executors/neoflow-executor.js",
+      "value": "Executor de token com transfer gasless. Estrutura limpa de interação ERC-20 (balance, approve, transfer).",
+      "action": "Usar como base do Settlement Engine. Integrar com quicknode-settlement; gasless via Bundler/UserOps.",
+      "target": "services/settlement/engine.js"
+    },
+    {
+      "id": "flowpay-legacy",
+      "name": "projetos_flowpay/FlowPAY (Lógica de Negócios)",
+      "sourceFile": "crypto.py",
+      "sourcePath": "web_apps/projetos_flowpay/FlowPAY/crypto.py",
+      "value": "Varredura de blocos para confirmar pagamentos USDT/USDC. Redundância se webhook falhar.",
+      "action": "Portar check_erc20_token_payment para Node.js. eth_getLogs com tópicos; não bloquear event loop.",
+      "target": "services/monitor/chain-scanner.js"
+    }
+  ],
+  "deliverables": {
+    "metadata": ["integration.json", "ecosystem.json"],
+    "tool": "flowpay-tool.ts (Neobot)",
+    "docs": [
+      "docs/TASK-001-sovereign-integration.md",
+      "docs/TECH-SPECS-integration.md",
+      "docs/integrations/flowpay/AGENT_TOOL_GUIDE.md"
+    ]
+  },
+  "nextSteps": [
+    "1. Toolkit -> FlowPay Wallet: Copiar criação de Smart Accounts.",
+    "2. NeoOne -> FlowPay Settlement: Copiar lógica de transferência gasless.",
+    "3. Legacy -> FlowPay Monitor: Copiar lógica de scan de blocos."
+  ]
+}

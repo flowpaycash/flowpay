@@ -29,7 +29,7 @@ databases (Supabase, Firebase, etc).
 
 Philosophy:
 > "If it doesn't run local, it's not
->  sovereign."
+> sovereign."
 
 ────────────────────────────────────────
 
@@ -300,11 +300,13 @@ node scripts/flowpay-init-db.js
 4. Alert Telegram if failed
 
 **Manual (On-Demand):**
+
 ```bash
 moltbot flowpay:backup
 ```
 
 **Recovery:**
+
 ```bash
 moltbot flowpay:restore --from-ipfs <CID>
 moltbot flowpay:restore --from-file <path>

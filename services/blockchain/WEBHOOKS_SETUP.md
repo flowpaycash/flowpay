@@ -3,14 +3,17 @@
 ## 📋 Templates Disponíveis
 
 ### 1. evmWalletFilter
+
 Monitora wallets específicas (EVM chains)
 
 **Uso no FlowPay:**
+
 - Monitorar wallets de usuários cadastrados
 - Detectar recebimentos de USDT
 - Atualizar status automaticamente
 
 **Exemplo:**
+
 ```javascript
 const { getQuickNodeREST } = require('./quicknode-rest');
 
@@ -26,14 +29,17 @@ await rest.monitorWallets(
 ---
 
 ### 2. evmContractEvents
+
 Monitora eventos de contratos específicos
 
 **Uso no FlowPay:**
+
 - Monitorar transferências USDT
 - Detectar eventos do contrato de prova
 - Confirmar transações automaticamente
 
 **Exemplo:**
+
 ```javascript
 // Monitorar transferências USDT
 await rest.monitorUSDTTransfers(
@@ -43,14 +49,17 @@ await rest.monitorUSDTTransfers(
 ```
 
 **Event Hash:**
+
 - Transfer: `0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef`
 
 ---
 
 ### 3. evmAbiFilter
+
 Monitora contratos usando ABI
 
 **Uso no FlowPay:**
+
 - Monitorar contrato de prova customizado
 - Detectar eventos específicos do FlowPay
 
@@ -87,9 +96,10 @@ console.log(webhooks);
 
 ---
 
-##  Endpoints da API
+## Endpoints da API
 
 ### Criar Webhook (Template)
+
 ```
 POST https://api.quicknode.com/v0/webhooks/template/{templateId}
 Headers:
@@ -112,6 +122,7 @@ Body:
 ```
 
 ### Listar Webhooks
+
 ```
 GET https://api.quicknode.com/v0/webhooks
 Headers:
@@ -119,6 +130,7 @@ Headers:
 ```
 
 ### Deletar Webhook
+
 ```
 DELETE https://api.quicknode.com/v0/webhooks/{webhookId}
 Headers:
@@ -127,7 +139,7 @@ Headers:
 
 ---
 
-##  Fluxo de Eventos
+## Fluxo de Eventos
 
 ```
 1. Transferência USDT detectada na blockchain
@@ -143,7 +155,7 @@ Headers:
 
 ---
 
-##  Checklist de Setup
+## Checklist de Setup
 
 - [ ] API Key configurada (`QUICKNODE_API_KEY`)
 - [ ] URL do webhook configurada (`URL` no ambiente)

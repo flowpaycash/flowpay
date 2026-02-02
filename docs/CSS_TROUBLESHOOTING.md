@@ -20,6 +20,7 @@ grep -o 'href="[^"]*\.css"' dist/index.html
 ```
 
 Deve mostrar:
+
 - `href="/css/landing.css"`
 - `href="/css/navbar.css"`
 - `href="/css/legacy.css"`
@@ -104,7 +105,8 @@ dist/
 
 **Sintoma:** CSS antigo sendo usado
 
-**Solução:** 
+**Solução:**
+
 - Hard refresh: `Ctrl+Shift+R` (Windows/Linux) ou `Cmd+Shift+R` (Mac)
 - Limpar cache do navegador
 - Abrir em aba anônima
@@ -120,6 +122,7 @@ dist/
 **Sintoma:** CSS não existe em `dist/`
 
 **Solução:**
+
 ```bash
 # Limpar e rebuild
 rm -rf dist .astro

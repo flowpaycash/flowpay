@@ -3,11 +3,13 @@
 ## ✅ Variáveis Configuradas Corretamente
 
 ### Obrigatórias
+
 - ✅ **WOOVI_API_KEY** - Configurada
 - ✅ **WOOVI_WEBHOOK_SECRET** - Configurada
 
 ### Opcionais (Importantes)
-- ✅ **WOOVI_API_URL** - https://api.woovi.com
+
+- ✅ **WOOVI_API_URL** - <https://api.woovi.com>
 - ✅ **SERVICE_WALLET_ADDRESS** - Configurada
 - ✅ **SERVICE_WALLET_PRIVATE_KEY** - Configurada
 - ✅ **BLOCKCHAIN_WRITER_ADDRESS** - Configurada
@@ -23,52 +25,64 @@
 ### 1. Variáveis Duplicadas
 
 #### INFURA_KEY (2x)
+
 ```
 INFURA_KEY=c0a62c40fbde4d6ab26bb4525109cbb9
 INFURA_KEY=https://polygon-mainnet.infura.io/v3/c0a62c40fbde4d6ab26bb4525109cbb9
 ```
+
 **Problema:** A segunda linha sobrescreve a primeira
 **Solução:** Remover a segunda linha ou renomear para `POLYGON_RPC_URL`
 
 #### URL (2x)
+
 ```
 URL=http://localhost:8888
 URL=http://localhost:8888
 ```
+
 **Problema:** Duplicação desnecessária
 **Solução:** Remover uma das linhas
 
 #### CONVERSION_FEE_PERCENT (2x)
+
 ```
 CONVERSION_FEE_PERCENT=0.5
 CONVERSION_FEE_PERCENT=0.5
 ```
+
 **Problema:** Duplicação desnecessária
 **Solução:** Remover uma das linhas
 
 #### LIQUIDITY_PROVIDER_NAME (2x)
+
 ```
 LIQUIDITY_PROVIDER_NAME=default
 LIQUIDITY_PROVIDER_NAME=manual
 ```
+
 **Problema:** A segunda linha sobrescreve a primeira
 **Solução:** Manter apenas `LIQUIDITY_PROVIDER_NAME=manual`
 
 ### 2. Variáveis com Nomes Incorretos
 
 #### QuickNode URLs
+
 O código espera:
+
 - `QUICKNODE_BASE_RPC` (não `QUICKNODE_BASE_URL`)
 - `QUICKNODE_POLYGON_RPC` (não `QUICKNODE_POLYGON_URL`)
 - `QUICKNODE_BSC_RPC` (não `QUICKNODE_BSC_URL`)
 
 **Atual no .env:**
+
 ```
 QUICKNODE_POLYGON_URL=https://your-endpoint.polygon.quiknode.pro/...
 QUICKNODE_BSC_URL=https://your-endpoint.bsc.quiknode.pro/...
 ```
 
 **Deveria ser:**
+
 ```
 QUICKNODE_BASE_RPC=https://xxx.base.quiknode.pro/xxx/
 QUICKNODE_POLYGON_RPC=https://xxx.polygon.quiknode.pro/xxx/
@@ -77,6 +91,7 @@ QUICKNODE_POLYGON_RPC=https://xxx.polygon.quiknode.pro/xxx/
 ### 3. Variáveis Faltando (Para v0)
 
 #### QuickNode (Crítico)
+
 - ⚠️ **QUICKNODE_BASE_RPC** - Não configurada
   - Necessária para provas on-chain (Base)
   

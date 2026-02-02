@@ -7,13 +7,16 @@ Este documento descreve como testar a API PIX da FLOWPay integrada com a Woovi/O
 ## 🛠️ Ferramentas de Teste
 
 ### 1. Scripts Bash
+
 - `tools/test-pix-api.sh` - Teste completo com múltiplos cenários
 - `tools/quick-pix-test.sh` - Teste rápido e simples
 
 ### 2. Script Node.js
+
 - `tools/advanced-pix-test.js` - Teste avançado com validação
 
 ### 3. Comandos CURL
+
 - `tools/curl-commands.md` - Comandos curl prontos para uso
 
 ## 🚀 Como Executar os Testes
@@ -21,6 +24,7 @@ Este documento descreve como testar a API PIX da FLOWPay integrada com a Woovi/O
 ### Pré-requisitos
 
 1. **Servidor rodando**
+
    ```bash
    netlify dev
    # ou
@@ -28,6 +32,7 @@ Este documento descreve como testar a API PIX da FLOWPay integrada com a Woovi/O
    ```
 
 2. **API Key configurada**
+
    ```bash
    export WOOVI_API_KEY='sua_chave_aqui'
    ```
@@ -94,6 +99,7 @@ curl -X POST \
 ## 📊 Respostas Esperadas
 
 ### Sucesso (200)
+
 ```json
 {
   "success": true,
@@ -112,6 +118,7 @@ curl -X POST \
 ```
 
 ### Erro de Validação (400)
+
 ```json
 {
   "error": "Wallet deve ser um endereço Ethereum válido"
@@ -119,6 +126,7 @@ curl -X POST \
 ```
 
 ### Erro de Servidor (500)
+
 ```json
 {
   "error": "Configuração da API Woovi não encontrada"
@@ -152,21 +160,25 @@ nano .env
 ## 🚨 Troubleshooting
 
 ### Erro: "Servidor não acessível"
+
 - Verifique se `netlify dev` está rodando
 - Confirme a porta (padrão: 8888)
 - Verifique logs do servidor
 
 ### Erro: "Configuração da API Woovi não encontrada"
+
 - Configure `WOOVI_API_KEY`
 - Verifique se a variável está no ambiente
 - Reinicie o servidor após configurar
 
 ### Erro: "Timeout"
+
 - Aumente o timeout no script
 - Verifique conectividade de rede
 - Monitore logs do servidor
 
 ### Erro: "CORS"
+
 - Verifique configuração CORS na função
 - Teste com `curl -X OPTIONS`
 - Confirme headers da requisição
@@ -174,6 +186,7 @@ nano .env
 ## 📈 Testes de Performance
 
 ### Múltiplas Requisições
+
 ```bash
 # Teste com 5 requisições simultâneas
 for i in {1..5}; do
@@ -190,6 +203,7 @@ done
 ```
 
 ### Teste de Carga
+
 ```bash
 # Usando Apache Bench (se disponível)
 ab -n 100 -c 10 -p test-payload.json \
@@ -200,6 +214,7 @@ ab -n 100 -c 10 -p test-payload.json \
 ## 🔍 Debug Avançado
 
 ### Logs do Servidor
+
 ```bash
 # Monitore logs em tempo real
 netlify dev --debug
@@ -209,6 +224,7 @@ tail -f .netlify/functions-serve/logs/*
 ```
 
 ### Teste de Conectividade
+
 ```bash
 # Verificar se a função está acessível
 curl -I http://localhost:8888/.netlify/functions/create-pix-charge
@@ -220,6 +236,7 @@ curl -X OPTIONS \
 ```
 
 ### Validação de Payload
+
 ```bash
 # Teste com payload malformado
 curl -X POST \
@@ -259,6 +276,7 @@ curl -X POST \
 ## 📞 Suporte
 
 Para problemas ou dúvidas:
+
 1. Verifique este documento
 2. Consulte os logs do servidor
 3. Teste com scripts fornecidos

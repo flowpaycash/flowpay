@@ -7,6 +7,7 @@ Pix no FlowPay.
 ---
 
 ## 1. Credenciais e Variáveis de Ambiente
+
 ```text
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️  ATENÇÃO: Credenciais NUNCA devem ser commitadas
@@ -23,6 +24,7 @@ Pix no FlowPay.
 ---
 
 ## 2. Autenticação (Cliente API)
+
 ```text
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ▸ REGRA DE OURO - AUTENTICAÇÃO
@@ -37,6 +39,7 @@ A API Woovi espera a chave SEM prefixo:
 ```
 
 ### Implementação (`src/pages/api/create-charge.js`)
+
 ```javascript
 const wooviResponse = await fetch(
   `${WOOVI_API_URL}/api/v1/charge`,
@@ -54,6 +57,7 @@ const wooviResponse = await fetch(
 ---
 
 ## 3. Segurança do Webhook
+
 ```text
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🛡️  BLINDAGEM TRIPLA DE SEGURANÇA
@@ -76,6 +80,7 @@ const wooviResponse = await fetch(
 ---
 
 ## 4. Configuração no Painel Woovi
+
 ```text
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚙️  SETUP DO WEBHOOK
@@ -98,6 +103,7 @@ const wooviResponse = await fetch(
 ---
 
 ## 5. Logs e Debug
+
 ```text
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 BOAS PRÁTICAS DE LOGGING
@@ -120,6 +126,7 @@ const wooviResponse = await fetch(
 ## 6. Comandos Úteis
 
 **Testar Conexão (cURL):**
+
 ```bash
 curl -I -H "Authorization: $WOOVI_API_KEY" \
   "https://api.woovi.com/api/v1/charge?limit=1"
@@ -127,6 +134,7 @@ curl -I -H "Authorization: $WOOVI_API_KEY" \
 ```
 
 **Testar Criação de Cobrança:**
+
 ```bash
 curl -X POST \
   https://flowpay-production.up.railway.app/api/create-charge \

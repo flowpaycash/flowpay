@@ -7,6 +7,7 @@ Sistema de autenticação passwordless implementado com magic links e preparado 
 ## Arquivos Implementados
 
 ### Frontend
+
 - `public/login.html` - Página principal de login
 - `public/auth/verify.html` - Página de verificação do magic link
 - `public/client.html` - Página do cliente após autenticação
@@ -15,12 +16,14 @@ Sistema de autenticação passwordless implementado com magic links e preparado 
 - `public/assets/js/auth-verify.js` - Verificação de magic link
 
 ### Backend (Netlify Functions)
+
 - `netlify/functions/auth-magic-start.js` - Inicia processo de magic link
 - `netlify/functions/auth-magic-verify.js` - Verifica magic link
 
 ## Fluxo de Autenticação
 
 ### 1. Magic Link (Passwordless)
+
 1. Usuário insere e-mail em `/login`
 2. Sistema gera token único e envia magic link
 3. Usuário clica no link recebido por e-mail
@@ -28,6 +31,7 @@ Sistema de autenticação passwordless implementado com magic links e preparado 
 5. Usuário é redirecionado para `/client`
 
 ### 2. Carteira Web3 (SIWE - Preparado)
+
 1. Usuário clica em "Entrar com carteira"
 2. Sistema conecta carteira via Web3Auth
 3. Implementa fluxo SIWE (Sign-In with Ethereum)
@@ -36,6 +40,7 @@ Sistema de autenticação passwordless implementado com magic links e preparado 
 ## Como Testar
 
 ### Desenvolvimento Local
+
 1. Inicie o servidor local: `npm run dev` ou `netlify dev`
 2. Acesse `/login`
 3. Insira um e-mail válido
@@ -44,6 +49,7 @@ Sistema de autenticação passwordless implementado com magic links e preparado 
 6. Verifique se a autenticação funciona
 
 ### Produção
+
 1. Configure variáveis de ambiente para SMTP
 2. Implemente banco de dados para tokens
 3. Configure domínio em `process.env.URL`
@@ -67,21 +73,25 @@ NODE_ENV=development
 ## Próximos Passos
 
 ### 1. Sistema de E-mails
+
 - [ ] Implementar envio real via SMTP
 - [ ] Criar templates de e-mail HTML
 - [ ] Configurar filas de envio
 
 ### 2. Banco de Dados
+
 - [ ] Armazenar tokens de magic link
 - [ ] Implementar expiração automática
 - [ ] Sistema de sessões persistente
 
 ### 3. Autenticação SIWE
+
 - [ ] Integrar com Web3Auth
 - [ ] Implementar fluxo SIWE completo
 - [ ] Validação de assinaturas
 
 ### 4. Segurança
+
 - [ ] Rate limiting para magic links
 - [ ] Validação de domínios de e-mail
 - [ ] Middleware de autenticação
@@ -115,6 +125,7 @@ O sistema está preparado para integração com Web3Auth para autenticação via
 ## Suporte
 
 Para dúvidas ou problemas:
+
 1. Verifique os logs das funções Netlify
 2. Teste localmente com `netlify dev`
 3. Valide configurações de CORS e headers

@@ -120,3 +120,98 @@
   }
 </script>
 
+
+
+<style>
+  .home-highlight {
+    padding: 6rem 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .home-highlight-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .home-highlight h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #00d4ff, #ff0080);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+  }
+
+  .home-highlight-text {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 800px;
+    margin: 0 auto 4rem;
+    line-height: 1.6;
+  }
+
+  .blockchain-logos {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .blockchain-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    background: rgba(0, 212, 255, 0.05); /* very light tint */
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    min-width: 160px;
+  }
+
+  .blockchain-logo:hover {
+    transform: translateY(-8px);
+    background: rgba(0, 212, 255, 0.1);
+    border-color: rgba(0, 212, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 212, 255, 0.2);
+  }
+
+  .blockchain-logo svg {
+    color: #00d4ff;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.5));
+  }
+  
+  .blockchain-logo:hover svg {
+    color: #fff;
+    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.8));
+    transform: scale(1.1);
+  }
+
+  .blockchain-logo span {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 768px) {
+    .home-highlight {
+      padding: 4rem 1rem;
+    }
+    
+    .blockchain-logos {
+      gap: 1rem;
+    }
+    
+    .blockchain-logo {
+      min-width: 140px;
+      padding: 1.5rem;
+    }
+  }
+</style>

@@ -50,7 +50,7 @@ Jan/2026 - v2.3.0 (Railway Migration)
 ────────────────────────────────────────
 └─ <ADMIN_PANEL_GUIDE.md>
    Gerenciamento e autenticação.
-   
+
 └─ <TELEGRAM_SETUP_GUIDE.md>
    Configuração de bots de notificação.
 

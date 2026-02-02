@@ -8,13 +8,13 @@ Status: SECURE & STABLE
 ========================================
 ```
 
-Este documento detalha o ecossistema 
-FLOWPay, auditoria de segurança e 
+Este documento detalha o ecossistema
+FLOWPay, auditoria de segurança e
 o roadmap de evolução técnica.
 
 ▓▓▓ ARQUITETURA & FLOW
 ────────────────────────────────────────
-O FLOWPay atua como bridge entre 
+O FLOWPay atua como bridge entre
 BRL (PIX) e ativos digitais (USDT).
 
 └─ Money Flow:

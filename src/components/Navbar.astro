@@ -5,7 +5,7 @@
   <div class="nav-wrapper">
     <div class="nav-left">
       <a href="/" class="brand-logo">
-        <img src="/img/flowpay-logo.png" alt="FLOWPay" />
+        <img src="/assets/icons/flowpay-header-logo.png" alt="FLOWPay" />
       </a>
       <div class="nav-links">
         <a href="/checkout" class="nav-item">Checkout</a>
@@ -31,13 +31,14 @@
     left: 0;
     right: 0;
     height: 72px;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(10, 10, 10, 0.4);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid #edeef2;
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     z-index: 1000;
     display: flex;
     align-items: center;
-    padding: 0 24px;
+    padding: 0 40px;
   }
 
   .nav-wrapper {
@@ -52,81 +53,104 @@
   .nav-left {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 50px;
   }
 
   .brand-logo img {
-    height: 32px;
+    height: 36px;
     width: auto;
+    filter: drop-shadow(0 0 10px rgba(255, 0, 122, 0.3));
   }
 
   .nav-links {
     display: flex;
-    gap: 24px;
+    gap: 32px;
   }
 
   .nav-item {
     text-decoration: none;
-    color: #707070;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 0.95rem;
     font-weight: 600;
-    transition: color 0.2s;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
   }
 
   .nav-item:hover {
-    color: #1d1d1f;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   }
 
   .nav-item.admin {
     color: #ff007a;
+    background: rgba(255, 0, 122, 0.1);
+    padding: 4px 12px;
+    border-radius: 8px;
+  }
+  
+  .nav-item.admin:hover {
+    background: rgba(255, 0, 122, 0.2);
+    box-shadow: 0 0 15px rgba(255, 0, 122, 0.3);
   }
 
   .nav-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
   }
 
   .wallet-pill {
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: #f5f6fc;
-    padding: 8px 16px;
+    gap: 10px;
+    background: rgba(255, 0, 122, 0.05);
+    padding: 8px 18px;
     border-radius: 99px;
     font-size: 0.85rem;
     font-weight: 700;
     color: #ff007a;
-    border: 1px solid #ff007a20;
+    border: 1px solid rgba(255, 0, 122, 0.2);
+    backdrop-filter: blur(10px);
   }
 
   .wallet-pill .dot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     background: #ff007a;
     border-radius: 50%;
-    box-shadow: 0 0 8px #ff007a;
+    box-shadow: 0 0 10px #ff007a;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
   }
 
   .btn-nav {
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 12px;
     font-size: 0.9rem;
     font-weight: 700;
     text-decoration: none;
-    transition: transform 0.1s;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .btn-nav.primary {
-    background: #1d1d1f;
-    color: white;
+    background: #ffffff;
+    color: #000000;
   }
 
   .btn-nav.primary:hover {
-    transform: scale(1.02);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
   }
 
   @media (max-width: 768px) {
+    .premium-nav {
+      padding: 0 20px;
+    }
     .nav-links, .wallet-pill {
       display: none;
     }

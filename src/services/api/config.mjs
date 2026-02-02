@@ -7,8 +7,12 @@ export const config = {
 
   // URLs permitidas por ambiente
   allowedOrigins: {
-    production: ['https://flowpaypix.netlify.app', 'https://flowpay-production-10d8.up.railway.app'],
-    staging: ['https://flowpaypix-staging.netlify.app'],
+    production: process.env.ALLOWED_ORIGINS_PROD
+      ? process.env.ALLOWED_ORIGINS_PROD.split(',')
+      : ['https://flowpaypix.netlify.app', 'https://flowpay-production-10d8.up.railway.app'],
+    staging: process.env.ALLOWED_ORIGINS_STAGING
+      ? process.env.ALLOWED_ORIGINS_STAGING.split(',')
+      : ['https://flowpaypix-staging.netlify.app'],
     development: ['http://localhost:8888', 'http://localhost:8000', 'http://127.0.0.1:8888']
   },
 
@@ -17,13 +21,16 @@ export const config = {
     apiKey: process.env.WOOVI_API_KEY,
     webhookSecret: process.env.WOOVI_WEBHOOK_SECRET,
     apiUrl: process.env.WOOVI_API_URL || 'https://api.woovi.com',
-    // IPs oficiais da Woovi para webhooks (https://developers.woovi.com/docs/webhook/api/webhook-api)
-    allowedIPs: ['179.190.27.5', '179.190.27.6', '186.224.205.214']
+    // IPs oficiais da Woovi para webhooks (Load from ENV or strict default)
+    allowedIPs: process.env.WOOVI_ALLOWED_IPS
+      ? process.env.WOOVI_ALLOWED_IPS.split(',')
+      : ['179.190.27.5', '179.190.27.6', '186.224.205.214']
   },
 
   // Configurações de autenticação
   auth: {
-    adminPassword: process.env.ADMIN_PASSWORD || 'flowpay2024',
+    // ⚠️ CRITICAL: Never default to a hardcoded password in production
+    adminPassword: process.env.ADMIN_PASSWORD,
     sessionTimeout: 24 * 60 * 60 * 1000, // 24 horas em ms
     tokenExpiration: 15 * 60 * 1000 // 15 minutos em ms
   },
@@ -37,7 +44,7 @@ export const config = {
     },
     rateLimit: {
       windowMs: 15 * 60 * 1000, // 15 minutos
-      maxRequests: 100, // máximo 100 requests por IP por janela
+      maxRequests: parseInt(process.env.RATE_LIMIT_MAX || '100', 10), // máximo requests por IP por janela
       skipSuccessfulRequests: false
     },
     headers: {
@@ -65,10 +72,19 @@ export function validateConfig() {
     'WOOVI_WEBHOOK_SECRET'
   ];
 
+  // In production, require ADMIN_PASSWORD
+  if (process.env.NODE_ENV === 'production') {
+    required.push('ADMIN_PASSWORD');
+  }
+
   const missing = required.filter(key => !process.env[key]);
 
   if (missing.length > 0) {
-    throw new Error(`Variáveis de ambiente obrigatórias não encontradas: ${missing.join(', ')}`);
+    const errorMsg = `🔥 ERRO CRÍTICO: Variáveis de ambiente obrigatórias não encontradas: ${missing.join(', ')}`;
+    console.error(errorMsg);
+    // In strict mode (production), we might want to exit. 
+    // Throwing error usually stops standard Node processes.
+    throw new Error(errorMsg);
   }
 
   return true;
@@ -76,11 +92,23 @@ export function validateConfig() {
 
 // Função para obter CORS headers
 export function getCorsHeaders(event) {
-  const origin = event.headers.origin || event.headers.Origin;
-  const isAllowedOrigin = config.allowedOrigins[config.environment]?.includes(origin) || false;
+  const origin = event.headers.origin || event.headers.Origin || '';
+  // Check against Environment-specific allow list
+  const envOrigins = config.allowedOrigins[config.environment] || config.allowedOrigins.development;
+  const isAllowedOrigin = envOrigins.includes(origin);
+
+  // Return specific origin if allowed, else null (or strict deny)
+  // Returning 'null' causing issues with credentials often, better to not return Access-Control-Allow-Origin at all or handle specifically.
+  // Standard secure practice: If allowed, echo origin. If not, don't send header (block).
+
+  if (!isAllowedOrigin) {
+    return {
+      ...config.security.headers
+    };
+  }
 
   return {
-    'Access-Control-Allow-Origin': isAllowedOrigin ? origin : 'null',
+    'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Headers': config.security.cors.headers.join(', '),
     'Access-Control-Allow-Methods': config.security.cors.methods.join(', '),
     'Access-Control-Allow-Credentials': config.security.cors.credentials.toString(),
@@ -90,6 +118,9 @@ export function getCorsHeaders(event) {
 
 // Função para logging seguro e estruturado
 export function secureLog(level, message, data = {}) {
+  // Avoid logging in test unless verbose
+  if (process.env.NODE_ENV === 'test' && !process.env.VERBOSE) return;
+
   const timestamp = new Date().toISOString();
   const logLevel = level.toUpperCase();
 
@@ -104,60 +135,72 @@ export function secureLog(level, message, data = {}) {
 
   // Processar dados se fornecidos
   if (data && typeof data === 'object') {
-    if (config.logging.redactSensitiveData) {
-      // Remove dados sensíveis dos logs
-      const redactedData = redactSensitiveData(data);
-      logEntry.data = redactedData;
-    } else {
-      logEntry.data = data;
+    try {
+      if (config.logging.redactSensitiveData) {
+        logEntry.data = redactSensitiveData(data);
+      } else {
+        logEntry.data = data;
+      }
+    } catch (err) {
+      logEntry.data = { error: 'Failed to process log data', rawError: err.message };
     }
   }
 
   // Log estruturado em JSON
-  console[level.toLowerCase()](JSON.stringify(logEntry));
+  // Use stdout/stderr appropriately
+  if (level.toLowerCase() === 'error') {
+    console.error(JSON.stringify(logEntry));
+  } else {
+    console.log(JSON.stringify(logEntry));
+  }
 }
 
-// Função para remover dados sensíveis
+// Função para remover dados sensíveis (Optimized & Non-Recursive Loop Safe)
 export function redactSensitiveData(data) {
-  const redacted = { ...data };
-  const sensitiveKeys = [
-    'password', 'token', 'secret', 'key', 'apiKey', 'api_key',
-    'webhook_secret', 'client_secret', 'private_key', 'privateKey',
-    'authorization', 'auth', 'credentials', 'session', 'sessionToken',
-    'wallet', 'address', 'mnemonic', 'seed', 'privateKey',
-    'correlationID', 'transactionId', 'id_transacao'
-  ];
+  if (!data || typeof data !== 'object') return data;
 
-  // Função recursiva para redatar objetos aninhados
-  function redactObject(obj, path = '') {
+  const sensitiveKeys = new Set([
+    'password', 'token', 'secret', 'key', 'apikey', 'api_key', 'access_token',
+    'webhook_secret', 'client_secret', 'private_key', 'privatekey',
+    'authorization', 'auth', 'credentials', 'session', 'sessiontoken',
+    'wallet', 'mnemonic', 'seed', 'correlationid', 'transactionid', 'id_transacao', 'card_number', 'cvv'
+  ]);
+
+  // Use WeakSet to detect cycles
+  const seen = new WeakSet();
+
+  function redact(obj) {
     if (obj === null || typeof obj !== 'object') {
       return obj;
     }
 
+    if (seen.has(obj)) {
+      return '[CIRCULAR]';
+    }
+    seen.add(obj);
+
     if (Array.isArray(obj)) {
-      return obj.map((item, index) => redactObject(item, `${path}[${index}]`));
+      return obj.map(item => redact(item));
     }
 
     const result = {};
     for (const [key, value] of Object.entries(obj)) {
-      const currentPath = path ? `${path}.${key}` : key;
-      const isSensitive = sensitiveKeys.some(sensitiveKey =>
-        key.toLowerCase().includes(sensitiveKey.toLowerCase()) ||
-        currentPath.toLowerCase().includes(sensitiveKey.toLowerCase())
-      );
+      const lowerKey = key.toLowerCase();
+      // Check if ANY sensitive key substring is present (aggressive) or exact match
+      // Making it slighty more performant by checking direct match first
+      const isSensitive = sensitiveKeys.has(lowerKey) ||
+        Array.from(sensitiveKeys).some(k => lowerKey.includes(k));
 
       if (isSensitive) {
         result[key] = '[REDACTED]';
-      } else if (typeof value === 'object' && value !== null) {
-        result[key] = redactObject(value, currentPath);
       } else {
-        result[key] = value;
+        result[key] = redact(value);
       }
     }
     return result;
   }
 
-  return redactObject(redacted);
+  return redact(data);
 }
 
 // Função para logging de transações PIX (específica)
@@ -168,7 +211,7 @@ export function logPixTransaction(level, message, transactionData = {}) {
     amount: transactionData.amount || transactionData.value || 'unknown',
     currency: transactionData.currency || transactionData.moeda || 'unknown',
     createdAt: transactionData.createdAt || transactionData.created_at || new Date().toISOString(),
-    // Dados sensíveis sempre redatados
+    // Dados sensíveis sempre redatados explicitamente
     wallet: '[REDACTED]',
     apiKey: '[REDACTED]',
     webhookSecret: '[REDACTED]'
@@ -184,9 +227,11 @@ export function logAPIError(level, message, errorData = {}) {
     statusCode: errorData.statusCode || 'unknown',
     endpoint: errorData.endpoint || 'unknown',
     method: errorData.method || 'unknown',
-    response: errorData.response ? String(errorData.response).substring(0, 200) : 'unknown',
+    // Limit response size to avoid log bloat
+    response: errorData.response ? String(errorData.response).substring(0, 500) : 'unknown',
     timestamp: new Date().toISOString()
   };
 
   secureLog(level, message, safeErrorData);
 }
+

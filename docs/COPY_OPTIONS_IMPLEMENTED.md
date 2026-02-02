@@ -12,6 +12,7 @@
 **Sub:** "Checkout invisível. Auto‑custódia. Transparente por padrão."
 
 **CTAs:**
+
 - **Primário:** "Começar checkout" → `/checkout`
 - **Secundário:** "Ver como operamos" → `/transparency`
 
@@ -23,7 +24,8 @@
 **Sub:** "Prova social baseada em tecnologia, não em marketing"
 
 **Cards implementados:**
-1. **PIX Dinâmico** - Rastreabilidade personalizada com webhooks assinados 
+
+1. **PIX Dinâmico** - Rastreabilidade personalizada com webhooks assinados
 
 (HMAC‑SHA256) e idempotência garantida
 2. **Ethereum + Polygon** - Cripto em redes EVM-ready com auto-custódia total
@@ -40,6 +42,7 @@
 **Sub:** "Sem login. Sem KYC. Só transação."
 
 **CTAs implementados:**
+
 - **PIX:** "Gerar cobrança PIX" (primário)
 - **Cripto:** "Receber em Cripto" (secundário)
 
@@ -53,12 +56,14 @@
 **Sub:** "Logs abertos, eventos assinados, e operação auditável."
 
 **Blocos de transparência implementados:**
+
 1. **Publicamos** - Status, timestamps, valores, provedor, ref_hash
 2. **Não Publicamos** - Dados pessoais, chaves, segredos, payload bruto
 3. **Provas de Pagamento** - PIX: BR‑Code + assinatura digital, Cripto: hash em blockchain pública
 4. **SLOs Declarados** - Uptime: 99.9%, Checkout p95: < 4000ms, MTTR: < 10min
 
 **CTAs implementados:**
+
 - **Ver transações** → `/pix_orders.json`
 - **Checar status da plataforma** → `/.netlify/functions/env`
 - **Ver código** → GitHub
@@ -80,11 +85,13 @@
 ## **Seções Globais Atualizadas**
 
 ### **CTA Section (Home)**
+
 - **Headline:** "Pronto para cortar o intermediário?"
 - **Sub:** "Checkout direto. Auto-custódia. Transparência por padrão."
 - **Botão:** "Começar checkout"
 
 ### **Footer**
+
 - **Tagline:** "Checkout invisível. Auto-custódia. Transparência por padrão."
 
 ---
@@ -92,16 +99,19 @@
 ## **🎨 Opções A/B/C Disponíveis para A/B Testing**
 
 ### **Opção A (ATIVA): "Corte o intermediário"**
+
 - **Tone:** Direto, focado em conversão
 - **Benefício:** Multiplicar conversões
 - **CTA:** "Começar checkout"
 
 ### **Opção B (ALTERNATIVA): "Pare de pedir permissão"**
+
 - **Tone:** Empoderamento, liberdade
 - **Benefício:** Sem fricção
 - **CTA:** "Criar cobrança agora"
 
 ### **Opção C (ALTERNATIVA): "Liberdade não passa por gateway"**
+
 - **Tone:** Filosófico, revolucionário
 - **Benefício:** Menos camada, mais conversão
 - **CTA:** "Iniciar fluxo"

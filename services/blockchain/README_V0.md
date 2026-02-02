@@ -1,6 +1,6 @@
-#  FLOWPay - QuickNode v0 (Focado)
+# FLOWPay - QuickNode v0 (Focado)
 
-##  Regra Mãe
+## Regra Mãe
 
 **No v0 do FlowPay, QuickNode não executa dinheiro.**
 **Ele registra fatos e confirma estados.**
@@ -22,22 +22,26 @@ Se não, **não cria agora**.
 **Função:** Escrever provas on-chain, emitir eventos, ler tx/confirmações
 
 **Uso:**
+
 - `writePaymentProof()`
 - `writeAgreementSignature()`
 - `readProof(txHash)`
 
 **Por que Base?**
+
 - Barata
 - Rápida
 - EVM padrão
 - Perfeita para "cartório digital"
 
 **Configuração:**
+
 ```bash
 QUICKNODE_BASE_RPC=https://xxx.base.quiknode.pro/xxx/
 ```
 
 **Nome sugerido no QuickNode:**
+
 ```
 flowpay-proof-base
 ```
@@ -49,10 +53,12 @@ flowpay-proof-base
 **Função:** Enviar USDT, ler saldos, confirmar transferências
 
 **Escolha UMA para o v0:**
+
 - **Polygon:** USDT barato
 - **BSC:** USDT com liquidez CEX
 
 **Configuração:**
+
 ```bash
 # Escolher rede
 USDT_SETTLEMENT_NETWORK=polygon  # ou 'bsc'
@@ -64,6 +70,7 @@ QUICKNODE_BSC_RPC=https://xxx.bsc.quiknode.pro/xxx/
 ```
 
 **Nome sugerido no QuickNode:**
+
 ```
 flowpay-usdt-settlement
 ```
@@ -75,22 +82,25 @@ flowpay-usdt-settlement
 **Função:** Compatibilidade futura, leitura de contratos, auditorias externas
 
 **NÃO usar para:**
+
 - Escrita frequente
 - v0 do produto
 
 **Configuração:**
+
 ```bash
 QUICKNODE_ETHEREUM_RPC=https://xxx.ethereum.quiknode.pro/xxx/
 ```
 
 **Nome sugerido no QuickNode:**
+
 ```
 flowpay-eth-read
 ```
 
 ---
 
-##  O Que NÃO Criar Agora
+## O Que NÃO Criar Agora
 
 - Solana
 - Jupiter / Swap / DeFi endpoints
@@ -100,6 +110,7 @@ flowpay-eth-read
 - IPFS via QuickNode (por enquanto)
 
 Esses recursos são ótimos, mas:
+
 - não resolvem seu problema agora
 - aumentam superfície de erro
 - drenam foco
@@ -109,7 +120,7 @@ Está construindo **infra de prova + liquidação**.
 
 ---
 
-##  Fluxo Real com QuickNode
+## Fluxo Real com QuickNode
 
 ```
 PIX confirmado
@@ -126,6 +137,7 @@ prova escrita na Base (QuickNode Proof)
 ```
 
 QuickNode aparece **duas vezes**:
+
 - liquidação (Polygon/BSC)
 - prova (Base)
 
@@ -145,7 +157,7 @@ services/blockchain/
 
 ---
 
-##  Checklist de Setup
+## Checklist de Setup
 
 Dentro do QuickNode, faça só isso:
 

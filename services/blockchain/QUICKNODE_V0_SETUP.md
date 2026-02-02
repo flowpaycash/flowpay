@@ -1,10 +1,10 @@
-#  FLOWPay - QuickNode v0 Setup Guide
+# FLOWPay - QuickNode v0 Setup Guide
 
 ## Passo a Passo no Dashboard QuickNode
 
 ### 1. Criar Endpoint Base (Proof Layer)
 
-1. Acesse: https://www.quicknode.com/dashboard
+1. Acesse: <https://www.quicknode.com/dashboard>
 2. Clique em **"Create Endpoint"**
 3. Selecione:
    - **Chain:** Base
@@ -13,6 +13,7 @@
 4. Nome: `flowpay-proof-base`
 5. Copie a **HTTP URL**
 6. Adicione ao `.env`:
+
    ```bash
    QUICKNODE_BASE_RPC=https://xxx.base.quiknode.pro/xxx/
    ```
@@ -24,24 +25,28 @@
 **Escolha UMA rede:**
 
 #### Opção A: Polygon (Recomendado para v0)
+
 1. **Chain:** Polygon
 2. **Network:** Mainnet
 3. **Plan:** Core
 4. Nome: `flowpay-usdt-settlement`
 5. Copie a **HTTP URL**
 6. Adicione ao `.env`:
+
    ```bash
    USDT_SETTLEMENT_NETWORK=polygon
    QUICKNODE_POLYGON_RPC=https://xxx.polygon.quiknode.pro/xxx/
    ```
 
 #### Opção B: BSC
+
 1. **Chain:** BNB Smart Chain
 2. **Network:** Mainnet
 3. **Plan:** Core
 4. Nome: `flowpay-usdt-settlement`
 5. Copie a **HTTP URL**
 6. Adicione ao `.env`:
+
    ```bash
    USDT_SETTLEMENT_NETWORK=bsc
    QUICKNODE_BSC_RPC=https://xxx.bsc.quiknode.pro/xxx/
@@ -57,13 +62,14 @@
 4. Nome: `flowpay-eth-read`
 5. Copie a **HTTP URL**
 6. Adicione ao `.env`:
+
    ```bash
    QUICKNODE_ETHEREUM_RPC=https://xxx.ethereum.quiknode.pro/xxx/
    ```
 
 ---
 
-##  Verificação
+## Verificação
 
 Após configurar, teste:
 

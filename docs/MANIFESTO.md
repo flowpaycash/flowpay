@@ -9,11 +9,11 @@ Pagamentos que viram prova.
 
 ▓▓▓ O PROBLEMA REAL
 ────────────────────────────────────────
-Pagamentos digitais não geram fatos 
-confiáveis. Geram registros frágeis, 
+Pagamentos digitais não geram fatos
+confiáveis. Geram registros frágeis,
 controlados por terceiros.
 
-Quando surge uma disputa, uma auditoria 
+Quando surge uma disputa, uma auditoria
 ou um conflito:
 * O banco decide
 * O gateway interpreta
@@ -23,7 +23,7 @@ O dinheiro passou, mas a verdade não ficou.
 
 ▓▓▓ O QUE FAZEMOS
 ────────────────────────────────────────
-O FLOWPay transforma um pagamento em 
+O FLOWPay transforma um pagamento em
 evidência verificável.
 
 * PIX acontece no mundo real
@@ -31,7 +31,7 @@ evidência verificável.
 * O evento é registrado
 * A prova é soberana e auditável
 
-Não é sobre pagar. É sobre não poder 
+Não é sobre pagar. É sobre não poder
 negar depois.
 
 ▓▓▓ NÃO É BANCO
@@ -42,7 +42,7 @@ FlowPay não:
 * Vende crédito
 * Bloqueia conta
 
-O sistema existe para registrar fatos, 
+O sistema existe para registrar fatos,
 não para controlar pessoas.
 
 ▓▓▓ COMO FUNCIONA

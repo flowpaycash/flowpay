@@ -7,28 +7,33 @@ O checkout foi completamente redesenhado com um design inspirado nos apps da App
 ## Características do Design
 
 ### 1. Fundo Claro
+
 - Background: `#f2f2f7` (iOS System Gray 6)
 - Cards: Branco com glassmorphism
 - Visual limpo e profissional
 
 ### 2. Glassmorphism
+
 - Backdrop filter blur de 40px
 - Saturação aumentada (180%)
 - Bordas sutis e translúcidas
 - Efeito de profundidade elegante
 
 ### 3. Tipografia
+
 - Font family: SF Pro Display / System fonts
 - Peso variável (400-600)
 - Letter-spacing ajustado para legibilidade
 - Hierarquia visual clara
 
 ### 4. Espaçamentos Generosos
+
 - Padding e margins bem definidos
 - Espaçamento consistente em todos os elementos
 - Breathing room para melhor leitura
 
 ### 5. Cores e Sombras
+
 - Sombras sutis e elegantes
 - Cores FLOWPay aplicadas com moderação
 - Gradientes suaves nos botões principais
@@ -37,24 +42,28 @@ O checkout foi completamente redesenhado com um design inspirado nos apps da App
 ### 6. Componentes
 
 #### Cards
+
 - Glassmorphism completo
 - Bordas arredondadas (24px)
 - Sombras sutis
 - Efeito hover suave
 
 #### Botões
+
 - Estilo Apple moderno
 - Gradientes suaves (primary → secondary)
 - Estados interativos claros
 - Feedback visual imediato
 
 #### Formulários
+
 - Inputs com bordas sutis
 - Focus states destacados
 - Validação em tempo real
 - Placeholders discretos
 
 #### Toasts
+
 - Glassmorphism aplicado
 - Animações suaves
 - Estados de sucesso/erro claros

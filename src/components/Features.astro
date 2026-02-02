@@ -84,3 +84,62 @@
   </div>
 </section>
 
+<style>
+  .home-navigation-cards {
+    padding: 8rem 2rem;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .home-navigation-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .home-navigation-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #fff, #ff0080);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(255, 0, 122, 0.2);
+  }
+
+  .home-navigation-container > p {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 4rem;
+    letter-spacing: 0.05em;
+  }
+
+  .home-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    margin-top: 2rem;
+  }
+
+  /* Specific internal card icon colors/styles if needed */
+  .home-card-icon svg {
+    color: #ff007a;
+    filter: drop-shadow(0 0 10px rgba(255, 0, 122, 0.5));
+  }
+
+  @media (max-width: 768px) {
+    .home-navigation-cards {
+      padding: 5rem 1rem;
+    }
+    
+    .home-navigation-title {
+      font-size: 2.2rem;
+    }
+    
+    .home-cards-grid {
+      gap: 1.5rem;
+    }
+  }
+</style>
+

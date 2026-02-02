@@ -33,6 +33,7 @@ npm run preview
 ### 1. Verificar Console do Navegador
 
 Abra DevTools (F12) e verifique:
+
 - **Network tab**: Procure por `landing.css`, `navbar.css`, `legacy.css`
 - **Console tab**: Procure por erros 404 ou CORS
 

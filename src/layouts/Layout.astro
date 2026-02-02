@@ -5,7 +5,7 @@ export interface Props {
 }
 
 const {
-  title = 'FLOWPay Gateway Web3 - PIX ou Cripto',
+  title = 'FlowPay Gateway Web3 - PIX ou Cripto',
   description = 'Checkout invisível. Auto-custódia. Transparente por padrão.',
 } = Astro.props;
 ---
@@ -17,6 +17,25 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title}</title>
+
+    <!-- SEO & Social -->
+    <link rel="canonical" href="https://flowpay.cash" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://flowpay.cash" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="https://flowpay.cash/assets/icons/web-app-manifest-512x512.png" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://flowpay.cash" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="https://flowpay.cash/assets/icons/web-app-manifest-512x512.png" />
+
+    <!-- Security (Stage 2 - CSP Hardening Initial) -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://*.web3auth.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' https://*.web3auth.io https://*.quicknode.com https://*.woovi.com;"
+    />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
@@ -95,9 +114,10 @@ const {
     />
 
     <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="196x196" href="/assets/icons/favicon-196.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-196.png" />
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
 
     <!-- Microsoft Tiles -->
     <meta name="msapplication-TileImage" content="mstile-icon-270.png" />
@@ -106,15 +126,11 @@ const {
     <!-- CSS -->
     <link rel="stylesheet" href="/css/design-system.css" />
     <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/landing.css" />
     <style is:global>
       :root {
         --primary: #ff007a;
         --primary-gradient: linear-gradient(90deg, #ff007a 0%, #ff7a00 100%);
-      }
-      body {
-        background-color: #f7f8fa;
-        color: #1d1d1f;
-        font-family: 'Inter', -apple-system, sans-serif;
       }
     </style>
   </head>

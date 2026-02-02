@@ -7,17 +7,20 @@
 Remove duplicações e corrige nomes de variáveis no arquivo `.env`.
 
 **Uso:**
+
 ```bash
 node tools/clean-env.js
 ```
 
 **O que faz:**
+
 - ✅ Remove variáveis duplicadas (mantém estratégia apropriada)
-- ✅ Renomeia variáveis incorretas (QUICKNODE_*_URL → QUICKNODE_*_RPC)
+- ✅ Renomeia variáveis incorretas (QUICKNODE_**URL → QUICKNODE**_RPC)
 - ✅ Cria backup automático (.env.backup)
 - ✅ Mantém estrutura e comentários do arquivo
 
 **Estratégias de duplicação:**
+
 - `INFURA_KEY`: Mantém primeira (chave), remove URL
 - `URL`: Mantém primeira
 - `CONVERSION_FEE_PERCENT`: Mantém primeira
@@ -28,11 +31,13 @@ node tools/clean-env.js
 Adiciona `QUICKNODE_BASE_RPC` e `QUICKNODE_POLYGON_RPC` ao `.env`.
 
 **Uso:**
+
 ```bash
 node tools/add-quicknode-vars.js
 ```
 
 **O que faz:**
+
 - ✅ Solicita valores interativamente
 - ✅ Adiciona variáveis na seção apropriada
 - ✅ Cria backup antes de modificar
@@ -41,6 +46,7 @@ node tools/add-quicknode-vars.js
 ## 🔄 Fluxo Recomendado
 
 1. **Limpar duplicações:**
+
    ```bash
    node tools/clean-env.js
    ```
@@ -50,11 +56,13 @@ node tools/add-quicknode-vars.js
    - Polygon - USDT Settlement
 
 3. **Adicionar variáveis QuickNode:**
+
    ```bash
    node tools/add-quicknode-vars.js
    ```
 
 4. **Verificar configuração:**
+
    ```bash
    node tools/validate-env.js
    ```

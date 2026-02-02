@@ -7,3 +7,77 @@
   <a href="/checkout" class="btn btn-primary btn-cta">Começar checkout</a>
 </section>
 
+</section>
+
+<style>
+  .cta {
+    padding: 8rem 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  /* Optional background effect/glow behind CTA */
+  .cta::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle, rgba(255, 0, 122, 0.15) 0%, transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+  }
+
+  .cta h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #fff, #ff0080);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(255, 0, 122, 0.2);
+  }
+
+  .cta p {
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    line-height: 1.6;
+  }
+
+  .btn-cta {
+    font-size: 1.25rem;
+    padding: 1.2rem 3rem;
+    border-radius: 50px;
+    box-shadow: 0 0 30px rgba(255, 0, 122, 0.4);
+  }
+
+  .btn-cta:hover {
+    box-shadow: 0 0 50px rgba(255, 0, 122, 0.6);
+    transform: translateY(-4px) scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    .cta {
+      padding: 5rem 1.5rem;
+    }
+    
+    .cta h2 {
+      font-size: 2rem;
+    }
+    
+    .cta p {
+      font-size: 1rem;
+    }
+    
+    .btn-cta {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+  }
+</style>

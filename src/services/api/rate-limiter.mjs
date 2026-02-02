@@ -1,7 +1,8 @@
 // 🚦 FLOWPay - Rate Limiter Middleware
-// Implementa rate limiting básico para proteção contra spam/abuso
+// Implementa rate limiting básico para proteção contra spam/abuso com cleanup
 
 import crypto from 'crypto';
+import { secureLog } from './config.mjs';
 
 // Store simples em memória (em produção, usar Redis ou similar)
 const requestCounts = new Map();
@@ -19,13 +20,46 @@ export const RATE_LIMITS = {
   'get-admin-config': { windowMs: 60 * 1000, maxRequests: 20 } // 20 requests por minuto
 };
 
-// Função para obter IP do cliente
+// 🧹 CLEANUP MECHANISM (Memory Leak Protection)
+// Remove expired entries every minute
+const CLEANUP_INTERVAL = 60 * 1000;
+setInterval(() => {
+  const now = Date.now();
+  let cleaned = 0;
+
+  for (const [key, entry] of requestCounts.entries()) {
+    // Calculate the specific window for this key entry if possible, 
+    // or just use a generous max window (e.g. 1 hour) to be safe if meta is missing
+    // For simplicity, if lastRequest was over 1 hour ago, delete it.
+    // Or better: check if now > resetTime (which we don't store directly but can infer)
+
+    // Simple expiry: if inactive for 1h, purge.
+    if (now - entry.lastRequest > 60 * 60 * 1000) {
+      requestCounts.delete(key);
+      cleaned++;
+    }
+  }
+
+  if (cleaned > 0 && process.env.NODE_ENV === 'development') {
+    secureLog('debug', `Rate limiter cleanup: removed ${cleaned} expired keys`);
+  }
+}, CLEANUP_INTERVAL).unref(); // unref to not block process exit
+
+// Função para obter IP do cliente com proteção contra spoofing
 export function getClientIP(event) {
-  return event.headers['x-forwarded-for'] ||
-    event.headers['x-real-ip'] ||
+  // Na Railway/Netlify, o x-forwarded-for é geralmente confiável se configurado corretamente
+  // mas devemos pegar o primeiro IP da lista (client original)
+
+  if (event.headers['x-forwarded-for']) {
+    const forwarded = event.headers['x-forwarded-for'];
+    const ips = typeof forwarded === 'string' ? forwarded.split(',') : forwarded;
+    return ips[0].trim();
+  }
+
+  return event.headers['x-real-ip'] ||
     event.headers['x-client-ip'] ||
     event.context?.clientIP ||
-    'unknown';
+    'unknown-ip';
 }
 
 // Função para gerar chave única para rate limiting
@@ -44,7 +78,7 @@ export function checkRateLimit(event, endpoint) {
   // Obter configuração do endpoint
   const config = RATE_LIMITS[endpoint] || { windowMs: 60 * 1000, maxRequests: 30 };
 
-  // Limpar entradas expiradas
+  // Limpar entradas expiradas específicas
   if (requestCounts.has(key)) {
     const entry = requestCounts.get(key);
     if (now - entry.firstRequest > config.windowMs) {
@@ -67,11 +101,12 @@ export function checkRateLimit(event, endpoint) {
   // Verificar se ainda está na janela de tempo
   if (now - entry.firstRequest <= config.windowMs) {
     if (entry.count >= config.maxRequests) {
+      const resetTime = entry.firstRequest + config.windowMs;
       return {
         allowed: false,
         remaining: 0,
-        resetTime: entry.firstRequest + config.windowMs,
-        retryAfter: Math.ceil((entry.firstRequest + config.windowMs - now) / 1000)
+        resetTime: resetTime,
+        retryAfter: Math.ceil((resetTime - now) / 1000)
       };
     }
 
@@ -84,7 +119,7 @@ export function checkRateLimit(event, endpoint) {
       resetTime: entry.firstRequest + config.windowMs
     };
   } else {
-    // Resetar contador se a janela expirou
+    // Resetar contador se a janela expirou (double check)
     requestCounts.set(key, {
       count: 1,
       firstRequest: now,
@@ -97,27 +132,39 @@ export function checkRateLimit(event, endpoint) {
 // Middleware para aplicar rate limiting
 export function applyRateLimit(endpoint) {
   return (event, context) => {
-    const result = checkRateLimit(event, endpoint);
+    try {
+      const result = checkRateLimit(event, endpoint);
 
-    if (!result.allowed) {
-      return {
-        statusCode: 429,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-RateLimit-Limit': RATE_LIMITS[endpoint]?.maxRequests || 30,
-          'X-RateLimit-Remaining': result.remaining,
-          'X-RateLimit-Reset': result.resetTime,
-          'Retry-After': result.retryAfter
-        },
-        body: JSON.stringify({
-          error: 'Rate limit exceeded',
-          message: `Too many requests. Try again in ${result.retryAfter} seconds.`,
-          retryAfter: result.retryAfter
-        })
-      };
+      if (!result.allowed) {
+        secureLog('warn', `Rate limit exceeded for ${endpoint}`, {
+          ip: getClientIP(event), // Log IP for ban analysis
+          endpoint
+        });
+
+        return {
+          statusCode: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-RateLimit-Limit': RATE_LIMITS[endpoint]?.maxRequests || 30,
+            'X-RateLimit-Remaining': result.remaining,
+            'X-RateLimit-Reset': result.resetTime,
+            'Retry-After': result.retryAfter
+          },
+          body: JSON.stringify({
+            error: 'Rate limit exceeded',
+            message: `Too many requests. Try again in ${result.retryAfter} seconds.`,
+            retryAfter: result.retryAfter
+          })
+        };
+      }
+
+      return null; // Continua com a execução normal
+    } catch (e) {
+      console.error("Rate limiter error:", e);
+      // Fail open (allow request) if rate limiter crashes? Or fail closed?
+      // For availability, fail open.
+      return null;
     }
-
-    return null; // Continua com a execução normal
   };
 }
 

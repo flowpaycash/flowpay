@@ -11,6 +11,7 @@ O FLOWPay agora suporta notificações automáticas via Telegram quando webhooks
 ### **1. Criar um Bot no Telegram**
 
 #### **Via @BotFather:**
+
 1. Abra o Telegram e procure por `@BotFather`
 2. Envie `/newbot`
 3. Escolha um nome para o bot (ex: "FLOWPay Notifications")
@@ -18,6 +19,7 @@ O FLOWPay agora suporta notificações automáticas via Telegram quando webhooks
 5. **Guarde o TOKEN** fornecido pelo BotFather
 
 #### **Exemplo de resposta:**
+
 ```
 Use this token to access the HTTP API:
 1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
@@ -28,17 +30,20 @@ Keep your token secure and store it safely!
 ### **2. Obter o Chat ID**
 
 #### **Método 1 - Via @userinfobot:**
+
 1. Procure por `@userinfobot` no Telegram
 2. Envie qualquer mensagem para ele
 3. Ele retornará suas informações, incluindo o `id`
 
 #### **Método 2 - Via @RawDataBot:**
+
 1. Procure por `@RawDataBot` no Telegram
 2. Adicione-o aos seus contatos
 3. Envie qualquer mensagem
 4. Ele retornará dados JSON com seu `id`
 
 #### **Exemplo de resposta:**
+
 ```json
 {
   "id": 123456789,
@@ -74,6 +79,7 @@ await sendToTelegram(payload);
 ## 📱 **Testando as Notificações**
 
 ### **1. Teste Local**
+
 ```bash
 # Teste o webhook localmente
 curl -X POST http://localhost:8888/.netlify/functions/webhook-handler \
@@ -83,6 +89,7 @@ curl -X POST http://localhost:8888/.netlify/functions/webhook-handler \
 ```
 
 ### **2. Teste em Produção**
+
 1. Configure as variáveis no Netlify
 2. Faça uma cobrança Pix real
 3. Verifique se a notificação chega no Telegram
@@ -90,6 +97,7 @@ curl -X POST http://localhost:8888/.netlify/functions/webhook-handler \
 ## 📨 **Formato das Mensagens**
 
 ### **Exemplo de Notificação:**
+
 ```
 📥 Novo Webhook FlowPay:
 
@@ -117,12 +125,14 @@ async function sendToTelegram(payload) {
 ## 🔒 **Segurança**
 
 ### **1. Token do Bot**
+
 - ✅ **NUNCA** compartilhe o token do bot
 - ✅ **NUNCA** commite o token no Git
 - ✅ Use variáveis de ambiente
 - ✅ Rotacione o token periodicamente
 
 ### **2. Chat ID**
+
 - ✅ O Chat ID é específico para cada usuário
 - ✅ Pode ser compartilhado com segurança
 - ✅ Use o mesmo Chat ID para todas as notificações
@@ -130,16 +140,21 @@ async function sendToTelegram(payload) {
 ## 🚨 **Troubleshooting**
 
 ### **Problema: "Bot was blocked by the user"**
+
 **Solução:** O usuário bloqueou o bot. Peça para desbloquear.
 
 ### **Problema: "Chat not found"**
+
 **Solução:** Verifique se o Chat ID está correto.
 
 ### **Problema: "Unauthorized"**
+
 **Solução:** Verifique se o TOKEN do bot está correto.
 
 ### **Problema: Notificações não chegam**
+
 **Soluções:**
+
 1. Verifique se as variáveis estão configuradas
 2. Verifique se a função está descomentada
 3. Verifique os logs do Netlify
@@ -148,17 +163,21 @@ async function sendToTelegram(payload) {
 ## 📊 **Monitoramento**
 
 ### **1. Logs do Netlify**
+
 Acesse: `Netlify Dashboard > Functions > Logs`
 
 ### **2. Arquivo de Payloads**
+
 O webhook salva todos os payloads em `webhook_payloads.json`
 
 ### **3. Status das Funcionalidades**
+
 Acesse: `/.netlify/functions/env` para ver o status
 
 ## 🔮 **Funcionalidades Futuras**
 
 ### **Próximas Implementações:**
+
 - 📊 **Relatórios diários** via Telegram
 - 🔔 **Alertas de erro** em tempo real
 - 📈 **Estatísticas** de pagamentos
@@ -167,10 +186,12 @@ Acesse: `/.netlify/functions/env` para ver o status
 ## 📚 **Recursos Adicionais**
 
 ### **Documentação Oficial:**
+
 - [Telegram Bot API](https://core.telegram.org/bots/api)
 - [@BotFather Commands](https://core.telegram.org/bots#how-do-i-create-a-bot)
 
 ### **Ferramentas Úteis:**
+
 - [Telegram Web](https://web.telegram.org/)
 - [BotFather](https://t.me/botfather)
 

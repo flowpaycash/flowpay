@@ -8,6 +8,7 @@
 ## 🧪 Teste Básico
 
 ### 1. Cobrança PIX Válida
+
 ```bash
 curl -X POST \
   http://localhost:8888/.netlify/functions/create-pix-charge \
@@ -21,6 +22,7 @@ curl -X POST \
 ```
 
 ### 2. Valor Baixo (Teste de Validação)
+
 ```bash
 curl -X POST \
   http://localhost:8888/.netlify/functions/create-pix-charge \
@@ -34,6 +36,7 @@ curl -X POST \
 ```
 
 ### 3. Teste de Erro - Wallet Inválido
+
 ```bash
 curl -X POST \
   http://localhost:8888/.netlify/functions/create-pix-charge \
@@ -47,6 +50,7 @@ curl -X POST \
 ```
 
 ### 4. Teste de Erro - Campos Faltando
+
 ```bash
 curl -X POST \
   http://localhost:8888/.netlify/functions/create-pix-charge \
@@ -58,6 +62,7 @@ curl -X POST \
 ```
 
 ### 5. Teste de Erro - Valor Zero
+
 ```bash
 curl -X POST \
   http://localhost:8888/.netlify/functions/create-pix-charge \
@@ -71,6 +76,7 @@ curl -X POST \
 ```
 
 ### 6. Teste de Erro - Valor Negativo
+
 ```bash
 curl -X POST \
   http://localhost:8888/.netlify/functions/create-pix-charge \
@@ -86,6 +92,7 @@ curl -X POST \
 ## 🔧 Teste com Variáveis
 
 ### Usando variáveis de ambiente
+
 ```bash
 # Configure a API key
 export WOOVI_API_KEY="sua_chave_aqui"
@@ -106,6 +113,7 @@ curl -X POST \
 ## 📊 Teste de Performance
 
 ### Múltiplas requisições
+
 ```bash
 # Teste com 5 requisições simultâneas
 for i in {1..5}; do
@@ -126,6 +134,7 @@ done
 ## 🚨 Respostas Esperadas
 
 ### ✅ Sucesso (200)
+
 ```json
 {
   "success": true,
@@ -144,6 +153,7 @@ done
 ```
 
 ### ❌ Erro de Validação (400)
+
 ```json
 {
   "error": "Wallet deve ser um endereço Ethereum válido"
@@ -151,6 +161,7 @@ done
 ```
 
 ### ❌ Erro de Servidor (500)
+
 ```json
 {
   "error": "Configuração da API Woovi não encontrada"
@@ -168,11 +179,13 @@ done
 ## 🔍 Debug
 
 ### Verificar se a função está acessível
+
 ```bash
 curl -I http://localhost:8888/.netlify/functions/create-pix-charge
 ```
 
 ### Teste de CORS (preflight)
+
 ```bash
 curl -X OPTIONS \
   http://localhost:8888/.netlify/functions/create-pix-charge \
@@ -180,6 +193,7 @@ curl -X OPTIONS \
 ```
 
 ### Verificar variáveis de ambiente
+
 ```bash
 echo "WOOVI_API_KEY: $WOOVI_API_KEY"
 echo "NODE_ENV: $NODE_ENV"

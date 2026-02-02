@@ -1,3 +1,8 @@
 User-agent: *
 Allow: /
-Sitemap: https://flowpay-production-10d8.up.railway.app/sitemap.xml
+Disallow: /admin
+Disallow: /api
+Disallow: /login
+Disallow: /private
+
+Sitemap: https://flowpay.cash/sitemap-index.xml

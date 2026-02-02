@@ -42,6 +42,7 @@ WOOVI_WEBHOOK_SECRET=your_secret \
 ### Testes Jest (`tests/openpix.test.js`)
 
 #### Create PIX Charge
+
 - ✅ Criar cobrança PIX válida
 - ✅ Validar wallet Ethereum
 - ✅ Validar valor positivo
@@ -50,6 +51,7 @@ WOOVI_WEBHOOK_SECRET=your_secret \
 - ✅ Incluir additionalInfo
 
 #### Webhook Handler
+
 - ✅ Processar webhook válido
 - ✅ Rejeitar webhook sem assinatura
 - ✅ Rejeitar webhook com assinatura inválida
@@ -57,9 +59,11 @@ WOOVI_WEBHOOK_SECRET=your_secret \
 - ✅ Criar ordem de liquidação assistida
 
 #### End-to-End Flow
+
 - ✅ Criar cobrança e processar webhook
 
 #### Error Handling
+
 - ✅ Tratar erro da API Woovi
 - ✅ Tratar API key não configurada
 
@@ -109,16 +113,19 @@ API_URL=http://localhost:8888/.netlify/functions
 ### Pré-requisitos
 
 1. **Servidor rodando**
+
    ```bash
    netlify dev
    ```
 
 2. **Dependências instaladas**
+
    ```bash
    npm install
    ```
 
 3. **Ferramentas opcionais**
+
    ```bash
    # jq para formatação JSON
    brew install jq
@@ -167,6 +174,7 @@ curl -X POST \
 ## Respostas Esperadas
 
 ### Sucesso (200)
+
 ```json
 {
   "success": true,
@@ -185,6 +193,7 @@ curl -X POST \
 ```
 
 ### Erro (400)
+
 ```json
 {
   "error": "Mensagem de erro descritiva",
@@ -195,12 +204,14 @@ curl -X POST \
 ## Troubleshooting
 
 ### Erro: "Servidor não está rodando"
+
 ```bash
 # Iniciar servidor
 netlify dev
 ```
 
 ### Erro: "WOOVI_API_KEY não configurada"
+
 ```bash
 # Configurar variável de ambiente
 export WOOVI_API_KEY='your_key_here'
@@ -210,6 +221,7 @@ echo "WOOVI_API_KEY=your_key_here" > .env
 ```
 
 ### Erro: "Assinatura inválida"
+
 - Verifique se `WOOVI_WEBHOOK_SECRET` está configurado corretamente
 - Certifique-se de que a assinatura está sendo calculada com o mesmo secret
 

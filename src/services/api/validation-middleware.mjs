@@ -1,5 +1,6 @@
 // 🔧 FLOWPay - Validation Middleware
 // Middleware reutilizável para validações de entrada
+// SECURE: Input sanitization and strict type checking
 
 import { createError, ERROR_TYPES } from './error-handler.mjs';
 
@@ -95,11 +96,13 @@ export function validateType(value, type, fieldName) {
       break;
 
     case 'email':
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // Regex mais robusto e seguro (non-backtracking risk low here, but stricter is better)
+      // Checks for basic email structure without catastrophic backtracking complexity
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(value)) {
         throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ser um email válido`, {
           field: fieldName,
-          value: value
+          value: value.substring(0, 50) + '...' // Truncate for log safety
         });
       }
       break;
@@ -138,6 +141,8 @@ export function validateType(value, type, fieldName) {
 
 // Função para validar comprimento
 export function validateLength(value, minLength, maxLength, fieldName) {
+  if (typeof value !== 'string') return;
+
   if (minLength !== undefined && value.length < minLength) {
     throw createError(ERROR_TYPES.VALIDATION_ERROR, `${fieldName} deve ter pelo menos ${minLength} caracteres`, {
       field: fieldName,
@@ -189,10 +194,19 @@ export function validateAllowedValues(value, allowed, fieldName) {
 
 // Função principal de validação
 export function validateData(data, schemaName) {
+  if (typeof data !== 'object' || data === null) {
+    throw createError(ERROR_TYPES.VALIDATION_ERROR, "Invalid input data format");
+  }
+
   const schema = VALIDATION_SCHEMAS[schemaName];
 
   if (!schema) {
-    throw createError(ERROR_TYPES.VALIDATION_ERROR, `Esquema de validação '${schemaName}' não encontrado`);
+    throw createError(ERROR_TYPES.INTERNAL_ERROR, `Esquema de validação '${schemaName}' não encontrado`);
+  }
+
+  // Prevent prototype poisoning
+  if (data.__proto__ || data.constructor?.prototype) {
+    throw createError(ERROR_TYPES.VALIDATION_ERROR, "Invalid input keys detected");
   }
 
   // Verificar campos obrigatórios
@@ -244,7 +258,10 @@ export function validateData(data, schemaName) {
 export function validateJSON(schemaName) {
   return (event, context) => {
     try {
-      const data = JSON.parse(event.body || '{}');
+      if (!event.body) {
+        throw createError(ERROR_TYPES.VALIDATION_ERROR, 'Corpo da requisição vazio');
+      }
+      const data = JSON.parse(event.body);
       validateData(data, schemaName);
       return { data, error: null };
     } catch (error) {
@@ -266,26 +283,49 @@ export function validateQueryParams(schemaName) {
 }
 
 // Função para sanitizar dados
+// Previne XSS e Injection básico
 export function sanitizeData(data) {
-  const sanitized = {};
+  // Prevent infinite recursion on circular references
+  const seen = new WeakSet();
 
-  for (const [key, value] of Object.entries(data)) {
-    if (typeof value === 'string') {
-      // Remover caracteres perigosos
-      sanitized[key] = value
-        .replace(/[<>]/g, '') // Remove < e >
-        .trim() // Remove espaços em branco
-        .substring(0, 1000); // Limita tamanho
-    } else if (typeof value === 'number') {
-      // Validar números
-      sanitized[key] = isNaN(value) ? 0 : value;
-    } else if (typeof value === 'object' && value !== null) {
-      // Recursão para objetos
-      sanitized[key] = sanitizeData(value);
-    } else {
-      sanitized[key] = value;
-    }
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return str;
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    // Only replace characters that strictly need escaping for HTML context checking
+    return str.replace(/[&<>"']/g, function (m) { return map[m]; }).substring(0, 1000);
   }
 
-  return sanitized;
+  function sanitize(obj) {
+    if (obj === null || typeof obj !== 'object') {
+      if (typeof obj === 'string') {
+        return escapeHtml(obj);
+      }
+      return obj;
+    }
+
+    if (seen.has(obj)) return '[CIRCULAR]';
+    seen.add(obj);
+
+    const sanitized = {};
+
+    for (const [key, value] of Object.entries(obj)) {
+      // Skip prototype pollution attempts
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') continue;
+
+      if (Array.isArray(value)) {
+        sanitized[key] = value.map(item => sanitize(item));
+      } else {
+        sanitized[key] = sanitize(value);
+      }
+    }
+    return sanitized;
+  }
+
+  return sanitize(data);
 }
