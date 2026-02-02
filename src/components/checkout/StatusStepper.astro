@@ -1,0 +1,119 @@
+---
+---
+<div class="industrial-stepper">
+  <div class="stepper-track"></div>
+  
+  <div class="step" data-step="1">
+    <div class="step-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-spinner">
+       <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-dasharray="30 60" />
+      </svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-check" hidden>
+        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="step-label">Aguardando PIX</div>
+  </div>
+
+  <div class="step" data-step="2">
+    <div class="step-icon">
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+         <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+         <circle cx="12" cy="12" r="4"/>
+       </svg>
+    </div>
+    <div class="step-label">Smart Factory</div>
+  </div>
+
+  <div class="step" data-step="3">
+    <div class="step-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+      </svg>
+    </div>
+    <div class="step-label">Blockchain</div>
+  </div>
+</div>
+
+<style>
+  .industrial-stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    margin: 2rem 0;
+    padding: 0 1rem;
+  }
+
+  /* Connecting Line */
+  .stepper-track {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    right: 40px;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    z-index: 0;
+    /* Optional: Animate a gradient across it when active */
+  }
+
+  .step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.4;
+    transition: all 0.3s ease;
+    width: 33%;
+  }
+
+  .step-icon {
+    width: 40px;
+    height: 40px;
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    color: #fff;
+  }
+
+  .step-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #fff;
+    text-align: center;
+  }
+
+  /* Active State */
+  .step.active {
+    opacity: 1;
+  }
+  .step.active .step-icon {
+    border-color: #ff007a;
+    box-shadow: 0 0 15px rgba(255, 0, 122, 0.4);
+    color: #ff007a;
+  }
+  .step.active .icon-spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  /* Completed State */
+  .step.done {
+    opacity: 1;
+  }
+  .step.done .step-icon {
+    background: #ff007a;
+    border-color: #ff007a;
+    color: #fff;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>
