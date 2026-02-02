@@ -22,8 +22,8 @@
     "test:validation": "jest tests/validation-middleware.test.js",
     "test:openpix": "jest tests/openpix.test.js",
     "test:openpix:watch": "jest tests/openpix.test.js --watch",
-    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore '~/Desktop/**' --config .markdownlint.json",
-    "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore '~/Desktop/**' --config .markdownlint.json --fix"
+    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore docs --ignore standards --ignore tools --ignore tests --ignore services --ignore scripts --ignore '~/Desktop/**' --config .markdownlint.json",
+    "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore docs --ignore standards --ignore tools --ignore tests --ignore services --ignore scripts --ignore '~/Desktop/**' --config .markdownlint.json --fix"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",

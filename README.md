@@ -1,4 +1,5 @@
-<!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
+# 🚀 FLOWPay - Pix-First Payment Gateway for Web3
+
 ```text
 ========================================
              F L O W P A Y
@@ -12,33 +13,38 @@ Stack: Astro + SQLite + Node (Railway)
 ========================================
 ```
 
-▓▓▓ MISSION
+## ▓▓▓ MISSION
+
 ────────────────────────────────────────
-O FLOWPay é um gateway de pagamento
-focado em Pix (via Woovi) e Web3.
-Projetado para oferecer soberania
-total e complexidade invisível.
+O FLOWPay é um gateway de pagamento focado em Pix e Web3. Projetado para oferecer soberania total e complexidade invisível.
 
-SOVEREIGN NODE: Esta versão utiliza
-persistência local SQLite. No Railway,
-utilize Volumes em `/app/data`.
+**SOVEREIGN NODE:** Esta versão utiliza persistência local SQLite. No Railway, utilize Volumes em `/app/data`.
 
-▓▓▓ CORE PRINCIPLES
+## ▓▓▓ CORE PRINCIPLES
+
 ────────────────────────────────────────
-└─ Checkout Familiar (PIX/BRL)
-└─ Complexidade Invisível
-└─ Base Soberana (On-chain proof)
-└─ O usuário compra ACESSO.
-└─ O protocolo registra ESTADO.
 
-▓▓▓ CAPABILITIES
+- └─ Checkout Familiar (PIX/BRL)
+- └─ Complexidade Invisível
+- └─ Base Soberana (On-chain proof)
+- └─ O usuário compra ACESSO.
+- └─ O protocolo registra ESTADO.
+
+## ▓▓▓ CAPABILITIES
+
 ────────────────────────────────────────
-[####] PIX Dynamic QR ............. OK
-[####] HMAC Secure Webhooks ....... OK
-[####] Assisted Settlement ........ OK
-[####] Real USDT Delivery ......... OK
-[####] Hardened Anti-Fraud ........ OK
 
+- [####] PIX Dynamic QR ............. OK
+- [####] HMAC Secure Webhooks ....... OK
+- [####] Assisted Settlement ........ OK
+- [####] Real USDT Delivery ......... OK
+- [####] Hardened Anti-Fraud ........ OK
+
+## ▓▓▓ ARCH OVERVIEW
+
+────────────────────────────────────────
+
+```text
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ┃ ARCH OVERVIEW
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -47,28 +53,32 @@ utilize Volumes em `/app/data`.
 ┃ ░ UNLOCK RECEIPT issued
 ┃ ░ Access granted (Product)
 ┃ ░ On-chain settlement (Async)
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
 
 ────────────────────────────────────────
-TECHNICAL DETAILS: <./SETUP.md>
+TECHNICAL DETAILS: [SETUP.md](./SETUP.md)
 ────────────────────────────────────────
 
-▓▓▓ NΞØ MELLØ
+## ▓▓▓ NΞØ MELLØ
+
 ────────────────────────────────────────
 Core Architect · NΞØ Protocol
-neo@neoprotocol.space
+<neo@neoprotocol.space>
 
 "Code is law. Expand until
  chaos becomes protocol."
 
-Security by design.
-Explits find no refuge here.
+**Security by design.**
+Exploits find no refuge here.
+
 ────────────────────────────────────────
 
+```text
 ░█▀█░█▀▀░█▀█░░░█▀█░█▀▄░█▀█░▀█▀░█▀█░█▀▀░█▀█░█░░
 ░█░█░█▀▀░█░█░░░█▀▀░█▀▄░█░█░░█░░█░█░█░░░█░█░█░░
 ░▀░▀░▀▀▀░▀▀▀░░░▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀▀▀░▀▀▀
 
-```text
      █ 
   ▄███  
  █  █ █
@@ -76,4 +86,3 @@ Explits find no refuge here.
   ███▀  
  █
 ```
-

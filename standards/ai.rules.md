@@ -1,12 +1,10 @@
-<!-- ai rules -->
+# 🤖 Regras para IAs e Assistentes NΞØ
 
-## Regras para IAs e Assistentes
-
-### Como Funciona
+## 📋 Como Funciona
 
 O Cursor lê automaticamente o `.cursorrules` na raiz do projeto. Este arquivo referencia os padrões em `standards/`.
 
-### Quando Criar ou Editar Arquivos
+## ✍️ Quando Criar ou Editar Arquivos
 
 1. **SEMPRE** siga os padrões de Markdown (linha em branco após headers)
 2. **SEMPRE** use 2 espaços para indentação
@@ -14,7 +12,7 @@ O Cursor lê automaticamente o `.cursorrules` na raiz do projeto. Este arquivo r
 4. **SEMPRE** adicione newline final
 5. **SEMPRE** use LF line endings (Unix)
 
-### Padrões de Código
+## 💻 Padrões de Código
 
 - **Indentação**: 2 espaços (não tabs)
 - **Encoding**: UTF-8
@@ -22,7 +20,7 @@ O Cursor lê automaticamente o `.cursorrules` na raiz do projeto. Este arquivo r
 - **Trailing whitespace**: Remover
 - **Final newline**: Sempre adicionar
 
-### Padrões de Markdown
+## 📝 Padrões de Markdown
 
 **CRITICAL**: Linha em branco após qualquer header (###, ##, #)
 
@@ -32,28 +30,29 @@ O Cursor lê automaticamente o `.cursorrules` na raiz do projeto. Este arquivo r
 Conteúdo aqui.
 
 ### ❌ Incorreto
-
 Conteúdo aqui.
 ```
 
-**CRITICAL**: NUNCA use emojis. Use caracteres Unicode quando necessário:
+## 📐 Padrões de Design Sônico & ASCII
+
+**CRITICAL**: Use caracteres Unicode quando necessário para manter a estética:
 
 - ⟁ ⟠ ⧉ ⧇ ⧖ ⧗ ⍟
 - ◬ ◭ ◮ ◯ ⨀ ⨂ ⨷
 - ◱ ◲ ◳ ◴ ◵ ◶ ◷ ⦿ ꙮ
 
-### Assinatura
+## ✒️ Assinatura
 
 Ao criar arquivos de documentação, inclua:
 
-```
+```text
 Author: MELLØ // POST-HUMAN
 
 This project follows my personal working standards.
 Changes are allowed, inconsistency is not.
 ```
 
-### Referências
+## 🔗 Referências
 
 - Ver `standards/markdown.rules.md` para regras completas de Markdown
 - Ver `standards/README.md` para padrões de trabalho

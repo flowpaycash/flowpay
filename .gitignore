@@ -44,3 +44,4 @@ secrets/
 *.bak
 *~
 .astro/
+docs/

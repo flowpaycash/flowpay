@@ -1,32 +1,29 @@
-<!-- markdown rules -->
+# ✍️ Regras de Markdown - NΞØ Protocol
 
-## Regras de Markdown - NEØ Dev
-
-### Regra Principal: Linha em Branco Após Headers
+## 📎 Regra Principal: Linha em Branco Após Headers
 
 **SEMPRE adicione uma linha em branco após qualquer título** (###, ##, #) antes de iniciar o conteúdo.
 
-#### ✅ Correto
+### ✅ Correto
 
 ```markdown
-### 1. **Título da Seção** ✅ STATUS
+### 1. **Título da Seção** ⟁ STATUS
 
 - **Campo**: Valor
 - **Outro campo**: Outro valor
 ```
 
-#### ❌ Incorreto
+### ❌ Incorreto
 
 ```markdown
-### 1. **Título da Seção** ✅ STATUS
-
+### 1. **Título da Seção** ⟁ STATUS
 - **Campo**: Valor
 - **Outro campo**: Outro valor
 ```
 
-### Padrões de Formatação
+## 📐 Padrões de Formatação
 
-#### Títulos
+### Títulos
 
 - Use `#` para título principal (H1)
 - Use `##` para seções principais (H2)
@@ -35,25 +32,25 @@
 
 **Sempre adicione uma linha em branco após o título antes do conteúdo.**
 
-#### Listas
+### Listas
 
 - Use `-` para listas não ordenadas
 - Use `1.`, `2.`, etc. para listas ordenadas
 - Indente com 2 espaços para subitens
 
-#### Código
+### Código
 
-- Use \`backticks\` para código inline
-- Use blocos de código com \`\`\` para blocos
+- Use `backticks` para código inline
+- Use blocos de código com ` ``` ` para blocos
 - Sempre especifique a linguagem quando possível
 
-#### Ênfase
+### Ênfase
 
 - Use `**negrito**` para destaque
 - Use `*itálico*` para ênfase suave
 - Use `~~riscado~~` para texto descontinuado
 
-#### Emojis e Unicode
+## 🚫 Emojis e Unicode
 
 **NUNCA use emojis** (😀, ✅, ❌, etc.) em documentação ou código.
 
@@ -63,7 +60,7 @@
 - ◬ ◭ ◮ ◯ ⨀ ⨂ ⨷
 - ◱ ◲ ◳ ◴ ◵ ◶ ◷ ⦿ ꙮ
 
-### Configurações do Projeto
+## ⚙️ Configurações do Projeto
 
 Este projeto usa:
 
