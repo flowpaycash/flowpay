@@ -5,8 +5,14 @@
 // ---------- tiny runtime
 export function createMachine(config) { return config }
 export function interpret(machine, opts = {}) {
+  const createState = (value, context) => ({
+    value,
+    context,
+    matches: (s) => value === s
+  })
+
   const svc = {
-    state: { value: machine.initial, context: machine.context || {} },
+    state: createState(machine.initial, machine.context || {}),
     send: (type, payload) => transition(type, payload),
     subscribe: (fn) => (svc._sub = fn, () => (svc._sub = null)),
     _sub: null
@@ -35,13 +41,13 @@ export function interpret(machine, opts = {}) {
       try {
         const data = await src(svc.state.context, payload)
         if (onDone) {
-          svc.state = { value: onDone, context: { ...svc.state.context, lastResult: data } }
+          svc.state = createState(onDone, { ...svc.state.context, lastResult: data })
           emit()
           return
         }
       } catch (err) {
         if (onError) {
-          svc.state = { value: onError, context: { ...svc.state.context, lastError: err } }
+          svc.state = createState(onError, { ...svc.state.context, lastError: err })
           emit()
           return
         }
@@ -51,7 +57,7 @@ export function interpret(machine, opts = {}) {
 
     // target
     if (step.target) {
-      svc.state = { value: step.target, context: svc.state.context }
+      svc.state = createState(step.target, svc.state.context)
       emit()
     }
   }
