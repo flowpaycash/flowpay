@@ -26,18 +26,50 @@
   document.addEventListener('DOMContentLoaded', async () => {
     const selector = document.getElementById('product-selector');
     const valorField = document.getElementById('valor');
+    const walletField = document.getElementById('wallet');
     
+    // Draft functionality
+    const saveDraft = () => {
+      const draft = {
+        productRef: selector.value,
+        wallet: walletField.value
+      };
+      localStorage.setItem('flowpay_checkout_draft', JSON.stringify(draft));
+    };
+
     try {
       const resp = await fetch('/api/products');
       const products = await resp.json();
+
+      // Restore Draft - Step 1: Load data
+      let draft = {};
+      try {
+        const saved = localStorage.getItem('flowpay_checkout_draft');
+        if (saved) draft = JSON.parse(saved);
+      } catch (e) { console.warn('Failed to parse draft', e); }
 
       products.forEach(p => {
         const opt = document.createElement('option');
         opt.value = p.ref;
         opt.dataset.price = p.price_brl;
         opt.textContent = `${p.name} - R$ ${p.price_brl.toFixed(2)}`;
+        
+        // Restore product selection
+        if (draft.productRef === p.ref) opt.selected = true;
+        
         selector.appendChild(opt);
       });
+
+      // Trigger change to update price if restored
+      if (draft.productRef) {
+          const selected = selector.options[selector.selectedIndex];
+          if (selected && selected.dataset.price) {
+              valorField.value = selected.dataset.price;
+          }
+      }
+
+      // Restore wallet
+      if (draft.wallet) walletField.value = draft.wallet;
 
       selector.addEventListener('change', (e) => {
         const selected = e.target.options[e.target.selectedIndex];
@@ -45,7 +77,11 @@
           valorField.value = selected.dataset.price;
           valorField.dispatchEvent(new Event('input'));
         }
+        saveDraft();
       });
+
+      walletField.addEventListener('input', saveDraft);
+
     } catch (err) {
       console.error('❌ Erro ao carregar produtos:', err);
     }
