@@ -9,7 +9,7 @@
 
 ▓▓▓ CHANGELOG: 02-FEB-2026
 ────────────────────────────────────────
-**"AESTHETIC & SECURITY CORE"**
+**"AESTHETIC & SECURITY CORE + DEPLOYMENT RESILIENCE"**
 
 └─ **UI/UX Rebirth:**
    - Hero: Logo ampliada (200px) + glow.
@@ -22,6 +22,10 @@
    - CSP Hardening: Meta tags aplicadas.
    - SEO: OpenGraph & Twitter Cards.
    - Robots: Optimized Disallow rules.
+└─ **Infrastructure & Stability:**
+   - Railway: Custom `railway.toml` com healthcheck tuning (300s).
+   - Server: Ajuste de porta SSR (4321) e rota de health para deploy estável.
+   - DevOps: Fluxo de build otimizado para Railway.
 └─ **Repository:**
    - Tag: `v2.0.0-soberania` pushed.
 
