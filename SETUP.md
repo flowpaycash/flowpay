@@ -62,6 +62,26 @@ Deploy: Netlify Functions (Astro)
 - └─ SERVICE_WALLET_PRIVATE_KEY
 - └─ ADMIN_PASSWORD
 
+## ▓▓▓ PROXY & SECURITY CONFIG
+
+────────────────────────────────────────
+
+FlowPay operates as a **Relayer Proxy** to the NΞØ Smart Factory (Neobot).
+This design ensures critical private keys are **segregated**.
+
+```text
+PROVISION FLOW:
+[FlowPay] -> (Webhook) -> [Neobot Core] -> (Blockchain)
+   |                          |                |
+   └─ Public Gateway          └─ Private Keys  └─ Asset Mint
+```
+
+>**SECURITY NOTE:**
+> - FlowPay holds **NO MINTING KEYS**.
+> - It acts only as a **Trigger** authenticated by HMAC.
+> - All high-privilege ops are executed by Neobot.
+
+
 ## ▓▓▓ NΞØ MELLØ
 
 ────────────────────────────────────────
