@@ -204,11 +204,6 @@ export function validateData(data, schemaName) {
     throw createError(ERROR_TYPES.INTERNAL_ERROR, `Esquema de validação '${schemaName}' não encontrado`);
   }
 
-  // Prevent prototype poisoning
-  if (data.__proto__ || data.constructor?.prototype) {
-    throw createError(ERROR_TYPES.VALIDATION_ERROR, "Invalid input keys detected");
-  }
-
   // Verificar campos obrigatórios
   const missingFields = schema.required.filter(field => !(field in data));
   if (missingFields.length > 0) {
