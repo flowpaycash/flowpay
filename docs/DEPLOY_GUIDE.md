@@ -1,4 +1,5 @@
-X`# 🚀 Guia de Deploy - Railway
+# 🚀 Guia de Deploy - Railway
+
 
 Este guia cobre o processo de deploy da aplicação **FlowPay** na plataforma **Railway**.
 
@@ -68,14 +69,18 @@ railway up
 ## 🔍 Troubleshooting
 
 **Erro 401 na API Woovi**
+
 - Verifique se `WOOVI_API_KEY` no Railway é a string codificada (inicia com `Q2xp...`) e não o AppID legível.
 
 **Erro de Build**
+
 - Verifique os logs na aba "Build Logs".
 - Geralmente falta de dependências ou erro de sintaxe.
 
 **Aplicação não inicia (Crash Loop)**
+
 - Verifique se `HOST=0.0.0.0` está definido. O Astro precisa disso para rodar em containers.
 
 ---
+
 **Status Atual (30/01/2026):** ✅ Deploy funcional e estável.
