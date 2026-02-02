@@ -74,9 +74,12 @@ export const POST = async ({ request, clientAddress }) => {
 
                 secureLog('info', 'Astro Webhook: Preparando disparo da Bridge 🌉', { correlationID });
 
+                // Extract customer email for notification
+                const customerEmail = charge.customer?.email;
+
                 // 🌉 BRIDGE: Trigger Neobot Unlock Skill (Model B - Access Unlock Primary)
                 const { triggerNeobotUnlock } = await import('../../services/api/neobot-bridge.mjs');
-                triggerNeobotUnlock(correlationID).catch(err => {
+                triggerNeobotUnlock(correlationID, customerEmail).catch(err => {
                     secureLog('error', 'Astro Webhook: Erro ao disparar Bridge Neobot', { error: err.message });
                 });
             } else {

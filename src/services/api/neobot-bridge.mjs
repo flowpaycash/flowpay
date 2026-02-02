@@ -9,11 +9,11 @@ import { secureLog } from './config.mjs';
  * Trigger Neobot Access Unlock Skill
  * @param {string} chargeId - The Woovi Correlation ID / Charge ID
  */
-export async function triggerNeobotUnlock(chargeId) {
+export async function triggerNeobotUnlock(chargeId, customerRef) {
     const NEOBOT_URL = process.env.NEOBOT_URL || 'http://localhost:3001';
     const NEOBOT_API_KEY = process.env.NEOBOT_API_KEY || process.env.FLOWPAY_API_KEY;
 
-    secureLog('info', '🌉 Bridge: Avisando Neobot para desbloquear acesso', { chargeId });
+    secureLog('info', '🌉 Bridge: Avisando Neobot para desbloquear acesso', { chargeId, customerRef });
 
     try {
         const response = await fetch(`${NEOBOT_URL}/tools/invoke`, {
@@ -25,7 +25,8 @@ export async function triggerNeobotUnlock(chargeId) {
             body: JSON.stringify({
                 tool: 'flowpay:unlock',
                 args: {
-                    charge_id: chargeId
+                    charge_id: chargeId,
+                    customer_ref: customerRef
                 }
             })
         });
