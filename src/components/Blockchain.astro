@@ -4,11 +4,10 @@
 <section id="blockchain" class="home-highlight">
   <div class="home-highlight-container">
     <div class="home-highlight-content">
-      <h2>Integração em Múltiplas Blockchains</h2>
+      <h2>Conectado com o Mundo</h2>
       <p class="home-highlight-text">
-        A FLOWPay suporta uma ampla variedade de redes blockchain, incluindo Ethereum, Polygon,
-        Linea, Base, Mantle, opBNB e Unichain, permitindo que você tenha flexibilidade para receber
-        pagamentos em diferentes ecossistemas cripto.
+        A FLOWPay conecta você automaticamente aos maiores mercados digitais do planeta. 
+        Uma infraestrutura global otimizada para velocidade e segurança.
       </p>
       <div class="blockchain-logos">
         <div class="blockchain-logo ethereum pulse-slow" onclick="showBlockchainInfo('ethereum')">
@@ -16,25 +15,25 @@
             <path d="M16 0L6 8v8l10 8 10-8V8L16 0z" />
             <path d="M6 20l10 8 10-8v8l-10 8L6 28v-8z" />
           </svg>
-          <span>Ethereum</span>
+          <span>Global</span>
         </div>
         <div class="blockchain-logo polygon pulse-slow" onclick="showBlockchainInfo('polygon')">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
             <polygon points="16,2 30,8 30,24 16,30 2,24 2,8" />
           </svg>
-          <span>Polygon</span>
+          <span>Rápido</span>
         </div>
         <div class="blockchain-logo linea pulse-slow" onclick="showBlockchainInfo('linea')">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
             <path d="M16 2L2 8v16l14 6 14-6V8L16 2z" />
           </svg>
-          <span>Linea</span>
+          <span>Seguro</span>
         </div>
         <div class="blockchain-logo base pulse-slow" onclick="showBlockchainInfo('base')">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
             <rect x="4" y="4" width="24" height="24" rx="4" />
           </svg>
-          <span>Base</span>
+          <span>Verificado</span>
         </div>
       </div>
     </div>
@@ -46,32 +45,32 @@
     (window as any).showBlockchainInfo = function (blockchain: string) {
       const info: Record<string, any> = {
         ethereum: {
-          name: 'Ethereum',
-          description: 'Rede principal com maior liquidez e segurança',
-          features: ['Smart Contracts', 'DeFi', 'NFTs', 'Layer 2'],
-          gas: 'Médio-Alto',
-          speed: '~15 segundos',
+          name: 'Global',
+          description: 'A rede mais utilizada do mundo.',
+          features: ['Liquidez Global', 'Segurança Máxima'],
+          gas: 'Padrão',
+          speed: 'Seguro',
         },
         polygon: {
-          name: 'Polygon',
-          description: 'Sidechain Ethereum com baixas taxas',
-          features: ['Baixo Custo', 'Compatibilidade EVM', 'Escalabilidade'],
-          gas: 'Baixo',
-          speed: '~2 segundos',
+          name: 'Speed',
+          description: 'Velocidade otimizada para transações rápidas.',
+          features: ['Ultra Rápido', 'Custo Baixo'],
+          gas: 'Mínimo',
+          speed: 'Instantâneo',
         },
         linea: {
-          name: 'Linea',
-          description: 'Layer 2 Ethereum com rollups ZK',
-          features: ['Zero-Knowledge', 'Baixo Custo', 'Segurança Ethereum'],
-          gas: 'Baixo',
-          speed: '~5 segundos',
+          name: 'Secure',
+          description: 'Proteção avançada para seus ativos.',
+          features: ['Privacidade', 'Auditoria Contínua'],
+          gas: 'Otimizado',
+          speed: 'Rápido',
         },
         base: {
-          name: 'Base',
-          description: 'Layer 2 da Coinbase com segurança máxima',
-          features: ['Coinbase Backed', 'Segurança', 'Baixo Custo'],
+          name: 'Verified',
+          description: 'Infraestrutura certificada por grandes players.',
+          features: ['Certificado', 'Confiável'],
           gas: 'Baixo',
-          speed: '~2 segundos',
+          speed: 'Fluido',
         },
       };
 
