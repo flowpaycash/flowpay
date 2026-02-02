@@ -3,6 +3,7 @@ import node from '@astrojs/node';
 import react from '@astrojs/react';
 
 export default defineConfig({
+  site: 'https://flowpay.cash',
   output: 'server',
   integrations: [react()],
   adapter: node({
