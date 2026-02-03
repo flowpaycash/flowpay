@@ -5,7 +5,7 @@
 const { createPublicClient, createWalletClient, http } = require('viem');
 const { privateKeyToAccount } = require('viem/accounts');
 const { base } = require('viem/chains');
-const { secureLog } = require('../../netlify/functions/config');
+const { secureLog } = require('../../src/services/api/config.mjs');
 
 class QuickNodeBase {
   constructor() {

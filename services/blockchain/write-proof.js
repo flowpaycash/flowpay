@@ -3,7 +3,7 @@
 // Usa Base (EVM) via QuickNode - função: registrar fatos, confirmar estados, auditar
 
 const { getQuickNodeBase } = require('./quicknode-base');
-const { secureLog } = require('../../netlify/functions/config');
+const { secureLog } = require('../../src/services/api/config.mjs');
 const crypto = require('crypto');
 
 class WriteProof {

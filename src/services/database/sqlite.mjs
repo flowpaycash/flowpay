@@ -101,6 +101,31 @@ function initializeSchema() {
             db.prepare("ALTER TABLE orders ADD COLUMN bridge_last_error TEXT").run();
         }
 
+        // 🚀 POE MIGRATION
+        if (!columnNames.includes('poe_batch_id')) {
+            console.log("[FlowPay DB] Migrating: Adding poe_batch_id...");
+            db.prepare("ALTER TABLE orders ADD COLUMN poe_batch_id INTEGER").run();
+        }
+
+        const poeTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='poe_batches'").get();
+        if (!poeTable) {
+            console.log("[FlowPay DB] Migrating: Creating poe_batches table...");
+            db.exec(`
+                CREATE TABLE IF NOT EXISTS poe_batches (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    merkle_root TEXT NOT NULL,
+                    batch_size INTEGER NOT NULL,
+                    anchor_tx_hash TEXT,
+                    network TEXT DEFAULT 'base',
+                    checkpoint_hash TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    anchored_at TIMESTAMP,
+                    metadata TEXT
+                )
+            `);
+            db.exec("CREATE INDEX idx_poe_batches_root ON poe_batches(merkle_root)");
+        }
+
     } catch (error) {
         console.error("[FlowPay DB] Schema initialization/migration failed:", error);
         throw error;

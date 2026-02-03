@@ -52,13 +52,17 @@ CREATE TABLE IF NOT EXISTS orders (
   bridge_attempts INTEGER DEFAULT 0,
   bridge_last_error TEXT,
   
+  -- PoE tracking
+  poe_batch_id INTEGER,
+  
   -- Metadata
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   metadata TEXT, -- JSON for extra data
   
   -- Indexes
-  FOREIGN KEY (product_ref) REFERENCES products(ref)
+  FOREIGN KEY (product_ref) REFERENCES products(ref),
+  FOREIGN KEY (poe_batch_id) REFERENCES poe_batches(id)
 );
 
 CREATE INDEX idx_orders_charge_id ON orders(charge_id);
@@ -247,12 +251,42 @@ SELECT
   o.*,
   p.name as product_name,
   r.receipt_id,
-  r.ipfs_cid
+  r.ipfs_cid,
+  b.merkle_root as poe_root
 FROM orders o
 LEFT JOIN products p ON o.product_ref = p.ref
 LEFT JOIN receipts r ON o.id = r.order_id
+LEFT JOIN poe_batches b ON o.poe_batch_id = b.id
 WHERE o.created_at >= datetime('now', '-7 days')
 ORDER BY o.created_at DESC;
+
+-- ════════════════════════════════════════
+260: -- POE BATCHES TABLE
+261: -- ════════════════════════════════════════
+262: 
+263: CREATE TABLE IF NOT EXISTS poe_batches (
+264:   id INTEGER PRIMARY KEY AUTOINCREMENT,
+265:   
+266:   -- Merkle Root
+267:   merkle_root TEXT NOT NULL,
+268:   batch_size INTEGER NOT NULL,
+269:   
+270:   -- Proof anchoring (Base L2)
+271:   anchor_tx_hash TEXT,
+272:   network TEXT DEFAULT 'base',
+273:   
+274:   -- Checkpoint
+275:   checkpoint_hash TEXT, -- SHA-256 of the current system state representation
+276:   
+277:   -- Timestamps
+278:   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+279:   anchored_at TIMESTAMP,
+280:   
+281:   metadata TEXT -- JSON
+282: );
+283: 
+284: CREATE INDEX idx_poe_batches_root ON poe_batches(merkle_root);
+285: CREATE INDEX idx_poe_batches_created_at ON poe_batches(created_at);
 
 -- Retry queue active
 CREATE VIEW IF NOT EXISTS v_retry_queue_active AS

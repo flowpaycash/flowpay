@@ -3,7 +3,7 @@
 // Usa QuickNode Settlement endpoint (Polygon OU BSC) - função: liquidação USDT
 
 const crypto = require('crypto');
-const { secureLog, logAPIError } = require('../../netlify/functions/config');
+const { secureLog, logAPIError } = require('../../src/services/api/config.mjs');
 const { getWalletRegistry } = require('./wallet-registry');
 const { getQuickNodeSettlement } = require('../blockchain/quicknode-settlement');
 
@@ -154,6 +154,18 @@ class USDTTransfer {
             type: 'usdt_transfer'
           }
         });
+
+        // 🚀 Add to PoE Batch
+        try {
+          const { getPOEService } = require('./poe-service');
+          const poeService = getPOEService();
+          await poeService.addOrderToBatch(correlationId);
+        } catch (poeError) {
+          secureLog('warn', 'Erro ao adicionar ao batch PoE (não crítico)', {
+            error: poeError.message,
+            correlationId
+          });
+        }
       } catch (proofError) {
         // Não falhar a transferência se o registro de prova falhar
         secureLog('warn', 'Erro ao registrar prova on-chain (não crítico)', {
