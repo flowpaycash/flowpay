@@ -66,8 +66,8 @@ export const POST = async ({ request, clientAddress }) => {
 
             if (order) {
                 // Idempotency Check: Avoid double processing
-                if (order.status === 'PIX_PAID' || order.status === 'PENDING_REVIEW') {
-                    secureLog('info', 'Astro Webhook: Idempotency check - Order already processed', { correlationID });
+                if ((order.status === 'PIX_PAID' || order.status === 'PENDING_REVIEW') && order.bridge_status === 'SENT') {
+                    secureLog('info', 'Astro Webhook: Idempotency check - Order already processed and Bridge SENT', { correlationID });
                     return new Response(JSON.stringify({ success: true, message: 'Already processed' }), {
                         status: 200,
                         headers: { ...headers, 'Content-Type': 'application/json' }

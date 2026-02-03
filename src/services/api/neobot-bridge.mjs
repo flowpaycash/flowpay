@@ -1,9 +1,5 @@
-/**
- * Neobot Integration Service
- * NEØ Protocol - Sovereign Command Bridge
- */
-
 import { secureLog } from './config.mjs';
+import { updateOrderStatus } from '../database/sqlite.mjs';
 
 /**
  * Trigger Neobot Access Unlock Skill
@@ -29,6 +25,10 @@ export async function triggerNeobotUnlock(chargeId, customerRef) {
     while (attempt < MAX_RETRIES) {
         try {
             attempt++;
+
+            // Update attempts count in DB
+            updateOrderStatus(chargeId, 'PENDING_REVIEW', { bridge_attempts: attempt });
+
             const response = await fetch(`${NEOBOT_URL}/tools/invoke`, {
                 method: 'POST',
                 headers: {
@@ -45,6 +45,13 @@ export async function triggerNeobotUnlock(chargeId, customerRef) {
 
             if (response.ok && result.ok) {
                 secureLog('info', '✅ Bridge: Neobot confirmou o desbloqueio', { chargeId, receiptId: result.result?.receipt?.receipt_id });
+
+                // 🏆 FINAL SUCCESS STATE
+                updateOrderStatus(chargeId, 'COMPLETED', {
+                    bridge_status: 'SENT',
+                    bridge_attempts: attempt
+                });
+
                 return { success: true, data: result.result };
             }
 
@@ -52,12 +59,16 @@ export async function triggerNeobotUnlock(chargeId, customerRef) {
             if (response.status >= 500) throw new Error(`Server Error: ${response.status}`);
             if (response.status === 429) throw new Error('Rate Limited');
 
-            // If it's a 400/401, it might be permanent, so break and log failure immediately? 
-            // For safety in "Industrial" context, we retry 500s. 
-            // Here, let's treat non-ok as failure to block.
             const errorMsg = result.error?.message || result.error || response.statusText;
             secureLog('error', `❌ Bridge: Falha tentativa ${attempt}/${MAX_RETRIES}`, { error: errorMsg });
-            if (attempt === MAX_RETRIES) return { success: false, error: errorMsg }; // Exit after retries if logic failing
+
+            if (attempt === MAX_RETRIES) {
+                updateOrderStatus(chargeId, 'PENDING_REVIEW', {
+                    bridge_status: 'FAILED',
+                    bridge_last_error: errorMsg
+                });
+                return { success: false, error: errorMsg };
+            }
 
         } catch (error) {
             secureLog('warn', `⚠️ Bridge: Erro de rede/conexão (Tentativa ${attempt}/${MAX_RETRIES})`, { error: error.message });
@@ -65,6 +76,12 @@ export async function triggerNeobotUnlock(chargeId, customerRef) {
             if (attempt === MAX_RETRIES) {
                 // DLQ Fallback
                 logFailedProvision(chargeId, customerRef, error.message);
+
+                updateOrderStatus(chargeId, 'PENDING_REVIEW', {
+                    bridge_status: 'FAILED',
+                    bridge_last_error: error.message
+                });
+
                 return { success: false, error: error.message };
             }
 

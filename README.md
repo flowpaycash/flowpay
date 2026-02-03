@@ -57,6 +57,12 @@ O FLOWPay é um gateway de pagamento focado em Pix e Web3. Projetado para oferec
 ```
 
 ────────────────────────────────────────
+
+### 🔒 SECURITY AUDIT NOTE: RELAYER PROXY
+O FLOWPay atua estritamente como um **Relayer Proxy** para o Neobot Smart Factory Core.
+- **Segregated Keys:** Chaves privadas e segredos de provisionamento *nunca* residem no FlowPay.
+- **Command Forwarding:** Este node apenas orquestra a intenção de compra e repassa o comando de "Unlock" via canal autenticado por API Key.
+
 TECHNICAL DETAILS: [SETUP.md](./SETUP.md)
 ────────────────────────────────────────
 

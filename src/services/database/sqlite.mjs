@@ -81,14 +81,28 @@ function initializeSchema() {
                 const schema = fs.readFileSync(SCHEMA_PATH, "utf-8");
                 db.exec(schema);
                 console.log("[FlowPay DB] Schema initialized from file ✓");
-            } else {
-                console.error(`[FlowPay DB] Schema file not found at ${SCHEMA_PATH}. Database might be empty!`);
-                // Create minimal schema if file missing to prevent crash, or throw
-                // throw new Error("Schema definition missing");
             }
         }
+
+        // 🚀 AUTOMATIC MIGRATION: Ensure bridge columns exist
+        const columns = db.prepare("PRAGMA table_info(orders)").all();
+        const columnNames = columns.map(c => c.name);
+
+        if (!columnNames.includes('bridge_status')) {
+            console.log("[FlowPay DB] Migrating: Adding bridge_status...");
+            db.prepare("ALTER TABLE orders ADD COLUMN bridge_status TEXT DEFAULT 'PENDING'").run();
+        }
+        if (!columnNames.includes('bridge_attempts')) {
+            console.log("[FlowPay DB] Migrating: Adding bridge_attempts...");
+            db.prepare("ALTER TABLE orders ADD COLUMN bridge_attempts INTEGER DEFAULT 0").run();
+        }
+        if (!columnNames.includes('bridge_last_error')) {
+            console.log("[FlowPay DB] Migrating: Adding bridge_last_error...");
+            db.prepare("ALTER TABLE orders ADD COLUMN bridge_last_error TEXT").run();
+        }
+
     } catch (error) {
-        console.error("[FlowPay DB] Schema initialization failed:", error);
+        console.error("[FlowPay DB] Schema initialization/migration failed:", error);
         throw error;
     }
 }
@@ -135,8 +149,8 @@ export function createOrder(order) {
           product_ref, product_name, product_price,
           customer_ref, customer_wallet, customer_metadata,
           status, pix_qr, pix_copy_paste, checkout_url,
-          metadata
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          metadata, bridge_status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
         const result = stmt.run(
@@ -155,6 +169,7 @@ export function createOrder(order) {
             order.pix_copy_paste || null,
             order.checkout_url || null,
             order.metadata || null,
+            order.bridge_status || 'PENDING'
         );
 
         return result.lastInsertRowid;
@@ -195,6 +210,18 @@ export function updateOrderStatus(charge_id, status, extra) {
             if (extra.receipt_cid) {
                 fields.push("receipt_cid = ?", "receipt_ipfs_url = ?");
                 values.push(extra.receipt_cid, extra.receipt_ipfs_url);
+            }
+            if (extra.bridge_status) {
+                fields.push("bridge_status = ?");
+                values.push(extra.bridge_status);
+            }
+            if (extra.bridge_attempts !== undefined) {
+                fields.push("bridge_attempts = ?");
+                values.push(extra.bridge_attempts);
+            }
+            if (extra.bridge_last_error !== undefined) {
+                fields.push("bridge_last_error = ?");
+                values.push(extra.bridge_last_error);
             }
         }
 

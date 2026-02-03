@@ -47,6 +47,11 @@ CREATE TABLE IF NOT EXISTS orders (
   receipt_cid TEXT,
   receipt_ipfs_url TEXT,
   
+  -- Bridge tracking
+  bridge_status TEXT DEFAULT 'PENDING', -- PENDING, SENT, FAILED
+  bridge_attempts INTEGER DEFAULT 0,
+  bridge_last_error TEXT,
+  
   -- Metadata
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
