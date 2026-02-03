@@ -155,17 +155,21 @@ import StatusStepper from '../components/checkout/StatusStepper.astro';
                             const statusData = await res.json();
                             
                             if (statusData.status === 'PIX_PAID' || statusData.status === 'PENDING_REVIEW') {
-                                // Step 2: Processing
+                                // Step 2: Factory
                                 pollingArea.qr.hidden = true;
                                 pollingArea.proc.hidden = false;
                                 updateStepper(2);
+                                
+                                // Check bridge status for step 3
+                                if (statusData.bridge_status === 'SENT') {
+                                    updateStepper(3);
+                                }
                             } 
                             else if (statusData.status === 'COMPLETED' || statusData.tx_hash) {
-                                // Step 3: Done
+                                // Step 4: Done
                                 pollingArea.proc.hidden = true;
                                 pollingArea.success.hidden = false;
-                                updateStepper(3); // or 4
-                                document.querySelector('[data-step="3"]').classList.add('done');
+                                updateStepper(4);
                                 
                                 clearInterval(pollInterval);
                                 pollInterval = null;

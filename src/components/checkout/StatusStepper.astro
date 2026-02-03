@@ -17,22 +17,30 @@
 
   <div class="step" data-step="2">
     <div class="step-icon">
-       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-factory">
          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
          <circle cx="12" cy="12" r="4"/>
        </svg>
     </div>
-    <div class="step-label">Smart Factory</div>
+    <div class="step-label">Acionando Fábrica</div>
   </div>
 
   <div class="step" data-step="3">
     <div class="step-icon">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
     </div>
-    <div class="step-label">Blockchain</div>
+    <div class="step-label">Blockchian Sync</div>
+  </div>
+
+  <div class="step" data-step="4">
+    <div class="step-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="step-label">Concluído!</div>
   </div>
 </div>
 
@@ -102,18 +110,26 @@
   .step.active .icon-spinner {
     animation: spin 1s linear infinite;
   }
+  .step.active .icon-factory {
+    animation: pulse 1.5s ease-in-out infinite;
+  }
 
   /* Completed State */
   .step.done {
     opacity: 1;
   }
   .step.done .step-icon {
-    background: #ff007a;
-    border-color: #ff007a;
-    color: #fff;
+    background: #00ff88;
+    border-color: #00ff88;
+    color: #0a0a0a;
   }
 
   @keyframes spin {
     to { transform: rotate(360deg); }
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
   }
 </style>

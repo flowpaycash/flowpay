@@ -10,25 +10,18 @@ import * as path from 'path';
 
 /**
  * Trigger Neobot Access Unlock Skill
- *With Retry Policy (3 attempts) + Dead Letter Queue (File)
+ * With Retry Policy (3 attempts) + Dead Letter Queue (File)
  * @param {string} chargeId - The Woovi Correlation ID / Charge ID
  */
 export async function triggerNeobotUnlock(chargeId, customerRef) {
+    const { withRetry } = await import('./utils.mjs');
     const NEOBOT_URL = process.env.NEOBOT_URL || 'http://localhost:3001';
     const NEOBOT_API_KEY = process.env.NEOBOT_API_KEY || process.env.FLOWPAY_API_KEY;
 
-    secureLog('info', '🌉 Bridge: Avisando Neobot para desbloquear acesso', { chargeId, customerRef });
+    secureLog('info', 'Bridge: Iniciando processo de desbloqueio Neobot', { chargeId });
 
-    const MAX_RETRIES = 3;
-    let attempt = 0;
-
-    while (attempt < MAX_RETRIES) {
-        try {
-            attempt++;
-
-            // Update attempts count in DB
-            updateOrderStatus(chargeId, 'PENDING_REVIEW', { bridge_attempts: attempt });
-
+    try {
+        const result = await withRetry(async () => {
             const response = await fetch(`${NEOBOT_URL}/tools/invoke`, {
                 method: 'POST',
                 headers: {
@@ -41,53 +34,44 @@ export async function triggerNeobotUnlock(chargeId, customerRef) {
                 })
             });
 
-            const result = await response.json();
-
-            if (response.ok && result.ok) {
-                secureLog('info', '✅ Bridge: Neobot confirmou o desbloqueio', { chargeId, receiptId: result.result?.receipt?.receipt_id });
-
-                // 🏆 FINAL SUCCESS STATE
-                updateOrderStatus(chargeId, 'COMPLETED', {
-                    bridge_status: 'SENT',
-                    bridge_attempts: attempt
-                });
-
-                return { success: true, data: result.result };
+            if (!response.ok) {
+                const errorBody = await response.json().catch(() => ({}));
+                throw new Error(errorBody.error?.message || errorBody.error || `HTTP ${response.status}`);
             }
 
-            // If logic error (4xx/5xx from bot), throw to trigger retry unless 400 (bad request)
-            if (response.status >= 500) throw new Error(`Server Error: ${response.status}`);
-            if (response.status === 429) throw new Error('Rate Limited');
+            const data = await response.json();
+            if (!data.ok) throw new Error(data.error || 'Neobot logic error');
 
-            const errorMsg = result.error?.message || result.error || response.statusText;
-            secureLog('error', `❌ Bridge: Falha tentativa ${attempt}/${MAX_RETRIES}`, { error: errorMsg });
-
-            if (attempt === MAX_RETRIES) {
-                updateOrderStatus(chargeId, 'PENDING_REVIEW', {
-                    bridge_status: 'FAILED',
-                    bridge_last_error: errorMsg
-                });
-                return { success: false, error: errorMsg };
+            return data.result;
+        }, {
+            retries: 3,
+            onRetry: (error, attempt) => {
+                secureLog('warn', `Bridge: Falha na tentativa ${attempt}. Retentando...`, { error: error.message });
+                updateOrderStatus(chargeId, 'PENDING_REVIEW', { bridge_attempts: attempt });
             }
+        });
 
-        } catch (error) {
-            secureLog('warn', `⚠️ Bridge: Erro de rede/conexão (Tentativa ${attempt}/${MAX_RETRIES})`, { error: error.message });
+        secureLog('info', '✅ Bridge: Neobot confirmou o desbloqueio', { chargeId });
 
-            if (attempt === MAX_RETRIES) {
-                // DLQ Fallback
-                logFailedProvision(chargeId, customerRef, error.message);
+        // 🏆 FINAL SUCCESS STATE
+        updateOrderStatus(chargeId, 'COMPLETED', {
+            bridge_status: 'SENT'
+        });
 
-                updateOrderStatus(chargeId, 'PENDING_REVIEW', {
-                    bridge_status: 'FAILED',
-                    bridge_last_error: error.message
-                });
+        return { success: true, data: result };
 
-                return { success: false, error: error.message };
-            }
+    } catch (error) {
+        secureLog('error', `❌ Bridge: Falha definitiva após retentativas`, { error: error.message });
 
-            // Wait before retry (1s, 2s, ...)
-            await new Promise(res => setTimeout(res, 1000 * attempt));
-        }
+        // DLQ Fallback
+        logFailedProvision(chargeId, customerRef, error.message);
+
+        updateOrderStatus(chargeId, 'PENDING_REVIEW', {
+            bridge_status: 'FAILED',
+            bridge_last_error: error.message
+        });
+
+        return { success: false, error: error.message };
     }
 }
 

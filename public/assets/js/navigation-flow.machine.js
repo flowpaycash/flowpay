@@ -206,12 +206,22 @@ export function bindCheckoutUI(service, opts = {}) {
   $("#pix-form")?.addEventListener("submit", (e) => {
     e.preventDefault()
     const fd = new FormData(e.currentTarget)
-    service.send("SUBMIT_PIX", {
+    const data = {
       wallet: fd.get("wallet"),
       valor: Number(fd.get("valor")),
       moeda: fd.get("moeda"),
       id_transacao: fd.get("id_transacao") || `pix_${Date.now()}`
-    })
+    }
+    // Clear draft on success
+    localStorage.removeItem('checkout_draft_pix');
+    service.send("SUBMIT_PIX", data)
+  })
+
+  // Draft persistence for PIX
+  $("#pix-form")?.addEventListener("input", (e) => {
+    const fd = new FormData(e.currentTarget);
+    const draft = Object.fromEntries(fd.entries());
+    localStorage.setItem('checkout_draft_pix', JSON.stringify(draft));
   })
 
   $("#crypto-form")?.addEventListener("submit", (e) => {
@@ -253,9 +263,25 @@ export function startCheckout({ services, copy, onToast } = {}) {
   bindCheckoutUI(svc, { onToast })
 
   // Auto-restore mode from URL
-  const urlMode = new URLSearchParams(window.location.search).get('mode');
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlMode = urlParams.get('mode');
   if (urlMode === 'pix' || urlMode === 'crypto') {
     svc.send('SELECT_MODE', { mode: urlMode });
+  }
+
+  // Restore Drafts
+  const pixDraft = localStorage.getItem('checkout_draft_pix');
+  if (pixDraft) {
+    try {
+      const data = JSON.parse(pixDraft);
+      const form = document.querySelector("#pix-form");
+      if (form) {
+        Object.keys(data).forEach(key => {
+          const input = form.querySelector(`[name="${key}"]`);
+          if (input) input.value = data[key];
+        });
+      }
+    } catch (e) { }
   }
 
   return svc
