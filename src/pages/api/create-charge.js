@@ -105,9 +105,9 @@ export const POST = async ({ request, clientAddress }) => {
                 customer_ref: `user_${wallet.substring(2, 10)}`,
                 customer_wallet: wallet,
                 status: 'CREATED',
-                pix_qr: wooviData.qrCodeImage,
-                pix_copy_paste: wooviData.brCode,
-                checkout_url: wooviData.paymentLinkUrl || null,
+                pix_qr: wooviData.charge?.qrCodeImage || wooviData.qrCodeImage,
+                pix_copy_paste: wooviData.brCode || wooviData.charge?.brCode,
+                checkout_url: wooviData.paymentLinkUrl || wooviData.charge?.paymentLinkUrl || null,
                 metadata: JSON.stringify({
                     woovi_id: wooviData.correlationID,
                     source: 'flowpay-sovereign-node'
@@ -121,12 +121,12 @@ export const POST = async ({ request, clientAddress }) => {
         const responseData = {
             success: true,
             pix_data: {
-                qr_code: wooviData.qrCodeImage,
-                br_code: wooviData.brCode,
-                correlation_id: wooviData.correlationID,
+                qr_code: wooviData.charge?.qrCodeImage || wooviData.qrCodeImage,
+                br_code: wooviData.brCode || wooviData.charge?.brCode,
+                correlation_id: wooviData.correlationID || wooviData.charge?.correlationID,
                 value: validatedValue,
-                expires_at: wooviData.expiresAt,
-                status: wooviData.status
+                expires_at: wooviData.expiresAt || wooviData.charge?.expiresDate,
+                status: wooviData.status || wooviData.charge?.status
             },
             wallet,
             moeda,
