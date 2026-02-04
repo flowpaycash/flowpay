@@ -1,5 +1,5 @@
 ---
-import '../styles/uniswap.css';
+import "../styles/uniswap.css";
 
 export interface Props {
   title?: string;
@@ -7,8 +7,8 @@ export interface Props {
 }
 
 const {
-  title = 'FlowPay - Sovereign Payment Gateway',
-  description = 'Invisible Web3 Checkout. Self-custody. Sovereign by design.',
+  title = "FlowPay - Sovereign Payment Gateway",
+  description = "Invisible Web3 Checkout. Self-custody. Sovereign by design.",
 } = Astro.props;
 ---
 
@@ -16,7 +16,10 @@ const {
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <meta name="description" content={description} />
     <title>{title}</title>
 
@@ -26,21 +29,29 @@ const {
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="FlowPay" />
-    
+
     <!-- PWA Icons -->
     <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
-    <link rel="icon" type="image/png" sizes="196x196" href="/assets/icons/favicon-196.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="196x196"
+      href="/assets/icons/favicon-196.png"
+    />
 
+    <!-- Web3 Config & Auth -->
+    <script is:inline src="/assets/neo.config.js"></script>
+    <script type="module" src="/assets/js/web3auth.js"></script>
   </head>
   <body>
     <slot />
-    
+
     <!-- Toasts (Universal Container) -->
     <div id="nf-toasts" class="nf-toasts"></div>
 
     <!-- Loading Overlay -->
     <div id="nf-loading" class="nf-loading" style="display:none">
-        <div class="nf-spinner" aria-hidden="true"></div>
+      <div class="nf-spinner" aria-hidden="true"></div>
     </div>
   </body>
 </html>
