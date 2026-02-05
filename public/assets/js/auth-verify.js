@@ -1,17 +1,17 @@
-const toast = (msg, type='info') => {
+const toast = (msg, type = 'info') => {
   let holder = document.getElementById('nf-toasts');
-  if (!holder) { 
-    holder = document.createElement('div'); 
-    holder.id='nf-toasts'; 
-    holder.className='nf-toasts'; 
-    document.body.appendChild(holder); 
+  if (!holder) {
+    holder = document.createElement('div');
+    holder.id = 'nf-toasts';
+    holder.className = 'nf-toasts';
+    document.body.appendChild(holder);
   }
   const n = document.createElement('div');
   n.className = `nf-toast is-${type}`;
   n.innerHTML = `<span>${msg}</span><button class="nf-x" aria-label="Fechar">×</button>`;
   holder.appendChild(n);
   n.querySelector('.nf-x').onclick = () => n.remove();
-  setTimeout(()=>n.remove(), 4200);
+  setTimeout(() => n.remove(), 4200);
 };
 
 // Função para extrair parâmetros da URL
@@ -23,7 +23,7 @@ function getUrlParameter(name) {
 // Função para verificar o token
 async function verifyToken(token) {
   try {
-    const response = await fetch('/.netlify/functions/auth-magic-verify', {
+    const response = await fetch('/api/auth/magic-verify', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -46,7 +46,7 @@ async function verifyToken(token) {
 // Função principal de verificação
 async function performVerification() {
   const token = getUrlParameter('token');
-  
+
   if (!token) {
     showError('Token não fornecido na URL');
     return;
@@ -54,11 +54,11 @@ async function performVerification() {
 
   try {
     const result = await verifyToken(token);
-    
+
     if (result.success) {
       showSuccess();
       toast('Acesso verificado com sucesso!', 'success');
-      
+
       // Redirecionar após 2 segundos
       setTimeout(() => {
         window.location.href = '/client';

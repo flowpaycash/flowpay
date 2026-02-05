@@ -1,26 +1,26 @@
-const toast = (msg, type='info') => {
+const toast = (msg, type = 'info') => {
   let holder = document.getElementById('nf-toasts');
-  if (!holder) { 
-    holder = document.createElement('div'); 
-    holder.id='nf-toasts'; 
-    holder.className='nf-toasts'; 
-    document.body.appendChild(holder); 
+  if (!holder) {
+    holder = document.createElement('div');
+    holder.id = 'nf-toasts';
+    holder.className = 'nf-toasts';
+    document.body.appendChild(holder);
   }
   const n = document.createElement('div');
   n.className = `nf-toast is-${type}`;
   n.innerHTML = `<span>${msg}</span><button class="nf-x" aria-label="Fechar">×</button>`;
   holder.appendChild(n);
   n.querySelector('.nf-x').onclick = () => n.remove();
-  setTimeout(()=>n.remove(), 4200);
+  setTimeout(() => n.remove(), 4200);
 };
 
 document.getElementById('magic-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = new FormData(e.currentTarget).get('email');
   try {
-    const res = await fetch('/.netlify/functions/auth-magic-start', {
-      method:'POST', 
-      headers:{'Content-Type':'application/json'},
+    const res = await fetch('/api/auth/magic-start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
     });
     if (!res.ok) throw new Error('Falha ao solicitar link');

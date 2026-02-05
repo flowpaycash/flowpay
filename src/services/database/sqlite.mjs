@@ -126,6 +126,24 @@ function initializeSchema() {
             db.exec("CREATE INDEX idx_poe_batches_root ON poe_batches(merkle_root)");
         }
 
+        // 🚀 AUTH MIGRATION: Magic Link Tokens
+        const authTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='auth_tokens'").get();
+        if (!authTable) {
+            console.log("[FlowPay DB] Migrating: Creating auth_tokens table...");
+            db.exec(`
+                CREATE TABLE IF NOT EXISTS auth_tokens (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email TEXT NOT NULL,
+                    token TEXT NOT NULL UNIQUE,
+                    expires_at TIMESTAMP NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    used BOOLEAN DEFAULT 0
+                )
+            `);
+            db.exec("CREATE INDEX idx_auth_tokens_token ON auth_tokens(token)");
+            db.exec("CREATE INDEX idx_auth_tokens_email ON auth_tokens(email)");
+        }
+
     } catch (error) {
         console.error("[FlowPay DB] Schema initialization/migration failed:", error);
         throw error;
@@ -369,5 +387,38 @@ export function logAudit(event_type, actor, action, details, order_id) {
         // Audit log failure should NOT crash the app, but we should log it to stdout
         console.error("FAILED TO WRITE AUDIT LOG:", e);
     }
+}
+
+// ════════════════════════════════════════
+// AUTH OPERATIONS
+// ════════════════════════════════════════
+
+export function saveAuthToken(email, token, expiresAt) {
+    return dbOp(() => {
+        const db = getDatabase();
+        const stmt = db.prepare(`
+            INSERT INTO auth_tokens (email, token, expires_at)
+            VALUES (?, ?, ?)
+        `);
+        return stmt.run(email, token, expiresAt.toISOString());
+    });
+}
+
+export function verifyAuthToken(token) {
+    return dbOp(() => {
+        const db = getDatabase();
+        const stmt = db.prepare(`
+            SELECT * FROM auth_tokens 
+            WHERE token = ? AND used = 0 AND expires_at > CURRENT_TIMESTAMP
+        `);
+        const authToken = stmt.get(token);
+
+        if (authToken) {
+            // Mark as used
+            db.prepare("UPDATE auth_tokens SET used = 1 WHERE id = ?").run(authToken.id);
+        }
+
+        return authToken;
+    });
 }
 
