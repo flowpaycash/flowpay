@@ -5,8 +5,8 @@ export interface Props {
 }
 
 const {
-  title = 'FlowPay Gateway Web3 - PIX ou Cripto',
-  description = 'Checkout invisível. Auto-custódia. Transparente por padrão.',
+  title = "FlowPay Gateway Web3 - PIX ou Cripto",
+  description = "Checkout invisível. Auto-custódia. Transparente por padrão.",
 } = Astro.props;
 ---
 
@@ -24,17 +24,23 @@ const {
     <meta property="og:url" content="https://flowpay.cash" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="https://flowpay.cash/assets/icons/web-app-manifest-512x512.png" />
+    <meta
+      property="og:image"
+      content="https://flowpay.cash/assets/icons/web-app-manifest-512x512.png"
+    />
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://flowpay.cash" />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="https://flowpay.cash/assets/icons/web-app-manifest-512x512.png" />
+    <meta
+      property="twitter:image"
+      content="https://flowpay.cash/assets/icons/web-app-manifest-512x512.png"
+    />
 
     <!-- Security (Stage 2 - CSP Hardening Initial) -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://*.web3auth.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' https://*.web3auth.io https://*.quicknode.com https://*.woovi.com;"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://*.web3auth.io https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' https://*.web3auth.io https://*.quicknode.com https://*.woovi.com https://cloudflareinsights.com;"
     />
 
     <!-- PWA Manifest -->
@@ -46,7 +52,10 @@ const {
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="FlowPay" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <meta name="format-detection" content="telephone=no" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
@@ -115,8 +124,18 @@ const {
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="196x196" href="/assets/icons/favicon-196.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-196.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="196x196"
+      href="/assets/icons/favicon-196.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/icons/favicon-196.png"
+    />
     <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
 
     <!-- Microsoft Tiles -->
@@ -138,4 +157,3 @@ const {
     <slot />
   </body>
 </html>
-
