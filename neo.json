@@ -12,7 +12,7 @@
   },
   "domains": {
     "production": {
-      "url": "https://flowpaypix.netlify.app",
+      "url": "https://flowpay.cash",
       "environment": "prod"
     },
     "staging": {

@@ -9,7 +9,7 @@ export const config = {
   allowedOrigins: {
     production: process.env.ALLOWED_ORIGINS_PROD
       ? process.env.ALLOWED_ORIGINS_PROD.split(',')
-      : ['https://flowpaypix.netlify.app', 'https://flowpay-production-10d8.up.railway.app'],
+      : ['https://flowpaypix.netlify.app', 'https://flowpay-production-10d8.up.railway.app', 'https://flowpay.cash', 'https://www.flowpay.cash'],
     staging: process.env.ALLOWED_ORIGINS_STAGING
       ? process.env.ALLOWED_ORIGINS_STAGING.split(',')
       : ['https://flowpaypix-staging.netlify.app'],
