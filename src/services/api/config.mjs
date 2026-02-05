@@ -24,7 +24,7 @@ export const config = {
     // IPs oficiais da Woovi para webhooks (Load from ENV or strict default)
     allowedIPs: process.env.WOOVI_ALLOWED_IPS
       ? process.env.WOOVI_ALLOWED_IPS.split(',')
-      : ['179.190.27.5', '179.190.27.6', '186.224.205.214']
+      : ['179.190.27.5', '179.190.27.6', '186.224.205.214', '181.192.114.64']
   },
 
   // Configurações de autenticação

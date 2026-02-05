@@ -1,9 +1,38 @@
----
----
-
 <header class="checkout-header">
-  <h1>FlowPay</h1>
+  <div class="checkout-logo">
+    <img src="/img/flowpay-logo.png" alt="FlowPay" class="header-logo" />
+  </div>
   <div class="nf-progress">
     <div class="nf-fill" id="nf-fill"></div>
   </div>
 </header>
+
+<style>
+  .checkout-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .checkout-logo {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+  .header-logo {
+    height: 40px;
+    width: auto;
+    filter: drop-shadow(0 0 10px rgba(255, 0, 122, 0.2));
+  }
+  .nf-progress {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .nf-fill {
+    width: 33%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff007a, #00ff88);
+    transition: width 0.3s ease;
+  }
+</style>

@@ -1,11 +1,12 @@
 ---
+
 ---
 
 <nav class="premium-nav">
   <div class="nav-wrapper">
     <div class="nav-left">
       <a href="/" class="brand-logo">
-        <img src="/assets/icons/flowpay-header-logo.png" alt="FlowPay" />
+        <img src="/img/flowpay-logo.png" alt="FlowPay" />
       </a>
       <div class="nav-links">
         <a href="/checkout" class="nav-item">Checkout</a>
@@ -87,7 +88,7 @@
     padding: 4px 12px;
     border-radius: 8px;
   }
-  
+
   .nav-item.admin:hover {
     background: rgba(255, 0, 122, 0.2);
     box-shadow: 0 0 15px rgba(255, 0, 122, 0.3);
@@ -121,11 +122,20 @@
     box-shadow: 0 0 10px #ff007a;
     animation: pulse 2s infinite;
   }
-  
+
   @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.7; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   .btn-nav {
@@ -151,7 +161,8 @@
     .premium-nav {
       padding: 0 20px;
     }
-    .nav-links, .wallet-pill {
+    .nav-links,
+    .wallet-pill {
       display: none;
     }
   }
@@ -159,13 +170,12 @@
 
 <script>
   // NEO Layout Injector compatibility
-  if (typeof window !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', () => {
-      const navbar = document.querySelector('.neo-navbar');
+  if (typeof window !== "undefined") {
+    document.addEventListener("DOMContentLoaded", () => {
+      const navbar = document.querySelector(".neo-navbar");
       if (navbar) {
-        navbar.setAttribute('data-neo-component', 'navbar');
+        navbar.setAttribute("data-neo-component", "navbar");
       }
     });
   }
 </script>
-
