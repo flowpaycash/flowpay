@@ -1,15 +1,41 @@
 ---
+
 ---
+
 <div class="industrial-stepper">
   <div class="stepper-track"></div>
-  
+
   <div class="step" data-step="1">
     <div class="step-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-spinner">
-       <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-dasharray="30 60" />
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        class="icon-spinner"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+          stroke-dasharray="30 60"></circle>
       </svg>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-check" hidden>
-        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        class="icon-check"
+        style="display: none;"
+      >
+        <path
+          d="M20 6L9 17L4 12"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
       </svg>
     </div>
     <div class="step-label">Aguardando PIX</div>
@@ -17,18 +43,35 @@
 
   <div class="step" data-step="2">
     <div class="step-icon">
-       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-factory">
-         <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-         <circle cx="12" cy="12" r="4"/>
-       </svg>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        class="icon-factory"
+      >
+        <path
+          d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
+        ></path>
+        <circle cx="12" cy="12" r="4"></circle>
+      </svg>
     </div>
     <div class="step-label">Acionando Fábrica</div>
   </div>
 
   <div class="step" data-step="3">
     <div class="step-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
       </svg>
     </div>
     <div class="step-label">Blockchian Sync</div>
@@ -36,8 +79,19 @@
 
   <div class="step" data-step="4">
     <div class="step-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+      >
+        <path
+          d="M20 6L9 17L4 12"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
       </svg>
     </div>
     <div class="step-label">Concluído!</div>
@@ -61,7 +115,7 @@
     left: 40px;
     right: 40px;
     height: 2px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     z-index: 0;
     /* Optional: Animate a gradient across it when active */
   }
@@ -82,12 +136,12 @@
     width: 40px;
     height: 40px;
     background: #0a0a0a;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     color: #fff;
   }
 
@@ -125,11 +179,22 @@
   }
 
   @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
   @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.7; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 </style>

@@ -1,6 +1,6 @@
 window.NEO_CONFIG = {
   "web3auth": {
-    "client_id": "9afb8749df8f4370aded1dce851d13f4",
+    "client_id": "",
     "network": "mainnet"
   },
   "crypto": {

@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Entrar — FlowPay">
@@ -13,7 +13,13 @@ import Layout from '../layouts/Layout.astro';
       <form id="magic-form" class="grid">
         <label>
           E-mail
-          <input type="email" name="email" autocomplete="email" placeholder="voce@exemplo.com" required />
+          <input
+            type="email"
+            name="email"
+            autocomplete="email"
+            placeholder="voce@exemplo.com"
+            required
+          />
         </label>
         <button class="primary" type="submit">Receber link seguro</button>
       </form>
@@ -22,12 +28,14 @@ import Layout from '../layouts/Layout.astro';
 
       <button class="ghost" id="wallet-login">Entrar com carteira</button>
 
-      <p class="tiny muted">Ao entrar, você concorda com sessão local e política de transparência sem PII.</p>
+      <p class="tiny muted">
+        Ao entrar, você concorda com sessão local e política de transparência
+        sem PII.
+      </p>
     </section>
   </main>
 
   <div id="nf-toasts" class="nf-toasts"></div>
 
-  <script type="module" src="/assets/js/login.js"></script>
+  <script is:inline type="module" src="/assets/js/login.js"></script>
 </Layout>
-
