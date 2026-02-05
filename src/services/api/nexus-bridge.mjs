@@ -15,7 +15,8 @@ export async function notifyNexus(eventName, payload) {
         return { success: false, error: 'Missing NEXUS_SECRET' };
     }
 
-    const endpoint = `${NEXUS_BASE_URL}/events`;
+    // Endpoint específico para o webhook do FlowPay no Nexus
+    const endpoint = process.env.NEXUS_WEBHOOK_URL || 'https://nexus.neoprotocol.space/api/webhooks/flowpay';
     const body = JSON.stringify({
         event: eventName,
         payload: payload
