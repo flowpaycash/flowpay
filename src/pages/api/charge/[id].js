@@ -1,4 +1,4 @@
-import { getOrder } from '../../../../services/database/sqlite.mjs';
+import { getOrder } from '../../../services/database/sqlite.mjs';
 
 export const GET = async ({ params, request }) => {
     const { id } = params;

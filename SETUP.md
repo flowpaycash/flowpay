@@ -77,6 +77,7 @@ PROVISION FLOW:
 ```
 
 >**SECURITY NOTE:**
+>
 > - FlowPay holds **NO MINTING KEYS**.
 > - It acts only as a **Trigger** authenticated by HMAC.
 > - All high-privilege ops are executed by Neobot.
