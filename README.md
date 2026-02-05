@@ -44,17 +44,21 @@ O FLOWPay é um gateway de pagamento focado em Pix e Web3. Projetado para oferec
 
 ────────────────────────────────────────
 
-```text
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-┃ ARCH OVERVIEW
-┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-┃ ░ User pays PIX
-┃ ░ Webhook -> Bridge Trigger (Proxy)
-┃ ░ Smart Factory (Neobot) executes
-┃ ░ UNLOCK RECEIPT issued
-┃ ░ Asset Minting (Segregated Keys)
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## ▓▓▓ ARCH OVERVIEW
+
+────────────────────────────────────────
+
+```mermaid
+graph LR
+    A[User] -->|Pays PIX| B(FLOWPay)
+    B -->|Webhook| C{Relayer Proxy}
+    C -->|Trigger| D[Neobot Core]
+    D -->|Execute| E(Smart Factory)
+    E -->|Unlock| F[Receipt / Assets]
 ```
+
+> **Detailed Payment Flow:** [docs/PAYMENT_FLOW.md](./docs/PAYMENT_FLOW.md)
+
 
 ────────────────────────────────────────
 
