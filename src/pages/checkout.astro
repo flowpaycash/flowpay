@@ -45,7 +45,7 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
             />
             <button
               class="text"
-              onclick="const e=document.getElementById('br-code-copy');e.select();document.execCommand('copy');alert('Código copiado!')"
+              onclick="const e=document.getElementById('br-code-copy'); navigator.clipboard.writeText(e.value || e.innerText).then(() => alert('Código copiado!'))"
               style="margin-top: 8px;">Copiar Código Pix</button
             >
           </div>
@@ -136,9 +136,7 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
         disconnect: () => window.disconnectWallet?.(),
       },
       onToast: (msg, _type) => {
-        const _holder = document.getElementById("nf-toasts");
-        // Simple toast fallback if holder missing (it is missing in previous file view, let's look at layout?)
-        // Assuming layout has it or we just log.
+        // Simple toast fallback
         console.log(`Toast: ${msg}`);
       },
     });
