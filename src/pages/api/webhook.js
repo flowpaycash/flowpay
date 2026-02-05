@@ -83,8 +83,28 @@ export const POST = async ({ request, clientAddress }) => {
 
                 secureLog('info', 'Astro Webhook: Preparando disparo da Bridge 🌉', { correlationID });
 
-                // Extract customer email for notification
+                //  Bridge call integration
                 const customerEmail = charge.customer?.email;
+
+                // 🛡️ POE: Add order to batch for proof layer
+                try {
+                    const { getPOEService } = await import('../../../services/blockchain/poe-service.js');
+                    const poe = getPOEService();
+                    await poe.addOrderToBatch(correlationID);
+                } catch (poeErr) {
+                    secureLog('error', 'Astro Webhook: Erro ao adicionar na camada de PoE', { error: poeErr.message });
+                }
+
+                // 🌉 NEXUS BRIDGE: Notify about payment
+                const { notifyNexus } = await import('../../services/api/nexus-bridge.mjs');
+                notifyNexus('PAYMENT_RECEIVED', {
+                    transactionId: correlationID,
+                    amount: charge.value / 100, // Woovi values are in cents
+                    currency: 'BRL',
+                    payer: order.customer_wallet || order.customer_ref || 'unknown'
+                }).catch(err => {
+                    secureLog('error', 'Astro Webhook: Erro ao notificar Nexus', { error: err.message });
+                });
 
                 // 🌉 BRIDGE: Trigger Neobot Unlock Skill (Model B - Access Unlock Primary)
                 const { triggerNeobotUnlock } = await import('../../services/api/neobot-bridge.mjs');
