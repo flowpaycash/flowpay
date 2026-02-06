@@ -99,22 +99,30 @@ export const POST = async ({ request, clientAddress }) => {
                     secureLog('error', 'Astro Webhook: Erro ao adicionar na camada de PoE', { error: poeErr.message });
                 }
 
-                // 🌉 NEXUS BRIDGE: Notify about payment
+                // 🌉 NEXUS BRIDGE: Notify about payment (FASE 2 - Single Point of Contact)
+                // Nexus is now responsible for routing to Smart Factory (mint) and Neobot (notifications)
+                // Direct calls to Neobot have been removed per ECOSYSTEM_COMPLIANCE_CHECKLIST v3.0
                 const { notifyNexus } = await import('../../services/api/nexus-bridge.mjs');
                 notifyNexus('PAYMENT_RECEIVED', {
                     transactionId: correlationID,
+                    orderId: correlationID,
                     amount: charge.value / 100, // Woovi values are in cents
                     currency: 'BRL',
-                    payer: order.customer_wallet || order.customer_ref || 'unknown'
+                    payer: order.customer_wallet || order.customer_ref || 'unknown',
+                    customerEmail: customerEmail,
+                    // Metadata for downstream processing
+                    metadata: {
+                        source: 'flowpay',
+                        chargeId: charge.identifier,
+                        paidAt: charge.paidAt
+                    }
                 }).catch(err => {
                     secureLog('error', 'Astro Webhook: Erro ao notificar Nexus', { error: err.message });
                 });
 
-                // 🌉 BRIDGE: Trigger Neobot Unlock Skill (Model B - Access Unlock Primary)
-                const { triggerNeobotUnlock } = await import('../../services/api/neobot-bridge.mjs');
-                triggerNeobotUnlock(correlationID, customerEmail).catch(err => {
-                    secureLog('error', 'Astro Webhook: Erro ao disparar Bridge Neobot', { error: err.message });
-                });
+                // ⚠️ DEPRECATED (FASE 2): Direct Neobot call removed
+                // The Nexus will route PAYMENT_RECEIVED to Neobot automatically
+                // See: neo-nexus/src/reactors/payment-to-unlock.ts
             } else {
                 secureLog('warn', 'Astro Webhook: Pedido não encontrado no SQLite', { correlationID });
             }

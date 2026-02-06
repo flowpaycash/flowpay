@@ -1,98 +1,42 @@
-import { secureLog } from './config.mjs';
-import { updateOrderStatus } from '../database/sqlite.mjs';
-
 /**
- * Trigger Neobot Access Unlock Skill
- * @param {string} chargeId - The Woovi Correlation ID / Charge ID
+ * ⚠️ DEPRECATED — FASE 2 COMPLIANCE
+ * 
+ * This module has been deprecated as part of the NEØ Protocol FASE 2 migration.
+ * 
+ * REASON:
+ * FlowPay no longer calls Neobot directly. All inter-service communication
+ * now flows through Neo-Nexus (the central event bus).
+ * 
+ * Flow Before (FASE 1):
+ *   FlowPay → Nexus (PAYMENT_RECEIVED)
+ *   FlowPay → Neobot (direct call) ← REDUNDANT
+ * 
+ * Flow After (FASE 2):
+ *   FlowPay → Nexus (PAYMENT_RECEIVED)
+ *   Nexus → Smart Factory (MINT_REQUESTED)
+ *   Nexus → Neobot (ACCESS_UNLOCK)
+ * 
+ * MIGRATION:
+ * - Remove NEOBOT_URL and NEOBOT_API_KEY from .env
+ * - The Nexus now handles routing to Neobot via payment-to-unlock reactor
+ * 
+ * DOCUMENT: neo-nexus/docs/ECOSYSTEM_COMPLIANCE_CHECKLIST.md (v3.0)
+ * DATE: 2026-02-06
  */
-import * as fs from 'fs';
-import * as path from 'path';
+
+import { secureLog } from './config.mjs';
 
 /**
- * Trigger Neobot Access Unlock Skill
- * With Retry Policy (3 attempts) + Dead Letter Queue (File)
- * @param {string} chargeId - The Woovi Correlation ID / Charge ID
+ * @deprecated Use Nexus routing instead (see nexus-bridge.mjs)
  */
 export async function triggerNeobotUnlock(chargeId, customerRef) {
-    const { withRetry } = await import('./utils.mjs');
-    const NEOBOT_URL = process.env.NEOBOT_URL || 'http://localhost:3001';
-    const NEOBOT_API_KEY = process.env.NEOBOT_API_KEY || process.env.FLOWPAY_API_KEY;
+    secureLog('warn', '⚠️ DEPRECATED: triggerNeobotUnlock called. This function is no longer active.');
+    secureLog('warn', '⚠️ MIGRATION: Use Nexus routing via PAYMENT_RECEIVED event instead.');
 
-    secureLog('info', 'Bridge: Iniciando processo de desbloqueio Neobot', { chargeId });
-
-    try {
-        const result = await withRetry(async () => {
-            const response = await fetch(`${NEOBOT_URL}/tools/invoke`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${NEOBOT_API_KEY}`
-                },
-                body: JSON.stringify({
-                    tool: 'flowpay:unlock',
-                    args: { charge_id: chargeId, customer_ref: customerRef }
-                }),
-                signal: AbortSignal.timeout(30000) // 30s timeout
-            });
-
-            if (!response.ok) {
-                const errorBody = await response.json().catch(() => ({}));
-                throw new Error(errorBody.error?.message || errorBody.error || `HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
-            if (!data.ok) throw new Error(data.error || 'Neobot logic error');
-
-            return data.result;
-        }, {
-            retries: 3,
-            onRetry: (error, attempt) => {
-                secureLog('warn', `Bridge: Falha na tentativa ${attempt}. Retentando...`, { error: error.message });
-                updateOrderStatus(chargeId, 'PENDING_REVIEW', { bridge_attempts: attempt });
-            }
-        });
-
-        secureLog('info', '✅ Bridge: Neobot confirmou o desbloqueio', { chargeId });
-
-        // 🏆 FINAL SUCCESS STATE
-        updateOrderStatus(chargeId, 'COMPLETED', {
-            bridge_status: 'SENT'
-        });
-
-        return { success: true, data: result };
-
-    } catch (error) {
-        secureLog('error', `❌ Bridge: Falha definitiva após retentativas`, { error: error.message });
-
-        // DLQ Fallback
-        logFailedProvision(chargeId, customerRef, error.message);
-
-        updateOrderStatus(chargeId, 'PENDING_REVIEW', {
-            bridge_status: 'FAILED',
-            bridge_last_error: error.message
-        });
-
-        return { success: false, error: error.message };
-    }
-}
-
-function logFailedProvision(chargeId, customerRef, error) {
-    try {
-        const dir = path.join(process.cwd(), 'data', 'flowpay');
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
-        const file = path.join(dir, 'failed_provisions.jsonl');
-        const entry = JSON.stringify({
-            timestamp: new Date().toISOString(),
-            chargeId,
-            customerRef,
-            error,
-            status: 'PENDING_RETRY'
-        }) + '\n';
-
-        fs.appendFileSync(file, entry);
-        secureLog('error', '🚨 BRIDGE CRITICAL: Falha gravada em DLQ local', { file });
-    } catch (e) {
-        console.error('CRITICAL: FAILED TO WRITE TO DLQ', e);
-    }
+    return {
+        success: false,
+        deprecated: true,
+        error: 'This function has been deprecated. Payment unlock is now handled by Nexus routing.',
+        migration: 'See neo-nexus/docs/ECOSYSTEM_COMPLIANCE_CHECKLIST.md'
+    };
 }
