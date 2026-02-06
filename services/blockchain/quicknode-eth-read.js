@@ -5,7 +5,7 @@
 
 const { createPublicClient, http } = require('viem');
 const { mainnet } = require('viem/chains');
-const { secureLog } = require('../../netlify/functions/config');
+const { secureLog } = require('../utils/config');
 
 class QuickNodeEthRead {
   constructor() {

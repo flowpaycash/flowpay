@@ -6,7 +6,7 @@ const { getQuickNodeSettlement } = require('../blockchain/quicknode-settlement')
 
 let secureLog = () => {};
 try {
-  const config = require('../../netlify/functions/config');
+  const config = require('../utils/config');
   secureLog = config.secureLog || secureLog;
 } catch {
   secureLog = (level, msg, meta) => console[level]?.({ msg, meta }) || console.log(msg, meta);

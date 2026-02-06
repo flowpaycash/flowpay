@@ -27,7 +27,7 @@
 ### 4. `crypto-processor.js` (Netlify Function) ✅
 
 - Orquestra fluxo completo
-- Endpoint: `/.netlify/functions/crypto-processor`
+- Endpoint: `/api/crypto/processor`
 - Método: POST
 - Integra todos os serviços
 
@@ -49,7 +49,7 @@
 
 ### Webhook Handler
 
-O arquivo `netlify/functions/webhook-handler.js` precisa ser atualizado para usar os novos serviços.
+O arquivo `src/pages/api/webhook.js` precisa ser atualizado para usar os novos serviços.
 
 Substituir as linhas 94-100 por:
 

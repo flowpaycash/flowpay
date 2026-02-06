@@ -22,7 +22,7 @@ const rest = getQuickNodeREST();
 await rest.monitorWallets(
   ['0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6', '0x...'],
   'ethereum',
-  'https://flowpaypix.netlify.app/.netlify/functions/quicknode-webhook'
+  'https://flowpay.cash/api/webhooks/quicknode'
 );
 ```
 
@@ -115,7 +115,7 @@ Body:
     "eventHashes": ["0xddf252ad..."]
   },
   "destination": {
-    "url": "https://flowpaypix.netlify.app/.netlify/functions/quicknode-webhook",
+    "url": "https://flowpay.cash/api/webhooks/quicknode",
     "securityToken": "optional_token"
   }
 }
@@ -146,7 +146,7 @@ Headers:
    ↓
 2. QuickNode webhook envia evento
    ↓
-3. /.netlify/functions/quicknode-webhook recebe
+3. /api/webhooks/quicknode recebe
    ↓
 4. Sistema atualiza status da ordem
    ↓

@@ -87,7 +87,7 @@ const rest = getQuickNodeREST();
 await rest.monitorUSDTTransfers(
   '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT Ethereum
   'ethereum',
-  'https://flowpaypix.netlify.app/.netlify/functions/quicknode-webhook'
+  'https://flowpay.cash/api/webhooks/quicknode'
 );
 
 // Webhook receberá eventos automaticamente quando:

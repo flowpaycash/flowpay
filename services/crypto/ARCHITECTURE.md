@@ -98,7 +98,7 @@ O sistema suporta três estratégias:
 
 Tudo entra em um único lugar:
 
-`netlify/functions/webhook-handler.js`
+`src/pages/api/webhook.js`
 
 ### Fluxo Realista
 

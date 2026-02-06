@@ -1,7 +1,7 @@
 // FLOWPay - QuickNode REST APIs Client
 // Cliente para APIs REST do QuickNode: IPFS, KV, Streams, Webhooks
 
-const { secureLog } = require('../../netlify/functions/config');
+const { secureLog } = require('../utils/config');
 const { getAPIRateLimiter } = require('../utils/api-rate-limiter');
 const crypto = require('crypto');
 
@@ -61,11 +61,11 @@ class QuickNodeREST {
         async () => {
           // Preparar dados para upload (formato JSON para QuickNode IPFS API)
           return await fetch(url, {
-        method: 'POST',
-        headers: {
-          'x-api-key': this.apiKey,
-          'Content-Type': 'application/json'
-        },
+            method: 'POST',
+            headers: {
+              'x-api-key': this.apiKey,
+              'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
               data: JSON.stringify(data),
               filename: filename || `proof_${Date.now()}.json`
@@ -295,7 +295,7 @@ class QuickNodeREST {
 
       // Webhook URL padrão
       const defaultWebhookUrl = webhookUrl ||
-        (process.env.URL ? `${process.env.URL}/.netlify/functions/quicknode-webhook` : null);
+        (process.env.URL ? `${process.env.URL}/api/webhooks/quicknode` : null);
 
       if (!defaultWebhookUrl) {
         throw new Error('webhookUrl é obrigatório ou configure URL no ambiente');
@@ -505,7 +505,7 @@ class QuickNodeREST {
 
       // Webhook URL padrão (endpoint Netlify)
       const defaultWebhookUrl = webhookUrl ||
-        (process.env.URL ? `${process.env.URL}/.netlify/functions/quicknode-webhook` : null);
+        (process.env.URL ? `${process.env.URL}/api/webhooks/quicknode` : null);
 
       if (!defaultWebhookUrl) {
         throw new Error('webhookUrl é obrigatório ou configure URL no ambiente');
@@ -546,7 +546,7 @@ class QuickNodeREST {
       }
 
       const defaultWebhookUrl = webhookUrl ||
-        (process.env.URL ? `${process.env.URL}/.netlify/functions/quicknode-webhook` : null);
+        (process.env.URL ? `${process.env.URL}/api/webhooks/quicknode` : null);
 
       if (!defaultWebhookUrl) {
         throw new Error('webhookUrl é obrigatório ou configure URL no ambiente');

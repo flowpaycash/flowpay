@@ -2,7 +2,7 @@
 // Liquidação programável: Fiat (BRL) → USDT via parceiros/OTC/exchanges
 // Suporta estratégias: auto, manual, deferred
 
-const { secureLog, logAPIError } = require('../../netlify/functions/config');
+const { secureLog, logAPIError } = require('../utils/config');
 
 class LiquidityProvider {
   constructor() {
