@@ -18,9 +18,8 @@ let isAuthenticated = false;
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 FLOWPay Admin carregado com sucesso!');
-    console.log('🔑 Senha padrão:', ADMIN_PASSWORD);
-    
+    console.log('FLOWPay Admin loaded');
+
     initializeElements();
     checkAuthentication();
     setupEventListeners();
@@ -165,58 +164,81 @@ async function loadSettlementOrders() {
 }
 
 // Renderizar ordens de liquidação pendentes
+// Escape HTML to prevent XSS when rendering server data
+function esc(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
 function renderSettlementOrders() {
     const container = document.getElementById('settlement-orders-container');
     if (!container) return;
-    
+
     if (settlementOrders.length === 0) {
         container.innerHTML = '<p class="no-orders">Nenhuma ordem de liquidação pendente</p>';
         return;
     }
-    
-    container.innerHTML = settlementOrders.map(order => `
+
+    container.innerHTML = settlementOrders.map(order => {
+        const safeOrderId = esc(order.orderId);
+        const safeCorrelationId = esc(order.correlationId);
+        const safeWallet = order.walletAddress ? esc(order.walletAddress.slice(0, 6) + '...' + order.walletAddress.slice(-4)) : 'N/A';
+        const safeNetwork = esc(order.network || 'ethereum');
+        const amountBRL = Number(order.amountBRL || 0).toFixed(2);
+        const estimatedAmount = Number(order.estimatedAmount || 0).toFixed(6);
+        const estimatedRate = Number(order.estimatedRate || 0).toFixed(4);
+        const createdAt = order.createdAt ? new Date(order.createdAt).toLocaleString('pt-BR') : 'N/A';
+
+        return `
         <div class="settlement-order-card">
             <div class="order-header">
-                <span class="order-id">${order.orderId}</span>
+                <span class="order-id">${safeOrderId}</span>
                 <span class="order-status pending">Pendente</span>
             </div>
             <div class="order-details">
                 <div class="detail-row">
                     <span class="label">PIX ID:</span>
-                    <span class="value">${order.correlationId}</span>
+                    <span class="value">${safeCorrelationId}</span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Valor BRL:</span>
-                    <span class="value">R$ ${order.amountBRL.toFixed(2)}</span>
+                    <span class="value">R$ ${amountBRL}</span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Estimado USDT:</span>
-                    <span class="value">${order.estimatedAmount.toFixed(6)} USDT</span>
+                    <span class="value">${estimatedAmount} USDT</span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Taxa:</span>
-                    <span class="value">${order.estimatedRate.toFixed(4)}</span>
+                    <span class="value">${estimatedRate}</span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Wallet:</span>
-                    <span class="value code">${order.walletAddress ? order.walletAddress.slice(0, 6) + '...' + order.walletAddress.slice(-4) : 'N/A'}</span>
+                    <span class="value code">${safeWallet}</span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Rede:</span>
-                    <span class="value">${order.network || 'ethereum'}</span>
+                    <span class="value">${safeNetwork}</span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Criado em:</span>
-                    <span class="value">${new Date(order.createdAt).toLocaleString('pt-BR')}</span>
+                    <span class="value">${createdAt}</span>
                 </div>
             </div>
             <div class="order-actions">
-                <button class="btn-settle" onclick="executeSettlement('${order.orderId}', '${order.walletAddress}', '${order.network || 'ethereum'}')">
+                <button class="btn-settle" data-order-id="${safeOrderId}" data-wallet="${esc(order.walletAddress)}" data-network="${safeNetwork}">
                     Liquidar Agora
                 </button>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
+
+    // Attach event listeners instead of inline onclick (safer)
+    container.querySelectorAll('.btn-settle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            executeSettlement(btn.dataset.orderId, btn.dataset.wallet, btn.dataset.network);
+        });
+    });
 }
 
 // Executar liquidação
@@ -330,22 +352,29 @@ function renderTransactions() {
     });
 }
 
-// Criar linha da tabela
+// Criar linha da tabela (XSS-safe)
 function createTransactionRow(transaction) {
     const row = document.createElement('tr');
+    const safeId = esc(transaction.id);
+    const safeWallet = transaction.wallet ? esc(transaction.wallet.slice(0, 6) + '...' + transaction.wallet.slice(-4)) : 'N/A';
+    const safeValor = esc(transaction.valor);
+    const safeMoeda = esc(transaction.moeda);
+    const createdAt = transaction.createdAt ? new Date(transaction.createdAt).toLocaleString('pt-BR') : 'N/A';
+
     row.innerHTML = `
-        <td><code>${transaction.id}</code></td>
+        <td><code>${safeId}</code></td>
         <td>${getStatusBadge(transaction.status)}</td>
-        <td>${transaction.moeda}</td>
-        <td>R$ ${transaction.valor}</td>
-        <td><code>${transaction.wallet.slice(0, 6)}...${transaction.wallet.slice(-4)}</code></td>
-        <td>${new Date(transaction.createdAt).toLocaleString('pt-BR')}</td>
+        <td>${safeMoeda}</td>
+        <td>R$ ${safeValor}</td>
+        <td><code>${safeWallet}</code></td>
+        <td>${createdAt}</td>
         <td>
-            <button class="action-btn view-btn" onclick="viewTransaction('${transaction.id}')">
+            <button class="action-btn view-btn" data-tx-id="${safeId}">
                 <i class="fas fa-eye"></i>
             </button>
         </td>
     `;
+    row.querySelector('.view-btn').addEventListener('click', () => viewTransaction(transaction.id));
     return row;
 }
 

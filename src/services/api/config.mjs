@@ -159,15 +159,24 @@ export function secureLog(level, message, data = {}) {
 export function redactSensitiveData(data) {
   if (!data || typeof data !== 'object') return data;
 
-  const sensitiveKeys = new Set([
+  // Pre-compute array once for substring checks (avoid Array.from per key)
+  const sensitiveKeysExact = new Set([
     'password', 'token', 'secret', 'key', 'apikey', 'api_key', 'access_token',
     'webhook_secret', 'client_secret', 'private_key', 'privatekey',
     'authorization', 'auth', 'credentials', 'session', 'sessiontoken',
     'wallet', 'mnemonic', 'seed', 'correlationid', 'transactionid', 'id_transacao', 'card_number', 'cvv'
   ]);
+  const sensitiveSubstrings = [...sensitiveKeysExact];
 
-  // Use WeakSet to detect cycles
   const seen = new WeakSet();
+
+  function isSensitiveKey(lowerKey) {
+    if (sensitiveKeysExact.has(lowerKey)) return true;
+    for (let i = 0; i < sensitiveSubstrings.length; i++) {
+      if (lowerKey.includes(sensitiveSubstrings[i])) return true;
+    }
+    return false;
+  }
 
   function redact(obj) {
     if (obj === null || typeof obj !== 'object') {
@@ -185,13 +194,7 @@ export function redactSensitiveData(data) {
 
     const result = {};
     for (const [key, value] of Object.entries(obj)) {
-      const lowerKey = key.toLowerCase();
-      // Check if ANY sensitive key substring is present (aggressive) or exact match
-      // Making it slighty more performant by checking direct match first
-      const isSensitive = sensitiveKeys.has(lowerKey) ||
-        Array.from(sensitiveKeys).some(k => lowerKey.includes(k));
-
-      if (isSensitive) {
+      if (isSensitiveKey(key.toLowerCase())) {
         result[key] = '[REDACTED]';
       } else {
         result[key] = redact(value);

@@ -1,14 +1,27 @@
 import crypto from 'crypto';
 import { saveAuthToken } from '../../../services/database/sqlite.mjs';
+import { applyRateLimit } from '../../../services/api/rate-limiter.mjs';
 import { config, secureLog, getCorsHeaders } from '../../../services/api/config.mjs';
 
-export const POST = async ({ request }) => {
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+export const POST = async ({ request, clientAddress }) => {
     const headers = getCorsHeaders({ headers: Object.fromEntries(request.headers) });
 
     try {
+        // Rate limiting to prevent email enumeration/spam
+        const rateLimitResult = applyRateLimit('auth-magic-start')({
+            headers: Object.fromEntries(request.headers),
+            context: { clientIP: clientAddress }
+        });
+
+        if (rateLimitResult && rateLimitResult.statusCode === 429) {
+            return new Response(rateLimitResult.body, { status: 429, headers });
+        }
+
         const { email } = await request.json();
 
-        if (!email || !email.includes('@')) {
+        if (!email || typeof email !== 'string' || email.length > 254 || !EMAIL_REGEX.test(email)) {
             return new Response(JSON.stringify({ error: 'E-mail inválido' }), { status: 400, headers });
         }
 

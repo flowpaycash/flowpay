@@ -31,7 +31,8 @@ export async function triggerNeobotUnlock(chargeId, customerRef) {
                 body: JSON.stringify({
                     tool: 'flowpay:unlock',
                     args: { charge_id: chargeId, customer_ref: customerRef }
-                })
+                }),
+                signal: AbortSignal.timeout(30000) // 30s timeout
             });
 
             if (!response.ok) {

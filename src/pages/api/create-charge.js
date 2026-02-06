@@ -77,7 +77,8 @@ export const POST = async ({ request, clientAddress }) => {
                 'Authorization': cleanApiKey,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(pixData)
+            body: JSON.stringify(pixData),
+            signal: AbortSignal.timeout(15000) // 15s timeout
         });
 
         if (!wooviResponse.ok) {

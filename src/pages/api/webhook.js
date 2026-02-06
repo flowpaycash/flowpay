@@ -45,11 +45,13 @@ export const POST = async ({ request, clientAddress }) => {
             });
         }
 
-        // 1. HMAC Validation
+        // 1. HMAC Validation (timing-safe comparison to prevent timing attacks)
         const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
         const digest = hmac.update(rawBody).digest('base64');
 
-        if (signature !== digest) {
+        const sigBuffer = Buffer.from(signature);
+        const digestBuffer = Buffer.from(digest);
+        if (sigBuffer.length !== digestBuffer.length || !crypto.timingSafeEqual(sigBuffer, digestBuffer)) {
             secureLog('error', 'Astro Webhook: Invalid Signature');
             return new Response(JSON.stringify({ error: 'Invalid signature' }), { status: 401, headers });
         }
@@ -66,8 +68,10 @@ export const POST = async ({ request, clientAddress }) => {
 
             if (order) {
                 // Idempotency Check: Avoid double processing
-                if (order.status === 'COMPLETED' || order.bridge_status === 'SENT') {
-                    secureLog('info', 'Astro Webhook: Idempotency check - Order already processed or Bridge SENT', { correlationID, status: order.status });
+                // Check multiple terminal/in-progress states to prevent race conditions
+                const terminalStates = ['COMPLETED', 'PIX_PAID', 'PENDING_REVIEW', 'APPROVED', 'SETTLED'];
+                if (terminalStates.includes(order.status) || order.bridge_status === 'SENT') {
+                    secureLog('info', 'Astro Webhook: Idempotency check - Order already processed', { correlationID, status: order.status, bridge: order.bridge_status });
                     return new Response(JSON.stringify({ success: true, message: 'Already processed' }), {
                         status: 200,
                         headers: { ...headers, 'Content-Type': 'application/json' }

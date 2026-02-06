@@ -1,5 +1,14 @@
+import crypto from 'crypto';
 import { verifyAuthToken } from '../../../services/database/sqlite.mjs';
 import { secureLog, getCorsHeaders } from '../../../services/api/config.mjs';
+
+function signSessionToken(payload) {
+    const secret = process.env.TOKEN_SECRET || process.env.FLOWPAY_JWT_SECRET;
+    if (!secret) throw new Error('TOKEN_SECRET not configured');
+    const data = Buffer.from(JSON.stringify(payload)).toString('base64url');
+    const sig = crypto.createHmac('sha256', secret).update(data).digest('base64url');
+    return `${data}.${sig}`;
+}
 
 export const POST = async ({ request, cookies }) => {
     const headers = getCorsHeaders({ headers: Object.fromEntries(request.headers) });
@@ -7,8 +16,8 @@ export const POST = async ({ request, cookies }) => {
     try {
         const { token } = await request.json();
 
-        if (!token) {
-            return new Response(JSON.stringify({ error: 'Token ausente' }), { status: 400, headers });
+        if (!token || typeof token !== 'string' || token.length > 200) {
+            return new Response(JSON.stringify({ error: 'Token ausente ou inválido' }), { status: 400, headers });
         }
 
         const authToken = verifyAuthToken(token);
@@ -17,22 +26,19 @@ export const POST = async ({ request, cookies }) => {
             return new Response(JSON.stringify({ error: 'Token inválido ou expirado' }), { status: 401, headers });
         }
 
-        // Successfully verified
         secureLog('info', 'Magic link verified successfully', { email: authToken.email });
 
-        // Set session cookie
-        // In a real app, you'd use a crypto-signed session token (JWT or similar)
-        // For now, we'll set a simple identity cookie for the PWA to consume
         const sessionData = {
             email: authToken.email,
-            verified_at: new Date().toISOString()
+            verified_at: new Date().toISOString(),
+            exp: Date.now() + (24 * 60 * 60 * 1000)
         };
 
-        const sessionToken = Buffer.from(JSON.stringify(sessionData)).toString('base64');
+        const sessionToken = signSessionToken(sessionData);
 
         cookies.set('flowpay_session', sessionToken, {
             path: '/',
-            httpOnly: false, // Permitir que o JS do cliente veja em alguns casos, mas idealmente true
+            httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
             maxAge: 24 * 60 * 60 // 24h
