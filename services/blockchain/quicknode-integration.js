@@ -3,7 +3,7 @@
 
 const { getQuickNodeREST } = require('./quicknode-rest');
 const { getWriteProof } = require('./write-proof');
-const { secureLog } = require('../../netlify/functions/config');
+const { secureLog } = require('../utils/config');
 
 class QuickNodeIntegration {
   constructor() {

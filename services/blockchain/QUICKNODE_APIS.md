@@ -72,7 +72,7 @@ const order = await rest.getKV('settlement_order:abc123');
 await rest.monitorUSDTTransfers(
   '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT contract
   'ethereum',
-  'https://flowpaypix.netlify.app/.netlify/functions/quicknode-webhook'
+  'https://flowpay.cash/api/webhooks/quicknode'
 );
 ```
 
@@ -95,7 +95,7 @@ await rest.monitorUSDTTransfers(
 // Criar webhook para eventos de transferência
 await rest.createWebhook({
   network: 'ethereum',
-  url: 'https://flowpaypix.netlify.app/.netlify/functions/quicknode-webhook',
+  url: 'https://flowpay.cash/api/webhooks/quicknode',
   events: ['transfer', 'transaction_confirmed'],
   description: 'FLOWPay USDT transfers'
 });
@@ -154,7 +154,7 @@ const cached = await integration.getCachedSettlementOrder(orderId);
 await integration.setupUSDTMonitoring('ethereum');
 
 // Webhook receberá eventos automaticamente em:
-// /.netlify/functions/quicknode-webhook
+// /api/webhooks/quicknode
 ```
 
 ### Caso 4: Backup e Auditoria
@@ -183,7 +183,7 @@ QUICKNODE_STREAMS_REST=https://api.quicknode.com/streams/v1
 QUICKNODE_WEBHOOKS_REST=https://api.quicknode.com/webhooks/v1
 
 # URL base do projeto (para webhooks)
-URL=https://flowpaypix.netlify.app
+URL=https://flowpay.cash
 ```
 
 ---

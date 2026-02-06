@@ -2,7 +2,7 @@
 // Gerencia o registro e validação de wallets de usuários
 
 const crypto = require('crypto');
-const { secureLog, redactSensitiveData } = require('../../netlify/functions/config');
+const { secureLog, redactSensitiveData } = require('../utils/config');
 
 class WalletRegistry {
   constructor() {

@@ -41,7 +41,7 @@ async function setupWebhooks() {
       const usdtWebhook = await rest.monitorUSDTTransfers(
         null, // Usa endereço padrão
         'ethereum',
-        process.env.URL ? `${process.env.URL}/.netlify/functions/quicknode-webhook` : null
+        process.env.URL ? `${process.env.URL}/api/webhooks/quicknode` : null
       );
       console.log(`   ✅ Webhook criado: ${usdtWebhook.webhook.id || usdtWebhook.webhook.webhook_id}\n`);
     } catch (error) {
@@ -54,7 +54,7 @@ async function setupWebhooks() {
       const polygonWebhook = await rest.monitorUSDTTransfers(
         null,
         'polygon',
-        process.env.URL ? `${process.env.URL}/.netlify/functions/quicknode-webhook` : null
+        process.env.URL ? `${process.env.URL}/api/webhooks/quicknode` : null
       );
       console.log(`   ✅ Webhook criado: ${polygonWebhook.webhook.id || polygonWebhook.webhook.webhook_id}\n`);
     } catch (error) {
