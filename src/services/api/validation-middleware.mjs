@@ -278,28 +278,28 @@ export function validateQueryParams(schemaName) {
 }
 
 // Função para sanitizar dados
-// Previne XSS e Injection básico
+// Previne XSS e Injection sem corromper dados de domínio (wallets, IDs)
+// Nota: HTML escaping só é necessário para dados que serão renderizados em HTML.
+// Para dados de API (JSON), strip de tags perigosas é mais seguro que encoding.
 export function sanitizeData(data) {
-  // Prevent infinite recursion on circular references
   const seen = new WeakSet();
 
-  function escapeHtml(str) {
+  // Strip dangerous patterns instead of HTML-encoding (which corrupts 0x addresses, etc.)
+  function sanitizeString(str) {
     if (typeof str !== 'string') return str;
-    const map = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#039;'
-    };
-    // Only replace characters that strictly need escaping for HTML context checking
-    return str.replace(/[&<>"']/g, function (m) { return map[m]; }).substring(0, 1000);
+    // Limit length to prevent abuse
+    const trimmed = str.substring(0, 2000);
+    // Remove script tags and event handlers (XSS vectors) - API-safe sanitization
+    return trimmed
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+      .replace(/<\/?(?:script|iframe|object|embed|applet|form|input|button|textarea|select|style|link|meta|base)\b[^>]*>/gi, '');
   }
 
   function sanitize(obj) {
     if (obj === null || typeof obj !== 'object') {
       if (typeof obj === 'string') {
-        return escapeHtml(obj);
+        return sanitizeString(obj);
       }
       return obj;
     }

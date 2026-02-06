@@ -1,5 +1,5 @@
 import { listProducts } from '../../services/database/sqlite.mjs';
-import { getCorsHeaders } from '../../services/api/config.mjs';
+import { getCorsHeaders, secureLog } from '../../services/api/config.mjs';
 
 export const GET = async ({ request }) => {
     const headers = getCorsHeaders({ headers: Object.fromEntries(request.headers) });
@@ -16,9 +16,10 @@ export const GET = async ({ request }) => {
             }
         });
     } catch (error) {
-        return new Response(JSON.stringify({ error: error.message }), {
+        secureLog('error', 'Products endpoint error', { error: error.message });
+        return new Response(JSON.stringify({ error: 'Failed to load products' }), {
             status: 500,
-            headers
+            headers: { ...headers, 'Content-Type': 'application/json' }
         });
     }
 };

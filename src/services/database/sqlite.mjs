@@ -144,6 +144,38 @@ function initializeSchema() {
             db.exec("CREATE INDEX idx_auth_tokens_email ON auth_tokens(email)");
         }
 
+        // 🚀 SIWE MIGRATION: Nonces + Wallet Sessions
+        const siweNoncesTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='siwe_nonces'").get();
+        if (!siweNoncesTable) {
+            console.log("[FlowPay DB] Migrating: Creating siwe_nonces table...");
+            db.exec(`
+                CREATE TABLE IF NOT EXISTS siwe_nonces (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nonce TEXT NOT NULL UNIQUE,
+                    expires_at TIMESTAMP NOT NULL,
+                    used BOOLEAN DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            db.exec("CREATE INDEX idx_siwe_nonces_nonce ON siwe_nonces(nonce)");
+        }
+
+        const walletSessionsTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='wallet_sessions'").get();
+        if (!walletSessionsTable) {
+            console.log("[FlowPay DB] Migrating: Creating wallet_sessions table...");
+            db.exec(`
+                CREATE TABLE IF NOT EXISTS wallet_sessions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    address TEXT NOT NULL,
+                    chain_id INTEGER NOT NULL DEFAULT 1,
+                    last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    login_count INTEGER DEFAULT 1,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            db.exec("CREATE UNIQUE INDEX idx_wallet_sessions_address ON wallet_sessions(address)");
+        }
+
     } catch (error) {
         console.error("[FlowPay DB] Schema initialization/migration failed:", error);
         throw error;
@@ -286,8 +318,7 @@ export function updateOrderStatus(charge_id, status, extra) {
 export function listOrdersPendingReview() {
     return dbOp(() => {
         const db = getDatabase();
-        // Check if view exists or just query table directly to be safe
-        const stmt = db.prepare("SELECT * FROM orders WHERE status = 'paid' OR status = 'processing'"); // Simple fallback if view unavailable
+        const stmt = db.prepare("SELECT * FROM orders WHERE status IN ('PIX_PAID', 'PENDING_REVIEW') ORDER BY created_at DESC");
         return stmt.all();
     });
 }
@@ -408,7 +439,7 @@ export function verifyAuthToken(token) {
     return dbOp(() => {
         const db = getDatabase();
         const stmt = db.prepare(`
-            SELECT * FROM auth_tokens 
+            SELECT * FROM auth_tokens
             WHERE token = ? AND used = 0 AND expires_at > CURRENT_TIMESTAMP
         `);
         const authToken = stmt.get(token);
@@ -419,6 +450,61 @@ export function verifyAuthToken(token) {
         }
 
         return authToken;
+    });
+}
+
+// Cleanup expired/used auth tokens to prevent table bloat
+export function cleanupExpiredAuthTokens() {
+    try {
+        const db = getDatabase();
+        const result = db.prepare(`
+            DELETE FROM auth_tokens
+            WHERE used = 1 OR expires_at < datetime('now', '-1 hour')
+        `).run();
+        if (result.changes > 0) {
+            console.log(`[FlowPay DB] Cleaned up ${result.changes} expired auth tokens`);
+        }
+    } catch (e) {
+        console.error('[FlowPay DB] Auth token cleanup failed:', e.message);
+    }
+}
+
+// Run cleanup every 30 minutes
+setInterval(cleanupExpiredAuthTokens, 30 * 60 * 1000).unref();
+
+// ════════════════════════════════════════
+// SIWE OPERATIONS
+// ════════════════════════════════════════
+
+export function saveSiweNonce(nonce, expiresAt) {
+    return dbOp(() => {
+        const db = getDatabase();
+        db.prepare(`INSERT INTO siwe_nonces (nonce, expires_at) VALUES (?, ?)`).run(nonce, expiresAt.toISOString());
+    });
+}
+
+export function consumeSiweNonce(nonce) {
+    return dbOp(() => {
+        const db = getDatabase();
+        const row = db.prepare(`SELECT * FROM siwe_nonces WHERE nonce = ? AND used = 0 AND expires_at > CURRENT_TIMESTAMP`).get(nonce);
+        if (row) {
+            db.prepare("UPDATE siwe_nonces SET used = 1 WHERE id = ?").run(row.id);
+        }
+        return row;
+    });
+}
+
+export function upsertWalletSession(address, chainId) {
+    return dbOp(() => {
+        const db = getDatabase();
+        const existing = db.prepare("SELECT * FROM wallet_sessions WHERE address = ?").get(address.toLowerCase());
+        if (existing) {
+            db.prepare(`UPDATE wallet_sessions SET last_login = CURRENT_TIMESTAMP, login_count = login_count + 1, chain_id = ? WHERE address = ?`)
+                .run(chainId, address.toLowerCase());
+        } else {
+            db.prepare(`INSERT INTO wallet_sessions (address, chain_id) VALUES (?, ?)`)
+                .run(address.toLowerCase(), chainId);
+        }
     });
 }
 

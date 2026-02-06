@@ -37,7 +37,8 @@ export async function notifyNexus(eventName, payload) {
                 'Content-Type': 'application/json',
                 'X-Nexus-Signature': signature
             },
-            body: body
+            body: body,
+            signal: AbortSignal.timeout(15000) // 15s timeout
         });
 
         if (!response.ok) {
