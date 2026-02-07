@@ -3,12 +3,12 @@
 
 // Evitar carregamento múltiplo
 if (window.FLOWPayCSP && window.FLOWPayCSP.loaded) {
-  console.log('🔒 CSP já carregado, pulando...');
+  // CSP already loaded
 } else {
   (function() {
     'use strict';
     
-    console.log('🔒 Configurando CSP para FLOWPay...');
+    // Configuring CSP for FLOWPay
 
     // Configuração CSP otimizada (sem frame-ancestors - já configurado no Netlify)
     const cspConfig = {
@@ -66,15 +66,14 @@ if (window.FLOWPayCSP && window.FLOWPayCSP.loaded) {
     function applyCSP() {
       try {
         // Verificar se estamos em produção (Netlify)
-        const isProduction = window.location.hostname.includes('netlify.app');
+        const isProduction = window.location.hostname.includes('flowpay.cash') || window.location.hostname.includes('netlify.app');
         
         if (isProduction) {
-          console.log('🌐 Produção detectada - CSP já configurado no Netlify');
-          console.log('🔒 Pulando aplicação local de CSP');
+          // Production detected - CSP configured server-side
           return true;
         }
         
-        console.log('🏠 Ambiente local detectado - Aplicando CSP local...');
+        // Local environment - applying CSP locally
         
         // Criar meta tag CSP apenas para desenvolvimento local
         const meta = document.createElement('meta');
@@ -96,12 +95,11 @@ if (window.FLOWPayCSP && window.FLOWPayCSP.loaded) {
         // Adicionar novo CSP
         document.head.appendChild(meta);
         
-        console.log('✅ CSP local aplicado com sucesso!');
-        console.log('🔒 Política:', cspString);
+        // CSP applied successfully
         
         return true;
       } catch (error) {
-        console.error('❌ Erro ao aplicar CSP:', error);
+        // CSP application error
         return false;
       }
     }
@@ -118,12 +116,12 @@ if (window.FLOWPayCSP && window.FLOWPayCSP.loaded) {
       try {
         // Teste básico
         const testScript = document.createElement('script');
-        testScript.textContent = 'console.log("🎉 CSP funcionando perfeitamente!");';
+        testScript.textContent = '// CSP verification passed';
         document.head.appendChild(testScript);
-        
-        console.log('✅ Verificação CSP concluída');
+
+        // CSP verification completed
       } catch (error) {
-        console.error('❌ Erro na verificação CSP:', error);
+        // CSP verification error
       }
     }, 200);
 
@@ -131,10 +129,10 @@ if (window.FLOWPayCSP && window.FLOWPayCSP.loaded) {
     window.FLOWPayCSP = {
       apply: applyCSP,
       config: cspConfig,
-      isProduction: () => window.location.hostname.includes('netlify.app'),
+      isProduction: () => window.location.hostname.includes('flowpay.cash') || window.location.hostname.includes('netlify.app'),
       loaded: true
     };
 
-    console.log('🔒 CSP configurado e otimizado!');
+    // CSP configured
   })();
 }

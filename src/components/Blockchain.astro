@@ -2,34 +2,35 @@
 ---
 
 <section id="blockchain" class="home-highlight">
+  <div class="section-bg-glow cyan"></div>
   <div class="home-highlight-container">
     <div class="home-highlight-content">
-      <h2>Conectado com o Mundo</h2>
+      <h2 class="highlight-title">Conectado com o <span class="gradient-text-cyan">Mundo</span></h2>
       <p class="home-highlight-text">
-        A FLOWPay conecta você automaticamente aos maiores mercados digitais do planeta. 
+        A FLOWPay conecta você automaticamente aos maiores mercados digitais do planeta.
         Uma infraestrutura global otimizada para velocidade e segurança.
       </p>
       <div class="blockchain-logos">
-        <div class="blockchain-logo ethereum pulse-slow" onclick="showBlockchainInfo('ethereum')">
+        <div class="blockchain-logo" style="--delay: 0.6s" onclick="showBlockchainInfo('ethereum')">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
             <path d="M16 0L6 8v8l10 8 10-8V8L16 0z" />
             <path d="M6 20l10 8 10-8v8l-10 8L6 28v-8z" />
           </svg>
           <span>Global</span>
         </div>
-        <div class="blockchain-logo polygon pulse-slow" onclick="showBlockchainInfo('polygon')">
+        <div class="blockchain-logo" style="--delay: 0.7s" onclick="showBlockchainInfo('polygon')">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
             <polygon points="16,2 30,8 30,24 16,30 2,24 2,8" />
           </svg>
           <span>Rápido</span>
         </div>
-        <div class="blockchain-logo linea pulse-slow" onclick="showBlockchainInfo('linea')">
+        <div class="blockchain-logo" style="--delay: 0.8s" onclick="showBlockchainInfo('linea')">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
             <path d="M16 2L2 8v16l14 6 14-6V8L16 2z" />
           </svg>
           <span>Seguro</span>
         </div>
-        <div class="blockchain-logo base pulse-slow" onclick="showBlockchainInfo('base')">
+        <div class="blockchain-logo" style="--delay: 0.9s" onclick="showBlockchainInfo('base')">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
             <rect x="4" y="4" width="24" height="24" rx="4" />
           </svg>
@@ -105,7 +106,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <a href="/checkout" class="btn btn-primary">Usar ${blockchainData.name}</a>
+            <a href="/checkout" class="modal-cta-btn">Usar ${blockchainData.name}</a>
           </div>
         </div>
       `;
@@ -119,44 +120,67 @@
   }
 </script>
 
-
-
 <style>
   .home-highlight {
-    padding: 6rem 2rem;
+    padding: 8rem 2rem;
     position: relative;
     z-index: 2;
+    overflow: hidden;
+  }
+
+  .section-bg-glow.cyan {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    height: 80vw;
+    background: radial-gradient(circle at center, rgba(0, 212, 255, 0.06) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
   }
 
   .home-highlight-container {
     max-width: 1200px;
     margin: 0 auto;
     text-align: center;
+    position: relative;
+    z-index: 1;
   }
 
-  .home-highlight h2 {
-    font-size: 2.5rem;
+  .highlight-title {
+    font-size: clamp(2rem, 6vw, 2.5rem);
+    font-weight: 800;
     margin-bottom: 2rem;
-    background: linear-gradient(135deg, #00d4ff, #ff0080);
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    text-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+
+  .gradient-text-cyan {
+    background: linear-gradient(135deg, #00d4ff, #ff007a);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
   }
 
   .home-highlight-text {
-    font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.85);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.7);
     max-width: 800px;
     margin: 0 auto 4rem;
     line-height: 1.6;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
   }
 
   .blockchain-logos {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
   }
 
   .blockchain-logo {
@@ -164,53 +188,67 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    padding: 2rem;
-    background: rgba(0, 212, 255, 0.05); /* very light tint */
+    padding: 2rem 1.5rem;
+    background: rgba(15, 15, 15, 0.4);
     border: 1px solid rgba(0, 212, 255, 0.1);
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    min-width: 160px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    -webkit-tap-highlight-color: transparent;
+    animation: fadeInUp 0.8s ease-out var(--delay, 0.6s) both;
   }
 
   .blockchain-logo:hover {
     transform: translateY(-8px);
-    background: rgba(0, 212, 255, 0.1);
-    border-color: rgba(0, 212, 255, 0.4);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 212, 255, 0.2);
+    background: rgba(0, 212, 255, 0.08);
+    border-color: rgba(0, 212, 255, 0.3);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 212, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .blockchain-logo:active {
+    transform: scale(0.96);
+    transition: all 0.1s ease;
   }
 
   .blockchain-logo svg {
     color: #00d4ff;
     transition: all 0.3s ease;
-    filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.5));
+    filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.4));
   }
-  
+
   .blockchain-logo:hover svg {
     color: #fff;
-    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.8));
+    filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.7));
     transform: scale(1.1);
   }
 
   .blockchain-logo span {
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.8);
     letter-spacing: 0.05em;
+    font-size: 0.9rem;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @media (max-width: 768px) {
     .home-highlight {
-      padding: 4rem 1rem;
+      padding: 5rem 1.25rem;
     }
-    
+
     .blockchain-logos {
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
     }
-    
+
     .blockchain-logo {
-      min-width: 140px;
-      padding: 1.5rem;
+      padding: 1.5rem 1rem;
     }
   }
 </style>

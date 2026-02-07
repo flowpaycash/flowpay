@@ -18,7 +18,7 @@ const WEB3AUTH_CONFIG = {
     
     // 🎭 Web3Auth Settings
     web3AuthNetwork: "mainnet",
-    enableLogging: true,
+    enableLogging: false,
     
     // 🔐 Authentication Methods
     authMode: "DAPP",
@@ -26,7 +26,7 @@ const WEB3AUTH_CONFIG = {
     // 📱 UI Configuration
     theme: "dark",
     appName: "FLOWPay",
-    appUrl: "https://flowpaypix.netlify.app",
+    appUrl: "https://flowpay.cash",
     
     // 🚀 Advanced Features
     enableMFA: true,
@@ -43,7 +43,7 @@ let provider = null;
 // 🔧 Initialize Web3Auth
 async function initializeWeb3Auth() {
     try {
-        console.log("🚀 Initializing Web3Auth...");
+        // Initializing Web3Auth
         
         // Import Web3Auth using import map
         const { Web3Auth } = await import('@web3auth/modal');
@@ -58,11 +58,11 @@ async function initializeWeb3Auth() {
         // Initialize
         await web3auth.initModal();
         
-        console.log("✅ Web3Auth initialized successfully!");
+        // Web3Auth initialized
         return true;
         
     } catch (error) {
-        console.error("❌ Web3Auth initialization failed:", error);
+        // Web3Auth init failed
         return false;
     }
 }
@@ -74,17 +74,17 @@ async function connectWallet() {
             throw new Error("Web3Auth not initialized");
         }
         
-        console.log("🔗 Connecting wallet...");
+        // Connecting wallet
         
         // Connect to Web3Auth
         provider = await web3auth.connect();
         
         if (provider) {
-            console.log("✅ Wallet connected successfully!");
+            // Wallet connected
             
             // Get user info
             const user = await web3auth.getUserInfo();
-            console.log("👤 User info:", user);
+            // User info retrieved
             
             // Update UI
             updateWalletStatus(true, user);
@@ -93,7 +93,7 @@ async function connectWallet() {
         }
         
     } catch (error) {
-        console.error("❌ Wallet connection failed:", error);
+        // Wallet connection failed
         updateWalletStatus(false, null);
         return false;
     }
@@ -105,11 +105,11 @@ async function disconnectWallet() {
         if (web3auth) {
             await web3auth.logout();
             provider = null;
-            console.log("🔌 Wallet disconnected");
+            // Wallet disconnected
             updateWalletStatus(false, null);
         }
     } catch (error) {
-        console.error("❌ Wallet disconnection failed:", error);
+        // Wallet disconnection failed
     }
 }
 
@@ -186,7 +186,7 @@ async function processCryptoTransaction(formData) {
             throw new Error("Carteira não conectada");
         }
         
-        console.log("🚀 Processing crypto transaction...");
+        // Processing crypto transaction
         
         // Get transaction data
         const amount = formData.get('amount');
@@ -211,7 +211,7 @@ async function processCryptoTransaction(formData) {
             params: [transaction]
         });
         
-        console.log("✅ Transaction sent:", txHash);
+        // Transaction sent
         
         // Show success
         showTransactionResult({
@@ -225,7 +225,7 @@ async function processCryptoTransaction(formData) {
         return txHash;
         
     } catch (error) {
-        console.error("❌ Crypto transaction failed:", error);
+        // Crypto transaction failed
         
         showTransactionResult({
             success: false,
@@ -243,7 +243,7 @@ async function getWalletAddress() {
         const accounts = await provider.request({ method: 'eth_accounts' });
         return accounts[0];
     } catch (error) {
-        console.error("❌ Failed to get wallet address:", error);
+        // Failed to get wallet address
         return null;
     }
 }
@@ -253,7 +253,7 @@ async function getGasPrice() {
     try {
         return await provider.request({ method: 'eth_gasPrice' });
     } catch (error) {
-        console.error("❌ Failed to get gas price:", error);
+        // Failed to get gas price
         return '0x3b9aca00'; // 1 Gwei default
     }
 }
@@ -301,4 +301,4 @@ setTimeout(() => {
     window.updateWalletStatus = updateWalletStatus;
 }, 100);
 
-console.log("🚀 Web3Auth configuration loaded successfully!");
+// Web3Auth configuration loaded

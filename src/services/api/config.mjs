@@ -3,7 +3,7 @@
 
 export const config = {
   // Ambiente atual
-  environment: process.env.NODE_ENV || 'development',
+  environment: process.env.NODE_ENV || 'production',
 
   // URLs permitidas por ambiente
   allowedOrigins: {
@@ -61,7 +61,7 @@ export const config = {
   logging: {
     level: process.env.LOG_LEVEL || 'info',
     redactSensitiveData: true,
-    includeStack: process.env.NODE_ENV === 'development'
+    includeStack: false
   }
 };
 
@@ -94,7 +94,7 @@ export function validateConfig() {
 export function getCorsHeaders(event) {
   const origin = event.headers.origin || event.headers.Origin || '';
   // Check against Environment-specific allow list
-  const envOrigins = config.allowedOrigins[config.environment] || config.allowedOrigins.development;
+  const envOrigins = config.allowedOrigins[config.environment] || config.allowedOrigins.production;
   const isAllowedOrigin = envOrigins.includes(origin);
 
   // Return specific origin if allowed, else null (or strict deny)

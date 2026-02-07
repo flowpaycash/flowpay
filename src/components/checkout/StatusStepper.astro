@@ -62,7 +62,7 @@
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
       </svg>
     </div>
-    <div class="step-label">Blockchian Sync</div>
+    <div class="step-label">Blockchain Sync</div>
   </div>
 
   <div class="step" data-step="4">
@@ -93,19 +93,18 @@
     align-items: flex-start;
     position: relative;
     margin: 2rem 0;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
   }
 
-  /* Connecting Line */
   .stepper-track {
     position: absolute;
     top: 20px;
     left: 40px;
     right: 40px;
     height: 2px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     z-index: 0;
-    /* Optional: Animate a gradient across it when active */
+    border-radius: 1px;
   }
 
   .step {
@@ -115,43 +114,48 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    opacity: 0.4;
-    transition: all 0.3s ease;
-    width: 33%;
+    opacity: 0.35;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    width: 25%;
   }
 
   .step-icon {
     width: 40px;
     height: 40px;
-    background: #0a0a0a;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(15, 15, 15, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     color: #fff;
+    transition: all 0.4s ease;
   }
 
   .step-label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
     text-align: center;
+    letter-spacing: 0.02em;
   }
 
   /* Active State */
   .step.active {
     opacity: 1;
   }
+
   .step.active .step-icon {
     border-color: #ff007a;
-    box-shadow: 0 0 15px rgba(255, 0, 122, 0.4);
+    box-shadow: 0 0 20px rgba(255, 0, 122, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4);
     color: #ff007a;
   }
+
   .step.active .icon-spinner {
     animation: spin 1s linear infinite;
   }
+
   .step.active .icon-factory {
     animation: pulse 1.5s ease-in-out infinite;
   }
@@ -160,29 +164,21 @@
   .step.done {
     opacity: 1;
   }
+
   .step.done .step-icon {
     background: #00ff88;
     border-color: #00ff88;
     color: #0a0a0a;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4);
   }
 
   @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
   }
+
   @keyframes pulse {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.1);
-      opacity: 0.7;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
   }
 </style>

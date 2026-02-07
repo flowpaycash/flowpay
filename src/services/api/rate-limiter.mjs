@@ -40,9 +40,7 @@ setInterval(() => {
     }
   }
 
-  if (cleaned > 0 && process.env.NODE_ENV === 'development') {
-    secureLog('debug', `Rate limiter cleanup: removed ${cleaned} expired keys`);
-  }
+  // Cleanup completed silently
 }, CLEANUP_INTERVAL).unref(); // unref to not block process exit
 
 // Função para obter IP do cliente com proteção contra spoofing
@@ -160,7 +158,7 @@ export function applyRateLimit(endpoint) {
 
       return null; // Continua com a execução normal
     } catch (e) {
-      console.error("Rate limiter error:", e);
+      // Rate limiter error - fail open
       // Fail open (allow request) if rate limiter crashes? Or fail closed?
       // For availability, fail open.
       return null;

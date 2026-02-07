@@ -40,7 +40,7 @@ export const POST = async ({ request, cookies, clientAddress }) => {
         const siweMessage = new SiweMessage(message);
 
         // Verify domain matches our app
-        const expectedDomain = (process.env.URL || 'http://localhost:4321').replace(/^https?:\/\//, '');
+        const expectedDomain = (process.env.URL || 'https://flowpay.cash').replace(/^https?:\/\//, '');
         if (siweMessage.domain !== expectedDomain) {
             secureLog('warn', 'SIWE domain mismatch', { expected: expectedDomain, got: siweMessage.domain });
             return new Response(JSON.stringify({ error: 'Domínio inválido' }), {
@@ -97,7 +97,7 @@ export const POST = async ({ request, cookies, clientAddress }) => {
         cookies.set('flowpay_session', sessionToken, {
             path: '/',
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
             sameSite: 'lax',
             maxAge: 24 * 60 * 60 // 24h
         });

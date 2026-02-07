@@ -25,20 +25,11 @@ const { DATA_DIR, DB_PATH, SCHEMA_PATH } = getDatabasePaths();
 // Ensure data directory exists with secure permissions
 try {
     if (!fs.existsSync(DATA_DIR)) {
-        console.log(`[FlowPay DB] Creating directory: ${DATA_DIR}`);
-        fs.mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 }); // Private directory (rwx------)
+        fs.mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 });
     }
 } catch (err) {
-    console.error(`[FlowPay DB] CRITICAL ERROR creating directory ${DATA_DIR}:`, err);
-    // Fallback to current directory if /app/data fails - but only in dev
-    if (process.env.NODE_ENV !== 'production') {
-        const fallbackDir = path.join(process.cwd(), "data", "flowpay");
-        console.log(`[FlowPay DB] Falling back to: ${fallbackDir}`);
-        fs.mkdirSync(fallbackDir, { recursive: true });
-    } else {
-        // In production, we must fail if we can't write to secure storage
-        throw new Error(`Failed to initialize secure storage at ${DATA_DIR}`);
-    }
+    // In production, we must fail if we can't write to secure storage
+    throw new Error(`Failed to initialize secure storage at ${DATA_DIR}`);
 }
 
 // Initialize database
@@ -47,8 +38,7 @@ let db = null;
 export function getDatabase() {
     if (!db) {
         try {
-            console.log(`[FlowPay DB] Opening database at: ${DB_PATH}`);
-            const newDb = new Database(DB_PATH, { timeout: 5000 }); // 5s timeout for locking
+            const newDb = new Database(DB_PATH, { timeout: 5000 });
             newDb.pragma("journal_mode = WAL");
             newDb.pragma("foreign_keys = ON");
             newDb.pragma("synchronous = NORMAL"); // Balance durability/speed for WAL
@@ -58,7 +48,7 @@ export function getDatabase() {
             // Initialize schema if needed
             initializeSchema();
         } catch (err) {
-            console.error(`[FlowPay DB] CRITICAL ERROR opening database:`, err);
+            // Critical DB error - propagate
             throw createError(ERROR_TYPES.INTERNAL_ERROR, "Failed to connect to database system", { error: err.message });
         }
     }
@@ -76,11 +66,9 @@ function initializeSchema() {
             .all();
 
         if (tables.length === 0) {
-            console.log("[FlowPay DB] Initializing schema...");
             if (fs.existsSync(SCHEMA_PATH)) {
                 const schema = fs.readFileSync(SCHEMA_PATH, "utf-8");
                 db.exec(schema);
-                console.log("[FlowPay DB] Schema initialized from file ✓");
             }
         }
 
@@ -89,27 +77,22 @@ function initializeSchema() {
         const columnNames = columns.map(c => c.name);
 
         if (!columnNames.includes('bridge_status')) {
-            console.log("[FlowPay DB] Migrating: Adding bridge_status...");
             db.prepare("ALTER TABLE orders ADD COLUMN bridge_status TEXT DEFAULT 'PENDING'").run();
         }
         if (!columnNames.includes('bridge_attempts')) {
-            console.log("[FlowPay DB] Migrating: Adding bridge_attempts...");
             db.prepare("ALTER TABLE orders ADD COLUMN bridge_attempts INTEGER DEFAULT 0").run();
         }
         if (!columnNames.includes('bridge_last_error')) {
-            console.log("[FlowPay DB] Migrating: Adding bridge_last_error...");
             db.prepare("ALTER TABLE orders ADD COLUMN bridge_last_error TEXT").run();
         }
 
-        // 🚀 POE MIGRATION
+        // POE MIGRATION
         if (!columnNames.includes('poe_batch_id')) {
-            console.log("[FlowPay DB] Migrating: Adding poe_batch_id...");
             db.prepare("ALTER TABLE orders ADD COLUMN poe_batch_id INTEGER").run();
         }
 
         const poeTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='poe_batches'").get();
         if (!poeTable) {
-            console.log("[FlowPay DB] Migrating: Creating poe_batches table...");
             db.exec(`
                 CREATE TABLE IF NOT EXISTS poe_batches (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -126,10 +109,9 @@ function initializeSchema() {
             db.exec("CREATE INDEX idx_poe_batches_root ON poe_batches(merkle_root)");
         }
 
-        // 🚀 AUTH MIGRATION: Magic Link Tokens
+        // AUTH MIGRATION: Magic Link Tokens
         const authTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='auth_tokens'").get();
         if (!authTable) {
-            console.log("[FlowPay DB] Migrating: Creating auth_tokens table...");
             db.exec(`
                 CREATE TABLE IF NOT EXISTS auth_tokens (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -144,10 +126,9 @@ function initializeSchema() {
             db.exec("CREATE INDEX idx_auth_tokens_email ON auth_tokens(email)");
         }
 
-        // 🚀 SIWE MIGRATION: Nonces + Wallet Sessions
+        // SIWE MIGRATION: Nonces + Wallet Sessions
         const siweNoncesTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='siwe_nonces'").get();
         if (!siweNoncesTable) {
-            console.log("[FlowPay DB] Migrating: Creating siwe_nonces table...");
             db.exec(`
                 CREATE TABLE IF NOT EXISTS siwe_nonces (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -162,7 +143,6 @@ function initializeSchema() {
 
         const walletSessionsTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='wallet_sessions'").get();
         if (!walletSessionsTable) {
-            console.log("[FlowPay DB] Migrating: Creating wallet_sessions table...");
             db.exec(`
                 CREATE TABLE IF NOT EXISTS wallet_sessions (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -177,7 +157,7 @@ function initializeSchema() {
         }
 
     } catch (error) {
-        console.error("[FlowPay DB] Schema initialization/migration failed:", error);
+        // Schema initialization/migration failed - propagate
         throw error;
     }
 }
@@ -187,7 +167,7 @@ export function closeDatabase() {
         try {
             db.close();
         } catch (e) {
-            console.error("Error closing database", e);
+            // Database close error - silent
         }
         db = null;
     }
@@ -205,7 +185,7 @@ function dbOp(operation) {
         if (err.code === 'SQLITE_BUSY' || err.code === 'SQLITE_LOCKED') {
             throw createError(ERROR_TYPES.INTERNAL_ERROR, "Database is busy, please try again", { detail: err.message });
         }
-        console.error("Database operation failed:", err);
+        // Database operation failed
         throw createError(ERROR_TYPES.INTERNAL_ERROR, "Database operation failed", { originalError: err.message });
     }
 }
@@ -310,7 +290,7 @@ export function updateOrderStatus(charge_id, status, extra) {
 
         const info = stmt.run(...values);
         if (info.changes === 0) {
-            console.warn(`[DB] Order update passed but no rows changed for charge_id: ${charge_id}`);
+            // Order update passed but no rows changed
         }
     });
 }
@@ -415,8 +395,7 @@ export function logAudit(event_type, actor, action, details, order_id) {
         const safeDetails = details ? JSON.stringify(details) : null;
         stmt.run(event_type, actor, action, safeDetails, order_id || null);
     } catch (e) {
-        // Audit log failure should NOT crash the app, but we should log it to stdout
-        console.error("FAILED TO WRITE AUDIT LOG:", e);
+        // Audit log failure should NOT crash the app
     }
 }
 
@@ -461,11 +440,9 @@ export function cleanupExpiredAuthTokens() {
             DELETE FROM auth_tokens
             WHERE used = 1 OR expires_at < datetime('now', '-1 hour')
         `).run();
-        if (result.changes > 0) {
-            console.log(`[FlowPay DB] Cleaned up ${result.changes} expired auth tokens`);
-        }
+        // Cleanup completed silently
     } catch (e) {
-        console.error('[FlowPay DB] Auth token cleanup failed:', e.message);
+        // Auth token cleanup failed - silent
     }
 }
 

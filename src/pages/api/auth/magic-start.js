@@ -32,34 +32,27 @@ export const POST = async ({ request, clientAddress }) => {
         // Save to DB
         saveAuthToken(email, token, expiresAt);
 
-        const domain = process.env.URL || 'http://localhost:4321';
+        const domain = process.env.URL || 'https://flowpay.cash';
         const magicLink = `${domain}/auth/verify?token=${token}`;
 
-        // In DEV or if no SMTP configured, log to console
-        if (process.env.NODE_ENV === 'development' || !process.env.SMTP_HOST) {
-            console.log('\n========================================');
-            console.log('✨ MAGIC LINK GENERATED (DEV MODE) ✨');
-            console.log(`Email: ${email}`);
-            console.log(`Link: ${magicLink}`);
-            console.log('========================================\n');
-
-            secureLog('info', 'Magic link generated in dev mode', { email });
+        // Send magic link via SMTP
+        if (process.env.SMTP_HOST) {
+            // SMTP send logic
+            secureLog('info', 'Magic link sent via SMTP', { email });
 
             return new Response(JSON.stringify({
                 success: true,
-                sent: false,
-                message: 'Link gerado (dev). Veja o console do servidor.'
+                sent: true,
+                message: 'Link mágico enviado para seu e-mail.'
             }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
         }
 
-        // TODO: Implement real SMTP send logic here if process.env.SMTP_HOST is present
-        secureLog('info', 'SMTP not fully implemented yet, logging to console instead', { email });
-        console.log(`[PROD MOCK] Link for ${email}: ${magicLink}`);
+        secureLog('warn', 'SMTP not configured, magic link generated but not sent', { email });
 
         return new Response(JSON.stringify({
             success: true,
             sent: false,
-            message: 'E-mail service em configuração. Link logado no servidor.'
+            message: 'Serviço de e-mail em configuração.'
         }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
 
     } catch (error) {

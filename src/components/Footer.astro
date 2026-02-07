@@ -2,7 +2,7 @@
 ---
 
 <footer class="site-footer">
-  <div class="container">
+  <div class="footer-container">
     <div class="footer-content">
       <div class="footer-section brand">
         <img src="/assets/icons/flowpay-header-logo.png" alt="FlowPay Logo" class="footer-logo" />
@@ -27,7 +27,7 @@
       </p>
     </div>
   </div>
-</footer >
+</footer>
 
 <style>
   .site-footer {
@@ -38,9 +38,9 @@
     -webkit-backdrop-filter: blur(25px);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     z-index: 2;
+    overflow: hidden;
   }
 
-  /* Decorative glow at the top of footer */
   .site-footer::before {
     content: '';
     position: absolute;
@@ -50,10 +50,10 @@
     width: 80%;
     height: 1px;
     background: linear-gradient(90deg, transparent, #ff007a, transparent);
-    opacity: 0.3;
+    opacity: 0.5;
   }
 
-  .container {
+  .footer-container {
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -72,29 +72,19 @@
     filter: drop-shadow(0 0 10px rgba(255, 0, 122, 0.3));
   }
 
-  .footer-section h3 {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, #fff, #ff0080);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
   .footer-section h4 {
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 700;
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
     margin-bottom: 1.5rem;
   }
 
   .footer-section p {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
     line-height: 1.6;
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .footer-section ul {
@@ -108,16 +98,15 @@
   }
 
   .footer-section a {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.4);
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     font-weight: 500;
+    font-size: 0.95rem;
   }
 
   .footer-section a:hover {
     color: #ff007a;
-    transform: translateX(5px);
-    display: inline-block;
   }
 
   .footer-bottom {
@@ -128,22 +117,23 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 1.5rem;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .footer-bottom p {
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.85rem;
     font-weight: 500;
   }
 
   .footer-bottom a {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.3);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   .footer-bottom a:hover {
-    color: #ffffff;
+    color: #ff007a;
   }
 
   @media (max-width: 992px) {
@@ -160,17 +150,17 @@
     .site-footer {
       padding: 4rem 1.5rem 2rem;
     }
-    
+
     .footer-content {
       grid-template-columns: 1fr;
       gap: 2.5rem;
     }
-    
+
     .footer-section.brand {
       grid-column: span 1;
       text-align: center;
     }
-    
+
     .footer-section {
       text-align: center;
     }
@@ -181,4 +171,3 @@
     }
   }
 </style>
-

@@ -17,7 +17,7 @@ function loadEnv() {
 loadEnv();
 
 const API_KEY = process.env.WOOVI_API_KEY;
-const TARGET_URL = 'https://flowpaypix.netlify.app/.netlify/functions/webhook-handler';
+const TARGET_URL = 'https://flowpay.cash/api/webhook';
 // Nota: Woovi API espera a URL encodada no query param
 const BASE_URL = `https://api.woovi.com/api/v1/webhook?url=${encodeURIComponent(TARGET_URL)}`;
 

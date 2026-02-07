@@ -2,7 +2,7 @@
 ---
 
 <section id="pix-mode" class="mode-section">
-  <form id="pix-form" class="card">
+  <form id="pix-form" class="pix-form-card">
     <label for="product-selector">Produto / Plano</label>
     <select name="product_id" id="product-selector" class="nf-input">
       <option value="" disabled selected>Selecione um produto...</option>
@@ -22,13 +22,28 @@
   </form>
 </section>
 
+<style>
+  .mode-section {
+    animation: slideUp 0.4s ease-out both;
+  }
+
+  .pix-form-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
 <script is:inline>
   document.addEventListener('DOMContentLoaded', async () => {
     const selector = document.getElementById('product-selector');
     const valorField = document.getElementById('valor');
     const walletField = document.getElementById('wallet');
-    
-    // Draft functionality
+
     const saveDraft = () => {
       const draft = {
         productRef: selector.value,
@@ -41,26 +56,23 @@
       const resp = await fetch('/api/products');
       const products = await resp.json();
 
-      // Restore Draft - Step 1: Load data
       let draft = {};
       try {
         const saved = localStorage.getItem('flowpay_checkout_draft');
         if (saved) draft = JSON.parse(saved);
-      } catch (e) { console.warn('Failed to parse draft', e); }
+      } catch (e) { /* draft parse failed */ }
 
       products.forEach(p => {
         const opt = document.createElement('option');
         opt.value = p.ref;
         opt.dataset.price = p.price_brl;
         opt.textContent = `${p.name} - R$ ${p.price_brl.toFixed(2)}`;
-        
-        // Restore product selection
+
         if (draft.productRef === p.ref) opt.selected = true;
-        
+
         selector.appendChild(opt);
       });
 
-      // Trigger change to update price if restored
       if (draft.productRef) {
           const selected = selector.options[selector.selectedIndex];
           if (selected && selected.dataset.price) {
@@ -68,7 +80,6 @@
           }
       }
 
-      // Restore wallet
       if (draft.wallet) walletField.value = draft.wallet;
 
       selector.addEventListener('change', (e) => {
@@ -83,7 +94,7 @@
       walletField.addEventListener('input', saveDraft);
 
     } catch (err) {
-      console.error('❌ Erro ao carregar produtos:', err);
+      // Product loading error handled silently
     }
   });
 </script>

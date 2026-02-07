@@ -18,7 +18,7 @@ let isAuthenticated = false;
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('FLOWPay Admin loaded');
+    // FLOWPay Admin loaded
 
     initializeElements();
     checkAuthentication();
@@ -126,7 +126,7 @@ async function loadTransactions() {
         showNotification(`✅ ${transactions.length} transações carregadas`, 'success');
         
     } catch (error) {
-        console.error('Erro ao carregar transações:', error);
+        // Transaction loading error
         
         // Se não conseguir carregar, usar dados mock para demonstração
         if (transactions.length === 0) {
@@ -158,7 +158,7 @@ async function loadSettlementOrders() {
         renderSettlementOrders();
         
     } catch (error) {
-        console.error('Erro ao carregar ordens de liquidação:', error);
+        // Settlement orders loading error
         settlementOrders = [];
     }
 }
@@ -273,7 +273,7 @@ async function executeSettlement(orderId, walletAddress, network) {
         }
         
     } catch (error) {
-        console.error('Erro ao executar liquidação:', error);
+        // Settlement execution error
         showNotification('❌ Erro ao executar liquidação', 'error');
     } finally {
         showLoading(false);
@@ -474,7 +474,7 @@ async function downloadTransactions() {
         
         showNotification('✅ Download realizado com sucesso!', 'success');
     } catch (error) {
-        console.error('Erro no download:', error);
+        // Download error
         showNotification('❌ Erro ao fazer download', 'error');
     }
 }

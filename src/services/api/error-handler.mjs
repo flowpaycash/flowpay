@@ -178,7 +178,7 @@ export function errorHandler(error, event, context) {
       success: false,
       error: userMessage,
       errorType: error.type,
-      details: config.environment === 'development' ? error.details : undefined,
+      details: undefined,
       timestamp: error.timestamp
     };
   } else {

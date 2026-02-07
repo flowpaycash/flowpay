@@ -21,70 +21,149 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
     <section class="flow-step" data-state="confirm" id="step-confirm" hidden>
       <StatusStepper />
 
-      <div id="payment-area" style="text-align: center; margin-top: 2rem;">
+      <div id="payment-area" class="payment-area">
         <!-- QR Code Container -->
         <div id="qr-container">
-          <p id="qr-instruction" style="opacity: 0.8; margin-bottom: 1rem;">
+          <p id="qr-instruction" class="qr-instruction">
             Escaneie o QR Code para pagar
           </p>
-          <div
-            style="background: white; padding: 1rem; border-radius: 8px; display: inline-block; margin-bottom: 1rem;"
-          >
+          <div class="qr-wrapper">
             <img
               id="qr-image"
               src=""
               alt="QR Code PIX"
-              style="width: 200px; height: 200px; display: block;"
+              class="qr-image"
             />
           </div>
-          <div style="margin-top: 1rem;">
+          <div class="brcode-area">
             <input
               id="br-code-copy"
               readonly
-              style="width: 100%; max-width: 300px; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: white;"
+              class="brcode-input"
             />
             <button
-              class="text"
+              class="text copy-btn"
               onclick="const e=document.getElementById('br-code-copy'); navigator.clipboard.writeText(e.value || e.innerText).then(() => alert('Código copiado!'))"
-              style="margin-top: 8px;">Copiar Código Pix</button
-            >
+            >Copiar Código Pix</button>
           </div>
         </div>
 
         <!-- Processing State -->
         <div id="processing-state" hidden>
-          <h3 class="gradient-text pulse-anim" style="font-size: 1.5rem;">
+          <h3 class="gradient-text processing-title">
             Processando...
           </h3>
-          <p style="opacity: 0.7;">
+          <p class="processing-subtitle">
             A Smart Factory está validando sua transação.
           </p>
         </div>
 
         <!-- Final Success -->
         <div id="success-state" hidden>
-          <h3 style="color: #4ade80;">Ativo Emitido!</h3>
-          <p>Sucesso. O ativo já está na sua carteira.</p>
-          <div style="margin-top: 24px;">
+          <h3 class="success-title">Ativo Emitido!</h3>
+          <p class="success-subtitle">Sucesso. O ativo já está na sua carteira.</p>
+          <div class="success-actions">
             <button class="primary" data-action="reset">Novo Pagamento</button>
           </div>
         </div>
       </div>
     </section>
 
-    <footer
-      style="text-align: center; margin-top: 32px; opacity: 0.5; font-size: 12px;"
-    >
+    <footer class="checkout-footer">
       <p>&copy; 2026 FlowPay Sovereign Systems</p>
     </footer>
   </main>
 </CheckoutLayout>
 
+<style>
+  .payment-area {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .qr-instruction {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .qr-wrapper {
+    background: white;
+    padding: 1rem;
+    border-radius: 16px;
+    display: inline-block;
+    margin-bottom: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .qr-image {
+    width: 200px;
+    height: 200px;
+    display: block;
+    border-radius: 8px;
+  }
+
+  .brcode-area {
+    margin-top: 1rem;
+  }
+
+  .brcode-input {
+    max-width: 100%;
+    font-size: 0.85rem;
+  }
+
+  .copy-btn {
+    margin-top: 0.5rem;
+  }
+
+  .processing-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  .processing-subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.5rem;
+  }
+
+  .success-title {
+    color: #00ff88;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+  }
+
+  .success-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.5rem;
+  }
+
+  .success-actions {
+    margin-top: 1.5rem;
+  }
+
+  .checkout-footer {
+    text-align: center;
+    margin-top: auto;
+    padding-top: 2rem;
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+    opacity: 0.3;
+    font-size: 0.75rem;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+</style>
+
 <script is:inline type="module">
   import { startCheckout } from "/assets/js/navigation-flow.machine.js";
 
   document.addEventListener("DOMContentLoaded", async () => {
-    console.log("🚀 Initializing FLOWPay Sovereign UI...");
+    // FLOWPay Sovereign UI initialized
 
     // Polling Control
     let pollInterval = null;
@@ -111,7 +190,7 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
       const res = await fetch("/ui.copy.pt.json", { cache: "no-store" });
       if (res.ok) copy = await res.json();
     } catch (error) {
-      console.warn("⚠️ Copy loading failed");
+      // Copy loading failed silently
     }
 
     let svc = startCheckout({
@@ -136,14 +215,12 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
         disconnect: () => window.disconnectWallet?.(),
       },
       onToast: (msg, _type) => {
-        // Simple toast fallback
-        console.log(`Toast: ${msg}`);
+        // Toast handled silently
       },
     });
 
     if (svc) {
       window.checkoutService = svc;
-      // Progress Sync & Polling
       svc.subscribe((state) => {
         const fill = document.getElementById("nf-fill");
         if (fill) {
@@ -152,13 +229,10 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
           if (state.matches("confirm")) fill.style.width = "100%";
         }
 
-        // Logic for Confirm State
         if (state.matches("confirm")) {
           const data = state.context.lastResult;
 
-          // Render QR if new
           if (data && data.success && data.pix_data) {
-            // Show QR, Hide others
             pollingArea.qr.hidden = false;
             pollingArea.proc.hidden = true;
             pollingArea.success.hidden = true;
@@ -166,11 +240,10 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
             pollingArea.qrImg.src = data.pix_data.qr_code;
             pollingArea.brCopy.value = data.pix_data.br_code;
 
-            updateStepper(1); // Step 1 Active
+            updateStepper(1);
 
-            // Start Polling
             if (!pollInterval) {
-              console.log("📡 Starting Polling for Charge:", data.id_transacao);
+              // Polling started for charge
               pollInterval = setInterval(async () => {
                 try {
                   const res = await fetch(`/api/charge/${data.id_transacao}`);
@@ -180,12 +253,10 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
                     statusData.status === "PIX_PAID" ||
                     statusData.status === "PENDING_REVIEW"
                   ) {
-                    // Step 2: Factory
                     pollingArea.qr.hidden = true;
                     pollingArea.proc.hidden = false;
                     updateStepper(2);
 
-                    // Check bridge status for step 3
                     if (statusData.bridge_status === "SENT") {
                       updateStepper(3);
                     }
@@ -193,7 +264,6 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
                     statusData.status === "COMPLETED" ||
                     statusData.tx_hash
                   ) {
-                    // Step 4: Done
                     pollingArea.proc.hidden = true;
                     pollingArea.success.hidden = false;
                     updateStepper(4);
@@ -202,13 +272,12 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
                     pollInterval = null;
                   }
                 } catch (e) {
-                  console.warn("Poll error", e);
+                  // Poll error handled silently
                 }
               }, 3000);
             }
           }
         } else {
-          // Cleanup if leaving confirm
           if (pollInterval) {
             clearInterval(pollInterval);
             pollInterval = null;
@@ -216,8 +285,5 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
         }
       });
     }
-
-    // Auto-restore logic is in machine boot (startCheckout) now, but form specifics are in PixForm.
-    // ID Transaction logic moved to form submission flow usually, but we keep the random ID for now if needed.
   });
 </script>

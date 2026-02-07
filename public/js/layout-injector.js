@@ -12,7 +12,7 @@ class NeoLayoutInjector {
     }
 
     async init() {
-        console.log('🚀 NEO Layout Injector iniciando...');
+        // Layout Injector starting
         await this.loadComponents();
         this.injectNavbar();
         
@@ -32,20 +32,20 @@ class NeoLayoutInjector {
             this.components.navbar = await navbarResponse.text();
             
             // Carregar outros componentes se necessário
-            console.log('✅ Componentes NEO carregados');
+            // Components loaded
         } catch (error) {
-            console.error('❌ Erro ao carregar componentes:', error);
+            // Component loading error
         }
     }
 
     injectNavbar() {
-        console.log('🔍 Injetando navbar...');
+        // Injecting navbar
         
         // Remover navbar existente se houver
         const existingNavbar = document.querySelector('.neo-navbar');
         if (existingNavbar) {
             existingNavbar.remove();
-            console.log('🗑️ Navbar existente removida');
+            // Existing navbar removed
         }
 
         const navbarContainer = document.createElement('div');
@@ -55,12 +55,12 @@ class NeoLayoutInjector {
         const navbarElement = navbarContainer.firstElementChild;
         document.body.insertBefore(navbarElement, document.body.firstChild);
         
-        console.log('✅ Navbar inserida no DOM:', navbarElement);
+        // Navbar inserted
 
         // Configurar menu mobile
         this.setupMobileMenu();
         
-        console.log('🎯 Navbar NEO injetada com sucesso');
+        // Navbar injected
     }
 
     injectSidebar() {
@@ -85,10 +85,10 @@ class NeoLayoutInjector {
                 // Criar layout admin
                 this.createAdminLayout();
                 
-                console.log('🎯 Sidebar Admin NEO modular criada');
+                // Sidebar loaded
             })
             .catch(error => {
-                console.error('❌ Erro ao carregar sidebar:', error);
+                // Sidebar loading error
                 // Fallback para sidebar inline
                 this.createInlineSidebar();
             });
@@ -151,7 +151,7 @@ class NeoLayoutInjector {
         // Criar layout admin
         this.createAdminLayout();
         
-        console.log('🎯 Sidebar Admin NEO criada');
+        // Sidebar created
     }
 
     createAdminLayout() {
@@ -294,22 +294,19 @@ class NeoLayoutInjector {
         const mobileToggle = document.getElementById('mobile-menu-toggle');
         const navMenu = document.querySelector('.nav-menu');
         
-        console.log('🔍 Setup Mobile Menu:', { mobileToggle, navMenu });
+        // Setting up mobile menu
         
         if (mobileToggle && navMenu) {
             mobileToggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                console.log('🍔 Mobile toggle clicked!');
+                // Mobile toggle clicked
                 
                 navMenu.classList.toggle('active');
                 mobileToggle.classList.toggle('active');
                 
-                console.log('📱 Menu state:', {
-                    menuActive: navMenu.classList.contains('active'),
-                    toggleActive: mobileToggle.classList.contains('active')
-                });
+                // Menu state toggled
                 
                 // Animar hamburger
                 const spans = mobileToggle.querySelectorAll('.hamburger span');
@@ -325,9 +322,9 @@ class NeoLayoutInjector {
                 });
             });
             
-            console.log('✅ Menu mobile configurado com sucesso');
+            // Mobile menu configured
         } else {
-            console.error('❌ Elementos do menu mobile não encontrados:', { mobileToggle, navMenu });
+            // Mobile menu elements not found
         }
     }
 
@@ -451,4 +448,4 @@ const styleSheet = document.createElement('style');
 styleSheet.textContent = neoStyles;
 document.head.appendChild(styleSheet);
 
-console.log('🚀 NEO Layout Injector carregado e pronto para ação!');
+// NEO Layout Injector loaded

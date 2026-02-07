@@ -1,8 +1,4 @@
 ---
-import "../styles/uniswap.css"; // Mantendo como fallback se houver classes específicas, mas vamos injetar o sistema novo acima
-// Na verdade, vamos comentar o uniswap.css para ver o efeito puro do design system, ou melhor, substituir.
-// import "../styles/uniswap.css";
-
 export interface Props {
   title?: string;
   description?: string;
@@ -24,7 +20,6 @@ const {
     />
     <meta name="description" content={description} />
     <title>{title}</title>
-    <!-- Security: Sovereign CSP (Block Amplitude explicitly) -->
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' https://*.web3auth.io https://*.quicknode.com https://*.woovi.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.web3auth.io; img-src 'self' data: https://*;"
@@ -34,7 +29,7 @@ const {
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#0a0a0a" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="FlowPay" />
 
     <!-- PWA Icons -->
@@ -43,46 +38,165 @@ const {
 
     <!-- Sovereign Design System -->
     <link rel="stylesheet" href="/css/design-system.css" />
-    <link rel="stylesheet" href="/css/landing.css" />
-    <!-- Overrides para Checkout Glassmorphism -->
+
     <style is:global>
-      :root {
-        --bg-app: #0a0a0a;
-        --card-bg: rgba(25, 25, 25, 0.6);
-        --card-border: rgba(255, 255, 255, 0.1);
-      }
       body {
-        background: var(--bg-app);
+        background: #0a0a0a;
         background-image: radial-gradient(
           circle at 50% 0%,
           #1a0b14 0%,
           #0a0a0a 70%
-        ); /* Darker gradient */
+        );
         color: white;
-        font-family: "Inter", sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        min-height: 100vh;
       }
-      /* Forçando Glassmorphism nos cards do Checkout */
-      .card,
-      .checkout-main,
+
+      .checkout-main {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: calc(env(safe-area-inset-top, 20px) + 20px) 20px env(safe-area-inset-bottom, 20px);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
       .flow-step {
-        background: var(--card-bg) !important;
-        backdrop-filter: blur(20px) !important;
-        border: 1px solid var(--card-border) !important;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-        color: white !important;
+        background: rgba(15, 15, 15, 0.4);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 28px;
+        padding: 2rem;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        animation: slideUp 0.5s ease-out both;
+        margin-bottom: 1rem;
       }
-      .checkout-header {
-        /* Keep it clean */
+
+      .card {
+        background: rgba(15, 15, 15, 0.4);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
       }
-      /* Inputs mais clean */
-      input {
-        background: rgba(0, 0, 0, 0.3) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
-      }
-      input:focus {
-        border-color: #ff007a !important;
+
+      input, select {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 14px 16px;
+        color: white;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
         outline: none;
+      }
+
+      input:focus, select:focus {
+        border-color: #ff007a;
+        box-shadow: 0 0 0 3px rgba(255, 0, 122, 0.15);
+      }
+
+      input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        padding-right: 40px;
+      }
+
+      label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      label:first-child {
+        margin-top: 0;
+      }
+
+      button {
+        font-family: inherit;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      button.primary {
+        width: 100%;
+        padding: 16px 24px;
+        background: linear-gradient(135deg, #ff007a, #ff7a00);
+        color: white;
+        border: none;
+        border-radius: 16px;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 1.5rem;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 0 20px rgba(255, 0, 122, 0.2);
+      }
+
+      button.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 30px rgba(255, 0, 122, 0.4);
+      }
+
+      button.primary:active {
+        transform: scale(0.96);
+        transition: all 0.1s ease;
+      }
+
+      button.text, button.ghost {
+        width: 100%;
+        padding: 14px 24px;
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-top: 0.75rem;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      button.text:hover, button.ghost:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+
+      button.text:active, button.ghost:active {
+        transform: scale(0.96);
+        transition: all 0.1s ease;
+      }
+
+      .gradient-text {
+        background: linear-gradient(90deg, #ff007a 0%, #ff7a00 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
       }
     </style>
 
@@ -93,7 +207,7 @@ const {
   <body>
     <slot />
 
-    <!-- Toasts (Universal Container) -->
+    <!-- Toasts -->
     <div id="nf-toasts" class="nf-toasts"></div>
 
     <!-- Loading Overlay -->

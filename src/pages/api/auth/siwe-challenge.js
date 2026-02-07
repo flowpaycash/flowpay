@@ -36,8 +36,8 @@ export const POST = async ({ request, clientAddress }) => {
         saveSiweNonce(nonce, expiresAt);
 
         // Build SIWE domain from URL env or request host
-        const domain = (process.env.URL || `http://localhost:4321`).replace(/^https?:\/\//, '');
-        const origin = process.env.URL || `http://localhost:4321`;
+        const domain = (process.env.URL || 'https://flowpay.cash').replace(/^https?:\/\//, '');
+        const origin = process.env.URL || 'https://flowpay.cash';
 
         secureLog('info', 'SIWE challenge generated', { address: address.slice(0, 8) + '...' });
 

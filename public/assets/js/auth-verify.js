@@ -67,7 +67,7 @@ async function performVerification() {
       showError('Falha na verificação do token');
     }
   } catch (error) {
-    console.error('Erro na verificação:', error);
+    // Verification error
     showError(error.message || 'Erro desconhecido na verificação');
   }
 }
