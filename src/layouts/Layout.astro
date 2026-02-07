@@ -45,8 +45,8 @@ const {
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#ff007a" />
-    <meta name="msapplication-TileColor" content="#ff007a" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="msapplication-TileColor" content="#000000" />
 
     <!-- PWA Support - Modern & Apple -->
     <meta name="mobile-web-app-capable" content="yes" />
@@ -139,7 +139,10 @@ const {
     <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
 
     <!-- Microsoft Tiles -->
-    <meta name="msapplication-TileImage" content="mstile-icon-270.png" />
+    <meta
+      name="msapplication-TileImage"
+      content="/assets/manifest/mstile-icon-270.png"
+    />
     <meta name="msapplication-config" content="/browserconfig.xml" />
 
     <!-- CSS -->
@@ -152,6 +155,10 @@ const {
         --primary-gradient: linear-gradient(90deg, #ff007a 0%, #ff7a00 100%);
       }
     </style>
+    <!-- Web3 Config & Auth -->
+    <script is:inline src="/assets/neo.config.js"></script>
+    <script is:inline type="module" src="/assets/js/web3auth.smart.js"></script>
+
     <script>
       import { Buffer } from "buffer";
       if (typeof window !== "undefined") {
