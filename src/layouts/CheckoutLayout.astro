@@ -1,5 +1,7 @@
 ---
-import "../styles/uniswap.css";
+import "../styles/uniswap.css"; // Mantendo como fallback se houver classes específicas, mas vamos injetar o sistema novo acima
+// Na verdade, vamos comentar o uniswap.css para ver o efeito puro do design system, ou melhor, substituir.
+// import "../styles/uniswap.css";
 
 export interface Props {
   title?: string;
@@ -22,22 +24,67 @@ const {
     />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <!-- Security: Sovereign CSP (Block Amplitude explicitly) -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' https://*.web3auth.io https://*.quicknode.com https://*.woovi.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.web3auth.io; img-src 'self' data: https://*;"
+    />
 
     <!-- PWA Support -->
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#0a0a0a" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="FlowPay" />
 
     <!-- PWA Icons -->
     <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="196x196"
-      href="/assets/icons/favicon-196.png"
-    />
+    <link rel="icon" type="image/png" href="/assets/icons/favicon-196.png" />
+
+    <!-- Sovereign Design System -->
+    <link rel="stylesheet" href="/css/design-system.css" />
+    <link rel="stylesheet" href="/css/landing.css" />
+    <!-- Overrides para Checkout Glassmorphism -->
+    <style is:global>
+      :root {
+        --bg-app: #0a0a0a;
+        --card-bg: rgba(25, 25, 25, 0.6);
+        --card-border: rgba(255, 255, 255, 0.1);
+      }
+      body {
+        background: var(--bg-app);
+        background-image: radial-gradient(
+          circle at 50% 0%,
+          #1a0b14 0%,
+          #0a0a0a 70%
+        ); /* Darker gradient */
+        color: white;
+        font-family: "Inter", sans-serif;
+      }
+      /* Forçando Glassmorphism nos cards do Checkout */
+      .card,
+      .checkout-main,
+      .flow-step {
+        background: var(--card-bg) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid var(--card-border) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+        color: white !important;
+      }
+      .checkout-header {
+        /* Keep it clean */
+      }
+      /* Inputs mais clean */
+      input {
+        background: rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+      }
+      input:focus {
+        border-color: #ff007a !important;
+        outline: none;
+      }
+    </style>
 
     <!-- Web3 Config & Auth -->
     <script is:inline src="/assets/neo.config.js"></script>

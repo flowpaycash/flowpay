@@ -1,7 +1,7 @@
 import crypto from 'crypto';
-import { applyRateLimit } from '../../services/api/rate-limiter.mjs';
-import { getCorsHeaders, secureLog } from '../../services/api/config.mjs';
-import { updateOrderStatus, getOrder } from '../../services/database/sqlite.mjs';
+import { applyRateLimit } from '../../../services/api/rate-limiter.mjs';
+import { getCorsHeaders, secureLog } from '../../../services/api/config.mjs';
+import { updateOrderStatus, getOrder } from '../../../services/database/sqlite.mjs';
 
 /**
  * NEØ PROTOCOL — Nexus Webhook Receiver
@@ -72,15 +72,15 @@ export const POST = async ({ request, clientAddress }) => {
 
         // Route event to appropriate handler
         switch (event) {
-            case 'MINT_CONFIRMED':
+            case 'FACTORY:MINT_CONFIRMED':
                 await handleMintConfirmed(payload);
                 break;
 
-            case 'MINT_FAILED':
+            case 'FACTORY:MINT_FAILED':
                 await handleMintFailed(payload);
                 break;
 
-            case 'ACCESS_UNLOCKED':
+            case 'NEOBOT:ACCESS_UNLOCKED':
                 await handleAccessUnlocked(payload);
                 break;
 

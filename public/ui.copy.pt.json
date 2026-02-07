@@ -5,44 +5,21 @@
       "hero_options": [
         {
           "id": "A",
-          "headline": "Escolha como quer receber: PIX ou Cripto",
-          "subheadline": "Selecione seu modo preferido de recebimento"
+          "headline": "FlowPay Sovereign. Ative seu Fluxo.",
+          "subheadline": "Liquidez instantânea via PIX ou liquidação on-chain. Sem intermediários."
         },
         {
           "id": "B",
-          "headline": "Recebimento direto. Sem rodeios.",
-          "subheadline": "PIX instantâneo ou cripto na blockchain"
+          "headline": "Soberania Financeira NΞØ.",
+          "subheadline": "Seus fundos, suas regras. Pagamento direto e irrevogável."
         }
       ],
       "messages": {
         "footnote": [
-          "Transações seguras e transparentes",
-          "Suporte 24/7 via Telegram",
-          "Zero taxas ocultas"
+          "Transações auditadas via PoE (Proof of Execution)",
+          "Orquestração via Nexus & Moltbot",
+          "Soberania Garantida"
         ]
-      }
-    }
-  },
-  "ui": {
-    "copy": {
-      "routes": {
-        "/checkout": {
-          "active_variant": "A",
-          "hero_options": [
-            {
-              "id": "A",
-              "headline": "Escolha como quer receber: PIX ou Cripto",
-              "subheadline": "Selecione seu modo preferido de recebimento"
-            }
-          ],
-          "messages": {
-            "footnote": [
-              "Transações seguras e transparentes",
-              "Suporte 24/7 via Telegram",
-              "Zero taxas ocultas"
-            ]
-          }
-        }
       }
     }
   }
