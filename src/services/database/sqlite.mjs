@@ -86,6 +86,17 @@ function initializeSchema() {
             db.prepare("ALTER TABLE orders ADD COLUMN bridge_last_error TEXT").run();
         }
 
+        // CUSTOMER DATA MIGRATION (Landing Page checkout)
+        if (!columnNames.includes('customer_cpf')) {
+            db.prepare("ALTER TABLE orders ADD COLUMN customer_cpf TEXT").run();
+        }
+        if (!columnNames.includes('customer_email')) {
+            db.prepare("ALTER TABLE orders ADD COLUMN customer_email TEXT").run();
+        }
+        if (!columnNames.includes('customer_name')) {
+            db.prepare("ALTER TABLE orders ADD COLUMN customer_name TEXT").run();
+        }
+
         // POE MIGRATION
         if (!columnNames.includes('poe_batch_id')) {
             db.prepare("ALTER TABLE orders ADD COLUMN poe_batch_id INTEGER").run();
@@ -202,10 +213,10 @@ export function createOrder(order) {
         INSERT INTO orders (
           charge_id, amount_brl, amount_usdt, exchange_rate,
           product_ref, product_name, product_price,
-          customer_ref, customer_wallet, customer_metadata,
+          customer_ref, customer_wallet, customer_cpf, customer_email, customer_name, customer_metadata,
           status, pix_qr, pix_copy_paste, checkout_url,
           metadata, bridge_status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
         const result = stmt.run(
@@ -218,6 +229,9 @@ export function createOrder(order) {
             order.product_price || null,
             order.customer_ref,
             order.customer_wallet || null,
+            order.customer_cpf || null,
+            order.customer_email || null,
+            order.customer_name || null,
             order.customer_metadata || null,
             order.status,
             order.pix_qr || null,

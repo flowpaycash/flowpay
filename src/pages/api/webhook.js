@@ -1,6 +1,6 @@
 import { applyRateLimit } from '../../services/api/rate-limiter.mjs';
 import { getCorsHeaders, secureLog } from '../../services/api/config.mjs';
-import { updateOrderStatus, getOrder } from '../../services/database/sqlite.mjs';
+import { updateOrderStatus, getOrder, getDatabase } from '../../services/database/sqlite.mjs';
 import crypto from 'crypto';
 
 export const POST = async ({ request, clientAddress }) => {
@@ -83,6 +83,34 @@ export const POST = async ({ request, clientAddress }) => {
 
                 //  Bridge call integration
                 const customerEmail = charge.customer?.email;
+                const customerName = charge.customer?.name;
+                const customerTaxID = charge.customer?.taxID?.taxID;
+
+                // 📋 Enriquecer dados do comprador no pedido (se vieram do webhook da Woovi)
+                try {
+                    const db = getDatabase();
+                    const updates = [];
+                    const values = [];
+                    if (customerEmail && !order.customer_email) {
+                        updates.push('customer_email = ?');
+                        values.push(customerEmail);
+                    }
+                    if (customerName && !order.customer_name) {
+                        updates.push('customer_name = ?');
+                        values.push(customerName);
+                    }
+                    if (customerTaxID && !order.customer_cpf) {
+                        updates.push('customer_cpf = ?');
+                        values.push(customerTaxID);
+                    }
+                    if (updates.length > 0) {
+                        values.push(correlationID);
+                        db.prepare(`UPDATE orders SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE charge_id = ?`).run(...values);
+                        secureLog('info', 'Webhook: Dados do comprador atualizados', { correlationID });
+                    }
+                } catch (enrichErr) {
+                    secureLog('warn', 'Webhook: Falha ao enriquecer dados do comprador', { error: enrichErr.message });
+                }
 
                 // 🛡️ POE: Add order to batch for proof layer
                 try {

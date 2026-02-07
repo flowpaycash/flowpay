@@ -34,6 +34,40 @@ export const VALIDATION_SCHEMAS = {
     }
   },
 
+  // Validação para criação de cobrança via Landing Page (fiat-only, sem wallet)
+  createLandingCharge: {
+    required: ['amount_brl', 'product_ref', 'customer_cpf', 'customer_email'],
+    validations: {
+      amount_brl: {
+        type: 'monetary_value',
+        required: true,
+        min: 0.01,
+        max: 1000000
+      },
+      product_ref: {
+        type: 'string',
+        required: true,
+        minLength: 1,
+        maxLength: 100
+      },
+      customer_cpf: {
+        type: 'string',
+        required: true,
+        minLength: 11,
+        maxLength: 18
+      },
+      customer_email: {
+        type: 'email',
+        required: true
+      },
+      customer_name: {
+        type: 'string',
+        required: false,
+        maxLength: 200
+      }
+    }
+  },
+
   // Validação para webhook
   webhook: {
     required: ['event', 'data'],

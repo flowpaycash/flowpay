@@ -23,6 +23,9 @@ CREATE TABLE IF NOT EXISTS orders (
   -- Customer info
   customer_ref TEXT NOT NULL,
   customer_wallet TEXT,
+  customer_cpf TEXT,
+  customer_email TEXT,
+  customer_name TEXT,
   customer_metadata TEXT, -- JSON
   
   -- Status tracking
