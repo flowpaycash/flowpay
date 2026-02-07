@@ -1,1 +1,0 @@
-function n(t){return typeof t=="string"}function e(t){return typeof t=="number"}function r(t){return typeof t=="function"}function o(t){return t!=null}function i(t){return Object.prototype.toString.call(t).slice(8,-1).toLowerCase()==="object"}export{n as a,e as b,r as c,o as d,i as e};

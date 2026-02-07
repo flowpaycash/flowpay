@@ -28,31 +28,21 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
             Escaneie o QR Code para pagar
           </p>
           <div class="qr-wrapper">
-            <img
-              id="qr-image"
-              src=""
-              alt="QR Code PIX"
-              class="qr-image"
-            />
+            <img id="qr-image" src="" alt="QR Code PIX" class="qr-image" />
           </div>
           <div class="brcode-area">
-            <input
-              id="br-code-copy"
-              readonly
-              class="brcode-input"
-            />
+            <input id="br-code-copy" readonly class="brcode-input" />
             <button
               class="text copy-btn"
               onclick="const e=document.getElementById('br-code-copy'); navigator.clipboard.writeText(e.value || e.innerText).then(() => alert('Código copiado!'))"
-            >Copiar Código Pix</button>
+              >Copiar Código Pix</button
+            >
           </div>
         </div>
 
         <!-- Processing State -->
         <div id="processing-state" hidden>
-          <h3 class="gradient-text processing-title">
-            Processando...
-          </h3>
+          <h3 class="gradient-text processing-title">Processando...</h3>
           <p class="processing-subtitle">
             A Smart Factory está validando sua transação.
           </p>
@@ -61,7 +51,9 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
         <!-- Final Success -->
         <div id="success-state" hidden>
           <h3 class="success-title">Ativo Emitido!</h3>
-          <p class="success-subtitle">Sucesso. O ativo já está na sua carteira.</p>
+          <p class="success-subtitle">
+            Sucesso. O ativo já está na sua carteira.
+          </p>
           <div class="success-actions">
             <button class="primary" data-action="reset">Novo Pagamento</button>
           </div>
@@ -153,9 +145,15 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
   }
 
   @keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.6; }
-    100% { opacity: 1; }
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 </style>
 
@@ -209,8 +207,22 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
           }
           return await response.json();
         },
-        submitCrypto: (_ctx, _p) =>
-          Promise.resolve({ success: true, hash: "0x..." }),
+        submitCrypto: async (_ctx, p) => {
+          if (window.__smartAccount && window.sendSATransaction) {
+            try {
+              const hash = await window.sendSATransaction({
+                to: p.to,
+                value: BigInt(p.amount * 10 ** 18),
+              });
+              return { success: true, hash };
+            } catch (err) {
+              console.error("Erro na transação Smart Account:", err);
+              throw err;
+            }
+          }
+          // Fallback ou modo manual
+          return Promise.resolve({ success: true, hash: "0x..." });
+        },
         connect: () => window.connectWallet?.(),
         disconnect: () => window.disconnectWallet?.(),
       },

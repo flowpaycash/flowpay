@@ -9,9 +9,10 @@ npx esbuild public/assets/js/web3auth.smart.ts \
   --target=es2022 \
   --minify \
   --tree-shaking=true \
-  --metafile=public/assets/js/web3auth.smart.meta.json \
-  --analyze \
+  --legal-comments=none \
   --outfile=public/assets/js/web3auth.smart.js \
+  --external:viem \
+  --external:buffer \
   --external:react \
   --external:react-dom \
   --external:react-i18next \

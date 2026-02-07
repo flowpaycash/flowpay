@@ -1,8 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="FlowPay - Acesse" description="Entre no FlowPay e conecte-se ao futuro dos pagamentos.">
+<Layout
+  title="FlowPay - Acesse"
+  description="Entre no FlowPay e conecte-se ao futuro dos pagamentos."
+>
   <main class="login-page">
     <div class="login-bg-glow"></div>
 
@@ -20,16 +23,41 @@ import Layout from '../layouts/Layout.astro';
           Acesse o <span class="gradient-text">FlowPay</span>
         </h1>
         <p class="login-subtitle">
-          Conecte sua carteira para começar a operar com liquidez instantânea e auto-custódia.
+          Conecte sua carteira para começar a operar com liquidez instantânea e
+          auto-custódia.
         </p>
 
         <div class="login-actions">
           <button class="btn-premium primary" id="login-web3auth">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="1" y="1" width="22" height="22" rx="2.18" ry="2.18"></rect>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="1" y="1" width="22" height="22" rx="2.18" ry="2.18"
+              ></rect>
               <line x1="7" y1="1" x2="7" y2="23"></line>
             </svg>
             Conectar com Web3Auth
+          </button>
+
+          <button
+            class="btn-premium secondary"
+            id="login-metamask-aa"
+            style="background: rgba(246, 133, 27, 0.1); border-color: rgba(246, 133, 27, 0.2);"
+          >
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Alpha_software_logo.svg"
+              width="20"
+              height="20"
+              alt="MetaMask"
+            />
+            MetaMask (Smart Account)
           </button>
 
           <div class="login-divider">
@@ -67,7 +95,11 @@ import Layout from '../layouts/Layout.astro';
     transform: translate(-50%, -50%);
     width: 100vw;
     height: 100vw;
-    background: radial-gradient(circle at center, rgba(255, 0, 122, 0.12) 0%, transparent 60%);
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 0, 122, 0.12) 0%,
+      transparent 60%
+    );
     z-index: 0;
     pointer-events: none;
   }
@@ -84,20 +116,26 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .login-brand {
-    animation: floatingLogo 6s ease-in-out infinite, fadeInDown 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation:
+      floatingLogo 6s ease-in-out infinite,
+      fadeInDown 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     position: relative;
     display: inline-block;
   }
 
   .login-brand::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 140%;
     height: 140%;
-    background: radial-gradient(circle, rgba(255, 0, 122, 0.2) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 0, 122, 0.2) 0%,
+      transparent 70%
+    );
     filter: blur(30px);
     z-index: -1;
     animation: logoGlowPulse 4s ease-in-out infinite alternate;
@@ -106,23 +144,36 @@ import Layout from '../layouts/Layout.astro';
   .login-logo {
     height: 120px;
     width: auto;
-    filter: drop-shadow(0 0 15px rgba(255, 0, 122, 0.6)) drop-shadow(0 0 30px rgba(0, 212, 255, 0.3));
+    filter: drop-shadow(0 0 15px rgba(255, 0, 122, 0.6))
+      drop-shadow(0 0 30px rgba(0, 212, 255, 0.3));
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .login-logo:hover {
     transform: scale(1.08) rotate(2deg);
-    filter: drop-shadow(0 0 25px rgba(255, 0, 122, 0.8)) drop-shadow(0 0 50px rgba(0, 212, 255, 0.5));
+    filter: drop-shadow(0 0 25px rgba(255, 0, 122, 0.8))
+      drop-shadow(0 0 50px rgba(0, 212, 255, 0.5));
   }
 
   @keyframes floatingLogo {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
   }
 
   @keyframes logoGlowPulse {
-    0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    0% {
+      opacity: 0.5;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
   }
 
   .login-card {
@@ -132,7 +183,9 @@ import Layout from '../layouts/Layout.astro';
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 32px;
     padding: 3rem 2.5rem;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 25px 50px rgba(0, 0, 0, 0.4),
+      inset 0 1px 1px rgba(255, 255, 255, 0.1);
     width: 100%;
     text-align: center;
     animation: fadeInUp 0.8s ease-out 0.3s both;
@@ -233,7 +286,7 @@ import Layout from '../layouts/Layout.astro';
 
   .login-divider::before,
   .login-divider::after {
-    content: '';
+    content: "";
     flex: 1;
     height: 1px;
     background: rgba(255, 255, 255, 0.1);
@@ -259,13 +312,25 @@ import Layout from '../layouts/Layout.astro';
   }
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-30px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (max-width: 768px) {
@@ -285,20 +350,49 @@ import Layout from '../layouts/Layout.astro';
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const loginBtn = document.getElementById('login-web3auth');
+  document.addEventListener("DOMContentLoaded", () => {
+    const loginBtn = document.getElementById("login-web3auth");
+    const metamaskBtn = document.getElementById("login-metamask-aa");
+
     if (loginBtn) {
-      loginBtn.addEventListener('click', async () => {
-        if (typeof window !== 'undefined' && (window as any).connectWallet) {
-          try {
-            await (window as any).connectWallet();
-            window.location.href = '/checkout';
-          } catch (err) {
-            // Login error handled silently
+      loginBtn.addEventListener("click", async () => {
+        // Load Web3Auth bundle dynamic
+        const script = document.createElement("script");
+        script.src = "/assets/js/web3auth.js";
+        script.type = "module";
+        document.head.appendChild(script);
+
+        script.onload = async () => {
+          if (typeof window !== "undefined" && (window as any).connectWallet) {
+            try {
+              const success = await (window as any).connectWallet();
+              if (success) window.location.href = "/checkout";
+            } catch (err) {
+              console.error("Login web3auth falhou", err);
+            }
           }
-        } else {
-          window.location.href = '/checkout';
-        }
+        };
+      });
+    }
+
+    if (metamaskBtn) {
+      metamaskBtn.addEventListener("click", async () => {
+        // Load MetaMask AA bundle dynamic
+        const script = document.createElement("script");
+        script.src = "/assets/js/metamask-aa.js";
+        script.type = "module";
+        document.head.appendChild(script);
+
+        script.onload = async () => {
+          if (typeof window !== "undefined" && (window as any).connectWallet) {
+            try {
+              const success = await (window as any).connectWallet();
+              if (success) window.location.href = "/checkout";
+            } catch (err) {
+              console.error("Login metamask aa falhou", err);
+            }
+          }
+        };
       });
     }
   });

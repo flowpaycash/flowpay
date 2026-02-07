@@ -40,6 +40,9 @@ try {
     crypto: {
       rpc: "https://rpc.ankr.com/eth", // Default fallback
       chainId: "0x1"
+    },
+    infura: {
+      apiKey: process.env.INFURA_API_KEY || process.env.INFURA_KEY || ""
     }
   };
 

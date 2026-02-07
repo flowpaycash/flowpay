@@ -6,5 +6,8 @@ window.NEO_CONFIG = {
   "crypto": {
     "rpc": "https://rpc.ankr.com/eth",
     "chainId": "0x1"
+  },
+  "infura": {
+    "apiKey": ""
   }
 };
