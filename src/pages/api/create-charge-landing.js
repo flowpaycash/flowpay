@@ -101,10 +101,7 @@ export const POST = async ({ request, clientAddress }) => {
             customer: {
                 name: customer_name || undefined,
                 email: customer_email,
-                taxID: {
-                    taxID: cpfClean,
-                    type: cpfClean.length <= 11 ? 'CPF' : 'CNPJ'
-                }
+                taxID: cpfClean
             },
             additionalInfo: [
                 { key: 'wallet', value: wallet },
