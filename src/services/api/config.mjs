@@ -8,10 +8,10 @@ export const config = {
   // URLs permitidas por ambiente
   allowedOrigins: {
     production: process.env.ALLOWED_ORIGINS_PROD
-      ? process.env.ALLOWED_ORIGINS_PROD.split(',')
+      ? process.env.ALLOWED_ORIGINS_PROD.split(',').map(o => o.trim())
       : ['https://flowpay-production-10d8.up.railway.app', 'https://flowpay.cash', 'https://www.flowpay.cash'],
     staging: process.env.ALLOWED_ORIGINS_STAGING
-      ? process.env.ALLOWED_ORIGINS_STAGING.split(',')
+      ? process.env.ALLOWED_ORIGINS_STAGING.split(',').map(o => o.trim())
       : [],
     development: ['http://localhost:3000', 'http://localhost:8888', 'http://localhost:8000', 'http://127.0.0.1:3000', 'http://127.0.0.1:8888']
   },
