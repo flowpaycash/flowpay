@@ -13,7 +13,7 @@ export const config = {
     staging: process.env.ALLOWED_ORIGINS_STAGING
       ? process.env.ALLOWED_ORIGINS_STAGING.split(',')
       : [],
-    development: ['http://localhost:8888', 'http://localhost:8000', 'http://127.0.0.1:8888']
+    development: ['http://localhost:3000', 'http://localhost:8888', 'http://localhost:8000', 'http://127.0.0.1:3000', 'http://127.0.0.1:8888']
   },
 
   // Configurações da API Woovi
