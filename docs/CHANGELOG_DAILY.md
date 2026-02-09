@@ -8,7 +8,29 @@
 ========================================
 ```
 
+## ▓▓▓ CHANGELOG: 08-FEB-2026
+
+────────────────────────────────────────
+**"SANDBOX COMPATIBILITY & AUTH BUNDLING OPTIMIZATION"**
+
+### └─ Agent Sandbox Standards (Critical Discovery)
+- **Problem**: Claude Code sandbox reads `.gitignore` and blocks writes to all listed paths (e.g., `.astro/`), causing build failures (`EPERM`).
+- **Solution**: Creation of `.agyignore` to override behavior, allowing writes to build artifacts while protecting sensitive secrets.
+- **Automation**: Updated `package.json` with `prebuild` scripts to ensure a clean state before every compilation.
+
+### └─ Auth Logic & UX
+- **Refactor**: Optimized dynamic script loading in `login.astro`.
+- **Race Condition Prevention**: Implemented `loadScriptOnce` to prevent duplicate provider injections.
+- **UX Feedback**: Added `loading-spinner` and disabled button states during authentication module fetching.
+
+### └─ Type Safety & Code Quality
+- **TS Fixes**: Removed unused variables (`addressDisplay` in Navbar) and cleaned parameters in Checkout to eliminate `ts(6133)` warnings.
+- **Engine Consistency**: Updated Node.js requirement to `>=20.x` in `package.json` for environment alignment.
+
+────────────────────────────────────────
+
 ## ▓▓▓ CHANGELOG: 05-FEB-2026
+
 
 ────────────────────────────────────────
 **"PROOF-OF-EXECUTION & SOVEREIGN AUTHENTICATION"**
