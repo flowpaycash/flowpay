@@ -122,17 +122,14 @@ export const POST = async ({ request, clientAddress }) => {
                 }
 
                 // 🌉 NEXUS BRIDGE: Notify about payment (FASE 2 - Single Point of Contact)
-                // Nexus is now responsible for routing to Smart Factory (mint) and Neobot (notifications)
-                // Direct calls to Neobot have been removed per ECOSYSTEM_COMPLIANCE_CHECKLIST v3.0
                 const { notifyNexus } = await import('../../services/api/nexus-bridge.mjs');
                 notifyNexus('PAYMENT_RECEIVED', {
                     transactionId: correlationID,
                     orderId: correlationID,
-                    amount: charge.value / 100, // Woovi values are in cents
+                    amount: charge.value / 100,
                     currency: 'BRL',
                     payer: order.customer_wallet || order.customer_ref || 'unknown',
                     customerEmail: customerEmail,
-                    // Metadata for downstream processing
                     metadata: {
                         source: 'flowpay',
                         chargeId: charge.identifier,
@@ -141,6 +138,25 @@ export const POST = async ({ request, clientAddress }) => {
                 }).catch(err => {
                     secureLog('error', 'Astro Webhook: Erro ao notificar Nexus', { error: err.message });
                 });
+
+                // 📧 EMAIL NOTIFICATION: Notify customer via Resend
+                if (customerEmail) {
+                    try {
+                        const { sendEmail } = await import('../../services/api/email-service.mjs');
+                        const { paymentConfirmedTemplate } = await import('../../services/api/email/templates/payment-confirmed.mjs');
+
+                        sendEmail({
+                            to: customerEmail,
+                            subject: 'Pagamento Confirmado - FlowPay 🚀',
+                            html: paymentConfirmedTemplate({
+                                orderId: correlationID,
+                                amount: charge.value / 100
+                            })
+                        }).catch(err => secureLog('error', 'Webhook: Erro de e-mail assíncrono', { error: err.message }));
+                    } catch (emailErr) {
+                        secureLog('error', 'Webhook: Erro ao carregar serviço de e-mail ou template', { error: emailErr.message });
+                    }
+                }
 
                 // ⚠️ DEPRECATED (FASE 2): Direct Neobot call removed
                 // The Nexus will route PAYMENT_RECEIVED to Neobot automatically

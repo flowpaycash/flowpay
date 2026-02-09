@@ -26,7 +26,7 @@ const {
     <meta property="og:description" content={description} />
     <meta
       property="og:image"
-      content="https://flowoff.xyz/public/images/og-flowpay.png"
+      content="https://flowpay.cash/img/og-flowpay-premium.png"
     />
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://flowpay.cash" />
@@ -34,8 +34,36 @@ const {
     <meta property="twitter:description" content={description} />
     <meta
       property="twitter:image"
-      content="https://flowoff.xyz/public/images/og-flowpay.png"
+      content="https://flowpay.cash/img/og-flowpay-premium.png"
     />
+
+    <!-- JSON-LD Structured Data (Elite SEO) -->
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "FlowPay",
+        "url": "https://flowpay.cash",
+        "logo": "https://flowpay.cash/img/og-flowpay-premium.png",
+        "description": "Gateway de pagamento Pix para Web3 com liquidação instantânea em USDT e prova de execução on-chain.",
+        "sameAs": [
+          "https://twitter.com/flowpaycash",
+          "https://github.com/flowpaycash"
+        ]
+      }
+    </script>
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://flowpay.cash",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://flowpay.cash/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
 
     <!-- Security (Stage 2 - CSP Hardening Initial) -->
     <meta

@@ -22,6 +22,33 @@ export async function connectWallet() {
     }
 
     try {
+        // 1. Verificar/Trocar para Polygon (ID: 137 ou 0x89)
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        if (chainId !== '0x89') {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0x89' }],
+                });
+            } catch (switchError: any) {
+                // Se a rede não existir na MetaMask, adicioná-la
+                if (switchError.code === 4902) {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: '0x89',
+                            chainName: 'Polygon Mainnet',
+                            nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+                            rpcUrls: ['https://polygon-rpc.com/'],
+                            blockExplorerUrls: ['https://polygonscan.com/']
+                        }]
+                    });
+                } else {
+                    throw switchError;
+                }
+            }
+        }
+
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const address = accounts[0];
 
@@ -79,10 +106,14 @@ export async function connectWallet() {
         // Helper para o App enviar transações via AA
         (window as any).sendSATransaction = async (params: any) => {
             if (window.__bundlerClient) {
-                return await (smartAccount as any).sendUserOperation({
-                    calls: [params],
-                    bundlerClient: window.__bundlerClient
-                });
+                try {
+                    return await (smartAccount as any).sendUserOperation({
+                        calls: [params],
+                        bundlerClient: window.__bundlerClient
+                    });
+                } catch (err) {
+                    console.error("❌ Falha no Bundler, tentando fallback para transação direta:", err);
+                }
             }
             return await (smartAccount as any).sendTransaction(params);
         };
@@ -93,6 +124,11 @@ export async function connectWallet() {
         return true;
     } catch (e: any) {
         console.error("❌ Falha ao conectar MetaMask AA:", e);
+        if (e.code === 4001) {
+            console.warn("Usuário recusou a conexão.");
+        } else {
+            alert(`Erro ao conectar Smart Account: ${e.message || 'Erro desconhecido'}`);
+        }
         return false;
     }
 }

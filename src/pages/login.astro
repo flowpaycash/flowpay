@@ -64,7 +64,7 @@ import Layout from "../layouts/Layout.astro";
             <span>ou</span>
           </div>
 
-          <a href="/checkout" class="btn-premium secondary">
+          <a href="/checkout" class="btn-premium secondary" id="login-guest">
             Entrar como Convidado
           </a>
         </div>
@@ -431,6 +431,18 @@ import Layout from "../layouts/Layout.astro";
           "metamask aa"
         )
       );
+    }
+
+    const guestBtn = document.getElementById("login-guest");
+    if (guestBtn) {
+      guestBtn.addEventListener("click", (e) => {
+        // Log access in background
+        fetch("/api/auth/guest-log", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "guest_login" }),
+        }).catch(() => {}); // Silent fail, don't block user
+      });
     }
   });
 </script>
