@@ -25,10 +25,14 @@ install: ## Instala dependências do projeto
 	@echo "$(GREEN)Dependências instaladas!$(NC)"
 
 dev: ## Inicia servidor de desenvolvimento (Astro)
+	@echo "$(GREEN)Limpando .astro para evitar conflitos...$(NC)"
+	@rm -rf .astro
 	@echo "$(GREEN)Iniciando servidor de desenvolvimento...$(NC)"
 	@npm run dev
 
 build: ## Executa o build de produção (SSR)
+	@echo "$(GREEN)Limpando .astro para evitar conflitos...$(NC)"
+	@rm -rf .astro
 	@echo "$(GREEN)Executando build do Astro...$(NC)"
 	@npm run build
 	@echo "$(GREEN)Build concluído em dist/$(NC)"

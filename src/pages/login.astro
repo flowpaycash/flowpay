@@ -351,49 +351,103 @@ import Layout from "../layouts/Layout.astro";
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const loginBtn = document.getElementById("login-web3auth");
-    const metamaskBtn = document.getElementById("login-metamask-aa");
+    const loginBtn = document.getElementById(
+      "login-web3auth"
+    ) as HTMLButtonElement;
+    const metamaskBtn = document.getElementById(
+      "login-metamask-aa"
+    ) as HTMLButtonElement;
+
+    async function loadScriptOnce(id: string, src: string): Promise<void> {
+      if (document.getElementById(id)) return;
+
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.id = id;
+        script.src = src;
+        script.type = "module";
+        script.onload = () => resolve();
+        script.onerror = () =>
+          reject(new Error(`Falha ao carregar script: ${src}`));
+        document.head.appendChild(script);
+      });
+    }
+
+    async function handleLogin(
+      btn: HTMLButtonElement,
+      scriptId: string,
+      scriptSrc: string,
+      type: string
+    ) {
+      if (btn.disabled) return;
+
+      const originalContent = btn.innerHTML;
+      btn.disabled = true;
+      btn.style.opacity = "0.7";
+      btn.innerHTML = `<span class="loading-spinner"></span> Carregando...`;
+
+      try {
+        await loadScriptOnce(scriptId, scriptSrc);
+
+        if (typeof window !== "undefined" && (window as any).connectWallet) {
+          const success = await (window as any).connectWallet();
+          if (success) {
+            window.location.href = "/checkout";
+          } else {
+            // Reset se não teve sucesso (ex: usuário cancelou)
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            btn.innerHTML = originalContent;
+          }
+        }
+      } catch (err) {
+        console.error(`Login ${type} falhou`, err);
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.innerHTML = originalContent;
+        alert(
+          `Erro ao carregar módulo de autenticação. Por favor, tente novamente.`
+        );
+      }
+    }
 
     if (loginBtn) {
-      loginBtn.addEventListener("click", async () => {
-        // Load Web3Auth bundle dynamic
-        const script = document.createElement("script");
-        script.src = "/assets/js/web3auth.js";
-        script.type = "module";
-        document.head.appendChild(script);
-
-        script.onload = async () => {
-          if (typeof window !== "undefined" && (window as any).connectWallet) {
-            try {
-              const success = await (window as any).connectWallet();
-              if (success) window.location.href = "/checkout";
-            } catch (err) {
-              console.error("Login web3auth falhou", err);
-            }
-          }
-        };
-      });
+      loginBtn.addEventListener("click", () =>
+        handleLogin(
+          loginBtn,
+          "script-web3auth",
+          "/assets/js/web3auth.js",
+          "web3auth"
+        )
+      );
     }
 
     if (metamaskBtn) {
-      metamaskBtn.addEventListener("click", async () => {
-        // Load MetaMask AA bundle dynamic
-        const script = document.createElement("script");
-        script.src = "/assets/js/metamask-aa.js";
-        script.type = "module";
-        document.head.appendChild(script);
-
-        script.onload = async () => {
-          if (typeof window !== "undefined" && (window as any).connectWallet) {
-            try {
-              const success = await (window as any).connectWallet();
-              if (success) window.location.href = "/checkout";
-            } catch (err) {
-              console.error("Login metamask aa falhou", err);
-            }
-          }
-        };
-      });
+      metamaskBtn.addEventListener("click", () =>
+        handleLogin(
+          metamaskBtn,
+          "script-metamask-aa",
+          "/assets/js/metamask-aa.js",
+          "metamask aa"
+        )
+      );
     }
   });
 </script>
+
+<style is:global>
+  .loading-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

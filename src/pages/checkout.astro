@@ -226,7 +226,7 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
         connect: () => window.connectWallet?.(),
         disconnect: () => window.disconnectWallet?.(),
       },
-      onToast: (msg, _type) => {
+      onToast: (_msg, _type) => {
         // Toast handled silently
       },
     });

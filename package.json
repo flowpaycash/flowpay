@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "rm -rf .astro",
     "build": "astro check && astro build",
     "preview": "npm run build && npx serve dist -p 4321",
     "astro": "astro",
@@ -68,7 +69,7 @@
   "author": "FlowPay Team",
   "license": "MIT",
   "engines": {
-    "node": "20.x"
+    "node": ">=20.x"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,22 @@
+# .agyignore - Claude Code Sandbox Ignore File
+# Este arquivo sobrescreve o .gitignore para o sandbox
+# Arquivos/diretórios listados aqui serão bloqueados pelo sandbox
+
+# Proteger arquivos sensíveis
+.env
+.env.*
+*.key
+*.pem
+*.p12
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+
+# Proteger configurações do sistema
+.ssh/
+.aws/
+.config/
+
+# NÃO bloqueie .astro/ - o Astro precisa escrever aqui durante o build
+# (removido intencionalmente para permitir builds)
