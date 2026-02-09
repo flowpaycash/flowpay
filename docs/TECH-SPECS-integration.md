@@ -2,7 +2,7 @@
 
 **Status:** RASCUNHO
 **Versão:** 1.0.0
-**Contexto:** Consolidação de ativos técnicos para o FlowPay Sovereign Node.
+**Contexto:** Consolidação de ativos técnicos para o FlowPay Autonomous Node.
 
 ---
 

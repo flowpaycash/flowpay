@@ -16,7 +16,7 @@ const tests = [
 ];
 
 console.log('========================================');
-console.log('🦁 FLOWPay - SOVEREIGN TEST SUITE 🦁');
+console.log('🦁 FLOWPay - AUTONOMOUS TEST SUITE 🦁');
 console.log('========================================\n');
 
 let failed = 0;

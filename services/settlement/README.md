@@ -12,4 +12,4 @@ Motor de liquidacao ERC-20 (USDT/USDC) com suporte gasless.
 
 **Variaveis:** `SERVICE_WALLET_*`, `QUICKNODE_POLYGON_RPC` / `QUICKNODE_BSC_RPC`, `USDT_SETTLEMENT_NETWORK` (ver `.env.example`).
 
-**Docs:** `docs/TASK-001-sovereign-integration.md`, `extensions/flowpay/legacy-audit-report.json`.
+**Docs:** `docs/TASK-001-autonomous-integration.md`, `extensions/flowpay/legacy-audit-report.json`.

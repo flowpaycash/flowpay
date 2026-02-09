@@ -16,4 +16,4 @@ Scanner de blocos para pagamentos ERC-20 (redundancia ao webhook).
 
 **Variaveis:** `QUICKNODE_POLYGON_RPC` (ou `QUICKNODE_ETHEREUM_RPC` ou `INFURA_API_KEY`), `MERCHANT_WALLET_ADDRESS` (ou `SERVICE_WALLET_ADDRESS`), `USDT_CONTRACT_ADDRESS`, `USDC_CONTRACT_ADDRESS`.
 
-**Docs:** `docs/TASK-001-sovereign-integration.md`, `extensions/flowpay/legacy-audit-report.json`.
+**Docs:** `docs/TASK-001-autonomous-integration.md`, `extensions/flowpay/legacy-audit-report.json`.

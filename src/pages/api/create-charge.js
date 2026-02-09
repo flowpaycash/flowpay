@@ -111,7 +111,7 @@ export const POST = async ({ request, clientAddress }) => {
                 checkout_url: wooviData.paymentLinkUrl || wooviData.charge?.paymentLinkUrl || null,
                 metadata: JSON.stringify({
                     woovi_id: wooviData.correlationID,
-                    source: 'flowpay-sovereign-node'
+                    source: 'flowpay-autonomous-node'
                 })
             });
             secureLog('info', 'Pedido salvo no SQLite (Railway Bridge) ✅', { id_transacao });

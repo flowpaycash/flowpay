@@ -76,7 +76,7 @@ export const POST = async ({ request, clientAddress }) => {
                     paid_at: new Date(charge.paidAt || Date.now()).toISOString()
                 });
 
-                // Auto-advance to Pending Review for Sovereign Manual Settlement
+                // Auto-advance to Pending Review for Autonomous Manual Settlement
                 updateOrderStatus(correlationID, 'PENDING_REVIEW');
 
                 secureLog('info', 'Astro Webhook: Preparando disparo da Bridge 🌉', { correlationID });

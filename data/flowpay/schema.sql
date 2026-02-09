@@ -1,5 +1,5 @@
 -- FlowPay SQLite Schema
--- NEØ Protocol · Sovereign Local Database
+-- NEØ Protocol · Autonomous Local Database
 -- No cloud, no centralization, full control
 
 -- ════════════════════════════════════════

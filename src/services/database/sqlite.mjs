@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { createError, ERROR_TYPES } from "../api/error-handler.mjs";
 
-// 🏛️ SOVEREIGN DATABASE PATH RESOLUTION
+// 🏛️ AUTONOMOUS DATABASE PATH RESOLUTION
 // Prioritize /app/data for Railway Volumes, fallback to local data dir
 const getDatabasePaths = () => {
     // Validate that we are not traversing up directory incorrectly if ENV is compromised

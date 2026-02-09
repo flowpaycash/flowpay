@@ -18,7 +18,7 @@ Supersedes: ADR-002 (Layer 2 strategy)
 
 FlowPay requires persistent storage for:
 - Payment orders lifecycle tracking
-- UNLOCK_RECEIPT sovereign records
+- UNLOCK_RECEIPT autonomous records
 - Product catalog
 - Retry queue (failed operations)
 - Audit logs
@@ -29,7 +29,7 @@ databases (Supabase, Firebase, etc).
 
 Philosophy:
 > "If it doesn't run local, it's not
-> sovereign."
+> autonomous."
 
 ────────────────────────────────────────
 
@@ -37,11 +37,11 @@ Philosophy:
 
 **We adopt SQLite as primary persistence:**
 
-> Local-first, sovereign, battle-tested,
+> Local-first, autonomous, battle-tested,
 > zero dependencies on cloud providers.
 
 **Rationale:**
-1. Runs 100% local (full sovereignty)
+1. Runs 100% local (full autonomousty)
 2. No accounts, no billing, no lock-in
 3. Battle-tested (20+ years, billions deployed)
 4. ACID transactions (data integrity)
@@ -89,7 +89,7 @@ Philosophy:
 │ • Content-addressed                    │
 │                                        │
 │ Provider: Storacha (w3up)             │
-│ Purpose: Sovereign proof, portability  │
+│ Purpose: Autonomous proof, portability  │
 └────────────────────────────────────────┘
 ```
 
@@ -107,7 +107,7 @@ Philosophy:
   customer, status, timestamps
 
 **receipts**
-- UNLOCK_RECEIPT sovereign records
+- UNLOCK_RECEIPT autonomous records
 - Generated when access granted
 - Stores: JWT, permissions, signature
 - Optional: IPFS CID for anchoring
@@ -140,7 +140,7 @@ Philosophy:
 
 ### ✅ Positive
 
-1. **Full Sovereignty**
+1. **Full Autonomousty**
    - No cloud provider lock-in
    - Data lives on our machines
    - Zero external dependencies
@@ -211,7 +211,7 @@ Philosophy:
 - Network latency
 - Single point of failure
 
-**Rejected because:** Violates sovereignty.
+**Rejected because:** Violates autonomousty.
 
 ────────────────────────────────────────
 
@@ -374,7 +374,7 @@ For user-owned data:
 Core Architect · NΞØ Protocol
 neo@neoprotocol.space
 
-"Local first. Sovereign always.
+"Local first. Autonomous always.
  Cloud is someone else's computer."
 
 If it doesn't run offline, it's not NEØ.

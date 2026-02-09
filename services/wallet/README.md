@@ -1,6 +1,6 @@
 # Smart Wallet Service (Pilar 1)
 
-Account Abstraction (ERC-4337) para FlowPay Sovereign v3.
+Account Abstraction (ERC-4337) para FlowPay Autonomous v3.
 
 **Origem legada:** `/Users/nettomello/CODIGOS/delegation-toolkit/integrate-token-smart-accounts.ts`
 
@@ -16,4 +16,4 @@ Account Abstraction (ERC-4337) para FlowPay Sovereign v3.
 
 **Variaveis:** `BUNDLER_URL` ou `INFURA_API_KEY`, `PRIVATE_KEY` ou `SERVICE_WALLET_PRIVATE_KEY`, `QUICKNODE_POLYGON_RPC` (ver `.env.example`).
 
-**Docs:** `docs/TASK-001-sovereign-integration.md`, `extensions/flowpay/legacy-audit-report.json`.
+**Docs:** `docs/TASK-001-autonomous-integration.md`, `extensions/flowpay/legacy-audit-report.json`.

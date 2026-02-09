@@ -1,5 +1,5 @@
 # Walkthrough: Proof-of-Execution (PoE) Implementation
-**NEØ Protocol · Sovereign Evidence Layer**
+**NEØ Protocol · Autonomous Evidence Layer**
 
 This document summarizes the implementation of the Proof-of-Execution (PoE) architecture, transforming FlowPay's execution logs into immutable cryptographic evidence anchored on the Base L2 blockchain.
 

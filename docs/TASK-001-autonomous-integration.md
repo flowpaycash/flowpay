@@ -6,7 +6,7 @@
 
 ## 🎯 Objetivo
 
-Migrar a inteligência dispersa nos repositórios legados (`delegation-toolkit`, `neo_one`, `FlowPAY Legacy`) para o núcleo do **FlowPay Sovereign v3**, habilitando contas inteligentes (gasless), liquidação robusta e redundância de verificação.
+Migrar a inteligência dispersa nos repositórios legados (`delegation-toolkit`, `neo_one`, `FlowPAY Legacy`) para o núcleo do **FlowPay Autonomous v3**, habilitando contas inteligentes (gasless), liquidação robusta e redundância de verificação.
 
 ---
 
@@ -48,7 +48,7 @@ Migrar a inteligência dispersa nos repositórios legados (`delegation-toolkit`,
 
 ---
 
-## Estrutura Criada (Sovereign v3)
+## Estrutura Criada (Autonomous v3)
 
 | Pilar | Destino | Status |
 | :--- | :--- | :--- |
@@ -56,7 +56,7 @@ Migrar a inteligência dispersa nos repositórios legados (`delegation-toolkit`,
 | B. Settlement Engine | `services/settlement/engine.js` | Transfer direto (viem) ok; gasless stub |
 | C. Chain Monitor | `services/monitor/chain-scanner.js` | Stub; portar de `crypto.py` |
 
-Relatório de auditoria: `extensions/flowpay/legacy-audit-report.json`. Variáveis de ambiente: `.env.example` (seção SOVEREIGN v3).
+Relatório de auditoria: `extensions/flowpay/legacy-audit-report.json`. Variáveis de ambiente: `.env.example` (seção AUTONOMOUS v3).
 
 ---
 

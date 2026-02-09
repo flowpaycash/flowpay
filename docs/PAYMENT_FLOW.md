@@ -12,7 +12,7 @@ sequenceDiagram
     actor User as Usuário
     participant UI as Checkout UI (Astro)
     participant API as FlowPay API
-    participant DB as SQLite (Sovereign)
+    participant DB as SQLite (Autonomous)
     participant Woovi as Gateway PIX
     participant PoE as PoE Service
     participant Nexus as Nexus Bridge
@@ -93,7 +93,7 @@ C4Context
 
     Person(user, "Usuário", "Realiza o pagamento PIX")
     
-    System_Boundary(c1, "FlowPay Sovereign Node") {
+    System_Boundary(c1, "FlowPay Autonomous Node") {
         System(web, "Next/Astro UI", "Checkout e Status")
         SystemDb(db, "SQLite", "Persistência local de ordens e PoE")
         System(api, "Node API", "Orquestrador de Webhooks e Pontos")

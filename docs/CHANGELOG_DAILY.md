@@ -33,7 +33,7 @@
 
 
 ────────────────────────────────────────
-**"PROOF-OF-EXECUTION & SOVEREIGN AUTHENTICATION"**
+**"PROOF-OF-EXECUTION & AUTONOMOUS AUTHENTICATION"**
 
 ### └─ Proof-of-Execution (PoE)
 - **Engine**: Implementação de Merkle Tree SHA-256 (`merkle.js`).
@@ -62,7 +62,7 @@
 - Theme: Dark Glassmorphism global.
 - Components: Navbar/Features/Footer.
 
-### └─ Sovereign Engine
+### └─ Autonomous Engine
 
 - Fix: SQLite local persistence.
 - Refactor: README/ROADMAP (NEO Std).

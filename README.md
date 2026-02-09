@@ -18,7 +18,7 @@ Stack: Astro + SQLite + Node (Railway)
 ────────────────────────────────────────
 O FLOWPay é um gateway de pagamento focado em Pix e Web3. Projetado para oferecer soberania total e complexidade invisível.
 
-**SOVEREIGN NODE:** Esta versão utiliza persistência local SQLite. No Railway, utilize Volumes em `/app/data`.
+**AUTONOMOUS NODE:** Esta versão utiliza persistência local SQLite. No Railway, utilize Volumes em `/app/data`.
 
 ## ▓▓▓ CORE PRINCIPLES
 
@@ -52,7 +52,7 @@ O FLOWPay é um gateway de pagamento focado em Pix e Web3. Projetado para oferec
 graph TD
     User((Usuário)) -->|Paga PIX| FP[FLOWPay Node]
     
-    subgraph "FLOWPay Sovereign"
+    subgraph "FLOWPay Autonomous"
         FP -->|Webhook| ID{Idempotency}
         ID -->|PoE| PB(Merkle Batching)
         ID -->|Nexus| NB(Nexus Bridge)

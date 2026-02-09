@@ -7,7 +7,7 @@
 
 ## 1. SYSTEM OVERVIEW
 
-The **NEO Nexus** is the central orchestration engine of the NEØ Protocol. It acts as a **Sovereign Event Bus** that coordinates communication between autonomous nodes (FlowPay, Smart Factory, Fluxx DAO, WOD Pro, etc.).
+The **NEO Nexus** is the central orchestration engine of the NEØ Protocol. It acts as a **Autonomous Event Bus** that coordinates communication between autonomous nodes (FlowPay, Smart Factory, Fluxx DAO, WOD Pro, etc.).
 
 **Core Principle:** Decoupled, event-driven architecture where nodes publish events and subscribe to reactions without knowing each other's implementation details.
 
