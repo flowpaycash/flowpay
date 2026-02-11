@@ -99,7 +99,20 @@ export function validateConfig() {
 
 // Função para obter CORS headers
 export function getCorsHeaders(event) {
-  const origin = event.headers.origin || event.headers.Origin || '';
+  // Extract origin from Headers object (Web API) or plain object
+  let origin = '';
+
+  if (event.headers) {
+    // If it's a Headers object (Web API), use .get()
+    if (typeof event.headers.get === 'function') {
+      origin = event.headers.get('origin') || event.headers.get('Origin') || '';
+    }
+    // If it's a plain object
+    else {
+      origin = event.headers.origin || event.headers.Origin || '';
+    }
+  }
+
   // Check against Environment-specific allow list
   const envOrigins = config.allowedOrigins[config.environment] || config.allowedOrigins.production;
   const isAllowedOrigin = envOrigins.includes(origin);
