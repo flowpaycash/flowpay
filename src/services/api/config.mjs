@@ -9,7 +9,14 @@ export const config = {
   allowedOrigins: {
     production: process.env.ALLOWED_ORIGINS_PROD
       ? process.env.ALLOWED_ORIGINS_PROD.split(',').map(o => o.trim())
-      : ['https://flowpay-production-10d8.up.railway.app', 'https://flowpay.cash', 'https://www.flowpay.cash'],
+      : [
+        'https://flowpay-production-10d8.up.railway.app',
+        'https://flowpay.cash',
+        'https://www.flowpay.cash',
+        'https://flowoff.xyz',
+        'https://www.flowoff.xyz',
+        'https://lp.flowoff.xyz'
+      ],
     staging: process.env.ALLOWED_ORIGINS_STAGING
       ? process.env.ALLOWED_ORIGINS_STAGING.split(',').map(o => o.trim())
       : [],
