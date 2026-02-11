@@ -28,6 +28,7 @@ const {
     <!-- PWA Support -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#000000" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
@@ -223,7 +224,7 @@ const {
 
     <!-- Web3 Config & Auth -->
     <script is:inline src="/assets/neo.config.js"></script>
-    <script is:inline type="module" src="/assets/js/web3auth.js"></script>
+    <script is:inline type="module" src="/assets/js/web3auth.smart.js"></script>
   </head>
   <body>
     <slot />
