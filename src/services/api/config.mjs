@@ -1,4 +1,4 @@
-// 🔐 FLOWPay - Configuração Centralizada
+// 🔐 FLOWPay - Configuração Centralizada (Updated: 2026-02-11)
 // Centraliza todas as configurações e validações de ambiente
 
 export const config = {
