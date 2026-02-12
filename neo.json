@@ -10,9 +10,37 @@
     "homepage": "https://github.com/flowpaycash/flowpay#readme",
     "issues": "https://github.com/flowpaycash/flowpay/issues"
   },
+  "railway": {
+    "projectId": "0a6c292a-b3b2-4873-96a7-2e84e7b9b38c",
+    "projectName": "flowpay",
+    "productionUrl": "https://flowpay-production-10d8.up.railway.app",
+    "port": 4321,
+    "buildCommand": "npm run build",
+    "startCommand": "PORT=4321 npm start",
+    "healthcheck": "/api/health"
+  },
+  "nexus": {
+    "nodeId": "flowpay",
+    "webhookEndpoint": "/api/webhook/nexus",
+    "eventsHandled": [
+      "FACTORY:MINT_CONFIRMED",
+      "FACTORY:MINT_FAILED",
+      "NEOBOT:ACCESS_UNLOCKED"
+    ],
+    "eventsEmitted": [
+      "FLOWPAY:PAYMENT_RECEIVED",
+      "FLOWPAY:PAYMENT_FAILED"
+    ],
+    "neobotApiUrl": "https://nexus.neoprotocol.space",
+    "neobotApiUrlDev": "http://localhost:19000"
+  },
   "domains": {
     "production": {
       "url": "https://flowpay.cash",
+      "environment": "prod"
+    },
+    "railway": {
+      "url": "https://flowpay-production-10d8.up.railway.app",
       "environment": "prod"
     },
     "staging": {
