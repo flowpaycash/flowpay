@@ -3,21 +3,15 @@
   "project": {
     "name": "FLOWPay",
     "tagline": "Checkout invisível. Auto-custódia. Transparência por padrão.",
-    "version": "2.2.0",
+    "version": "1.0.1",
     "protocol": "NEØ",
+    "role": "Financial Sovereign Node",
     "license": "MIT",
-    "repository": "https://github.com/flowpaycash/flowpay",
-    "homepage": "https://github.com/flowpaycash/flowpay#readme",
-    "issues": "https://github.com/flowpaycash/flowpay/issues"
+    "repository": "https://github.com/flowpaycash/flowpay"
   },
   "railway": {
     "projectId": "0a6c292a-b3b2-4873-96a7-2e84e7b9b38c",
-    "projectName": "flowpay",
-    "productionUrl": "https://flowpay-production-10d8.up.railway.app",
-    "port": 4321,
-    "buildCommand": "npm run build",
-    "startCommand": "PORT=4321 npm start",
-    "healthcheck": "/api/health"
+    "serviceId": "f8203b16-7306-414c-a723-f1baa69a8250"
   },
   "nexus": {
     "nodeId": "flowpay",
