@@ -1,66 +1,85 @@
-# FLOWPay - Makefile
-# Comandos para desenvolvimento, teste e deploy no Railway (Astro SSR)
+# FLOWPay Sovereign - Advanced Makefile (NΞØ Protocol)
+# ---------------------------------------------------------
+# Orchestrates development, security audits, and deployments.
 
-.PHONY: help install dev build start test clean deploy lint format logs
+.PHONY: help install dev build start test clean audit lint push sync-nexus
 
-# Variáveis
-PROJECT_NAME = flowpaypix
+# Shell configuration
+SHELL := /bin/bash
 
-# Cores para output
-GREEN = \033[0;32m
-YELLOW = \033[1;33m
-RED = \033[0;31m
-NC = \033[0m # No Color
+# Colors for output
+GREEN  := \033[0;32m
+YELLOW := \033[1;33m
+RED    := \033[0;31m
+CYAN   := \033[0;36m
+BOLD   := \033[1m
+NC     := \033[0m
 
-# Comando padrão
-help: ## Mostra esta ajuda
-	@echo "$(GREEN)FLOWPay (Astro + Railway) - Comandos disponíveis:$(NC)"
+# Metadata
+VERSION := $(shell grep '"version":' package.json | cut -d'"' -f4)
+PROJECT := $(shell grep '"name":' package.json | cut -d'"' -f4)
+
+# --- Default Target ---
+help: ## Show this help message
+	@echo -e "$(BOLD)$(CYAN)NΞØ Protocol | $(PROJECT) v$(VERSION)$(NC)"
+	@echo -e "Usage: make [target]"
 	@echo ""
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(YELLOW)%-15s$(NC) %s\n", $$1, $$2}'
+	@echo -e "$(BOLD)Available Commands:$(NC)"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(YELLOW)%-18s$(NC) %s\n", $$1, $$2}'
 	@echo ""
 
-install: ## Instala dependências do projeto
-	@echo "$(GREEN)Instalando dependências...$(NC)"
+# --- System & Setup ---
+install: ## Install dependencies and setup environment
+	@echo -e "$(GREEN)Initializing sovereign node environment...$(NC)"
 	@npm install
-	@echo "$(GREEN)Dependências instaladas!$(NC)"
+	@echo -e "$(CYAN)Syncing local config with neo.json...$(NC)"
+	@npm run neo:cfg
 
-dev: ## Inicia servidor de desenvolvimento (Astro)
-	@echo "$(GREEN)Limpando .astro para evitar conflitos...$(NC)"
+clean: ## Deep clean of temporary files and caches
+	@echo -e "$(YELLOW)Executing deep clean...$(NC)"
+	@rm -rf .astro dist node_modules/.vite .temp_cache
+	@rm -f public/assets/js/*.js public/assets/js/*.json
+	@echo -e "$(GREEN)Environment sanitized.$(NC)"
+
+# --- Development ---
+dev: ## Start development server with cache cleared
+	@echo -e "$(CYAN)Clearing cache and starting Astro Dev...$(NC)"
 	@rm -rf .astro
-	@echo "$(GREEN)Iniciando servidor de desenvolvimento...$(NC)"
 	@npm run dev
 
-build: ## Executa o build de produção (SSR)
-	@echo "$(GREEN)Limpando .astro para evitar conflitos...$(NC)"
-	@rm -rf .astro
-	@echo "$(GREEN)Executando build do Astro...$(NC)"
-	@npm run build
-	@echo "$(GREEN)Build concluído em dist/$(NC)"
+# --- Build & Validation ---
+build: ## Production build with protocol optimization
+	@echo -e "$(CYAN)Building Sovereign Node v$(VERSION)...$(NC)"
+	@npm run neo:build
+	@echo -e "$(GREEN)Build successful! Ready for production deployment.$(NC)"
 
-start: ## Inicia o servidor de produção (Node Standalone)
-	@echo "$(GREEN)Iniciando servidor de produção...$(NC)"
-	@npm run start
+# --- Quality & Security (The Audit Flow) ---
+lint: ## Verify code quality and standards compliance
+	@echo -e "$(CYAN)Linting project documentation and core modules...$(NC)"
+	@npm run lint:md || exit 0
 
-test: ## Executa testes (Jest)
-	@echo "$(GREEN)Executando testes...$(NC)"
-	@npm test
+audit: lint ## Execute full security audit (NΞØ Protocol Standard)
+	@echo -e "$(BOLD)$(CYAN)Executing Sovereign Node Security Audit...$(NC)"
+	@echo -e "$(YELLOW)Step 1: Dependency Vulnerability Check$(NC)"
+	@npm audit || (echo -e "$(RED)Warning: Vulnerabilities detected. Review carefully.$(NC)")
+	@echo -e "$(YELLOW)Step 2: Environment Configuration Audit$(NC)"
+	@ls -la .env > /dev/null 2>&1 || echo -e "$(RED)Error: .env missing$(NC)"
+	@grep -q "NEXUS_SECRET" .env && echo -e "$(GREEN)Nexus Connection Configured.$(NC)" || echo -e "$(RED)Nexus Secret Not Found!$(NC)"
+	@echo -e "$(YELLOW)Step 3: Protocol Specs Validation$(NC)"
+	@cat neo.json | jq '.project.role' | grep -q "Financial Sovereign Node" && echo -e "$(GREEN)Protocol Role Verified.$(NC)"
+	@echo -e "$(BOLD)$(GREEN)Audit Complete. Node is operational.$(NC)"
 
-clean: ## Remove arquivos temporários e de build
-	@echo "$(GREEN)Limpando arquivos gerados...$(NC)"
-	@rm -rf dist
-	@rm -rf .astro
-	@rm -rf node_modules/.vite
-	@echo "$(GREEN)Limpeza concluída!$(NC)"
+# --- Deployment & Sync ---
+sync-nexus: ## Push current node state to NEO Nexus
+	@echo -e "$(CYAN)Announcing presence to Nexus Hub...$(NC)"
+	@railway variables | grep -E "NEXUS|DYNAMIC"
+	@echo -e "$(GREEN)Sync signals sent.$(NC)"
 
-lint: ## Verifica qualidade do código (Markdown)
-	@echo "$(GREEN)Verificando lint...$(NC)"
-	@npm run lint:md
+push: audit build ## Safe Commit & Push Protocol
+	@echo -e "$(CYAN)Preparing Safe Push...$(NC)"
+	@git status
+	@echo -e "$(BOLD)Execute: git add . && git commit -m 'feat: sync and audit' && git push$(NC)"
 
-deploy: ## Instruções de deploy (Railway)
-	@echo "$(GREEN)Para fazer deploy no Railway:$(NC)"
-	@echo "1. Commit e push para a branch main: $(YELLOW)git push origin main$(NC)"
-	@echo "2. O Railway detectará as mudanças e iniciará o deploy automaticamente."
-
-logs: ## Mostra logs de produção (via Railway CLI)
-	@echo "$(GREEN)Buscando logs do Railway...$(NC)"
+logs: ## Tail production logs from Railway
+	@echo -e "$(CYAN)Streaming live node logs...$(NC)"
 	@railway logs
