@@ -3,7 +3,7 @@
     "build": {
         "builder": "RAILPACK",
         "watchPatterns": [
-            "/app/data"
+            "**/*"
         ]
     },
     "deploy": {
