@@ -1,0 +1,710 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPaymentButton } from '../../services/database/sqlite.mjs';
+
+const { id } = Astro.params;
+let button = null;
+let notFound = false;
+
+if (!id || typeof id !== 'string' || id.length > 20 || !/^[a-f0-9]+$/.test(id)) {
+  notFound = true;
+} else {
+  button = getPaymentButton(id);
+  if (!button) notFound = true;
+}
+
+const methods = button ? JSON.parse(button.payment_methods || '["pix"]') : [];
+const hasPix = methods.includes('pix');
+const hasCrypto = methods.includes('crypto');
+const buttonTitle = button?.title || '';
+const buttonDesc = button?.description || '';
+const amountFixed = button?.amount_fixed === 1;
+const amountBrl = button?.amount_brl ? Number(button.amount_brl).toFixed(2) : null;
+const cryptoAddress = button?.crypto_address || '';
+const cryptoNetwork = button?.crypto_network || 'polygon';
+const creatorName = button?.user_name || 'FlowPay';
+---
+
+<Layout
+  title={notFound ? 'Pagamento não encontrado — FlowPay' : `${buttonTitle} — Pagamento FlowPay`}
+  description={notFound ? '' : `Pague ${buttonTitle} via PIX ou cripto com segurança pelo FlowPay.`}
+>
+  <main class="pay-page">
+    <div class="pay-bg-glow"></div>
+
+    {notFound ? (
+      <div class="pay-container">
+        <div class="pay-card not-found-card">
+          <div class="nf-icon">🔍</div>
+          <h1>Link não encontrado</h1>
+          <p>Este link de pagamento não existe ou foi desativado.</p>
+          <a href="/" class="btn-ghost">Voltar ao FlowPay</a>
+        </div>
+      </div>
+    ) : (
+      <div class="pay-container">
+        <!-- Header -->
+        <div class="pay-header">
+          <img src="/img/flowpay-logo.png" alt="FlowPay" class="pay-logo" />
+        </div>
+
+        <!-- Payment card -->
+        <div class="pay-card">
+          <div class="product-info">
+            <h1 class="product-title">{buttonTitle}</h1>
+            {buttonDesc && <p class="product-desc">{buttonDesc}</p>}
+            <div class="product-meta">
+              <span class="creator-badge">por {creatorName}</span>
+              {amountFixed && amountBrl && (
+                <span class="amount-badge">R$ {amountBrl}</span>
+              )}
+            </div>
+          </div>
+
+          <!-- Method selector (if both available) -->
+          {hasPix && hasCrypto && (
+            <div class="method-tabs">
+              <button class="tab-btn active" id="tab-pix">PIX</button>
+              <button class="tab-btn" id="tab-crypto">Cripto</button>
+            </div>
+          )}
+
+          <!-- PIX Form -->
+          {hasPix && (
+            <div id="pix-section" class="pay-section">
+              <div id="pix-form-state">
+                <form id="pix-form" novalidate>
+                  {!amountFixed && (
+                    <div class="field-group">
+                      <label>Valor (BRL) *</label>
+                      <div class="amount-input-wrap">
+                        <span class="currency-prefix">R$</span>
+                        <input type="number" id="pix-amount" placeholder="0,00" min="1" step="0.01" required />
+                      </div>
+                    </div>
+                  )}
+                  {amountFixed && amountBrl && (
+                    <div class="amount-display">
+                      <span class="amount-label">Valor</span>
+                      <span class="amount-value">R$ {amountBrl}</span>
+                    </div>
+                  )}
+
+                  <div class="field-group">
+                    <label>Seu nome *</label>
+                    <input type="text" id="pix-name" placeholder="Nome completo" required maxlength="100" />
+                  </div>
+                  <div class="field-group">
+                    <label>Seu e-mail *</label>
+                    <input type="email" id="pix-email" placeholder="seu@email.com" required />
+                  </div>
+
+                  <div id="pix-error" class="msg-error" hidden></div>
+
+                  <button type="submit" class="btn-pay" id="pix-submit">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    Gerar PIX
+                  </button>
+                </form>
+              </div>
+
+              <!-- QR Code state (hidden initially) -->
+              <div id="pix-qr-state" hidden>
+                <div class="qr-header">
+                  <div class="qr-step-badge">✅ PIX gerado</div>
+                  <p class="qr-instruction">Escaneie o QR Code ou copie o código PIX</p>
+                </div>
+                <div class="qr-wrapper">
+                  <img id="qr-img" src="" alt="QR Code PIX" class="qr-img" />
+                </div>
+                <div class="brcode-wrap">
+                  <input type="text" id="br-code" readonly class="brcode-input" />
+                  <button class="btn-copy-pix" id="copy-pix-btn">Copiar código PIX</button>
+                </div>
+                <div id="pix-status-bar" class="status-bar">
+                  <span class="status-dot"></span>
+                  <span id="pix-status-text">Aguardando pagamento...</span>
+                </div>
+              </div>
+
+              <!-- Success state -->
+              <div id="pix-success-state" hidden>
+                <div class="success-check">✅</div>
+                <h3 class="success-title">Pagamento confirmado!</h3>
+                <p class="success-msg">Seu pagamento foi recebido e está sendo processado pela FlowPay.</p>
+              </div>
+            </div>
+          )}
+
+          <!-- Crypto Section -->
+          {hasCrypto && (
+            <div id="crypto-section" class="pay-section" hidden={hasPix}>
+              <div class="crypto-info">
+                <div class="crypto-badge">
+                  <span class="crypto-icon">⬡</span>
+                  <div>
+                    <div class="crypto-network-name">{cryptoNetwork === 'polygon' ? 'Polygon Network' : cryptoNetwork === 'ethereum' ? 'Ethereum' : cryptoNetwork === 'base' ? 'Base L2' : cryptoNetwork}</div>
+                    <div class="crypto-token">USDT / USDC</div>
+                  </div>
+                </div>
+
+                {amountFixed && amountBrl && (
+                  <div class="amount-display">
+                    <span class="amount-label">Valor em BRL</span>
+                    <span class="amount-value">R$ {amountBrl}</span>
+                  </div>
+                )}
+
+                <div class="field-group">
+                  <label>Envie para este endereço</label>
+                  <div class="address-wrap">
+                    <code class="crypto-addr" id="crypto-address-display">{cryptoAddress}</code>
+                    <button class="btn-copy-addr" id="copy-addr-btn">Copiar</button>
+                  </div>
+                </div>
+
+                <div class="crypto-steps">
+                  <div class="step">
+                    <span class="step-num">1</span>
+                    <span>Abra sua carteira (MetaMask, Trust Wallet, etc.)</span>
+                  </div>
+                  <div class="step">
+                    <span class="step-num">2</span>
+                    <span>Selecione a rede <strong>{cryptoNetwork === 'polygon' ? 'Polygon' : cryptoNetwork === 'ethereum' ? 'Ethereum' : 'Base'}</strong></span>
+                  </div>
+                  <div class="step">
+                    <span class="step-num">3</span>
+                    <span>Envie USDT ou USDC para o endereço acima</span>
+                  </div>
+                  <div class="step">
+                    <span class="step-num">4</span>
+                    <span>A FlowPay confirmará o recebimento automaticamente</span>
+                  </div>
+                </div>
+
+                <p class="crypto-disclaimer">
+                  Após o envio, a confirmação pode levar de 1 a 5 minutos dependendo da rede.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <!-- Powered by -->
+        <div class="powered-by">
+          <span>Pagamento seguro via</span>
+          <a href="/" target="_blank">
+            <img src="/img/flowpay-logo.png" alt="FlowPay" height="18" />
+            FlowPay
+          </a>
+        </div>
+      </div>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .pay-page {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 30px 16px 60px;
+    overflow: hidden;
+  }
+
+  .pay-bg-glow {
+    position: fixed;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100vw; height: 60vh;
+    background: radial-gradient(ellipse at top, rgba(255, 0, 122, 0.1) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .pay-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .pay-header { text-align: center; }
+  .pay-logo { height: 60px; filter: drop-shadow(0 0 10px rgba(255, 0, 122, 0.4)); }
+
+  .pay-card {
+    background: rgba(12, 12, 12, 0.7);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 1.75rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Not found */
+  .not-found-card { text-align: center; padding: 3rem 2rem; }
+  .nf-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .not-found-card h1 { font-size: 1.4rem; color: #fff; margin-bottom: 0.75rem; }
+  .not-found-card p { color: rgba(255,255,255,.5); margin-bottom: 1.5rem; }
+
+  /* Product info */
+  .product-info { margin-bottom: 1.5rem; }
+  .product-title { font-size: 1.3rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+  .product-desc { font-size: 0.88rem; color: rgba(255,255,255,.55); line-height: 1.6; margin-bottom: 0.75rem; }
+  .product-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .creator-badge {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,.5);
+  }
+  .amount-badge {
+    background: linear-gradient(135deg, rgba(255,0,122,.15), rgba(255,122,0,.15));
+    border: 1px solid rgba(255,0,122,.25);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ff7a44;
+  }
+
+  /* Method tabs */
+  .method-tabs {
+    display: flex;
+    background: rgba(255,255,255,.05);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 1.5rem;
+    gap: 4px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    border-radius: 9px;
+    color: rgba(255,255,255,.5);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+  }
+  .tab-btn.active {
+    background: rgba(255,0,122,.15);
+    border: 1px solid rgba(255,0,122,.25);
+    color: #fff;
+  }
+
+  /* Pay sections */
+  .pay-section { }
+
+  /* Form fields */
+  .field-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+  .field-group label { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .04em; }
+  .field-group input {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #fff;
+    font-size: .92rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field-group input:focus { border-color: rgba(255,0,122,.45); }
+  .field-group input::placeholder { color: rgba(255,255,255,.22); }
+
+  .amount-input-wrap { position: relative; display: flex; align-items: center; }
+  .currency-prefix {
+    position: absolute;
+    left: 14px;
+    color: rgba(255,255,255,.4);
+    font-weight: 600;
+    font-size: .9rem;
+    pointer-events: none;
+  }
+  .amount-input-wrap input { padding-left: 36px; }
+
+  .amount-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,0,122,.06);
+    border: 1px solid rgba(255,0,122,.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 1rem;
+  }
+  .amount-label { font-size: .8rem; color: rgba(255,255,255,.45); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .amount-value { font-size: 1.15rem; font-weight: 800; color: #ff7a44; }
+
+  .msg-error {
+    background: rgba(255,50,50,.1);
+    border: 1px solid rgba(255,50,50,.25);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: .85rem;
+    color: #ff7070;
+    margin-bottom: .75rem;
+  }
+
+  .btn-pay {
+    width: 100%;
+    background: linear-gradient(135deg, #ff007a, #ff7a00);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: .95rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    transition: all .3s;
+    box-shadow: 0 0 20px rgba(255,0,122,.2);
+    margin-top: .5rem;
+  }
+  .btn-pay:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 35px rgba(255,0,122,.4); }
+  .btn-pay:disabled { opacity: .6; cursor: not-allowed; }
+
+  /* QR Code state */
+  .qr-header { text-align: center; margin-bottom: 1rem; }
+  .qr-step-badge {
+    display: inline-block;
+    background: rgba(0,255,136,.1);
+    border: 1px solid rgba(0,255,136,.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: .8rem;
+    color: #00ff88;
+    font-weight: 600;
+    margin-bottom: .5rem;
+  }
+  .qr-instruction { font-size: .88rem; color: rgba(255,255,255,.5); }
+  .qr-wrapper { background: #fff; border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 1rem; }
+  .qr-img { width: 180px; height: 180px; display: block; margin: 0 auto; }
+
+  .brcode-wrap { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .brcode-input {
+    flex: 1;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: rgba(255,255,255,.6);
+    font-size: .75rem;
+    font-family: 'Courier New', monospace;
+    outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .btn-copy-pix {
+    background: rgba(0,200,120,.12);
+    border: 1px solid rgba(0,200,120,.25);
+    border-radius: 10px;
+    padding: 0 14px;
+    color: rgba(0,230,140,.9);
+    font-size: .8rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .btn-copy-pix:hover { background: rgba(0,200,120,.22); }
+
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .82rem;
+    color: rgba(255,255,255,.45);
+    padding: 10px 14px;
+    background: rgba(255,255,255,.04);
+    border-radius: 10px;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    background: #ffaa00;
+    border-radius: 50%;
+    animation: pulse-dot 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .status-bar.paid .status-dot { background: #00ff88; animation: none; }
+  .status-bar.paid { color: rgba(0,255,136,.8); }
+
+  /* Success state */
+  .success-check { font-size: 2.5rem; text-align: center; margin-bottom: .75rem; }
+  .success-title { font-size: 1.2rem; font-weight: 700; color: #00ff88; text-align: center; margin-bottom: .5rem; }
+  .success-msg { font-size: .88rem; color: rgba(255,255,255,.55); text-align: center; line-height: 1.6; }
+
+  /* Crypto section */
+  .crypto-info { display: flex; flex-direction: column; gap: 1rem; }
+  .crypto-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0,212,255,.07);
+    border: 1px solid rgba(0,212,255,.15);
+    border-radius: 12px;
+    padding: 12px 16px;
+  }
+  .crypto-icon { font-size: 1.5rem; }
+  .crypto-network-name { font-size: .9rem; font-weight: 700; color: rgba(0,212,255,.9); }
+  .crypto-token { font-size: .75rem; color: rgba(255,255,255,.4); margin-top: 2px; }
+
+  .address-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .crypto-addr {
+    flex: 1;
+    font-size: .72rem;
+    font-family: 'Courier New', monospace;
+    color: rgba(0,212,255,.8);
+    word-break: break-all;
+  }
+  .btn-copy-addr {
+    background: rgba(0,212,255,.1);
+    border: 1px solid rgba(0,212,255,.2);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: rgba(0,212,255,.9);
+    font-size: .78rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .btn-copy-addr:hover { background: rgba(0,212,255,.18); }
+
+  .crypto-steps { display: flex; flex-direction: column; gap: 10px; }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: .85rem;
+    color: rgba(255,255,255,.6);
+    line-height: 1.5;
+  }
+  .step-num {
+    background: rgba(255,0,122,.15);
+    border: 1px solid rgba(255,0,122,.25);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .72rem;
+    font-weight: 700;
+    color: #ff7a44;
+    flex-shrink: 0;
+  }
+  .step strong { color: rgba(255,255,255,.8); }
+
+  .crypto-disclaimer { font-size: .78rem; color: rgba(255,255,255,.3); text-align: center; line-height: 1.6; }
+
+  /* Powered by */
+  .powered-by {
+    text-align: center;
+    font-size: .75rem;
+    color: rgba(255,255,255,.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .powered-by a {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255,255,255,.35);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color .2s;
+  }
+  .powered-by a:hover { color: rgba(255,255,255,.6); }
+
+  .btn-ghost {
+    display: inline-block;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 10px;
+    padding: 11px 22px;
+    color: rgba(255,255,255,.7);
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,.13); }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .4; transform: scale(.8); }
+  }
+</style>
+
+<script define:vars={{ buttonId: button?.button_id, amountFixed, amountBrl, hasPix, hasCrypto, cryptoAddress }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Tab switching
+    if (hasPix && hasCrypto) {
+      const tabPix = document.getElementById('tab-pix');
+      const tabCrypto = document.getElementById('tab-crypto');
+      const pixSection = document.getElementById('pix-section');
+      const cryptoSection = document.getElementById('crypto-section');
+
+      tabPix?.addEventListener('click', () => {
+        tabPix.classList.add('active');
+        tabCrypto?.classList.remove('active');
+        pixSection && (pixSection.hidden = false);
+        cryptoSection && (cryptoSection.hidden = true);
+      });
+
+      tabCrypto?.addEventListener('click', () => {
+        tabCrypto.classList.add('active');
+        tabPix?.classList.remove('active');
+        cryptoSection && (cryptoSection.hidden = false);
+        pixSection && (pixSection.hidden = true);
+      });
+    }
+
+    // Copy crypto address
+    const copyAddrBtn = document.getElementById('copy-addr-btn');
+    if (copyAddrBtn) {
+      copyAddrBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(cryptoAddress).then(() => {
+          copyAddrBtn.textContent = 'Copiado!';
+          setTimeout(() => copyAddrBtn.textContent = 'Copiar', 2000);
+        });
+      });
+    }
+
+    // PIX form submission
+    const pixForm = document.getElementById('pix-form');
+    const pixSubmit = document.getElementById('pix-submit');
+    const pixError = document.getElementById('pix-error');
+
+    if (pixForm && hasPix) {
+      pixForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (pixError) pixError.hidden = true;
+
+        const nameVal = document.getElementById('pix-name')?.value?.trim();
+        const emailVal = document.getElementById('pix-email')?.value?.trim();
+        const amountVal = amountFixed ? parseFloat(amountBrl) : parseFloat(document.getElementById('pix-amount')?.value || '0');
+
+        if (!nameVal || !emailVal) {
+          if (pixError) { pixError.textContent = 'Preencha todos os campos.'; pixError.hidden = false; }
+          return;
+        }
+        if (!amountVal || amountVal <= 0) {
+          if (pixError) { pixError.textContent = 'Valor inválido.'; pixError.hidden = false; }
+          return;
+        }
+
+        if (pixSubmit) { pixSubmit.disabled = true; pixSubmit.textContent = 'Gerando PIX...'; }
+
+        const transactionId = `pay_${buttonId}_${Date.now()}`;
+
+        try {
+          const res = await fetch('/api/create-charge', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              wallet: '0x0000000000000000000000000000000000000000',
+              valor: amountVal,
+              moeda: 'BRL',
+              id_transacao: transactionId,
+              product_id: `btn_${buttonId}`,
+              customer_name: nameVal,
+              customer_email: emailVal
+            })
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.success && data.pix_data) {
+            showQR(data.pix_data, transactionId);
+          } else {
+            if (pixError) { pixError.textContent = data.error || 'Erro ao gerar PIX. Tente novamente.'; pixError.hidden = false; }
+            if (pixSubmit) { pixSubmit.disabled = false; pixSubmit.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Gerar PIX'; }
+          }
+        } catch {
+          if (pixError) { pixError.textContent = 'Erro de conexão. Tente novamente.'; pixError.hidden = false; }
+          if (pixSubmit) { pixSubmit.disabled = false; pixSubmit.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Gerar PIX'; }
+        }
+      });
+    }
+
+    function showQR(pixData, transactionId) {
+      const formState = document.getElementById('pix-form-state');
+      const qrState = document.getElementById('pix-qr-state');
+      const qrImg = document.getElementById('qr-img');
+      const brCode = document.getElementById('br-code');
+      const copyPixBtn = document.getElementById('copy-pix-btn');
+      const statusBar = document.getElementById('pix-status-bar');
+      const statusText = document.getElementById('pix-status-text');
+
+      if (formState) formState.hidden = true;
+      if (qrState) qrState.hidden = false;
+      if (qrImg) qrImg.src = pixData.qr_code || '';
+      if (brCode) brCode.value = pixData.br_code || '';
+
+      // Copy button
+      copyPixBtn?.addEventListener('click', () => {
+        navigator.clipboard.writeText(pixData.br_code || '').then(() => {
+          copyPixBtn.textContent = '✅ Copiado!';
+          setTimeout(() => copyPixBtn.textContent = 'Copiar código PIX', 2000);
+        });
+      });
+
+      // Poll for payment status
+      let pollCount = 0;
+      const maxPolls = 120; // 6 minutes
+      const pollInterval = setInterval(async () => {
+        pollCount++;
+        if (pollCount > maxPolls) {
+          clearInterval(pollInterval);
+          if (statusText) statusText.textContent = 'Tempo expirado. Gere um novo PIX.';
+          return;
+        }
+
+        try {
+          const res = await fetch(`/api/charge/${transactionId}`);
+          const data = await res.json();
+
+          if (data.status === 'PIX_PAID' || data.status === 'PENDING_REVIEW' || data.status === 'APPROVED') {
+            if (statusBar) statusBar.classList.add('paid');
+            if (statusText) statusText.textContent = 'Pagamento recebido! Processando...';
+          }
+
+          if (data.status === 'COMPLETED') {
+            clearInterval(pollInterval);
+            if (qrState) qrState.hidden = true;
+            const successState = document.getElementById('pix-success-state');
+            if (successState) successState.hidden = false;
+          }
+        } catch { /* silent */ }
+      }, 3000);
+    }
+  });
+</script>

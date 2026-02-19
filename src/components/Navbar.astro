@@ -9,9 +9,9 @@
         <img src="/img/flowpay-logo.png" alt="FlowPay" />
       </a>
       <div class="nav-links">
-        <a href="/checkout" class="nav-item">Checkout</a>
+        <a href="/registro" class="nav-item">Cadastro</a>
+        <a href="/dashboard" class="nav-item">Dashboard</a>
         <a href="/transparency" class="nav-item">Transparência</a>
-        <a href="/admin" class="nav-item admin">Admin</a>
       </div>
     </div>
 
@@ -20,7 +20,7 @@
         <div class="dot"></div>
         <span id="wallet-address-display">Conectado</span>
       </div>
-      <button id="btn-access" class="btn-nav primary">Acessar</button>
+      <a href="/registro" class="btn-nav primary">Começar</a>
     </div>
   </div>
 </nav>
@@ -173,44 +173,6 @@
 </style>
 
 <script>
-  // FlowPay - Unified Auth & Navigation
-  document.addEventListener("DOMContentLoaded", () => {
-    const btnAccess = document.getElementById("btn-access");
-    const walletPill = document.getElementById("wallet-status-pill");
-
-    async function handleAuth() {
-      if (window.location.pathname === "/checkout") return;
-
-      if (typeof (window as any).connectWallet === "function") {
-        try {
-          btnAccess!.textContent = "Conectando...";
-          const success = await (window as any).connectWallet();
-          if (success) {
-            window.location.href = "/checkout";
-          } else {
-            btnAccess!.textContent = "Acessar";
-          }
-        } catch (err) {
-          console.error("Auth failed", err);
-          btnAccess!.textContent = "Acessar";
-        }
-      } else {
-        // Fallback se o script ainda não carregou
-        window.location.href = "/checkout";
-      }
-    }
-
-    if (btnAccess) {
-      btnAccess.addEventListener("click", handleAuth);
-    }
-
-    // Check UI if already connected
-    if ((window as any).__provider) {
-      if (btnAccess) btnAccess.style.display = "none";
-      if (walletPill) walletPill.classList.remove("hidden");
-    }
-  });
-
   // NEO Layout Injector compatibility
   if (typeof window !== "undefined") {
     document.addEventListener("DOMContentLoaded", () => {

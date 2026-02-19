@@ -1,13 +1,10 @@
-# FLOWPay Sovereign - Advanced Makefile (NΞØ Protocol)
-# ---------------------------------------------------------
-# Orchestrates development, security audits, and deployments.
+# FlowPay - Makefile
+# ────────────────────────────────────────────────────
 
-.PHONY: help install dev build start test clean audit lint push sync-nexus
+.PHONY: help install dev build start clean test test-unit test-db audit lint check status db-reset logs
 
-# Shell configuration
 SHELL := /bin/bash
 
-# Colors for output
 GREEN  := \033[0;32m
 YELLOW := \033[1;33m
 RED    := \033[0;31m
@@ -15,71 +12,118 @@ CYAN   := \033[0;36m
 BOLD   := \033[1m
 NC     := \033[0m
 
-# Metadata
-VERSION := $(shell grep '"version":' package.json | cut -d'"' -f4)
-PROJECT := $(shell grep '"name":' package.json | cut -d'"' -f4)
+VERSION := $(shell node -p "require('./package.json').version" 2>/dev/null || echo "0.0.0")
 
-# --- Default Target ---
-help: ## Show this help message
-	@echo -e "$(BOLD)$(CYAN)NΞØ Protocol | $(PROJECT) v$(VERSION)$(NC)"
-	@echo -e "Usage: make [target]"
+# ── Help ─────────────────────────────────────────────
+
+help: ## Show available commands
+	@echo -e "$(BOLD)$(CYAN)FlowPay v$(VERSION)$(NC)"
 	@echo ""
-	@echo -e "$(BOLD)Available Commands:$(NC)"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(YELLOW)%-18s$(NC) %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(YELLOW)%-16s$(NC) %s\n", $$1, $$2}'
 	@echo ""
 
-# --- System & Setup ---
-install: ## Install dependencies and setup environment
-	@echo -e "$(GREEN)Initializing sovereign node environment...$(NC)"
+# ── Setup ────────────────────────────────────────────
+
+install: ## Install dependencies
+	@echo -e "$(CYAN)Installing dependencies...$(NC)"
 	@npm install
-	@echo -e "$(CYAN)Syncing local config with neo.json...$(NC)"
-	@npm run neo:cfg
+	@echo -e "$(GREEN)Done.$(NC)"
 
-clean: ## Deep clean of temporary files and caches
-	@echo -e "$(YELLOW)Executing deep clean...$(NC)"
-	@rm -rf .astro dist node_modules/.vite .temp_cache
-	@rm -f public/assets/js/*.js public/assets/js/*.json
-	@echo -e "$(GREEN)Environment sanitized.$(NC)"
+clean: ## Remove build artifacts and caches
+	@echo -e "$(YELLOW)Cleaning...$(NC)"
+	@rm -rf .astro dist node_modules/.vite
+	@echo -e "$(GREEN)Clean.$(NC)"
 
-# --- Development ---
-dev: ## Start development server with cache cleared
-	@echo -e "$(CYAN)Clearing cache and starting Astro Dev...$(NC)"
+clean-all: clean ## Full clean including node_modules
+	@rm -rf node_modules
+	@echo -e "$(GREEN)Full clean done. Run 'make install' to restore.$(NC)"
+
+# ── Development ──────────────────────────────────────
+
+dev: ## Start dev server (clears cache first)
 	@rm -rf .astro
 	@npm run dev
 
-# --- Build & Validation ---
-build: ## Production build with protocol optimization
-	@echo -e "$(CYAN)Building Sovereign Node v$(VERSION)...$(NC)"
-	@npm run neo:build
-	@echo -e "$(GREEN)Build successful! Ready for production deployment.$(NC)"
+start: ## Start production server (requires build first)
+	@test -f dist/server/entry.mjs || (echo -e "$(RED)No build found. Run 'make build' first.$(NC)" && exit 1)
+	@node ./dist/server/entry.mjs
 
-# --- Quality & Security (The Audit Flow) ---
-lint: ## Verify code quality and standards compliance
-	@echo -e "$(CYAN)Linting project documentation and core modules...$(NC)"
-	@npm run lint:md || exit 0
+# ── Build & Validation ───────────────────────────────
 
-audit: lint ## Execute full security audit (NΞØ Protocol Standard)
-	@echo -e "$(BOLD)$(CYAN)Executing Sovereign Node Security Audit...$(NC)"
-	@echo -e "$(YELLOW)Step 1: Dependency Vulnerability Check$(NC)"
-	@npm audit || (echo -e "$(RED)Warning: Vulnerabilities detected. Review carefully.$(NC)")
-	@echo -e "$(YELLOW)Step 2: Environment Configuration Audit$(NC)"
-	@ls -la .env > /dev/null 2>&1 || echo -e "$(RED)Error: .env missing$(NC)"
-	@grep -q "NEXUS_SECRET" .env && echo -e "$(GREEN)Nexus Connection Configured.$(NC)" || echo -e "$(RED)Nexus Secret Not Found!$(NC)"
-	@echo -e "$(YELLOW)Step 3: Protocol Specs Validation$(NC)"
-	@cat neo.json | jq '.project.role' | grep -q "Financial Sovereign Node" && echo -e "$(GREEN)Protocol Role Verified.$(NC)"
-	@echo -e "$(BOLD)$(GREEN)Audit Complete. Node is operational.$(NC)"
+check: ## Run Astro type-checking
+	@echo -e "$(CYAN)Type checking...$(NC)"
+	@npx astro check
 
-# --- Deployment & Sync ---
-sync-nexus: ## Push current node state to NEO Nexus
-	@echo -e "$(CYAN)Announcing presence to Nexus Hub...$(NC)"
-	@railway variables | grep -E "NEXUS|DYNAMIC"
-	@echo -e "$(GREEN)Sync signals sent.$(NC)"
+build: clean ## Production build (type-check + build)
+	@echo -e "$(CYAN)Building v$(VERSION)...$(NC)"
+	@npm run build
+	@echo -e "$(GREEN)Build complete.$(NC)"
 
-push: audit build ## Safe Commit & Push Protocol
-	@echo -e "$(CYAN)Preparing Safe Push...$(NC)"
-	@git status
-	@echo -e "$(BOLD)Execute: git add . && git commit -m 'feat: sync and audit' && git push$(NC)"
+# ── Tests ────────────────────────────────────────────
+
+test: ## Run all tests (unit + DB flow)
+	@echo -e "$(CYAN)Running all tests...$(NC)"
+	@$(MAKE) test-unit
+	@$(MAKE) test-db
+	@echo -e "$(GREEN)All tests passed.$(NC)"
+
+test-unit: ## Run Jest unit tests
+	@echo -e "$(CYAN)Running unit tests...$(NC)"
+	@npx jest --passWithNoTests
+
+test-db: ## Run database flow integration tests
+	@echo -e "$(CYAN)Running DB flow tests...$(NC)"
+	@node tests/run-tests.js
+
+# ── Quality ──────────────────────────────────────────
+
+lint: ## Lint markdown files
+	@npm run lint:md 2>/dev/null || true
+
+audit: ## Full project audit (lint + check + build + tests)
+	@echo -e "$(BOLD)$(CYAN)FlowPay Audit$(NC)"
+	@echo ""
+	@echo -e "$(YELLOW)[1/6] Dependencies$(NC)"
+	@npm audit --audit-level=high 2>/dev/null || echo -e "$(YELLOW)  Warnings found (review above)$(NC)"
+	@echo ""
+	@echo -e "$(YELLOW)[2/6] Environment$(NC)"
+	@test -f .env && echo -e "  $(GREEN).env exists$(NC)" || echo -e "  $(RED).env missing!$(NC)"
+	@(grep -q "OPENPIX_APPID" .env 2>/dev/null && echo -e "  $(GREEN)OPENPIX_APPID set$(NC)") || echo -e "  $(RED)OPENPIX_APPID missing$(NC)"
+	@(grep -q "ADMIN_PASSWORD" .env 2>/dev/null && echo -e "  $(GREEN)ADMIN_PASSWORD set$(NC)") || echo -e "  $(RED)ADMIN_PASSWORD missing$(NC)"
+	@echo ""
+	@echo -e "$(YELLOW)[3/6] Lint$(NC)"
+	@$(MAKE) lint
+	@echo ""
+	@echo -e "$(YELLOW)[4/6] Type Check$(NC)"
+	@$(MAKE) check
+	@echo ""
+	@echo -e "$(YELLOW)[5/6] Tests$(NC)"
+	@$(MAKE) test
+	@echo ""
+	@echo -e "$(YELLOW)[6/6] Build$(NC)"
+	@$(MAKE) build
+	@echo ""
+	@echo -e "$(BOLD)$(GREEN)Audit passed. Ready for deployment.$(NC)"
+
+# ── Database ─────────────────────────────────────────
+
+db-reset: ## Reset local SQLite database (WARNING: destroys data)
+	@echo -e "$(RED)This will delete the local database. Press Ctrl+C to cancel.$(NC)"
+	@sleep 2
+	@rm -f data/flowpay.db data/flowpay.db-wal data/flowpay.db-shm
+	@echo -e "$(GREEN)Database removed. It will be recreated on next server start.$(NC)"
+
+status: ## Show project status overview
+	@echo -e "$(BOLD)$(CYAN)FlowPay v$(VERSION) — Status$(NC)"
+	@echo ""
+	@echo -e "  Node:    $$(node -v)"
+	@echo -e "  NPM:     $$(npm -v)"
+	@test -f dist/server/entry.mjs && echo -e "  Build:   $(GREEN)exists$(NC)" || echo -e "  Build:   $(YELLOW)not built$(NC)"
+	@test -f data/flowpay.db && echo -e "  DB:      $(GREEN)$$(du -h data/flowpay.db | cut -f1)$(NC)" || echo -e "  DB:      $(YELLOW)not created$(NC)"
+	@test -f .env && echo -e "  .env:    $(GREEN)present$(NC)" || echo -e "  .env:    $(RED)missing$(NC)"
+	@echo ""
+
+# ── Deployment ───────────────────────────────────────
 
 logs: ## Tail production logs from Railway
-	@echo -e "$(CYAN)Streaming live node logs...$(NC)"
 	@railway logs

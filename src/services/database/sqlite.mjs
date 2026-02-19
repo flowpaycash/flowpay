@@ -137,6 +137,56 @@ function initializeSchema() {
             db.exec("CREATE INDEX idx_auth_tokens_email ON auth_tokens(email)");
         }
 
+        // USERS MIGRATION: Registered users with manual approval
+        const usersTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='users'").get();
+        if (!usersTable) {
+            db.exec(`
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    email TEXT NOT NULL UNIQUE,
+                    cpf TEXT,
+                    phone TEXT,
+                    business_type TEXT,
+                    status TEXT DEFAULT 'PENDING_APPROVAL',
+                    -- PENDING_APPROVAL, APPROVED, REJECTED
+                    approved_at TIMESTAMP,
+                    approved_by TEXT,
+                    rejected_reason TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            db.exec("CREATE UNIQUE INDEX idx_users_email ON users(email)");
+            db.exec("CREATE INDEX idx_users_status ON users(status)");
+        }
+
+        // PAYMENT BUTTONS MIGRATION: User-created payment buttons
+        const paymentButtonsTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='payment_buttons'").get();
+        if (!paymentButtonsTable) {
+            db.exec(`
+                CREATE TABLE IF NOT EXISTS payment_buttons (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    button_id TEXT NOT NULL UNIQUE,
+                    user_id INTEGER NOT NULL,
+                    title TEXT NOT NULL,
+                    description TEXT,
+                    amount_brl REAL,
+                    amount_fixed INTEGER DEFAULT 1,
+                    -- 1 = fixed amount, 0 = customer chooses
+                    payment_methods TEXT DEFAULT '["pix","crypto"]',
+                    -- JSON array
+                    crypto_address TEXT,
+                    crypto_network TEXT DEFAULT 'polygon',
+                    active INTEGER DEFAULT 1,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+            `);
+            db.exec("CREATE UNIQUE INDEX idx_payment_buttons_id ON payment_buttons(button_id)");
+            db.exec("CREATE INDEX idx_payment_buttons_user ON payment_buttons(user_id)");
+        }
+
         // SIWE MIGRATION: Nonces + Wallet Sessions
         const siweNoncesTable = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='siwe_nonces'").get();
         if (!siweNoncesTable) {
@@ -462,6 +512,123 @@ export function cleanupExpiredAuthTokens() {
 
 // Run cleanup every 30 minutes
 setInterval(cleanupExpiredAuthTokens, 30 * 60 * 1000).unref();
+
+// ════════════════════════════════════════
+// USER OPERATIONS
+// ════════════════════════════════════════
+
+export function createUser(user) {
+    return dbOp(() => {
+        const db = getDatabase();
+        const stmt = db.prepare(`
+            INSERT INTO users (name, email, cpf, phone, business_type, status)
+            VALUES (?, ?, ?, ?, ?, 'PENDING_APPROVAL')
+        `);
+        const result = stmt.run(user.name, user.email, user.cpf || null, user.phone || null, user.business_type || null);
+        return result.lastInsertRowid;
+    });
+}
+
+export function getUserByEmail(email) {
+    return dbOp(() => {
+        const db = getDatabase();
+        return db.prepare("SELECT * FROM users WHERE email = ?").get(email.toLowerCase().trim());
+    });
+}
+
+export function getUserById(id) {
+    return dbOp(() => {
+        const db = getDatabase();
+        return db.prepare("SELECT * FROM users WHERE id = ?").get(id);
+    });
+}
+
+export function listUsers(status) {
+    return dbOp(() => {
+        const db = getDatabase();
+        if (status) {
+            return db.prepare("SELECT * FROM users WHERE status = ? ORDER BY created_at DESC").all(status);
+        }
+        return db.prepare("SELECT * FROM users ORDER BY created_at DESC").all();
+    });
+}
+
+export function approveUser(userId, approvedBy) {
+    return dbOp(() => {
+        const db = getDatabase();
+        db.prepare(`
+            UPDATE users SET status = 'APPROVED', approved_at = CURRENT_TIMESTAMP, approved_by = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        `).run(approvedBy, userId);
+    });
+}
+
+export function rejectUser(userId, reason, rejectedBy) {
+    return dbOp(() => {
+        const db = getDatabase();
+        db.prepare(`
+            UPDATE users SET status = 'REJECTED', rejected_reason = ?, approved_by = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        `).run(reason || 'Reprovado pelo administrador', rejectedBy, userId);
+    });
+}
+
+// ════════════════════════════════════════
+// PAYMENT BUTTON OPERATIONS
+// ════════════════════════════════════════
+
+export function createPaymentButton(btn) {
+    return dbOp(() => {
+        const db = getDatabase();
+        const stmt = db.prepare(`
+            INSERT INTO payment_buttons (button_id, user_id, title, description, amount_brl, amount_fixed, payment_methods, crypto_address, crypto_network)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+        const result = stmt.run(
+            btn.button_id,
+            btn.user_id,
+            btn.title,
+            btn.description || null,
+            btn.amount_brl || null,
+            btn.amount_fixed ? 1 : 0,
+            btn.payment_methods ? JSON.stringify(btn.payment_methods) : '["pix","crypto"]',
+            btn.crypto_address || null,
+            btn.crypto_network || 'polygon'
+        );
+        return result.lastInsertRowid;
+    });
+}
+
+export function getPaymentButton(buttonId) {
+    return dbOp(() => {
+        const db = getDatabase();
+        return db.prepare("SELECT pb.*, u.name as user_name, u.email as user_email FROM payment_buttons pb JOIN users u ON pb.user_id = u.id WHERE pb.button_id = ? AND pb.active = 1").get(buttonId);
+    });
+}
+
+export function listPaymentButtonsByUser(userId) {
+    return dbOp(() => {
+        const db = getDatabase();
+        return db.prepare("SELECT * FROM payment_buttons WHERE user_id = ? AND active = 1 ORDER BY created_at DESC").all(userId);
+    });
+}
+
+export function listAllOrders(limit = 50) {
+    return dbOp(() => {
+        const db = getDatabase();
+        return db.prepare("SELECT * FROM orders ORDER BY created_at DESC LIMIT ?").all(limit);
+    });
+}
+
+export function completeOrder(chargeId, completedBy) {
+    return dbOp(() => {
+        const db = getDatabase();
+        db.prepare(`
+            UPDATE orders SET status = 'COMPLETED', reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ?, settled_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+            WHERE charge_id = ? AND status IN ('PIX_PAID', 'PENDING_REVIEW', 'APPROVED')
+        `).run(completedBy, chargeId);
+    });
+}
 
 // ════════════════════════════════════════
 // SIWE OPERATIONS

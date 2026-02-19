@@ -26,8 +26,8 @@
 
     <div class="hero-glass-cta">
       <div class="cta-actions">
-        <button id="hero-cta-start" class="btn-premium primary">
-          Experimentar FlowPay
+        <a href="/registro" class="btn-premium primary">
+          Criar conta grátis
           <svg
             width="20"
             height="20"
@@ -40,7 +40,7 @@
             ><line x1="5" y1="12" x2="19" y2="12"></line><polyline
               points="12 5 19 12 12 19"></polyline></svg
           >
-        </button>
+        </a>
         <a href="#features" class="btn-premium secondary">
           Entender a Tecnologia
         </a>
@@ -320,26 +320,3 @@
     }
   }
 </style>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const ctaStart = document.getElementById("hero-cta-start");
-
-    if (ctaStart) {
-      ctaStart.addEventListener("click", async () => {
-        if (typeof (window as any).connectWallet === "function") {
-          try {
-            ctaStart.textContent = "Conectando...";
-            const success = await (window as any).connectWallet();
-            if (success) window.location.href = "/checkout";
-            else ctaStart.textContent = "Experimentar FlowPay";
-          } catch {
-            window.location.href = "/checkout";
-          }
-        } else {
-          window.location.href = "/checkout";
-        }
-      });
-    }
-  });
-</script>

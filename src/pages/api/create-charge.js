@@ -37,7 +37,9 @@ export const POST = async ({ request, clientAddress }) => {
             valor,
             moeda,
             id_transacao,
-            product_id
+            product_id,
+            customer_name,
+            customer_email
         } = sanitizedData;
 
         const validatedValue = parseFloat(valor);
@@ -105,6 +107,8 @@ export const POST = async ({ request, clientAddress }) => {
                 product_ref: product_id || 'manual',
                 customer_ref: `user_${wallet.substring(2, 10)}`,
                 customer_wallet: wallet,
+                customer_name: customer_name || null,
+                customer_email: customer_email || null,
                 status: 'CREATED',
                 pix_qr: wooviData.charge?.qrCodeImage || wooviData.qrCodeImage,
                 pix_copy_paste: wooviData.brCode || wooviData.charge?.brCode,

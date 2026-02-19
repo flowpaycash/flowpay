@@ -1,0 +1,416 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Cadastro — FlowPay" description="Crie sua conta FlowPay e comece a receber pagamentos com PIX e cripto.">
+  <main class="register-page">
+    <div class="register-bg-glow"></div>
+
+    <div class="register-content">
+      <div class="register-brand">
+        <a href="/">
+          <img src="/img/flowpay-logo.png" alt="FlowPay Logo" class="register-logo" />
+        </a>
+      </div>
+
+      <div class="register-card" id="form-card">
+        <h1 class="register-title">Criar sua conta <span class="gradient-text">FlowPay</span></h1>
+        <p class="register-subtitle">
+          Preencha os dados abaixo. Sua conta será analisada e aprovada manualmente em até 24h.
+        </p>
+
+        <form id="register-form" class="register-form" novalidate>
+          <div class="field-group">
+            <label for="name">Nome completo *</label>
+            <input type="text" id="name" name="name" placeholder="Seu nome completo" required autocomplete="name" />
+          </div>
+
+          <div class="field-group">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" required autocomplete="email" />
+          </div>
+
+          <div class="field-group">
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" autocomplete="off" maxlength="14" />
+          </div>
+
+          <div class="field-group">
+            <label for="phone">WhatsApp / Telefone</label>
+            <input type="tel" id="phone" name="phone" placeholder="(11) 99999-9999" autocomplete="tel" />
+          </div>
+
+          <div class="field-group">
+            <label for="business_type">Tipo de uso *</label>
+            <select id="business_type" name="business_type" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option value="ecommerce">E-commerce / Loja online</option>
+              <option value="services">Prestação de serviços</option>
+              <option value="content">Criador de conteúdo / Infoprodutos</option>
+              <option value="saas">SaaS / Plataforma digital</option>
+              <option value="freelancer">Freelancer</option>
+              <option value="other">Outro</option>
+            </select>
+          </div>
+
+          <div id="form-error" class="form-error" hidden></div>
+
+          <button type="submit" class="btn-submit" id="submit-btn">
+            <span class="btn-text">Solicitar Cadastro</span>
+            <span class="btn-loader" hidden>
+              <span class="spinner"></span> Enviando...
+            </span>
+          </button>
+        </form>
+
+        <p class="login-link">Já tem conta? <a href="/login">Entrar</a></p>
+      </div>
+
+      <!-- Success state -->
+      <div class="register-card success-card" id="success-card" hidden>
+        <div class="success-icon">✅</div>
+        <h2 class="success-title">Cadastro enviado!</h2>
+        <p class="success-message">
+          Recebemos seu pedido de cadastro. Nossa equipe irá analisar e você receberá uma resposta por e-mail em até 24 horas.
+        </p>
+        <a href="/" class="btn-home">Voltar ao início</a>
+      </div>
+
+      <footer class="register-footer">
+        <p>&copy; 2026 FlowPay Autonomous Systems</p>
+      </footer>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .register-page {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 40px 20px;
+  }
+
+  .register-bg-glow {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vw;
+    background: radial-gradient(circle at center, rgba(0, 212, 255, 0.1) 0%, transparent 60%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .register-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .register-brand {
+    animation: fadeInDown 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .register-logo {
+    height: 80px;
+    width: auto;
+    filter: drop-shadow(0 0 15px rgba(255, 0, 122, 0.5));
+    display: block;
+  }
+
+  .register-card {
+    background: rgba(15, 15, 15, 0.5);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    width: 100%;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+
+  .register-title {
+    font-size: clamp(1.5rem, 5vw, 1.9rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #ff007a 0%, #ff7a00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .register-subtitle {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+  }
+
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .field-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .field-group input,
+  .field-group select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 13px 16px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  .field-group input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  .field-group input:focus,
+  .field-group select:focus {
+    border-color: rgba(255, 0, 122, 0.5);
+    background: rgba(255, 0, 122, 0.04);
+  }
+
+  .field-group select option {
+    background: #1a1a1a;
+    color: #fff;
+  }
+
+  .form-error {
+    background: rgba(255, 50, 50, 0.12);
+    border: 1px solid rgba(255, 50, 50, 0.3);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.88rem;
+    color: #ff6b6b;
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, #ff007a, #ff7a00);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    box-shadow: 0 0 25px rgba(255, 0, 122, 0.25);
+  }
+
+  .btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px rgba(255, 0, 122, 0.45);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .login-link a {
+    color: rgba(255, 0, 122, 0.8);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .login-link a:hover { text-decoration: underline; }
+
+  /* Success card */
+  .success-card {
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+
+  .success-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .success-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #00ff88;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+  }
+
+  .success-message {
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .btn-home {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 13px 28px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+
+  .btn-home:hover {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-2px);
+  }
+
+  .register-footer {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .register-footer p {
+    color: rgba(255, 255, 255, 0.18);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (max-width: 480px) {
+    .register-card { padding: 2rem 1.25rem; }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('register-form') as HTMLFormElement;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+    const btnText = submitBtn.querySelector('.btn-text') as HTMLElement;
+    const btnLoader = submitBtn.querySelector('.btn-loader') as HTMLElement;
+    const formError = document.getElementById('form-error') as HTMLElement;
+    const formCard = document.getElementById('form-card') as HTMLElement;
+    const successCard = document.getElementById('success-card') as HTMLElement;
+
+    // CPF mask
+    const cpfInput = document.getElementById('cpf') as HTMLInputElement;
+    cpfInput.addEventListener('input', () => {
+      let v = cpfInput.value.replace(/\D/g, '');
+      if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
+      else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
+      else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/, '$1.$2');
+      cpfInput.value = v;
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formError.hidden = true;
+
+      const name = (document.getElementById('name') as HTMLInputElement).value.trim();
+      const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+      const cpf = cpfInput.value.trim();
+      const phone = (document.getElementById('phone') as HTMLInputElement).value.trim();
+      const business_type = (document.getElementById('business_type') as HTMLSelectElement).value;
+
+      if (!name || !email || !business_type) {
+        formError.textContent = 'Preencha todos os campos obrigatórios.';
+        formError.hidden = false;
+        return;
+      }
+
+      submitBtn.disabled = true;
+      btnText.hidden = true;
+      btnLoader.hidden = false;
+
+      try {
+        const res = await fetch('/api/auth/registro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, cpf, phone, business_type })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          formCard.hidden = true;
+          successCard.hidden = false;
+        } else {
+          formError.textContent = data.error || 'Erro ao enviar cadastro. Tente novamente.';
+          formError.hidden = false;
+          submitBtn.disabled = false;
+          btnText.hidden = false;
+          btnLoader.hidden = true;
+        }
+      } catch {
+        formError.textContent = 'Erro de conexão. Verifique sua internet e tente novamente.';
+        formError.hidden = false;
+        submitBtn.disabled = false;
+        btnText.hidden = false;
+        btnLoader.hidden = true;
+      }
+    });
+  });
+</script>
