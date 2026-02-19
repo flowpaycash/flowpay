@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Image } from 'astro:assets';
+import brandLogo from '../../public/img/flowpay-logo.png';
 ---
 
 <Layout
@@ -11,11 +13,7 @@ import Layout from "../layouts/Layout.astro";
 
     <div class="login-content">
       <div class="login-brand">
-        <img
-          src="/img/flowpay-logo.png"
-          alt="FlowPay Logo"
-          class="login-logo"
-        />
+        <Image src={brandLogo} alt="FlowPay Logo" class="login-logo" height={80} />
       </div>
 
       <div class="login-card">
