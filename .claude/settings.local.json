@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(git diff:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(xattr:*)",
+      "Bash(npm audit:*)",
+      "mcp__acp__Bash",
+      "Bash(node --input-type=module:*)",
+      "Bash(node -e:*)",
+      "Bash(npx astro check:*)",
+      "Bash(npx astro build:*)",
+      "Bash(make help:*)",
+      "Bash(make status:*)"
+    ]
+  }
+}

@@ -16,7 +16,7 @@
     "neo:build:smart": "./scripts/build-web3auth-smart.sh",
     "neo:build:minimal": "./scripts/build-web3auth-minimal.sh",
     "clean": "rm -rf .astro dist node_modules/.vite public/assets/js/*.js public/assets/js/*.json",
-    "neo:build:aa": "npx esbuild public/assets/js/wallet.metamask-aa.ts --bundle --format=esm --target=es2022 --minify --tree-shaking=true --legal-comments=none --outfile=public/assets/js/metamask-aa.js --external:react --external:react-dom",
+    "neo:build:aa": "npx esbuild public/assets/js/wallet.metamask-aa.ts --bundle --format=esm --target=es2022 --minify --tree-shaking=true --legal-comments=none --outfile=public/assets/js/metamask-aa.js",
     "neo:build": "npm run clean && npm run neo:cfg && npm run neo:build:smart && npm run neo:build:aa",
     "test": "jest",
     "test:watch": "jest --watch",

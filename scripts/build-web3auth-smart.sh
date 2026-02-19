@@ -13,8 +13,6 @@ npx esbuild public/assets/js/web3auth.smart.ts \
   --outfile=public/assets/js/web3auth.smart.js \
   --external:viem \
   --external:buffer \
-  --external:react \
-  --external:react-dom \
   --external:react-i18next \
   --external:@segment/analytics-next \
   --external:@sentry/core
