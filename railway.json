@@ -4,13 +4,16 @@
         "builder": "RAILPACK",
         "watchPatterns": [
             "**/*"
-        ]
+        ],
+        "buildEnvironment": "V3"
     },
     "deploy": {
         "runtime": "V2",
         "numReplicas": 1,
         "healthcheckPath": "/api/health",
+        "healthcheckTimeout": 300,
         "sleepApplication": false,
+        "useLegacyStacker": false,
         "ipv6EgressEnabled": false,
         "multiRegionConfig": {
             "us-west2": {
@@ -18,7 +21,6 @@
             }
         },
         "restartPolicyType": "ON_FAILURE",
-        "healthcheckTimeout": 300,
         "restartPolicyMaxRetries": 10
     }
 }
