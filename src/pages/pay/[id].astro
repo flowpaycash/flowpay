@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getPaymentButton } from '../../services/database/sqlite.mjs';
+import { Image } from 'astro:assets';
+import flowpayLogo from '../../../public/img/flowpay-logo.png';
 
 const { id } = Astro.params;
 let button = null;
@@ -45,7 +47,7 @@ const creatorName = button?.user_name || 'FlowPay';
       <div class="pay-container">
         <!-- Header -->
         <div class="pay-header">
-          <img src="/img/flowpay-logo.png" alt="FlowPay" class="pay-logo" />
+          <Image src={flowpayLogo} alt="FlowPay" class="pay-logo" height={40} loading="eager" />
         </div>
 
         <!-- Payment card -->
@@ -194,7 +196,7 @@ const creatorName = button?.user_name || 'FlowPay';
         <div class="powered-by">
           <span>Pagamento seguro via</span>
           <a href="/" target="_blank">
-            <img src="/img/flowpay-logo.png" alt="FlowPay" height="18" />
+            <Image src={flowpayLogo} alt="FlowPay" height={18} />
             FlowPay
           </a>
         </div>

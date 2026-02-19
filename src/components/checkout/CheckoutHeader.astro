@@ -1,6 +1,11 @@
+---
+import { Image } from 'astro:assets';
+import flowpayLogo from '../../../public/img/flowpay-logo.png';
+---
+
 <header class="checkout-header">
   <div class="checkout-logo">
-    <img src="/img/flowpay-logo.png" alt="FlowPay" class="header-logo" />
+    <Image src={flowpayLogo} alt="FlowPay" class="header-logo" height={44} loading="eager" />
   </div>
   <div class="nf-progress">
     <div class="nf-fill" id="nf-fill"></div>

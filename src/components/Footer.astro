@@ -1,11 +1,13 @@
 ---
+import { Image } from 'astro:assets';
+import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
 ---
 
 <footer class="site-footer">
   <div class="footer-container">
     <div class="footer-content">
       <div class="footer-section brand">
-        <img src="/assets/icons/flowpay-header-logo.png" alt="FlowPay Logo" class="footer-logo" />
+        <Image src={headerLogo} alt="FlowPay Logo" class="footer-logo" height={28} />
         <p>
           Simples. Rápido. <br />
           Powered by <strong>NEØ Smart Factory™</strong>

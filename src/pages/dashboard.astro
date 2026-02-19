@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import flowpayLogo from '../../public/img/flowpay-logo.png';
 ---
 
 <Layout title="Dashboard — FlowPay" description="Crie botões de pagamento com PIX e cripto.">
@@ -9,7 +11,7 @@ import Layout from '../layouts/Layout.astro';
     <!-- Auth check screen -->
     <div id="screen-auth" class="screen active">
       <div class="dash-card auth-card">
-        <img src="/img/flowpay-logo.png" alt="FlowPay" class="dash-logo" />
+        <Image src={flowpayLogo} alt="FlowPay" class="dash-logo" height={80} loading="eager" />
         <h1 class="dash-title">Área do <span class="gradient-text">Vendedor</span></h1>
         <p class="dash-sub">Digite seu e-mail cadastrado para acessar o painel.</p>
         <form id="auth-form" class="auth-form" novalidate>
@@ -45,7 +47,7 @@ import Layout from '../layouts/Layout.astro';
     <div id="screen-dashboard" class="screen" hidden>
       <header class="dash-header">
         <div class="dash-brand">
-          <img src="/img/flowpay-logo.png" alt="FlowPay" class="dash-logo-sm" />
+          <Image src={flowpayLogo} alt="FlowPay" class="dash-logo-sm" height={32} loading="eager" />
           <span class="dash-title-sm">FlowPay</span>
         </div>
         <div class="dash-user-info">

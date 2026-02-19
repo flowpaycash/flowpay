@@ -1,12 +1,13 @@
 ---
-
+import { Image } from 'astro:assets';
+import flowpayLogo from '../../public/img/flowpay-logo.png';
 ---
 
 <nav class="premium-nav">
   <div class="nav-wrapper">
     <div class="nav-left">
       <a href="/" class="brand-logo">
-        <img src="/img/flowpay-logo.png" alt="FlowPay" />
+        <Image src={flowpayLogo} alt="FlowPay" height={36} loading="eager" />
       </a>
       <div class="nav-links">
         <a href="/registro" class="nav-item">Cadastro</a>

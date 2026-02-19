@@ -1,15 +1,18 @@
 ---
-
+import { Image } from 'astro:assets';
+import flowpayLogo from '../../public/img/flowpay-logo.png';
 ---
 
 <section class="hero-premium">
   <div class="hero-bg-glow"></div>
   <div class="hero-content">
     <div class="brand-reveal">
-      <img
-        src="/img/flowpay-logo.png"
+      <Image
+        src={flowpayLogo}
         alt="FlowPay Logo"
         class="premium-logo"
+        height={200}
+        loading="eager"
       />
     </div>
 

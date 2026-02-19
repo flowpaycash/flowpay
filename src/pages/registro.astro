@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
+import brandLogo from '../../public/img/flowpay-logo.png';
 ---
 
 <Layout title="Cadastro — FlowPay" description="Crie sua conta FlowPay e comece a receber pagamentos com PIX e cripto.">
@@ -9,12 +12,13 @@ import Layout from '../layouts/Layout.astro';
     <div class="register-content">
       <div class="register-brand">
         <a href="/">
-          <img src="/img/flowpay-logo.png" alt="FlowPay Logo" class="register-logo" />
+          <Image src={brandLogo} alt="FlowPay Logo" class="register-logo" height={80} />
         </a>
       </div>
 
       <div class="register-card" id="form-card">
-        <h1 class="register-title">Criar sua conta <span class="gradient-text">FlowPay</span></h1>
+        <Image src={headerLogo} alt="FlowPay" class="register-header-logo" height={36} />
+        <h1 class="register-title">Criar sua conta</h1>
         <p class="register-subtitle">
           Preencha os dados abaixo. Sua conta será analisada e aprovada manualmente em até 24h.
         </p>
@@ -138,6 +142,13 @@ import Layout from '../layouts/Layout.astro';
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.08);
     width: 100%;
     animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+
+  .register-header-logo {
+    height: 36px;
+    width: auto;
+    margin-bottom: 1rem;
+    display: block;
   }
 
   .register-title {
