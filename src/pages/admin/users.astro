@@ -1,0 +1,580 @@
+---
+// Admin Users page - self-contained, no external layout dependencies
+---
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLOWPay Admin | Usuários</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/admin/admin.css" />
+
+  <style>
+    /* ── Page-specific styles ── */
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .filter-btn {
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid #2a2a2a;
+      background: #111;
+      color: #aaa;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover { border-color: #444; color: #fff; }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, #ff007a 0%, #a855f7 100%);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .user-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .user-table th {
+      text-align: left;
+      padding: 10px 14px;
+      color: #666;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #1e1e1e;
+      white-space: nowrap;
+    }
+
+    .user-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #151515;
+      color: #ddd;
+      vertical-align: middle;
+    }
+
+    .user-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+    .user-table tbody tr:last-child td { border-bottom: none; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-pending  { background: rgba(255,170,0,0.15);  color: #ffaa00; border: 1px solid rgba(255,170,0,0.25); }
+    .badge-approved { background: rgba(0,204,102,0.15);  color: #00cc66; border: 1px solid rgba(0,204,102,0.25); }
+    .badge-rejected { background: rgba(255,68,68,0.15);  color: #ff4444; border: 1px solid rgba(255,68,68,0.25); }
+
+    .action-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn-approve, .btn-reject {
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-approve {
+      background: rgba(0,204,102,0.15);
+      color: #00cc66;
+      border: 1px solid rgba(0,204,102,0.25);
+    }
+    .btn-approve:hover { background: rgba(0,204,102,0.3); }
+
+    .btn-reject {
+      background: rgba(255,68,68,0.1);
+      color: #ff4444;
+      border: 1px solid rgba(255,68,68,0.2);
+    }
+    .btn-reject:hover { background: rgba(255,68,68,0.25); }
+
+    .btn-approve:disabled, .btn-reject:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .user-name { font-weight: 600; color: #fff; }
+    .user-email { color: #888; font-size: 0.82rem; }
+    .user-meta { color: #555; font-size: 0.8rem; }
+
+    .empty-row td {
+      text-align: center;
+      color: #555;
+      padding: 40px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid #1e1e1e;
+    }
+
+    .reason-input {
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 5px 10px;
+      color: #ddd;
+      font-size: 0.78rem;
+      font-family: inherit;
+      width: 140px;
+    }
+
+    .reason-input:focus { outline: none; border-color: #ff4444; }
+    .reason-input::placeholder { color: #444; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .stat-card .stat-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-card.pending .stat-num  { color: #ffaa00; }
+    .stat-card.approved .stat-num { color: #00cc66; }
+    .stat-card.rejected .stat-num { color: #ff4444; }
+
+    @media (max-width: 768px) {
+      .stats-row { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .reason-input { display: none; }
+      .user-table th:nth-child(4),
+      .user-table td:nth-child(4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login screen (reused if session expires) -->
+  <div id="login-screen">
+    <div class="login-box">
+      <div class="login-logo">FLOWPay</div>
+      <h1>Admin</h1>
+      <p>Acesso restrito</p>
+      <form id="login-form" autocomplete="off">
+        <label for="password">Senha de Acesso</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        <div id="login-error" class="error-msg"></div>
+        <button type="submit" class="btn-login">Acessar Painel</button>
+      </form>
+      <a href="/" class="login-back">Voltar ao site</a>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="admin-panel">
+    <div class="admin-wrapper">
+
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-name">FLOWPay</div>
+          <div class="sidebar-brand-version">v2.2.0 — Admin</div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-group">
+            <div class="nav-group-label">Dashboard</div>
+            <a href="/admin" class="nav-link">
+              <span class="nav-dot"></span>
+              Visao Geral
+            </a>
+            <a href="/admin/transactions" class="nav-link">
+              <span class="nav-dot"></span>
+              Transacoes
+            </a>
+          </div>
+
+          <div class="nav-group">
+            <div class="nav-group-label">Gestao</div>
+            <a href="/admin/users" class="nav-link active">
+              <span class="nav-dot"></span>
+              Usuarios
+            </a>
+            <a href="/admin/settings" class="nav-link">
+              <span class="nav-dot"></span>
+              Configuracoes
+            </a>
+          </div>
+
+          <div class="nav-group">
+            <div class="nav-group-label">Sistema</div>
+            <a href="/admin/logs" class="nav-link">
+              <span class="nav-dot"></span>
+              Logs
+            </a>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button id="logout-btn" class="btn-logout">Sair</button>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="main-content">
+        <div class="topbar">
+          <div class="topbar-title">Usuarios &amp; Cadastros</div>
+          <div class="topbar-actions">
+            <button id="refresh-btn" class="btn-secondary" onclick="loadUsers()">↻ Atualizar</button>
+          </div>
+        </div>
+
+        <div class="content-area">
+
+          <!-- Stats -->
+          <div class="stats-row">
+            <div class="stat-card pending">
+              <div class="stat-num" id="count-pending">—</div>
+              <div class="stat-label">Aguardando</div>
+            </div>
+            <div class="stat-card approved">
+              <div class="stat-num" id="count-approved">—</div>
+              <div class="stat-label">Aprovados</div>
+            </div>
+            <div class="stat-card rejected">
+              <div class="stat-num" id="count-rejected">—</div>
+              <div class="stat-label">Rejeitados</div>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="filters">
+            <button class="filter-btn active" data-status="PENDING_APPROVAL" onclick="setFilter('PENDING_APPROVAL', this)">Pendentes</button>
+            <button class="filter-btn" data-status="APPROVED" onclick="setFilter('APPROVED', this)">Aprovados</button>
+            <button class="filter-btn" data-status="REJECTED" onclick="setFilter('REJECTED', this)">Rejeitados</button>
+            <button class="filter-btn" data-status="" onclick="setFilter('', this)">Todos</button>
+          </div>
+
+          <!-- Table -->
+          <div class="table-wrap">
+            <table class="user-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Tipo de negocio</th>
+                  <th>Data</th>
+                  <th>Contato</th>
+                  <th>Status</th>
+                  <th>Acoes</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody">
+                <tr class="empty-row"><td colspan="6">Carregando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="notification"></div>
+
+  <script is:inline src="/csp-config.js"></script>
+
+  <script is:inline>
+    let currentFilter = 'PENDING_APPROVAL';
+    let allUsers = [];
+
+    // ── Bootstrap ───────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+      const ok = await checkAuthentication();
+      if (ok) {
+        showAdminPanel();
+        await loadUsers();
+      } else {
+        showLoginScreen();
+        setupLoginForm();
+      }
+      setupLogout();
+    });
+
+    // ── Auth ────────────────────────────────────────────────
+    async function checkAuthentication() {
+      try {
+        const res = await fetch('/api/admin/auth/session', {
+          credentials: 'same-origin',
+          cache: 'no-store',
+        });
+        const data = await res.json();
+        return Boolean(data?.authenticated);
+      } catch { return false; }
+    }
+
+    function setupLoginForm() {
+      const form = document.getElementById('login-form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = document.getElementById('password').value;
+        const errEl = document.getElementById('login-error');
+        if (!password) return;
+
+        try {
+          const res = await fetch('/api/admin/auth/login', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            document.getElementById('password').value = '';
+            showAdminPanel();
+            await loadUsers();
+          } else {
+            errEl.textContent = data.error || 'Senha incorreta.';
+          }
+        } catch {
+          errEl.textContent = 'Erro de conexão.';
+        }
+      });
+    }
+
+    function setupLogout() {
+      document.getElementById('logout-btn')?.addEventListener('click', async () => {
+        await fetch('/api/admin/auth/logout', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        showLoginScreen();
+        setupLoginForm();
+      });
+    }
+
+    function showAdminPanel() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-panel').style.display = 'flex';
+    }
+
+    function showLoginScreen() {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('admin-panel').style.display = 'none';
+    }
+
+    function getAuthHeaders() {
+      return { 'Content-Type': 'application/json' };
+    }
+
+    // ── Data ─────────────────────────────────────────────────
+    async function loadUsers() {
+      try {
+        const res = await fetch('/api/admin/users', {
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: getAuthHeaders(),
+        });
+
+        if (res.status === 401) {
+          showLoginScreen();
+          setupLoginForm();
+          return;
+        }
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error);
+
+        allUsers = data.users || [];
+        updateStats();
+        renderTable(currentFilter);
+      } catch (err) {
+        showNotification('Erro ao carregar usuários: ' + err.message, 'error');
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('count-pending').textContent =
+        allUsers.filter(u => u.status === 'PENDING_APPROVAL').length;
+      document.getElementById('count-approved').textContent =
+        allUsers.filter(u => u.status === 'APPROVED').length;
+      document.getElementById('count-rejected').textContent =
+        allUsers.filter(u => u.status === 'REJECTED').length;
+    }
+
+    function setFilter(status, btn) {
+      currentFilter = status;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable(status);
+    }
+
+    function renderTable(statusFilter) {
+      const tbody = document.getElementById('users-tbody');
+      const filtered = statusFilter
+        ? allUsers.filter(u => u.status === statusFilter)
+        : allUsers;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Nenhum usuario encontrado.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(u => {
+        const date = new Date(u.created_at).toLocaleDateString('pt-BR', {
+          day: '2-digit', month: '2-digit', year: '2-digit'
+        });
+        const badgeClass = {
+          PENDING_APPROVAL: 'badge-pending',
+          APPROVED: 'badge-approved',
+          REJECTED: 'badge-rejected',
+        }[u.status] || 'badge-pending';
+        const badgeLabel = {
+          PENDING_APPROVAL: 'Pendente',
+          APPROVED: 'Aprovado',
+          REJECTED: 'Rejeitado',
+        }[u.status] || u.status;
+
+        const isPending = u.status === 'PENDING_APPROVAL';
+
+        return `
+          <tr id="row-${u.id}">
+            <td>
+              <div class="user-name">${esc(u.name)}</div>
+              <div class="user-email">${esc(u.email)}</div>
+            </td>
+            <td><span class="user-meta">${esc(u.business_type || '—')}</span></td>
+            <td><span class="user-meta">${date}</span></td>
+            <td>
+              ${u.phone ? `<div class="user-meta">${esc(u.phone)}</div>` : ''}
+              ${u.cpf ? `<div class="user-meta">CPF: ${esc(u.cpf)}</div>` : ''}
+            </td>
+            <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+            <td>
+              ${isPending ? `
+                <div class="action-row">
+                  <button class="btn-approve" onclick="approve(${u.id}, this)">Aprovar</button>
+                  <input class="reason-input" id="reason-${u.id}" placeholder="Motivo (opcional)" maxlength="100" />
+                  <button class="btn-reject" onclick="reject(${u.id}, this)">Rejeitar</button>
+                </div>
+              ` : `<span class="user-meta">—</span>`}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ── Actions ──────────────────────────────────────────────
+    async function approve(userId, btn) {
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      try {
+        const res = await fetch('/api/admin/users', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ action: 'approve', userId }),
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error);
+
+        showNotification('✅ Usuario aprovado com sucesso.', 'success');
+        await loadUsers();
+      } catch (err) {
+        showNotification('Erro: ' + err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Aprovar';
+      }
+    }
+
+    async function reject(userId, btn) {
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      const reason = document.getElementById(`reason-${userId}`)?.value.trim() || '';
+
+      try {
+        const res = await fetch('/api/admin/users', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ action: 'reject', userId, reason }),
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error);
+
+        showNotification('Usuario rejeitado.', 'warning');
+        await loadUsers();
+      } catch (err) {
+        showNotification('Erro: ' + err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Rejeitar';
+      }
+    }
+
+    // ── Helpers ──────────────────────────────────────────────
+    function esc(str) {
+      return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    let notifTimer;
+    function showNotification(msg, type = 'info') {
+      const el = document.getElementById('notification');
+      el.textContent = msg;
+      el.className = `notif-${type}`;
+      el.style.display = 'block';
+      clearTimeout(notifTimer);
+      notifTimer = setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+  </script>
+
+</body>
+</html>
