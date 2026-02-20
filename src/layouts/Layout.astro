@@ -6,6 +6,7 @@ export interface Props {
   ogType?: string;
   noindex?: boolean;
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
+  bodyClass?: string;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   ogType = "website",
   noindex = false,
   structuredData,
+  bodyClass,
 } = Astro.props;
 
 const SITE = "https://flowpay.cash";
@@ -216,7 +218,7 @@ const allSchemas = [...defaultStructuredData, ...extraSchema];
       }
     </script>
   </head>
-  <body>
+  <body class={bodyClass ?? ""}>
     <slot />
   </body>
 </html>
