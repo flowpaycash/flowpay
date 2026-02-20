@@ -9,9 +9,9 @@ export default defineConfig({
   integrations: [
     react(),
     sentry({
-      dsn: process.env.SENTRY_DSN,
       sourceMapsUploadOptions: {
-        project: process.env.SENTRY_PROJECT,
+        project: "javascript-astro",
+        org: "flowpay-ms",
         authToken: process.env.SENTRY_AUTH_TOKEN,
       },
     }),
