@@ -3,212 +3,727 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 ---
 
-<Layout title="FLOWPay - Transparência Radical">
+<Layout title="FLOWPay - Transparencia Radical">
   <Navbar />
 
-  <main class="premium-page">
+  <main class="transparency-page">
+
     <header class="page-header">
       <div class="glow-sphere"></div>
-      <h1 class="premium-title">Provas, não <span class="gradient-text">Promessas</span>.</h1>
-      <p class="premium-subtitle">Operação auditável em tempo real. Privacidade por padrão, transparência por design.</p>
+      <h1 class="page-title">Provas, nao <span class="gradient-text">Promessas</span>.</h1>
+      <p class="page-subtitle">Operacao auditavel em tempo real. Privacidade por padrao, transparencia por design.</p>
     </header>
 
-    <div class="premium-grid container">
-      <div class="premium-card">
-        <div class="card-icon">👁️</div>
-        <h3>O que é Público</h3>
-        <p>Status da rede, volumes transacionados e hashes de liquidação blockchain.</p>
-        <ul class="premium-list">
-          <li>Timestamps Reais</li>
-          <li>ID de Correlação</li>
-          <li>Status de Liquidação</li>
-        </ul>
-      </div>
+    <div class="container">
 
-      <div class="premium-card">
-        <div class="card-icon">🛡️</div>
-        <h3>O que é Privado</h3>
-        <p>Seus dados são seus. Não armazenamos PII (Personally Identifiable Information).</p>
-        <ul class="premium-list">
-          <li>Sem KYC Intrusivo</li>
-          <li>Sem Registro de IPs</li>
-          <li>Payloads Redigidos</li>
-        </ul>
-      </div>
+      <!-- Status do Sistema -->
+      <section class="status-bar" id="system-status">
+        <div class="status-indicator">
+          <span class="pulse-dot" id="status-dot"></span>
+          <span class="status-label" id="status-label">Verificando...</span>
+        </div>
+        <div class="status-meta" id="status-meta"></div>
+      </section>
 
-      <div class="premium-card highlight">
-        <div class="card-icon">💻</div>
-        <h3>Código Aberto</h3>
-        <p>Soberania exige auditoria. Todo o núcleo do FLOWPay está no GitHub.</p>
-        <a href="https://github.com/flowpaycash/flowpay" target="_blank" class="btn-premium secondary full">Ver Repositório</a>
-      </div>
+      <!-- Stats em tempo real -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">Volume Total (BRL)</span>
+          <span class="stat-value" id="total-volume">--</span>
+          <span class="stat-sub" id="volume-24h">Ultimas 24h: --</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Transacoes Liquidadas</span>
+          <span class="stat-value" id="settled-count">--</span>
+          <span class="stat-sub" id="total-orders">Total processado: --</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Provas On-Chain (PoE)</span>
+          <span class="stat-value" id="poe-count">--</span>
+          <span class="stat-sub">Merkle root anchorada na Base</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Volume 30 dias</span>
+          <span class="stat-value" id="volume-30d">--</span>
+          <span class="stat-sub" id="orders-30d">-- transacoes</span>
+        </div>
+      </section>
+
+      <!-- Cards de principios -->
+      <section class="principles-grid">
+        <div class="principle-card">
+          <div class="principle-icon">&#128065;</div>
+          <h3>O que e Publico</h3>
+          <p>Status da rede, volumes transacionados e hashes de liquidacao blockchain.</p>
+          <ul class="principle-list">
+            <li>Timestamps reais de cada transacao</li>
+            <li>ID de correlacao unico por charge</li>
+            <li>Status de liquidacao on-chain</li>
+            <li>Merkle root de cada batch de PoE</li>
+          </ul>
+        </div>
+
+        <div class="principle-card">
+          <div class="principle-icon">&#128737;</div>
+          <h3>O que e Privado</h3>
+          <p>Seus dados sao seus. Nao armazenamos PII (Personally Identifiable Information).</p>
+          <ul class="principle-list">
+            <li>Sem KYC intrusivo</li>
+            <li>Sem registro de IPs</li>
+            <li>Payloads redigidos nos logs</li>
+            <li>Dados de pagamento nunca expostos</li>
+          </ul>
+        </div>
+
+        <div class="principle-card highlight">
+          <div class="principle-icon">&#128187;</div>
+          <h3>Codigo Aberto</h3>
+          <p>Soberania exige auditoria. Todo o nucleo do FLOWPay esta no GitHub.</p>
+          <a href="https://github.com/flowpaycash/flowpay" target="_blank" rel="noopener noreferrer" class="btn-repo">
+            Ver Repositorio
+          </a>
+        </div>
+      </section>
+
+      <!-- Liquidacoes Recentes -->
+      <section class="table-section">
+        <div class="section-header">
+          <h2>Liquidacoes Recentes</h2>
+          <span class="section-badge">Prova on-chain</span>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table" id="settlements-table">
+            <thead>
+              <tr>
+                <th>Charge ID</th>
+                <th>Valor (BRL)</th>
+                <th>Status</th>
+                <th>Rede</th>
+                <th>TX Hash</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody id="settlements-body">
+              <tr><td colspan="6" class="loading-row">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Batches de PoE -->
+      <section class="table-section">
+        <div class="section-header">
+          <h2>Proof of Existence — Batches</h2>
+          <span class="section-badge">Merkle Tree</span>
+        </div>
+        <p class="section-desc">
+          Cada batch agrupa multiplas transacoes em uma Merkle Tree e ancora o root hash on-chain,
+          provando a existencia e integridade de todos os pagamentos sem expor dados individuais.
+        </p>
+        <div class="table-wrapper">
+          <table class="data-table" id="poe-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Merkle Root</th>
+                <th>Transacoes</th>
+                <th>Anchor TX</th>
+                <th>Rede</th>
+                <th>Anchorado em</th>
+              </tr>
+            </thead>
+            <tbody id="poe-body">
+              <tr><td colspan="6" class="loading-row">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Rodape de auditoria -->
+      <section class="audit-footer">
+        <div class="audit-item">
+          <span class="audit-label">API de Transparencia</span>
+          <a href="/api/transparency" target="_blank" class="audit-link">/api/transparency</a>
+        </div>
+        <div class="audit-item">
+          <span class="audit-label">Repositorio</span>
+          <a href="https://github.com/flowpaycash/flowpay" target="_blank" rel="noopener noreferrer" class="audit-link">github.com/flowpaycash/flowpay</a>
+        </div>
+        <div class="audit-item">
+          <span class="audit-label">Rede Blockchain</span>
+          <a href="https://basescan.org" target="_blank" rel="noopener noreferrer" class="audit-link">Base (basescan.org)</a>
+        </div>
+        <div class="audit-item">
+          <span class="audit-label">Atualizado em</span>
+          <span class="audit-value" id="generated-at">--</span>
+        </div>
+      </section>
+
     </div>
-
-    <section class="api-status-section container">
-      <div class="status-card">
-        <div class="status-header">
-          <div class="pulse-icon online"></div>
-          <h4>Sistema Operacional</h4>
-        </div>
-        <div class="status-metrics">
-          <div class="metric">
-            <span class="m-label">Uptime</span>
-            <span class="m-value">99.9%</span>
-          </div>
-          <div class="metric">
-            <span class="m-label">P95 Latency</span>
-            <span class="m-value">&lt; 1.2s</span>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <style>
-    .premium-page {
+    .transparency-page {
       padding-top: 120px;
-      padding-bottom: 80px;
+      padding-bottom: 100px;
       background: #f7f8fa;
       min-height: 100vh;
     }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
     .page-header {
       text-align: center;
-      margin-bottom: 80px;
+      margin-bottom: 64px;
       position: relative;
+      padding: 0 24px;
     }
+
     .glow-sphere {
       position: absolute;
       top: -100px;
       left: 50%;
       transform: translateX(-50%);
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(255, 0, 122, 0.05) 0%, transparent 70%);
-      z-index: 0;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 0, 122, 0.06) 0%, transparent 70%);
+      pointer-events: none;
     }
-    .premium-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 32px;
-      margin-bottom: 64px;
+
+    .page-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      color: #0a0a0a;
+      margin-bottom: 16px;
+      letter-spacing: -0.03em;
     }
-    .premium-card {
-      background: #ffffff;
-      padding: 40px;
-      border-radius: 32px;
-      border: 1px solid #edeef2;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-      transition: transform 0.2s;
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ff007a, #ff7a00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .premium-card:hover {
-      transform: translateY(-4px);
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.6;
     }
-    .premium-card.highlight {
-      border-color: #ff007a40;
-      background: linear-gradient(180deg, #ffffff 0%, #fff0f7 100%);
+
+    /* Status Bar */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1d1d1f;
+      color: white;
+      padding: 16px 28px;
+      border-radius: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
-    .card-icon {
-      font-size: 40px;
-      margin-bottom: 24px;
-    }
-    .premium-list {
-      list-style: none;
-      padding: 0;
-      margin-top: 24px;
-    }
-    .premium-list li {
-      padding: 8px 0;
-      color: #707070;
-      font-weight: 500;
+
+    .status-indicator {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    .premium-list li::before {
-      content: '✓';
-      color: #ff007a;
-      font-weight: 800;
-    }
-    .status-card {
-      background: #1d1d1f;
-      color: white;
-      padding: 32px;
-      border-radius: 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 32px;
-    }
-    .status-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .pulse-icon.online {
-      width: 12px;
-      height: 12px;
-      background: #00ff88;
+
+    .pulse-dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      box-shadow: 0 0 12px #00ff88;
+      background: #888;
+      flex-shrink: 0;
+    }
+
+    .pulse-dot.online {
+      background: #00ff88;
+      box-shadow: 0 0 10px #00ff88;
       animation: pulse 2s infinite;
     }
-    .status-metrics {
-      display: flex;
-      gap: 48px;
+
+    .pulse-dot.offline {
+      background: #ff4444;
+      box-shadow: 0 0 10px #ff4444;
     }
-    .metric {
-      display: flex;
-      flex-direction: column;
+
+    .status-label {
+      font-weight: 600;
+      font-size: 0.95rem;
     }
-    .m-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
+
+    .status-meta {
+      font-size: 0.8rem;
       color: #888;
-      letter-spacing: 0.1em;
     }
-    .m-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
+
     @keyframes pulse {
       0% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.5); opacity: 0.5; }
       100% { transform: scale(1); opacity: 1; }
     }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid #edeef2;
+      border-radius: 20px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #999;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0a0a0a;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-sub {
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    /* Principles */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    .principle-card {
+      background: white;
+      border: 1px solid #edeef2;
+      border-radius: 24px;
+      padding: 36px;
+      transition: transform 0.2s;
+    }
+
+    .principle-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .principle-card.highlight {
+      border-color: rgba(255, 0, 122, 0.25);
+      background: linear-gradient(180deg, #ffffff 0%, #fff0f7 100%);
+    }
+
+    .principle-icon {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .principle-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0a0a0a;
+      margin-bottom: 10px;
+    }
+
+    .principle-card p {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .principle-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .principle-list li {
+      font-size: 0.875rem;
+      color: #555;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .principle-list li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ff007a;
+      flex-shrink: 0;
+    }
+
+    .btn-repo {
+      display: inline-block;
+      background: #0a0a0a;
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    .btn-repo:hover {
+      background: #333;
+    }
+
+    /* Tables */
+    .table-section {
+      margin-bottom: 56px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0a0a0a;
+    }
+
+    .section-badge {
+      background: rgba(255, 0, 122, 0.08);
+      color: #ff007a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 100px;
+      border: 1px solid rgba(255, 0, 122, 0.15);
+    }
+
+    .section-desc {
+      font-size: 0.875rem;
+      color: #777;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      max-width: 720px;
+    }
+
+    .table-wrapper {
+      background: white;
+      border: 1px solid #edeef2;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .data-table thead {
+      background: #f7f8fa;
+    }
+
+    .data-table th {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #999;
+      font-weight: 600;
+      border-bottom: 1px solid #edeef2;
+    }
+
+    .data-table td {
+      padding: 14px 20px;
+      color: #333;
+      border-bottom: 1px solid #f0f1f3;
+      vertical-align: middle;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover td {
+      background: #fafafa;
+    }
+
+    .loading-row {
+      text-align: center;
+      color: #bbb;
+      padding: 32px !important;
+    }
+
+    .empty-row {
+      text-align: center;
+      color: #ccc;
+      padding: 32px !important;
+      font-size: 0.85rem;
+    }
+
+    .tx-hash {
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: #ff007a;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .tx-hash:hover {
+      text-decoration: underline;
+    }
+
+    .hash-short {
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: #666;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-badge.settled,
+    .status-badge.completed {
+      background: rgba(0, 200, 100, 0.1);
+      color: #00a855;
+    }
+
+    .status-badge.pending {
+      background: rgba(255, 165, 0, 0.1);
+      color: #e07c00;
+    }
+
+    .status-badge.paid {
+      background: rgba(0, 100, 255, 0.1);
+      color: #0050cc;
+    }
+
+    .network-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #888;
+      background: #f0f1f3;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    /* Audit Footer */
+    .audit-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      background: #1d1d1f;
+      border-radius: 20px;
+      padding: 28px 32px;
+      align-items: center;
+    }
+
+    .audit-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .audit-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .audit-link {
+      font-size: 0.85rem;
+      color: #ff007a;
+      text-decoration: none;
+      font-family: monospace;
+    }
+
+    .audit-link:hover {
+      text-decoration: underline;
+    }
+
+    .audit-value {
+      font-size: 0.85rem;
+      color: #888;
+      font-family: monospace;
+    }
   </style>
 
-  <!-- CSP Configuration -->
   <script is:inline src="/csp-config.js"></script>
 
-  <!-- Scripts -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Mobile menu toggle
-      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-      const navList = document.querySelector('.nav-list');
+    function formatBRL(value) {
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      }).format(parseFloat(value) || 0);
+    }
 
-      if (mobileMenuToggle && navList) {
-        mobileMenuToggle.addEventListener('click', function () {
-          navList.classList.toggle('active');
-          mobileMenuToggle.classList.toggle('active');
-        });
-      }
-
-      // Smooth scrolling para links internos
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-
-          const target = document.querySelector(this.getAttribute('href') || '');
-          if (target) {
-            target.scrollIntoView({
-              behavior: 'smooth',
-            });
-          }
-        });
+    function formatDate(dateStr) {
+      if (!dateStr) return '--';
+      return new Date(dateStr).toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
       });
-    });
+    }
+
+    function shortHash(hash) {
+      if (!hash) return '--';
+      return hash.substring(0, 8) + '...' + hash.substring(hash.length - 6);
+    }
+
+    function statusBadge(status) {
+      const map = {
+        'SETTLED': 'settled',
+        'COMPLETED': 'completed',
+        'PIX_PAID': 'paid',
+        'PENDING_REVIEW': 'pending',
+        'APPROVED': 'pending',
+      };
+      const cls = map[status] || 'pending';
+      return `<span class="status-badge ${cls}">${status}</span>`;
+    }
+
+    function getExplorerUrl(txHash, network) {
+      if (!txHash) return null;
+      const explorers = {
+        base: 'https://basescan.org/tx/',
+        ethereum: 'https://etherscan.io/tx/',
+        polygon: 'https://polygonscan.com/tx/',
+      };
+      const base = explorers[network] || explorers['base'];
+      return base + txHash;
+    }
+
+    async function loadTransparency() {
+      try {
+        const res = await fetch('/api/transparency');
+        const data = await res.json();
+
+        if (!data.ok) throw new Error('API unavailable');
+
+        // Status
+        const dot = document.getElementById('status-dot');
+        const label = document.getElementById('status-label');
+        const meta = document.getElementById('status-meta');
+
+        if (data.system.status === 'operational') {
+          dot.classList.add('online');
+          label.textContent = 'Sistema Operacional';
+        } else {
+          dot.classList.add('offline');
+          label.textContent = 'Sistema Degradado';
+        }
+        meta.textContent = `v${data.system.version} · Rede ${data.system.network} · Atualizado ${formatDate(data.generated_at)}`;
+
+        // Stats
+        document.getElementById('total-volume').textContent = formatBRL(data.stats.total_volume_brl);
+        document.getElementById('volume-24h').textContent = `Ultimas 24h: ${formatBRL(data.stats.last_24h.volume_brl)}`;
+        document.getElementById('settled-count').textContent = data.stats.settled_count.toLocaleString('pt-BR');
+        document.getElementById('total-orders').textContent = `Total processado: ${data.stats.total_orders.toLocaleString('pt-BR')}`;
+        document.getElementById('poe-count').textContent = data.poe_batches.length > 0 ? data.poe_batches.length + '+' : '0';
+        document.getElementById('volume-30d').textContent = formatBRL(data.stats.last_30d.volume_brl);
+        document.getElementById('orders-30d').textContent = `${data.stats.last_30d.orders.toLocaleString('pt-BR')} transacoes`;
+        document.getElementById('generated-at').textContent = formatDate(data.generated_at);
+
+        // Settlements table
+        const tbody = document.getElementById('settlements-body');
+        if (data.recent_settlements.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty-row">Nenhuma liquidacao on-chain registrada ainda.</td></tr>';
+        } else {
+          tbody.innerHTML = data.recent_settlements.map((s) => {
+            const explorerUrl = getExplorerUrl(s.tx_hash, s.network);
+            const txCell = explorerUrl
+              ? `<a href="${explorerUrl}" target="_blank" rel="noopener noreferrer" class="tx-hash">${shortHash(s.tx_hash)}</a>`
+              : `<span class="hash-short">--</span>`;
+            return `
+              <tr>
+                <td><span class="hash-short">${shortHash(s.charge_id)}</span></td>
+                <td><strong>${formatBRL(s.amount_brl)}</strong></td>
+                <td>${statusBadge(s.status)}</td>
+                <td><span class="network-badge">${s.network}</span></td>
+                <td>${txCell}</td>
+                <td>${formatDate(s.settled_at || s.created_at)}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        // PoE table
+        const poebody = document.getElementById('poe-body');
+        if (data.poe_batches.length === 0) {
+          poebody.innerHTML = '<tr><td colspan="6" class="empty-row">Nenhum batch de PoE anchorado ainda.</td></tr>';
+        } else {
+          poebody.innerHTML = data.poe_batches.map((b) => {
+            const anchorUrl = getExplorerUrl(b.anchor_tx_hash, b.network);
+            const anchorCell = anchorUrl
+              ? `<a href="${anchorUrl}" target="_blank" rel="noopener noreferrer" class="tx-hash">${shortHash(b.anchor_tx_hash)}</a>`
+              : `<span class="hash-short">Pendente</span>`;
+            return `
+              <tr>
+                <td>#${b.id}</td>
+                <td><span class="hash-short">${shortHash(b.merkle_root)}</span></td>
+                <td>${b.batch_size}</td>
+                <td>${anchorCell}</td>
+                <td><span class="network-badge">${b.network}</span></td>
+                <td>${formatDate(b.anchored_at || b.created_at)}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+      } catch (err) {
+        document.getElementById('status-dot').classList.add('offline');
+        document.getElementById('status-label').textContent = 'Dados temporariamente indisponiveis';
+        document.getElementById('settlements-body').innerHTML =
+          '<tr><td colspan="6" class="empty-row">Nao foi possivel carregar os dados.</td></tr>';
+        document.getElementById('poe-body').innerHTML =
+          '<tr><td colspan="6" class="empty-row">Nao foi possivel carregar os dados.</td></tr>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTransparency);
   </script>
 </Layout>
-
