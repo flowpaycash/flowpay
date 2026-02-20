@@ -14,7 +14,22 @@
       "Bash(npx astro check:*)",
       "Bash(npx astro build:*)",
       "Bash(make help:*)",
-      "Bash(make status:*)"
+      "Bash(make status:*)",
+      "Bash(python3:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(sort:*)",
+      "Bash(git -C /usr/local/projects/flowpay status)",
+      "Bash(git -C /usr/local/projects/flowpay log --oneline -10)",
+      "Bash(git -C /usr/local/projects/flowpay diff HEAD~3..HEAD -- \"*.env\" \"*.key\" \"*.pem\")",
+      "Bash(# Look for hardcoded Sentry DSN URLs in all source files grep -rn \"\"sentry.io\\\\|ingest.sentry\"\" \\\\ --include=\"\"*.js\"\" --include=\"\"*.mjs\"\" --include=\"\"*.ts\"\" --include=\"\"*.astro\"\" --include=\"\"*.json\"\" \\\\ --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git \\\\ /usr/local/projects/flowpay/src /usr/local/projects/flowpay/public)",
+      "Bash(# Search for any hardcoded DSN patterns across the entire src tree grep -rn \"\"https://[a-f0-9]\\\\{32\\\\}@\"\" \\\\ --include=\"\"*.js\"\" --include=\"\"*.mjs\"\" --include=\"\"*.ts\"\" --include=\"\"*.astro\"\" --include=\"\"*.json\"\" \\\\ --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git \\\\ /usr/local/projects/flowpay/)",
+      "Bash(git -C /usr/local/projects/flowpay show be0c160 -- astro.config.mjs)",
+      "Bash(# Check for any hardcoded tokens/keys across ALL file types \\(broader search\\) grep -rn \\\\ --include=\"\"*.js\"\" --include=\"\"*.mjs\"\" --include=\"\"*.ts\"\" --include=\"\"*.astro\"\" --include=\"\"*.json\"\" --include=\"\"*.toml\"\" --include=\"\"*.yaml\"\" --include=\"\"*.yml\"\" \\\\ -E \"\"[''\\\\\"\"][a-zA-Z0-9_\\\\-]{32,}[''\\\\\"\"]\"\" \\\\ --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git \\\\ /usr/local/projects/flowpay/src)",
+      "Bash(# Deeper check: scan git history for DSN patterns that look like real Sentry DSNs git -C /usr/local/projects/flowpay log --all -p --follow -- astro.config.mjs)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git stash pop:*)"
     ]
   }
 }

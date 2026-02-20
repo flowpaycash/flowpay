@@ -1,32 +1,32 @@
 <!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
-# 🛠️ FLOWPay - Guia de Configuração Técnica
+
+# FLOWPay: Guia de Configuração Técnica
 
 ```text
 ========================================
-     CONFIGURAÇÃO E DEPLOYMENT
+     FlowPay - SETUP & OPERATIONS
 ========================================
 Nó: mio-flowpay (Liquidação)
-Infra: Tunnel -> Nexus -> Factory
-Monitor: RPC QuickNode/Infura
-Status: PRONTO PARA OPERAÇÃO
+Infra: Node.js 22 + Astro + Railway
+Foco: Comandos, Variáveis e Deploy
 ========================================
 ```
 
-## ▓▓▓ REQUISITOS DE SISTEMA
+## Requisitos de Sistema
 
 - **Node.js:** Versão 22.x (Ambiente Soberano).
-- **Railway CLI:** Gerenciamento de infra cloud.
-- **NΞØ Tunnel:** Gateway de conectividade segura.
+- **Railway CLI:** Gerenciamento de infraestrutura cloud.
+- **NΞØ Tunnel:** Gateway de conectividade para webhooks locais.
 
-## ▓▓▓ MATRIZ DE CONDIÇÕES (GATES)
+## Matriz de Condições (Gates)
 
-A execução é estritamente condicional. Falhas em qualquer "Gate" resultam em bloqueio imediato:
+A execução é estritamente condicional. Falhas em qualquer "Gate" resultam em bloqueio imediato para garantir a integridade do protocolo:
 
 1. **HMAC GATE:** Validação da assinatura do webhook WooVi. Impede ataques de replay e payloads falsos.
 2. **TUNNEL GATE:** Handshake de camada 4/7 usando o `TUNNEL_SECRET`. Garante que apenas o seu túnel toque na Nexus.
-3. **FINALITY GATE:** Verificação de estado na rede via **RPC Adapter**. O recibo só é emitido após confirmação de bloco.
+3. **FINALITY GATE:** Verificação de estado na rede via **RPC Adapter**. O recibo só é emitido após confirmação de bloco e geração da **Proof of Integrity (PoI)**.
 
-## ▓▓▓ VARIÁVEIS DE AMBIENTE (.env)
+## Variáveis de Ambiente (.env)
 
 | Variável | Função Técnica | Severidade |
 | :--- | :--- | :--- |
@@ -36,36 +36,40 @@ A execução é estritamente condicional. Falhas em qualquer "Gate" resultam em 
 | `NEXUS_WEBHOOK_URL` | Endpoint da Nexus Core via Túnel | **SISTEMA** |
 | `QUICKNODE_RPC_URL` | Endpoint de monitoramento on-chain | **SISTEMA** |
 
-## ▓▓▓ INÍCIO RÁPIDO (PRODUÇÃO)
+## Início Rápido (Operação)
 
-1. **Bootstrap:**
-   ```bash
-   npm run setup
-   ```
-2. **Provisionamento Soberano:**
-   ```bash
-   npm run neo:cfg
-   ```
-3. **Ativação com Tunnel:**
-   ```bash
-   railway run npm run dev
-   ```
+### 1. Bootstrap e Dependências
+```bash
+# Instalação limpa do ecossistema
+npm run setup
+```
 
-## ▓▓▓ MONITORAMENTO (LOOP DE RETORNO)
+### 2. Provisionamento Soberano
+```bash
+# Gera os assets e configurações locais do NΞØ
+npm run neo:cfg
+```
 
-O sistema opera em **Ciclo Fechado**:
-- Entrada detectada -> Execução pedida.
-- Monitoramento de RPC -> Confirmação.
-- PoI Gerada -> Recibo Final emitido.
+### 3. Execução em Desenvolvimento (com Tunnel)
+```bash
+# Inicia ambiente Railway local expondo os endpoints
+railway run npm run dev
+```
 
-▓▓▓ NΞØ MELLØ
-────────────────────────────────────────
-Arquiteto Core · NΞØ Protocol
-neo@neoprotocol.space
+### 4. Build de Produção
+```bash
+# Compilação Astro para modo servidor
+npm run build
+```
 
-"Código é lei. Expanda até que o
- caos se torne protocolo."
+## Verificação e Auditoria
 
-Segurança por design.
-Exploits não encontram refúgio aqui.
-────────────────────────────────────────
+O FlowPay opera em **Ciclo Fechado**. Para validar a saúde do nó, utilize os scripts integrados:
+
+- `npm run test`: Suite de testes de integração.
+- `scripts/flowpay/check-health.sh`: Verifica status da API, Tunnel e RPC.
+
+---
+
+NΞØ MELLØ
+Core Architect · NΞØ Protocol

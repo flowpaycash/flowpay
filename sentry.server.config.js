@@ -9,8 +9,11 @@ Sentry.init({
     process.env.SENTRY_RELEASE ||
     `flowpay@${process.env.npm_package_version || "1.0.1"}`,
 
-  // Performance monitoring - amostragem conservadora em producao
-  tracesSampleRate: process.env.NODE_ENV === "development" ? 1.0 : 0.2,
+  // Tracing must be enabled for MCP monitoring to work
+  tracesSampleRate: 1.0,
+
+  // Enable PII for better debugging in MCP interactions
+  sendDefaultPii: true,
 
   // Captura logs do console como logs estruturados no Sentry
   enableLogs: true,
