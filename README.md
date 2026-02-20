@@ -1,15 +1,14 @@
 <!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
 
-# FLOWPay: Motor de Liquidação Soberana
+# FlowPay: Gateway de Liquidação Autonoma
 
 ```text
 ========================================
      FlowPay - SETTLEMENT ENGINE
 ========================================
-Nó: mio-flowpay
-Protocolo: NΞØ Smart Factory
-Infra alvo: Railway + NΞØ Tunnel + Nexus Core
-Papel deste README: Arquitetura e contexto
+Node: mio-flowpay
+NΞØ Protocol
+Infra: Railway + NΞØ Tunnel + NΞØ Nexus 
 ========================================
 ```
 
@@ -52,7 +51,7 @@ graph TD
         WATCHER["NEØBOT AUDIT<br/>Watcher"]
         POI["PROOF OF INTEGRITY"]
         LOG["LOG LOCAL"]
-        END[[RECIBO FINAL<br/>LIQUIDADO]]
+        END[[RECIBO TRANSAÇÃO<br/>LIQUIDADO]]
     end
 
     START -->|Webhook PIX| RELAYER
@@ -77,7 +76,7 @@ graph TD
     POI --> LOG
     LOG --> END
 
-    END -.->|Finalidade Confirmada| START
+    END -.->|TRANSAÇÃO CONFIRMADA | START
 
     class START web2;
     class RELAYER engine;
