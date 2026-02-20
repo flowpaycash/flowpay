@@ -127,3 +127,22 @@ status: ## Show project status overview
 
 logs: ## Tail production logs from Railway
 	@railway logs
+
+# --- TUNNEL OPERATIONS -------------------------------------------------------
+
+TUNNEL_DIR := /Users/nettomello/neomello/01-neo-protocol-org/neo-tunnel
+
+tunnel-neo-agent: ## Start tunnel for neo-agent
+	@cd $(TUNNEL_DIR) && $(MAKE) client-neo-agent
+
+tunnel-flowpay: ## Start tunnel for flowpay
+	@cd $(TUNNEL_DIR) && $(MAKE) client-flowpay
+
+tunnel-nexus: ## Start tunnel for nexus
+	@cd $(TUNNEL_DIR) && $(MAKE) client-nexus
+
+tunnel-neobot: ## Start tunnel for neobot
+	@cd $(TUNNEL_DIR) && $(MAKE) client-neobot
+
+tunnel-status: ## Check tunnel server status
+	@cd $(TUNNEL_DIR) && $(MAKE) status

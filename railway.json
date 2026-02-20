@@ -4,8 +4,7 @@
         "builder": "RAILPACK",
         "watchPatterns": [
             "**/*"
-        ],
-        "buildEnvironment": "V3"
+        ]
     },
     "deploy": {
         "runtime": "V2",
@@ -13,7 +12,6 @@
         "healthcheckPath": "/api/health",
         "healthcheckTimeout": 300,
         "sleepApplication": false,
-        "useLegacyStacker": false,
         "ipv6EgressEnabled": false,
         "multiRegionConfig": {
             "us-west2": {
