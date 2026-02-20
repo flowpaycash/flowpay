@@ -1,6 +1,6 @@
 // 🔐 FLOWPay - Configuração Central para Serviços Node.js
 // Fornece utilitários de logging, proteção de dados sensíveis e acesso a configurações
-// Substitui a dependência anterior do Netlify Functions
+// Substitui a dependência anterior do Railway Functions
 
 const config = {
     environment: process.env.NODE_ENV || 'development',

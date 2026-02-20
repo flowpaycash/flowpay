@@ -38,7 +38,7 @@
       "environment": "prod"
     },
     "staging": {
-      "url": "https://flowpaypix-staging.netlify.app",
+      "url": "https://flowpay-staging.up.railway.app",
       "environment": "stage"
     },
     "development": {
@@ -47,11 +47,11 @@
     }
   },
   "hosting": {
-    "provider": "Netlify",
+    "provider": "Railway",
     "type": "serverless",
     "build": {
       "publish": "public",
-      "functions": ".netlify/functions",
+      "functions": "src/pages/api",
       "node_version": "18"
     },
     "redirects": [
@@ -67,7 +67,7 @@
       },
       {
         "from": "/api/*",
-        "to": "/.netlify/functions/:splat",
+        "to": "/api/:splat",
         "status": 200
       }
     ]
@@ -102,19 +102,19 @@
     ],
     "api": [
       {
-        "path": "/.netlify/functions/create-pix-charge",
+        "path": "/api/create-charge",
         "method": "POST",
         "function": "Cria cobrança Pix",
         "timeout": 30
       },
       {
-        "path": "/.netlify/functions/webhook-handler",
+        "path": "/api/webhook",
         "method": "POST",
         "function": "Webhook Pix + HMAC",
         "timeout": 30
       },
       {
-        "path": "/.netlify/functions/pix-orders",
+        "path": "/api/pix-orders",
         "method": "GET",
         "function": "Lista transações JSON",
         "timeout": 30
@@ -215,7 +215,7 @@
   },
   "webhooks": {
     "pix": {
-      "endpoint": "/.netlify/functions/webhook-handler",
+      "endpoint": "/api/webhook",
       "method": "POST",
       "provider": "woovi",
       "signature_header": "x-woovi-signature",
@@ -273,7 +273,7 @@
     "status": {
       "health_checks": [
         {
-          "url": "/.netlify/functions/ping",
+          "url": "/api/health",
           "purpose": "Liveness",
           "expected_ms": 150
         }
@@ -285,7 +285,7 @@
       },
       "dependencies": [
         "woovi_api",
-        "netlify_functions",
+        "railway_runtime",
         "rpc_mainnet",
         "walletconnect"
       ]
@@ -310,7 +310,7 @@
       "vanilla": {
         "checkout": "/checkout",
         "admin": "/admin",
-        "api": "/.netlify/functions/*"
+        "api": "/api/*"
       },
       "nextjs": "planned",
       "react": "planned"
@@ -333,7 +333,7 @@
       "TELEGRAM_BOT_TOKEN",
       "TELEGRAM_CHAT_ID"
     ],
-    "notes": "Não commit de segredos. Usar variables do Netlify/CI."
+    "notes": "Não commit de segredos. Usar variables do Railway/CI."
   },
   "signing": {
     "config_signature": "auto",

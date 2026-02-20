@@ -47,9 +47,9 @@ npm run build
 npm run preview
 ```
 
-### Problema: CSS não carrega em produção (Netlify)
+### Problema: CSS não carrega em produção (Railway)
 
-**Solução:** Verificar se `netlify.toml` está configurado corretamente:
+**Solução:** Verificar se `railway.json` está configurado corretamente:
 
 ```toml
 [build]
@@ -159,5 +159,5 @@ curl -I http://localhost:4321/css/landing.css
 ## 📚 Referências
 
 - [Astro Public Assets](https://docs.astro.build/en/guides/assets/#public-folder)
-- [Astro Build Output](https://docs.astro.build/en/guides/deploy/netlify/)
+- [Astro Build Output](https://docs.astro.build/en/guides/deploy/node/)
 

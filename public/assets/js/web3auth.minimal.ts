@@ -25,8 +25,8 @@ const web3auth = new Web3Auth({
   web3AuthNetwork,
   // Apenas o MÍNIMO necessário
   uiConfig: {
-    logoLight: "https://flowpaypix.netlify.app/assets/logos/flowpay-logo.png",
-    logoDark: "https://flowpaypix.netlify.app/assets/logos/flowpay-logo.png",
+    logoLight: "https://flowpay.cash/assets/logos/flowpay-logo.png",
+    logoDark: "https://flowpay.cash/assets/logos/flowpay-logo.png",
     // APENAS Google - remove todas as outras dependências
     loginMethodsOrder: ["google"],
     // Desabilitar TUDO que não é essencial

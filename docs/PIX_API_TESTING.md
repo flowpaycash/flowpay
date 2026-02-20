@@ -26,7 +26,7 @@ Este documento descreve como testar a API PIX da FLOWPay integrada com a Woovi/O
 1. **Servidor rodando**
 
    ```bash
-   netlify dev
+   npm run dev
    # ou
    npm run dev
    ```
@@ -55,10 +55,10 @@ node tools/advanced-pix-test.js
 ```bash
 # Teste básico
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 50.00,
     "moeda": "BRL",
     "id_transacao": "test_pix_001"
@@ -107,11 +107,11 @@ curl -X POST \
     "qr_code": "data:image/png;base64,...",
     "br_code": "00020126580014br.gov.bcb.pix...",
     "correlation_id": "test_pix_001",
-    "value": 50.00,
+    "value": 50.0,
     "expires_at": "2024-01-01T12:00:00Z",
     "status": "ACTIVE"
   },
-  "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+  "wallet": "0x1111111111111111111111111111111111111111",
   "moeda": "BRL",
   "id_transacao": "test_pix_001"
 }
@@ -144,7 +144,7 @@ WOOVI_API_URL=https://api.woovi.com
 
 # Ambiente
 NODE_ENV=development
-URL=http://localhost:8888
+URL=http://localhost:4321
 ```
 
 ### Arquivo .env
@@ -161,8 +161,8 @@ nano .env
 
 ### Erro: "Servidor não acessível"
 
-- Verifique se `netlify dev` está rodando
-- Confirme a porta (padrão: 8888)
+- Verifique se `npm run dev` está rodando
+- Confirme a porta (padrão: 4321)
 - Verifique logs do servidor
 
 ### Erro: "Configuração da API Woovi não encontrada"
@@ -191,10 +191,10 @@ nano .env
 # Teste com 5 requisições simultâneas
 for i in {1..5}; do
   curl -s -X POST \
-    http://localhost:8888/.netlify/functions/create-pix-charge \
+    http://localhost:4321/api/create-charge \
     -H "Content-Type: application/json" \
     -d "{
-      \"wallet\": \"0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6\",
+      \"wallet\": \"0x1111111111111111111111111111111111111111\",
       \"valor\": $((RANDOM % 100 + 1)).$((RANDOM % 99)),
       \"moeda\": \"BRL\",
       \"id_transacao\": \"perf_test_$i\"
@@ -208,7 +208,7 @@ done
 # Usando Apache Bench (se disponível)
 ab -n 100 -c 10 -p test-payload.json \
    -T application/json \
-   http://localhost:8888/.netlify/functions/create-pix-charge/
+   http://localhost:4321/api/create-charge/
 ```
 
 ## 🔍 Debug Avançado
@@ -217,21 +217,21 @@ ab -n 100 -c 10 -p test-payload.json \
 
 ```bash
 # Monitore logs em tempo real
-netlify dev --debug
+npm run dev --debug
 
 # Ou verifique logs específicos
-tail -f .netlify/functions-serve/logs/*
+railway logs -f
 ```
 
 ### Teste de Conectividade
 
 ```bash
 # Verificar se a função está acessível
-curl -I http://localhost:8888/.netlify/functions/create-pix-charge
+curl -I http://localhost:4321/api/create-charge
 
 # Teste de CORS
 curl -X OPTIONS \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Origin: http://localhost:3000"
 ```
 
@@ -240,14 +240,14 @@ curl -X OPTIONS \
 ```bash
 # Teste com payload malformado
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d 'invalid json'
 ```
 
 ## 📋 Checklist de Teste
 
-- [ ] Servidor rodando (`netlify dev`)
+- [ ] Servidor rodando (`npm run dev`)
 - [ ] API Key configurada (`WOOVI_API_KEY`)
 - [ ] Função acessível (teste OPTIONS)
 - [ ] Testes de validação passando

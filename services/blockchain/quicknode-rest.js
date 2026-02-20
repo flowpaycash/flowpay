@@ -503,7 +503,7 @@ class QuickNodeREST {
       // Hash do evento Transfer(address,address,uint256)
       const transferEventHash = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
 
-      // Webhook URL padrão (endpoint Netlify)
+      // Webhook URL padrão (endpoint Railway)
       const defaultWebhookUrl = webhookUrl ||
         (process.env.URL ? `${process.env.URL}/api/webhooks/quicknode` : null);
 

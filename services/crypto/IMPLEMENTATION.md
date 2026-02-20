@@ -24,7 +24,7 @@
 - Suporta múltiplas redes
 - Modo desenvolvimento (simulado) e produção (real)
 
-### 4. `crypto-processor.js` (Netlify Function) ✅
+### 4. `crypto-processor.js` (Railway Function) ✅
 
 - Orquestra fluxo completo
 - Endpoint: `/api/crypto/processor`
@@ -127,7 +127,7 @@ BSC_RPC_URL=https://bsc-dataseed.binance.org
 - [x] Wallet Registry implementado
 - [x] Liquidity Provider implementado
 - [x] USDT Transfer implementado
-- [x] Crypto Processor (Netlify Function) criado
+- [x] Crypto Processor (Railway Function) criado
 - [ ] Webhook Handler atualizado (pendente)
 - [ ] Variáveis de ambiente configuradas (pendente)
 - [ ] Testes unitários (pendente)

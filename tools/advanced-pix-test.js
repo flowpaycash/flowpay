@@ -10,8 +10,8 @@ const http = require('http');
 
 // Configurações
 const CONFIG = {
-  baseUrl: 'http://localhost:8888',
-  endpoint: '/.netlify/functions/create-pix-charge',
+  baseUrl: 'http://localhost:4321',
+  endpoint: '/api/create-charge',
   timeout: 10000,
   retries: 3
 };
@@ -123,7 +123,7 @@ async function runTests() {
     console.log(`\n${colors.green}✅ Servidor acessível${colors.reset}`);
   } catch (error) {
     console.log(`\n${colors.red}❌ Servidor não acessível:${colors.reset}`, error.message);
-    console.log(`${colors.yellow}💡 Certifique-se de que 'netlify dev' está rodando${colors.reset}`);
+    console.log(`${colors.yellow}💡 Certifique-se de que 'npm run dev' está rodando${colors.reset}`);
     return;
   }
 
@@ -131,7 +131,7 @@ async function runTests() {
     {
       name: "Cobrança PIX válida",
       payload: {
-        wallet: "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+        wallet: "0x1111111111111111111111111111111111111111",
         valor: 50.00,
         moeda: "BRL",
         id_transacao: "test_pix_001"
@@ -141,7 +141,7 @@ async function runTests() {
     {
       name: "Valor baixo (validação)",
       payload: {
-        wallet: "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+        wallet: "0x1111111111111111111111111111111111111111",
         valor: 0.50,
         moeda: "BRL",
         id_transacao: "test_pix_002"
@@ -161,7 +161,7 @@ async function runTests() {
     {
       name: "Campos obrigatórios faltando",
       payload: {
-        wallet: "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+        wallet: "0x1111111111111111111111111111111111111111",
         valor: 100.00
       },
       expectedStatus: 400
@@ -169,7 +169,7 @@ async function runTests() {
     {
       name: "Valor zero",
       payload: {
-        wallet: "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+        wallet: "0x1111111111111111111111111111111111111111",
         valor: 0,
         moeda: "BRL",
         id_transacao: "test_pix_005"
@@ -179,7 +179,7 @@ async function runTests() {
     {
       name: "Valor negativo",
       payload: {
-        wallet: "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+        wallet: "0x1111111111111111111111111111111111111111",
         valor: -10.00,
         moeda: "BRL",
         id_transacao: "test_pix_006"
@@ -217,7 +217,7 @@ async function runTests() {
   console.log(`\n${colors.cyan}💡 Dicas:${colors.reset}`);
   console.log("- Verifique se WOOVI_API_KEY está configurada");
   console.log("- Monitore os logs do servidor para detalhes");
-  console.log("- Use 'netlify dev' para desenvolvimento local");
+  console.log("- Use 'npm run dev' para desenvolvimento local");
 }
 
 // Executar testes se o script for chamado diretamente

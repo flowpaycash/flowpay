@@ -1,0 +1,652 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "FlowPay",
+      "item": "https://flowpay.cash",
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Política de Cookies",
+      "item": "https://flowpay.cash/cookies",
+    },
+  ],
+};
+---
+
+<Layout
+  title="Política de Cookies — FlowPay"
+  description="Entenda como a FlowPay utiliza cookies e tecnologias similares em conformidade com a LGPD (Lei 13.709/2018). Saiba como gerenciar suas preferências e revogar o consentimento."
+  structuredData={breadcrumbSchema}
+>
+  <Navbar />
+
+  <main class="legal-page">
+    <div class="legal-bg-glow"></div>
+
+    <div class="legal-container">
+
+      <header class="legal-header">
+        <span class="legal-badge">LGPD — Lei 13.709/2018</span>
+        <h1 class="legal-title">Política de <span class="gradient-text">Cookies</span></h1>
+        <p class="legal-meta">
+          Controlador: <strong>FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA — ME</strong><br />
+          CNPJ: 43.376.355/0001-92<br />
+          Última atualização: 20 de fevereiro de 2026
+        </p>
+      </header>
+
+      <div class="legal-body">
+
+        <section class="legal-section">
+          <h2>1. O que são cookies</h2>
+          <p>
+            Cookies são pequenos arquivos de texto armazenados no seu dispositivo (computador,
+            smartphone ou tablet) quando você acessa um site ou aplicativo. Eles permitem que
+            a plataforma reconheça seu dispositivo em visitas futuras, mantenha preferências
+            e colete informações sobre o uso do serviço.
+          </p>
+          <p>
+            Além dos cookies tradicionais, utilizamos tecnologias similares como
+            <strong>localStorage</strong> e <strong>sessionStorage</strong> do navegador
+            para armazenar dados de sessão autenticada localmente no seu dispositivo,
+            sem transmissão para servidores externos.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>2. Cookies que utilizamos</h2>
+
+          <h3>2.1 Cookies estritamente necessários</h3>
+          <p>
+            Essenciais para o funcionamento básico da plataforma. Sem eles, partes do
+            serviço não funcionam corretamente. Não podem ser desativados.
+          </p>
+
+          <div class="cookie-table-wrapper">
+            <table class="cookie-table">
+              <thead>
+                <tr>
+                  <th>Nome / Tecnologia</th>
+                  <th>Finalidade</th>
+                  <th>Duração</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>fp_user_session</code></td>
+                  <td>Armazena a sessão autenticada do vendedor no Dashboard (localStorage)</td>
+                  <td>7 dias</td>
+                </tr>
+                <tr>
+                  <td>Cookies de segurança HTTPS</td>
+                  <td>Proteção contra CSRF e ataques de sessão</td>
+                  <td>Sessão</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>2.2 Cookies de desempenho e análise</h3>
+          <p>
+            Coletam informações anônimas sobre como os visitantes utilizam a plataforma,
+            como páginas mais acessadas e erros encontrados. Nos ajudam a melhorar o serviço.
+          </p>
+
+          <div class="cookie-table-wrapper">
+            <table class="cookie-table">
+              <thead>
+                <tr>
+                  <th>Nome / Tecnologia</th>
+                  <th>Finalidade</th>
+                  <th>Duração</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cloudflare Insights</td>
+                  <td>Métricas de desempenho e disponibilidade da plataforma</td>
+                  <td>30 dias</td>
+                </tr>
+                <tr>
+                  <td>Sentry</td>
+                  <td>Monitoramento de erros técnicos (dados anonimizados)</td>
+                  <td>Sessão</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>2.3 Cookies funcionais</h3>
+          <p>
+            Permitem que a plataforma lembre suas preferências e personalize a experiência.
+          </p>
+
+          <div class="cookie-table-wrapper">
+            <table class="cookie-table">
+              <thead>
+                <tr>
+                  <th>Nome / Tecnologia</th>
+                  <th>Finalidade</th>
+                  <th>Duração</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Preferência de tema</td>
+                  <td>Armazena preferências de exibição da interface (localStorage)</td>
+                  <td>Persistente</td>
+                </tr>
+                <tr>
+                  <td>fp_cookie_consent</td>
+                  <td>Registra sua decisão sobre o uso de cookies não essenciais</td>
+                  <td>12 meses</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="legal-highlight">
+            A FlowPay <strong>não utiliza cookies de publicidade ou rastreamento
+            de terceiros</strong> para fins de marketing direcionado. Não compartilhamos
+            dados de comportamento de navegação com plataformas de anúncios.
+          </div>
+        </section>
+
+        <section class="legal-section">
+          <h2>3. Base legal para uso de cookies</h2>
+          <p>
+            O uso de cookies estritamente necessários baseia-se no <strong>legítimo
+            interesse</strong> e na <strong>execução do contrato</strong> (art. 7º, V e
+            IX da LGPD), pois são indispensáveis para o funcionamento do serviço.
+          </p>
+          <p>
+            Para cookies de análise e funcionais não essenciais, a base legal é o
+            <strong>consentimento</strong> (art. 7º, I da LGPD), coletado por meio das
+            preferências do navegador e do registro local de consentimento.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>4. Como gerenciar e revogar cookies</h2>
+          <p>
+            Você pode gerenciar suas preferências de cookies a qualquer momento:
+          </p>
+
+          <h3>4.1 Pelo registro local de consentimento</h3>
+          <p>
+            A plataforma registra sua preferência de cookies não essenciais no
+            armazenamento local do navegador (<code>fp_cookie_consent</code>). Para
+            atualizar sua escolha, limpe os dados de navegação do site ou entre em
+            contato conosco para suporte no processo de revogação.
+          </p>
+
+          <h3>4.2 Pelo seu navegador</h3>
+          <p>
+            Você pode configurar seu navegador para bloquear ou excluir cookies a qualquer
+            momento. Consulte as instruções do seu navegador:
+          </p>
+          <ul>
+            <li>
+              <strong>Safari (iOS/macOS):</strong> Ajustes > Safari > Privacidade e
+              Segurança > Bloquear todos os cookies
+            </li>
+            <li>
+              <strong>Chrome:</strong> Configurações > Privacidade e segurança > Cookies
+              e outros dados do site
+            </li>
+            <li>
+              <strong>Firefox:</strong> Configurações > Privacidade e segurança >
+              Cookies e dados do site
+            </li>
+          </ul>
+          <p>
+            Atenção: bloquear cookies estritamente necessários pode comprometer o
+            funcionamento do Dashboard e da autenticação na plataforma.
+          </p>
+
+          <h3>4.3 Revogação do consentimento (LGPD)</h3>
+          <p>
+            Para revogar seu consentimento ao uso de cookies não essenciais, envie uma
+            solicitação para
+            <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+            ou utilize os controles do seu navegador conforme descrito acima.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>5. Cookies de terceiros</h2>
+          <p>
+            Alguns serviços integrados à plataforma podem definir seus próprios cookies:
+          </p>
+          <ul>
+            <li>
+              <strong>Cloudflare</strong> — proteção DDoS e CDN. Política de privacidade:
+              <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">cloudflare.com/privacypolicy</a>
+            </li>
+            <li>
+              <strong>Sentry</strong> — monitoramento de erros. Política:
+              <a href="https://sentry.io/privacy/" target="_blank" rel="noopener noreferrer">sentry.io/privacy</a>
+            </li>
+          </ul>
+          <p>
+            Não temos controle sobre os cookies definidos por esses terceiros. Recomendamos
+            consultar as políticas de privacidade de cada serviço para mais informações.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>6. Atualizações desta política</h2>
+          <p>
+            Esta Política de Cookies pode ser atualizada periodicamente para refletir
+            mudanças na plataforma ou na legislação. A versão vigente estará sempre
+            disponível em <a href="/cookies">flowpay.cash/cookies</a>.
+          </p>
+          <p>
+            Alterações relevantes serão comunicadas por aviso na plataforma ou por e-mail.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>7. Contato</h2>
+          <p>
+            Para dúvidas sobre o uso de cookies ou para exercer seus direitos relativos
+            a dados pessoais, entre em contato com nosso encarregado de dados (DPO):
+          </p>
+          <div class="legal-contact-card">
+            <div class="contact-line">
+              <span class="contact-label">Empresa</span>
+              <span>FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA — ME</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">CNPJ</span>
+              <span>43.376.355/0001-92</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">Endereço</span>
+              <span>Av. 85, esq. c/ Rua 137, nº 556 — Setor Marista, Goiânia — GO, 74.170-120</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">E-mail</span>
+              <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="legal-footer-note">
+        <p>
+          Dúvidas? Entre em contato:
+          <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+        </p>
+        <div class="legal-links">
+          <a href="/privacidade">Política de Privacidade</a>
+          <span>·</span>
+          <a href="/termos">Termos de Uso</a>
+          <span>·</span>
+          <a href="/riscos">Aviso de Riscos</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .legal-page {
+    position: relative;
+    min-height: 100vh;
+    padding-top: 72px;
+    overflow: hidden;
+  }
+
+  .legal-bg-glow {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 60vh;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255, 0, 122, 0.07) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .legal-container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 5rem;
+  }
+
+  @media (min-width: 768px) {
+    .legal-container {
+      padding: 4rem 2rem 6rem;
+    }
+  }
+
+  /* Header */
+  .legal-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .legal-badge {
+    display: inline-block;
+    background: rgba(255, 0, 122, 0.1);
+    border: 1px solid rgba(255, 0, 122, 0.2);
+    color: rgba(255, 0, 122, 0.9);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 99px;
+    margin-bottom: 1rem;
+  }
+
+  .legal-title {
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #ff007a 0%, #ff7a00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .legal-meta {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.8;
+  }
+
+  .legal-meta strong {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+  }
+
+  /* Body */
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .legal-section {
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .legal-section:last-child {
+    border-bottom: none;
+  }
+
+  .legal-section h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-section h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.01em;
+  }
+
+  .legal-section p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .legal-section p:last-child {
+    margin-bottom: 0;
+  }
+
+  .legal-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .legal-section ul li {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.7;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .legal-section ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 0, 122, 0.6);
+  }
+
+  .legal-section ul li strong {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+  }
+
+  .legal-section a {
+    color: rgba(255, 0, 122, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .legal-section a:hover {
+      color: #ff007a;
+      text-decoration: underline;
+    }
+  }
+
+  /* Highlight box */
+  .legal-highlight {
+    background: rgba(0, 212, 255, 0.06);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-left: 3px solid rgba(0, 212, 255, 0.5);
+    border-radius: 0 12px 12px 0;
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+
+  /* Cookie / data tables */
+  .cookie-table-wrapper {
+    overflow-x: auto;
+    margin: 1rem 0;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .cookie-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    min-width: 480px;
+  }
+
+  .cookie-table thead {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .cookie-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .cookie-table td {
+    padding: 12px 16px;
+    color: rgba(255, 255, 255, 0.65);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+
+  .cookie-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .cookie-table code {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 2px 7px;
+    font-size: 0.82rem;
+    font-family: 'SF Mono', 'Fira Mono', 'Courier New', monospace;
+    color: rgba(0, 212, 255, 0.9);
+    white-space: nowrap;
+  }
+
+  /* Contact card */
+  .legal-contact-card {
+    background: rgba(15, 15, 15, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .contact-line {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  @media (min-width: 480px) {
+    .contact-line {
+      flex-direction: row;
+      gap: 1rem;
+      align-items: baseline;
+    }
+  }
+
+  .contact-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .contact-line a {
+    color: rgba(255, 0, 122, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .contact-line a:hover {
+      color: #ff007a;
+      text-decoration: underline;
+    }
+  }
+
+  /* Footer note */
+  .legal-footer-note {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .legal-footer-note p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .legal-footer-note p a {
+    color: rgba(255, 0, 122, 0.8);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  @media (hover: hover) {
+    .legal-footer-note p a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .legal-links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .legal-links a {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.35);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .legal-links a:hover {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .legal-links span {
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 0.85rem;
+  }
+</style>

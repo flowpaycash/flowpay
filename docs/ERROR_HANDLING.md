@@ -79,7 +79,7 @@ Muitas requisições em pouco tempo.
 
 ```javascript
 try {
-  const response = await fetch('/.netlify/functions/create-pix-charge', {
+  const response = await fetch('/api/create-charge', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)

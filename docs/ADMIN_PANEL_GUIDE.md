@@ -9,7 +9,7 @@
 - ✅ `public/admin/index.html` - Interface principal
 - ✅ `public/admin/admin.css` - Estilos iOS-like
 - ✅ `public/admin/admin.js` - Funcionalidades JavaScript
-- ✅ `netlify.toml` - Rota `/admin` configurada
+- ✅ `railway.json` - Deploy em Railway configurado
 
 #### **🔐 Sistema de Autenticação:**
 
@@ -23,13 +23,13 @@
 ### **URL Local:**
 
 ```
-http://localhost:8888/admin
+http://localhost:4321/admin
 ```
 
 ### **URL Produção:**
 
 ```
-https://seudominio.netlify.app/admin
+https://seudominio.com/admin
 ```
 
 ### **Credenciais:**
@@ -155,7 +155,7 @@ https://seudominio.netlify.app/admin
 make dev-woovi
 
 # Acessar admin
-curl http://localhost:8888/admin
+curl http://localhost:4321/admin
 ```
 
 ### **2. Teste de Funcionalidades:**
@@ -182,20 +182,20 @@ make deploy-woovi
 
 # Ou manual
 make build
-netlify deploy --prod
+railway up
 ```
 
 ### **2. Configurar Variáveis:**
 
 ```bash
-# No Netlify
-netlify env:set ADMIN_PASSWORD nova_senha_segura
-netlify env:set NODE_ENV production
+# No Railway
+railway variables set ADMIN_PASSWORD=nova_senha_segura
+railway variables set NODE_ENV=production
 ```
 
 ### **3. Verificar Funcionalidades:**
 
-- ✅ **URL:** `https://seudominio.netlify.app/admin`
+- ✅ **URL:** `https://seudominio.com/admin`
 - ✅ **Login** funcionando
 - ✅ **Dados** carregando
 - ✅ **Responsividade** perfeita
@@ -233,6 +233,6 @@ netlify env:set NODE_ENV production
 
 ---
 
-**🎯 Acesse agora:** <http://localhost:8888/admin>
+**🎯 Acesse agora:** <http://localhost:4321/admin>
 **🔑 Senha:** `flowpay2024`
 **📱 Interface iOS-like** completa e funcional!

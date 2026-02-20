@@ -1,9 +1,20 @@
-# FlowPay - Makefile
+# FlowPay - Makefile v2
 # ────────────────────────────────────────────────────
 
-.PHONY: help install dev build start clean test test-unit test-db audit lint check status db-reset logs
+.DEFAULT_GOAL := help
+
+.PHONY: \
+	help install clean clean-all \
+	dev start preview \
+	check build rebuild \
+	test test-unit test-db \
+	lint lint-soft \
+	env-check audit audit-soft ci \
+	status db-reset logs \
+	tunnel-neo-agent tunnel-flowpay tunnel-nexus tunnel-neobot tunnel-status
 
 SHELL := /bin/bash
+MAKEFLAGS += --no-builtin-rules
 
 GREEN  := \033[0;32m
 YELLOW := \033[1;33m
@@ -13,13 +24,18 @@ BOLD   := \033[1m
 NC     := \033[0m
 
 VERSION := $(shell node -p "require('./package.json').version" 2>/dev/null || echo "0.0.0")
+ENV_FILE ?= .env
+REQUIRED_ENV ?= ADMIN_PASSWORD
+OPTIONAL_ENV ?= OPENPIX_APPID
+TUNNEL_DIR ?= /Users/nettomello/neomello/01-neo-protocol-org/neo-tunnel
 
 # ── Help ─────────────────────────────────────────────
 
 help: ## Show available commands
 	@echo -e "$(BOLD)$(CYAN)FlowPay v$(VERSION)$(NC)"
 	@echo ""
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(YELLOW)%-16s$(NC) %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_.-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+	awk 'BEGIN {FS = ":.*?## "}; {printf "  $(YELLOW)%-16s$(NC) %s\n", $$1, $$2}'
 	@echo ""
 
 # ── Setup ────────────────────────────────────────────
@@ -48,16 +64,21 @@ start: ## Start production server (requires build first)
 	@test -f dist/server/entry.mjs || (echo -e "$(RED)No build found. Run 'make build' first.$(NC)" && exit 1)
 	@node ./dist/server/entry.mjs
 
+preview: ## Build and serve production preview
+	@npm run preview
+
 # ── Build & Validation ───────────────────────────────
 
 check: ## Run Astro type-checking
 	@echo -e "$(CYAN)Type checking...$(NC)"
 	@npx astro check
 
-build: clean ## Production build (type-check + build)
+build: ## Production build (type-check + build)
 	@echo -e "$(CYAN)Building v$(VERSION)...$(NC)"
 	@npm run build
 	@echo -e "$(GREEN)Build complete.$(NC)"
+
+rebuild: clean build ## Clean and build from scratch
 
 # ── Tests ────────────────────────────────────────────
 
@@ -77,19 +98,42 @@ test-db: ## Run database flow integration tests
 
 # ── Quality ──────────────────────────────────────────
 
-lint: ## Lint markdown files
-	@npm run lint:md 2>/dev/null || true
+lint: ## Strict markdown lint (fails on issues)
+	@echo -e "$(CYAN)Linting markdown...$(NC)"
+	@npm run lint:md
 
-audit: ## Full project audit (lint + check + build + tests)
-	@echo -e "$(BOLD)$(CYAN)FlowPay Audit$(NC)"
+lint-soft: ## Non-blocking markdown lint (local convenience)
+	@echo -e "$(CYAN)Linting markdown (soft mode)...$(NC)"
+	@npm run lint:md 2>/dev/null || echo -e "$(YELLOW)Lint warnings found.$(NC)"
+
+env-check: ## Validate required env vars in .env
+	@test -f "$(ENV_FILE)" || (echo -e "$(RED)$(ENV_FILE) missing.$(NC)" && exit 1)
+	@missing=0; \
+	for key in $(REQUIRED_ENV); do \
+		if grep -qE "^$$key=" "$(ENV_FILE)"; then \
+			echo -e "  $(GREEN)$$key set$(NC)"; \
+		else \
+			echo -e "  $(RED)$$key missing$(NC)"; \
+			missing=1; \
+		fi; \
+	done; \
+	for key in $(OPTIONAL_ENV); do \
+		if grep -qE "^$$key=" "$(ENV_FILE)"; then \
+			echo -e "  $(GREEN)$$key set (optional)$(NC)"; \
+		else \
+			echo -e "  $(YELLOW)$$key missing (optional)$(NC)"; \
+		fi; \
+	done; \
+	test $$missing -eq 0
+
+audit: ## Strict full audit (fails on vulnerabilities/issues)
+	@echo -e "$(BOLD)$(CYAN)FlowPay Audit (strict)$(NC)"
 	@echo ""
 	@echo -e "$(YELLOW)[1/6] Dependencies$(NC)"
-	@npm audit --audit-level=high 2>/dev/null || echo -e "$(YELLOW)  Warnings found (review above)$(NC)"
+	@npm audit --audit-level=high
 	@echo ""
 	@echo -e "$(YELLOW)[2/6] Environment$(NC)"
-	@test -f .env && echo -e "  $(GREEN).env exists$(NC)" || echo -e "  $(RED).env missing!$(NC)"
-	@(grep -q "OPENPIX_APPID" .env 2>/dev/null && echo -e "  $(GREEN)OPENPIX_APPID set$(NC)") || echo -e "  $(RED)OPENPIX_APPID missing$(NC)"
-	@(grep -q "ADMIN_PASSWORD" .env 2>/dev/null && echo -e "  $(GREEN)ADMIN_PASSWORD set$(NC)") || echo -e "  $(RED)ADMIN_PASSWORD missing$(NC)"
+	@$(MAKE) env-check
 	@echo ""
 	@echo -e "$(YELLOW)[3/6] Lint$(NC)"
 	@$(MAKE) lint
@@ -104,6 +148,36 @@ audit: ## Full project audit (lint + check + build + tests)
 	@$(MAKE) build
 	@echo ""
 	@echo -e "$(BOLD)$(GREEN)Audit passed. Ready for deployment.$(NC)"
+
+audit-soft: ## Non-blocking audit for local diagnosis
+	@echo -e "$(BOLD)$(CYAN)FlowPay Audit (soft)$(NC)"
+	@echo ""
+	@echo -e "$(YELLOW)[1/6] Dependencies$(NC)"
+	@npm audit --audit-level=high || echo -e "$(YELLOW)  Vulnerabilities found (non-blocking).$(NC)"
+	@echo ""
+	@echo -e "$(YELLOW)[2/6] Environment$(NC)"
+	@$(MAKE) env-check || echo -e "$(YELLOW)  Environment issues found (non-blocking).$(NC)"
+	@echo ""
+	@echo -e "$(YELLOW)[3/6] Lint$(NC)"
+	@$(MAKE) lint-soft
+	@echo ""
+	@echo -e "$(YELLOW)[4/6] Type Check$(NC)"
+	@$(MAKE) check || echo -e "$(YELLOW)  Check issues found (non-blocking).$(NC)"
+	@echo ""
+	@echo -e "$(YELLOW)[5/6] Tests$(NC)"
+	@$(MAKE) test || echo -e "$(YELLOW)  Test issues found (non-blocking).$(NC)"
+	@echo ""
+	@echo -e "$(YELLOW)[6/6] Build$(NC)"
+	@$(MAKE) build || echo -e "$(YELLOW)  Build issues found (non-blocking).$(NC)"
+	@echo ""
+	@echo -e "$(BOLD)$(YELLOW)Soft audit completed.$(NC)"
+
+ci: ## CI pipeline (strict): check + test + build
+	@echo -e "$(BOLD)$(CYAN)Running CI pipeline$(NC)"
+	@$(MAKE) check
+	@$(MAKE) test
+	@$(MAKE) build
+	@echo -e "$(BOLD)$(GREEN)CI pipeline passed.$(NC)"
 
 # ── Database ─────────────────────────────────────────
 
@@ -120,29 +194,33 @@ status: ## Show project status overview
 	@echo -e "  NPM:     $$(npm -v)"
 	@test -f dist/server/entry.mjs && echo -e "  Build:   $(GREEN)exists$(NC)" || echo -e "  Build:   $(YELLOW)not built$(NC)"
 	@test -f data/flowpay.db && echo -e "  DB:      $(GREEN)$$(du -h data/flowpay.db | cut -f1)$(NC)" || echo -e "  DB:      $(YELLOW)not created$(NC)"
-	@test -f .env && echo -e "  .env:    $(GREEN)present$(NC)" || echo -e "  .env:    $(RED)missing$(NC)"
+	@test -f "$(ENV_FILE)" && echo -e "  $(ENV_FILE): $(GREEN)present$(NC)" || echo -e "  $(ENV_FILE): $(RED)missing$(NC)"
 	@echo ""
 
 # ── Deployment ───────────────────────────────────────
 
 logs: ## Tail production logs from Railway
+	@command -v railway >/dev/null 2>&1 || (echo -e "$(RED)Railway CLI not found.$(NC)" && exit 1)
 	@railway logs
 
-# --- TUNNEL OPERATIONS -------------------------------------------------------
-
-TUNNEL_DIR := /Users/nettomello/neomello/01-neo-protocol-org/neo-tunnel
+# ── Tunnel Operations ────────────────────────────────
 
 tunnel-neo-agent: ## Start tunnel for neo-agent
-	@cd $(TUNNEL_DIR) && $(MAKE) client-neo-agent
+	@test -d "$(TUNNEL_DIR)" || (echo -e "$(RED)TUNNEL_DIR not found: $(TUNNEL_DIR)$(NC)" && exit 1)
+	@cd "$(TUNNEL_DIR)" && $(MAKE) client-neo-agent
 
 tunnel-flowpay: ## Start tunnel for flowpay
-	@cd $(TUNNEL_DIR) && $(MAKE) client-flowpay
+	@test -d "$(TUNNEL_DIR)" || (echo -e "$(RED)TUNNEL_DIR not found: $(TUNNEL_DIR)$(NC)" && exit 1)
+	@cd "$(TUNNEL_DIR)" && $(MAKE) client-flowpay
 
 tunnel-nexus: ## Start tunnel for nexus
-	@cd $(TUNNEL_DIR) && $(MAKE) client-nexus
+	@test -d "$(TUNNEL_DIR)" || (echo -e "$(RED)TUNNEL_DIR not found: $(TUNNEL_DIR)$(NC)" && exit 1)
+	@cd "$(TUNNEL_DIR)" && $(MAKE) client-nexus
 
 tunnel-neobot: ## Start tunnel for neobot
-	@cd $(TUNNEL_DIR) && $(MAKE) client-neobot
+	@test -d "$(TUNNEL_DIR)" || (echo -e "$(RED)TUNNEL_DIR not found: $(TUNNEL_DIR)$(NC)" && exit 1)
+	@cd "$(TUNNEL_DIR)" && $(MAKE) client-neobot
 
 tunnel-status: ## Check tunnel server status
-	@cd $(TUNNEL_DIR) && $(MAKE) status
+	@test -d "$(TUNNEL_DIR)" || (echo -e "$(RED)TUNNEL_DIR not found: $(TUNNEL_DIR)$(NC)" && exit 1)
+	@cd "$(TUNNEL_DIR)" && $(MAKE) status

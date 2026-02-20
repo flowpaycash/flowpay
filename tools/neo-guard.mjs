@@ -16,7 +16,7 @@ function scanHTML() {
 }
 
 function scanCSP() {
-  const toml = fs.existsSync("netlify.toml") ? fs.readFileSync("netlify.toml","utf8") : "";
+  const toml = fs.existsSync("railway.json") ? fs.readFileSync("railway.json","utf8") : "";
   
   // Verificar se Web3Auth está ativo no neo.json
   let web3authEnabled = false;
@@ -43,7 +43,7 @@ function scanCSP() {
         console.log("⚠️  'unsafe-eval' permitido para Web3Auth (WebAssembly)");
         continue;
       }
-      fail(`CSP contém 'unsafe-eval' em netlify.toml: ${cleanLine}`);
+      fail(`CSP contém 'unsafe-eval' em railway.json: ${cleanLine}`);
     }
   }
 }

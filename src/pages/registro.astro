@@ -9,6 +9,13 @@ import brandLogo from '../../public/img/flowpay-logo.png';
   <main class="register-page">
     <div class="register-bg-glow"></div>
 
+    <a href="/" class="back-home-btn" aria-label="Voltar para a home">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Voltar
+    </a>
+
     <div class="register-content">
       <div class="register-brand">
         <a href="/">
@@ -95,7 +102,63 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 40px 20px;
+    padding: calc(env(safe-area-inset-top, 0px) + 80px) 20px calc(env(safe-area-inset-bottom, 0px) + 40px);
+  }
+
+  @media (min-width: 768px) {
+    .register-page {
+      padding: 80px 20px 40px;
+    }
+  }
+
+  /* Mobile-first: tap target 44pt, safe area aware */
+  .back-home-btn {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 16px);
+    left: calc(env(safe-area-inset-left, 0px) + 16px);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 44px;
+    padding: 0 16px;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    z-index: 10;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .back-home-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .back-home-btn:active {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(0.96);
+    transition: transform 0.1s ease;
+  }
+
+  @media (min-width: 768px) {
+    .back-home-btn {
+      top: 24px;
+      left: 24px;
+      min-height: unset;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      border-radius: 10px;
+    }
   }
 
   .register-bg-glow {
@@ -126,10 +189,16 @@ import brandLogo from '../../public/img/flowpay-logo.png';
   }
 
   .register-logo {
-    height: 80px;
+    height: 64px;
     width: auto;
     filter: drop-shadow(0 0 15px rgba(255, 0, 122, 0.5));
     display: block;
+  }
+
+  @media (min-width: 768px) {
+    .register-logo {
+      height: 80px;
+    }
   }
 
   .register-card {
@@ -137,11 +206,18 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 28px;
-    padding: 2.5rem 2rem;
+    border-radius: 24px;
+    padding: 1.75rem 1.25rem;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.08);
     width: 100%;
     animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+
+  @media (min-width: 480px) {
+    .register-card {
+      border-radius: 28px;
+      padding: 2.5rem 2rem;
+    }
   }
 
   .register-header-logo {
@@ -198,13 +274,17 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    padding: 13px 16px;
+    padding: 14px 16px;
     color: #fff;
-    font-size: 0.95rem;
+    font-size: 1rem; /* mínimo 16px — previne zoom automático no iOS */
     font-family: inherit;
     transition: border-color 0.2s, background 0.2s;
     outline: none;
     width: 100%;
+    min-height: 44px; /* tap target iOS */
+    touch-action: manipulation;
+    -webkit-appearance: none;
+    appearance: none;
   }
 
   .field-group input::placeholder {
@@ -243,14 +323,24 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    transition: all 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.2s ease;
     margin-top: 0.5rem;
     box-shadow: 0 0 25px rgba(255, 0, 122, 0.25);
+    min-height: 52px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .btn-submit:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 0 40px rgba(255, 0, 122, 0.45);
+  @media (hover: hover) {
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(255, 0, 122, 0.45);
+    }
+  }
+
+  .btn-submit:active:not(:disabled) {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
   }
 
   .btn-submit:disabled {
@@ -282,7 +372,9 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     font-weight: 600;
   }
 
-  .login-link a:hover { text-decoration: underline; }
+  @media (hover: hover) {
+    .login-link a:hover { text-decoration: underline; }
+  }
 
   /* Success card */
   .success-card {
@@ -310,21 +402,33 @@ import brandLogo from '../../public/img/flowpay-logo.png';
   }
 
   .btn-home {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-    padding: 13px 28px;
+    border-radius: 14px;
+    padding: 14px 28px;
     color: #fff;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.2s;
+    font-size: 1rem;
+    min-height: 52px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
   }
 
-  .btn-home:hover {
-    background: rgba(255, 255, 255, 0.14);
-    transform: translateY(-2px);
+  @media (hover: hover) {
+    .btn-home:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-2px);
+    }
+  }
+
+  .btn-home:active {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
   }
 
   .register-footer {
@@ -351,9 +455,7 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     to { transform: rotate(360deg); }
   }
 
-  @media (max-width: 480px) {
-    .register-card { padding: 2rem 1.25rem; }
-  }
+
 </style>
 
 <script>

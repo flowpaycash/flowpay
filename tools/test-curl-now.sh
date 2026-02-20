@@ -9,11 +9,11 @@ echo "======================================"
 # Verificar se o servidor está rodando
 echo "🔍 Verificando se o servidor está rodando..."
 
-if curl -s -I "http://localhost:8888/.netlify/functions/create-pix-charge" > /dev/null 2>&1; then
+if curl -s -I "http://localhost:4321/api/create-charge" > /dev/null 2>&1; then
     echo "✅ Servidor acessível!"
 else
     echo "❌ Servidor não acessível!"
-    echo "💡 Execute: netlify dev"
+    echo "💡 Execute: npm run dev"
     exit 1
 fi
 
@@ -25,12 +25,12 @@ response=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
     -X POST \
     -H "Content-Type: application/json" \
     -d '{
-        "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+        "wallet": "0x1111111111111111111111111111111111111111",
         "valor": 25.50,
         "moeda": "BRL",
         "id_transacao": "test_curl_$(date +%s)"
     }' \
-    "http://localhost:8888/.netlify/functions/create-pix-charge")
+    "http://localhost:4321/api/create-charge")
 
 # Separar status e body
 http_status=$(echo "$response" | grep "HTTP_STATUS:" | cut -d: -f2)

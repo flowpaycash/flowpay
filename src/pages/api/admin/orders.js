@@ -1,24 +1,25 @@
 import * as Sentry from "@sentry/astro";
 import { getCorsHeaders, secureLog } from "../../../services/api/config.mjs";
 import {
+  requireAdminSession,
+  withAdminNoStoreHeaders,
+} from "../../../services/api/admin-auth.mjs";
+import {
   listAllOrders,
   completeOrder,
   getOrder,
 } from "../../../services/database/sqlite.mjs";
 
-function checkAdminAuth(request) {
-  const authHeader = request.headers.get("authorization");
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  return authHeader && authHeader === `Bearer ${adminPassword}`;
-}
-
 // GET /api/admin/orders - list all orders
-export const GET = async ({ request }) => {
-  const headers = getCorsHeaders({
-    headers: Object.fromEntries(request.headers),
+export const GET = async ({ request, cookies }) => {
+  const headers = withAdminNoStoreHeaders({
+    ...getCorsHeaders({
+      headers: Object.fromEntries(request.headers),
+    }),
+    "Content-Type": "application/json",
   });
 
-  if (!checkAdminAuth(request)) {
+  if (!requireAdminSession(cookies)) {
     Sentry.addBreadcrumb({
       category: "admin.orders",
       message: "Tentativa de acesso nao autorizado a listagem de pedidos",
@@ -48,7 +49,7 @@ export const GET = async ({ request }) => {
 
     return new Response(JSON.stringify({ success: true, orders }), {
       status: 200,
-      headers: { ...headers, "Content-Type": "application/json" },
+      headers,
     });
   } catch (error) {
     secureLog("error", "Admin orders list error", { error: error.message });
@@ -65,12 +66,15 @@ export const GET = async ({ request }) => {
 };
 
 // POST /api/admin/orders - complete an order
-export const POST = async ({ request }) => {
-  const headers = getCorsHeaders({
-    headers: Object.fromEntries(request.headers),
+export const POST = async ({ request, cookies }) => {
+  const headers = withAdminNoStoreHeaders({
+    ...getCorsHeaders({
+      headers: Object.fromEntries(request.headers),
+    }),
+    "Content-Type": "application/json",
   });
 
-  if (!checkAdminAuth(request)) {
+  if (!requireAdminSession(cookies)) {
     Sentry.addBreadcrumb({
       category: "admin.orders",
       message: "Tentativa de acesso nao autorizado para completar pedido",
@@ -144,7 +148,7 @@ export const POST = async ({ request }) => {
       }),
       {
         status: 200,
-        headers: { ...headers, "Content-Type": "application/json" },
+        headers,
       }
     );
   } catch (error) {
@@ -162,8 +166,10 @@ export const POST = async ({ request }) => {
 };
 
 export const OPTIONS = async ({ request }) => {
-  const headers = getCorsHeaders({
-    headers: Object.fromEntries(request.headers),
-  });
+  const headers = withAdminNoStoreHeaders(
+    getCorsHeaders({
+      headers: Object.fromEntries(request.headers),
+    })
+  );
   return new Response(null, { status: 204, headers });
 };

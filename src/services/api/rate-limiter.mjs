@@ -13,6 +13,7 @@ export const RATE_LIMITS = {
   "pix-orders": { windowMs: 60 * 1000, maxRequests: 30 },
   "debug-env": { windowMs: 60 * 1000, maxRequests: 10 },
   "get-admin-config": { windowMs: 60 * 1000, maxRequests: 20 },
+  "admin-login": { windowMs: 15 * 60 * 1000, maxRequests: 8 },
 };
 
 // --- Redis client (singleton, lazy) -----------------------------------

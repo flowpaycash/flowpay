@@ -1,187 +1,218 @@
 // 🧪 FLOWPay - Validation Middleware Tests
 // Testes unitários para o middleware de validação
 
-const { 
-  validateData, 
-  validateType, 
-  validateLength, 
-  validateNumericRange,
-  validateAllowedValues,
-  sanitizeData,
-  VALIDATION_SCHEMAS 
-} = require('../netlify/functions/validation-middleware');
+let validateData;
+let validateType;
+let validateLength;
+let validateNumericRange;
+let validateAllowedValues;
+let sanitizeData;
+let VALIDATION_SCHEMAS;
 
-describe('validateData', () => {
-  test('deve validar dados corretos para createPixCharge', () => {
+beforeAll(async () => {
+  ({
+    validateData,
+    validateType,
+    validateLength,
+    validateNumericRange,
+    validateAllowedValues,
+    sanitizeData,
+    VALIDATION_SCHEMAS,
+  } = await import("../src/services/api/validation-middleware.mjs"));
+});
+
+describe("validateData", () => {
+  test("deve validar dados corretos para createPixCharge", () => {
     const data = {
-      wallet: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
-      valor: 100.50,
-      moeda: 'BRL',
-      id_transacao: 'test-123'
+      wallet: "0x1111111111111111111111111111111111111111",
+      valor: 100.5,
+      moeda: "BRL",
+      id_transacao: "test-123",
     };
-    
-    expect(() => validateData(data, 'createPixCharge')).not.toThrow();
+
+    expect(() => validateData(data, "createPixCharge")).not.toThrow();
   });
 
-  test('deve falhar com campos obrigatórios ausentes', () => {
+  test("deve falhar com campos obrigatórios ausentes", () => {
     const data = {
-      wallet: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6'
+      wallet: "0x1111111111111111111111111111111111111111",
     };
-    
-    expect(() => validateData(data, 'createPixCharge')).toThrow();
+
+    expect(() => validateData(data, "createPixCharge")).toThrow();
   });
 
-  test('deve falhar com esquema inexistente', () => {
-    const data = { test: 'value' };
-    
-    expect(() => validateData(data, 'inexistentSchema')).toThrow();
-  });
-});
+  test("deve falhar com esquema inexistente", () => {
+    const data = { test: "value" };
 
-describe('validateType', () => {
-  test('deve validar string corretamente', () => {
-    expect(() => validateType('test', 'string', 'field')).not.toThrow();
-    expect(() => validateType(123, 'string', 'field')).toThrow();
-  });
-
-  test('deve validar email corretamente', () => {
-    expect(() => validateType('test@example.com', 'email', 'field')).not.toThrow();
-    expect(() => validateType('invalid-email', 'email', 'field')).toThrow();
-  });
-
-  test('deve validar endereço Ethereum corretamente', () => {
-    expect(() => validateType('0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6', 'ethereum_address', 'field')).not.toThrow();
-    expect(() => validateType('0x123', 'ethereum_address', 'field')).toThrow();
-  });
-
-  test('deve validar valor monetário corretamente', () => {
-    expect(() => validateType(100, 'monetary_value', 'field')).not.toThrow();
-    expect(() => validateType('50.50', 'monetary_value', 'field')).not.toThrow();
-    expect(() => validateType(0, 'monetary_value', 'field')).toThrow();
-    expect(() => validateType(-10, 'monetary_value', 'field')).toThrow();
+    expect(() => validateData(data, "inexistentSchema")).toThrow();
   });
 });
 
-describe('validateLength', () => {
-  test('deve validar comprimento mínimo', () => {
-    expect(() => validateLength('test', 3, undefined, 'field')).not.toThrow();
-    expect(() => validateLength('ab', 3, undefined, 'field')).toThrow();
+describe("validateType", () => {
+  test("deve validar string corretamente", () => {
+    expect(() => validateType("test", "string", "field")).not.toThrow();
+    expect(() => validateType(123, "string", "field")).toThrow();
   });
 
-  test('deve validar comprimento máximo', () => {
-    expect(() => validateLength('test', undefined, 10, 'field')).not.toThrow();
-    expect(() => validateLength('very long string', undefined, 10, 'field')).toThrow();
+  test("deve validar email corretamente", () => {
+    expect(() =>
+      validateType("test@example.com", "email", "field")
+    ).not.toThrow();
+    expect(() => validateType("invalid-email", "email", "field")).toThrow();
   });
 
-  test('deve validar range de comprimento', () => {
-    expect(() => validateLength('test', 3, 10, 'field')).not.toThrow();
-    expect(() => validateLength('ab', 3, 10, 'field')).toThrow();
-    expect(() => validateLength('very long string', 3, 10, 'field')).toThrow();
-  });
-});
-
-describe('validateNumericRange', () => {
-  test('deve validar valor mínimo', () => {
-    expect(() => validateNumericRange(100, 50, undefined, 'field')).not.toThrow();
-    expect(() => validateNumericRange(25, 50, undefined, 'field')).toThrow();
+  test("deve validar endereço Ethereum corretamente", () => {
+    expect(() =>
+      validateType(
+        "0x1111111111111111111111111111111111111111",
+        "ethereum_address",
+        "field"
+      )
+    ).not.toThrow();
+    expect(() => validateType("0x123", "ethereum_address", "field")).toThrow();
   });
 
-  test('deve validar valor máximo', () => {
-    expect(() => validateNumericRange(100, undefined, 200, 'field')).not.toThrow();
-    expect(() => validateNumericRange(250, undefined, 200, 'field')).toThrow();
-  });
-
-  test('deve validar range numérico', () => {
-    expect(() => validateNumericRange(100, 50, 200, 'field')).not.toThrow();
-    expect(() => validateNumericRange(25, 50, 200, 'field')).toThrow();
-    expect(() => validateNumericRange(250, 50, 200, 'field')).toThrow();
+  test("deve validar valor monetário corretamente", () => {
+    expect(() => validateType(100, "monetary_value", "field")).not.toThrow();
+    expect(() =>
+      validateType("50.50", "monetary_value", "field")
+    ).not.toThrow();
+    expect(() => validateType(0, "monetary_value", "field")).toThrow();
+    expect(() => validateType(-10, "monetary_value", "field")).toThrow();
   });
 });
 
-describe('validateAllowedValues', () => {
-  test('deve validar valores permitidos', () => {
-    const allowed = ['BRL', 'USD', 'EUR'];
-    expect(() => validateAllowedValues('BRL', allowed, 'field')).not.toThrow();
-    expect(() => validateAllowedValues('INVALID', allowed, 'field')).toThrow();
+describe("validateLength", () => {
+  test("deve validar comprimento mínimo", () => {
+    expect(() => validateLength("test", 3, undefined, "field")).not.toThrow();
+    expect(() => validateLength("ab", 3, undefined, "field")).toThrow();
+  });
+
+  test("deve validar comprimento máximo", () => {
+    expect(() => validateLength("test", undefined, 10, "field")).not.toThrow();
+    expect(() =>
+      validateLength("very long string", undefined, 10, "field")
+    ).toThrow();
+  });
+
+  test("deve validar range de comprimento", () => {
+    expect(() => validateLength("test", 3, 10, "field")).not.toThrow();
+    expect(() => validateLength("ab", 3, 10, "field")).toThrow();
+    expect(() => validateLength("very long string", 3, 10, "field")).toThrow();
   });
 });
 
-describe('sanitizeData', () => {
-  test('deve sanitizar strings removendo caracteres perigosos', () => {
+describe("validateNumericRange", () => {
+  test("deve validar valor mínimo", () => {
+    expect(() =>
+      validateNumericRange(100, 50, undefined, "field")
+    ).not.toThrow();
+    expect(() => validateNumericRange(25, 50, undefined, "field")).toThrow();
+  });
+
+  test("deve validar valor máximo", () => {
+    expect(() =>
+      validateNumericRange(100, undefined, 200, "field")
+    ).not.toThrow();
+    expect(() => validateNumericRange(250, undefined, 200, "field")).toThrow();
+  });
+
+  test("deve validar range numérico", () => {
+    expect(() => validateNumericRange(100, 50, 200, "field")).not.toThrow();
+    expect(() => validateNumericRange(25, 50, 200, "field")).toThrow();
+    expect(() => validateNumericRange(250, 50, 200, "field")).toThrow();
+  });
+});
+
+describe("validateAllowedValues", () => {
+  test("deve validar valores permitidos", () => {
+    const allowed = ["BRL", "USD", "EUR"];
+    expect(() => validateAllowedValues("BRL", allowed, "field")).not.toThrow();
+    expect(() => validateAllowedValues("INVALID", allowed, "field")).toThrow();
+  });
+});
+
+describe("sanitizeData", () => {
+  test("deve sanitizar strings removendo caracteres perigosos", () => {
     const data = {
       name: '  <script>alert("xss")</script>  ',
-      value: 'normal string'
+      value: "normal string",
     };
-    
+
     const sanitized = sanitizeData(data);
     expect(sanitized.name).toBe('scriptalert("xss")/script');
-    expect(sanitized.value).toBe('normal string');
+    expect(sanitized.value).toBe("normal string");
   });
 
-  test('deve limitar tamanho de strings', () => {
+  test("deve limitar tamanho de strings", () => {
     const data = {
-      longString: 'a'.repeat(2000)
+      longString: "a".repeat(2000),
     };
-    
+
     const sanitized = sanitizeData(data);
     expect(sanitized.longString.length).toBe(1000);
   });
 
-  test('deve validar números', () => {
+  test("deve validar números", () => {
     const data = {
       validNumber: 100,
-      invalidNumber: 'not-a-number'
+      invalidNumber: "not-a-number",
     };
-    
+
     const sanitized = sanitizeData(data);
     expect(sanitized.validNumber).toBe(100);
-    expect(sanitized.invalidNumber).toBe('not-a-number'); // Mantém string original
+    expect(sanitized.invalidNumber).toBe("not-a-number"); // Mantém string original
   });
 
-  test('deve sanitizar objetos aninhados', () => {
+  test("deve sanitizar objetos aninhados", () => {
     const data = {
       user: {
         name: '  <script>alert("xss")</script>  ',
-        email: 'test@example.com'
-      }
+        email: "test@example.com",
+      },
     };
-    
+
     const sanitized = sanitizeData(data);
     expect(sanitized.user.name).toBe('scriptalert("xss")/script');
-    expect(sanitized.user.email).toBe('test@example.com');
+    expect(sanitized.user.email).toBe("test@example.com");
   });
 });
 
-describe('VALIDATION_SCHEMAS', () => {
-  test('deve ter esquemas definidos', () => {
+describe("VALIDATION_SCHEMAS", () => {
+  test("deve ter esquemas definidos", () => {
     expect(VALIDATION_SCHEMAS.createPixCharge).toBeDefined();
     expect(VALIDATION_SCHEMAS.webhook).toBeDefined();
     expect(VALIDATION_SCHEMAS.auth).toBeDefined();
   });
 
-  test('esquema createPixCharge deve ter campos obrigatórios corretos', () => {
+  test("esquema createPixCharge deve ter campos obrigatórios corretos", () => {
     const schema = VALIDATION_SCHEMAS.createPixCharge;
-    expect(schema.required).toEqual(['wallet', 'valor', 'moeda', 'id_transacao']);
+    expect(schema.required).toEqual([
+      "wallet",
+      "valor",
+      "moeda",
+      "id_transacao",
+    ]);
   });
 });
 
 // Executar testes se chamado diretamente
 if (require.main === module) {
-  console.log('🧪 Executando testes do Validation Middleware...');
-  
+  console.log("🧪 Executando testes do Validation Middleware...");
+
   const tests = [
-    'validateData',
-    'validateType',
-    'validateLength', 
-    'validateNumericRange',
-    'validateAllowedValues',
-    'sanitizeData',
-    'VALIDATION_SCHEMAS'
+    "validateData",
+    "validateType",
+    "validateLength",
+    "validateNumericRange",
+    "validateAllowedValues",
+    "sanitizeData",
+    "VALIDATION_SCHEMAS",
   ];
-  
-  tests.forEach(test => {
+
+  tests.forEach((test) => {
     console.log(`✅ ${test} - Testes passaram`);
   });
-  
-  console.log('🎉 Todos os testes do Validation Middleware passaram!');
+
+  console.log("🎉 Todos os testes do Validation Middleware passaram!");
 }

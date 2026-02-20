@@ -7,11 +7,11 @@ echo "🧪 Teste Rápido da API PIX FLOWPay"
 echo "=================================="
 
 # URL da API (ajuste se necessário)
-API_URL="http://localhost:8888/.netlify/functions/create-pix-charge"
+API_URL="http://localhost:4321/api/create-charge"
 
 # Payload de teste
 PAYLOAD='{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 25.50,
     "moeda": "BRL",
     "id_transacao": "test_curl_001"
@@ -43,6 +43,6 @@ echo ""
 echo "✅ Teste concluído!"
 echo ""
 echo "💡 Se o status for 500, verifique:"
-echo "   - Se o servidor está rodando (netlify dev)"
+echo "   - Se o servidor está rodando (npm run dev)"
 echo "   - Se WOOVI_API_KEY está configurada"
 echo "   - Logs do servidor para detalhes"

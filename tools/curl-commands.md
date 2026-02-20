@@ -2,7 +2,7 @@
 
 ## Pré-requisitos
 
-1. **Servidor rodando**: `netlify dev` ou `npm run dev`
+1. **Servidor rodando**: `npm run dev` ou `npm run dev`
 2. **API Key configurada**: `export WOOVI_API_KEY='sua_chave_aqui'`
 
 ## 🧪 Teste Básico
@@ -11,10 +11,10 @@
 
 ```bash
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 50.00,
     "moeda": "BRL",
     "id_transacao": "test_pix_001"
@@ -25,10 +25,10 @@ curl -X POST \
 
 ```bash
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 0.50,
     "moeda": "BRL",
     "id_transacao": "test_pix_002"
@@ -39,7 +39,7 @@ curl -X POST \
 
 ```bash
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d '{
     "wallet": "invalid_wallet",
@@ -53,10 +53,10 @@ curl -X POST \
 
 ```bash
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 100.00
   }'
 ```
@@ -65,10 +65,10 @@ curl -X POST \
 
 ```bash
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 0,
     "moeda": "BRL",
     "id_transacao": "test_pix_005"
@@ -79,7 +79,7 @@ curl -X POST \
 
 ```bash
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d '{
     "wallet": "0x7420d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
@@ -100,10 +100,10 @@ export WOOVI_API_KEY="sua_chave_aqui"
 # Teste com valor variável
 VALOR=75.50
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d "{
-    \"wallet\": \"0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6\",
+    \"wallet\": \"0x1111111111111111111111111111111111111111\",
     \"valor\": $VALOR,
     \"moeda\": \"BRL\",
     \"id_transacao\": \"test_pix_$(date +%s)\"
@@ -119,10 +119,10 @@ curl -X POST \
 for i in {1..5}; do
   echo "Teste $i:"
   curl -s -X POST \
-    http://localhost:8888/.netlify/functions/create-pix-charge \
+    http://localhost:4321/api/create-charge \
     -H "Content-Type: application/json" \
     -d "{
-      \"wallet\": \"0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6\",
+      \"wallet\": \"0x1111111111111111111111111111111111111111\",
       \"valor\": $((RANDOM % 100 + 1)).$((RANDOM % 99)),
       \"moeda\": \"BRL\",
       \"id_transacao\": \"perf_test_$i\"
@@ -146,7 +146,7 @@ done
     "expires_at": "2024-01-01T12:00:00Z",
     "status": "ACTIVE"
   },
-  "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+  "wallet": "0x1111111111111111111111111111111111111111",
   "moeda": "BRL",
   "id_transacao": "test_pix_001"
 }
@@ -170,7 +170,7 @@ done
 
 ## 💡 Dicas de Uso
 
-1. **Verifique o servidor**: Certifique-se de que `netlify dev` está rodando
+1. **Verifique o servidor**: Certifique-se de que `npm run dev` está rodando
 2. **Configure a API key**: `export WOOVI_API_KEY='sua_chave'`
 3. **Monitore os logs**: Veja os logs do servidor para detalhes
 4. **Use jq para formatação**: `brew install jq` para macOS
@@ -181,14 +181,14 @@ done
 ### Verificar se a função está acessível
 
 ```bash
-curl -I http://localhost:8888/.netlify/functions/create-pix-charge
+curl -I http://localhost:4321/api/create-charge
 ```
 
 ### Teste de CORS (preflight)
 
 ```bash
 curl -X OPTIONS \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Origin: http://localhost:3000"
 ```
 

@@ -1,6 +1,10 @@
 import * as Sentry from "@sentry/astro";
 import { getCorsHeaders, secureLog } from "../../../services/api/config.mjs";
 import {
+  requireAdminSession,
+  withAdminNoStoreHeaders,
+} from "../../../services/api/admin-auth.mjs";
+import {
   listUsers,
   approveUser,
   rejectUser,
@@ -8,19 +12,16 @@ import {
 } from "../../../services/database/sqlite.mjs";
 import { sendEmail } from "../../../services/api/email-service.mjs";
 
-function checkAdminAuth(request) {
-  const authHeader = request.headers.get("authorization");
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  return authHeader && authHeader === `Bearer ${adminPassword}`;
-}
-
 // GET /api/admin/users - list all users
-export const GET = async ({ request }) => {
-  const headers = getCorsHeaders({
-    headers: Object.fromEntries(request.headers),
+export const GET = async ({ request, cookies }) => {
+  const headers = withAdminNoStoreHeaders({
+    ...getCorsHeaders({
+      headers: Object.fromEntries(request.headers),
+    }),
+    "Content-Type": "application/json",
   });
 
-  if (!checkAdminAuth(request)) {
+  if (!requireAdminSession(cookies)) {
     Sentry.addBreadcrumb({
       category: "admin.users",
       message: "Tentativa de acesso nao autorizado a listagem de usuarios",
@@ -52,7 +53,7 @@ export const GET = async ({ request }) => {
 
     return new Response(JSON.stringify({ success: true, users }), {
       status: 200,
-      headers: { ...headers, "Content-Type": "application/json" },
+      headers,
     });
   } catch (error) {
     secureLog("error", "Admin users list error", { error: error.message });
@@ -69,12 +70,15 @@ export const GET = async ({ request }) => {
 };
 
 // POST /api/admin/users - approve or reject user
-export const POST = async ({ request }) => {
-  const headers = getCorsHeaders({
-    headers: Object.fromEntries(request.headers),
+export const POST = async ({ request, cookies }) => {
+  const headers = withAdminNoStoreHeaders({
+    ...getCorsHeaders({
+      headers: Object.fromEntries(request.headers),
+    }),
+    "Content-Type": "application/json",
   });
 
-  if (!checkAdminAuth(request)) {
+  if (!requireAdminSession(cookies)) {
     Sentry.addBreadcrumb({
       category: "admin.users",
       message: "Tentativa de acesso nao autorizado para acao em usuario",
@@ -157,7 +161,7 @@ export const POST = async ({ request }) => {
         JSON.stringify({ success: true, message: "Usuario aprovado." }),
         {
           status: 200,
-          headers: { ...headers, "Content-Type": "application/json" },
+          headers,
         }
       );
     }
@@ -210,7 +214,7 @@ export const POST = async ({ request }) => {
         JSON.stringify({ success: true, message: "Usuario rejeitado." }),
         {
           status: 200,
-          headers: { ...headers, "Content-Type": "application/json" },
+          headers,
         }
       );
     }
@@ -234,8 +238,10 @@ export const POST = async ({ request }) => {
 };
 
 export const OPTIONS = async ({ request }) => {
-  const headers = getCorsHeaders({
-    headers: Object.fromEntries(request.headers),
-  });
+  const headers = withAdminNoStoreHeaders(
+    getCorsHeaders({
+      headers: Object.fromEntries(request.headers),
+    })
+  );
   return new Response(null, { status: 204, headers });
 };

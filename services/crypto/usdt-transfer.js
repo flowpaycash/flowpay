@@ -292,7 +292,7 @@ class USDTTransfer {
       });
 
       // 3. Aguardar confirmação (não bloqueamos muito tempo, mas o suficiente para garantir submissão)
-      // Em contextos serverless (Netlify), temos limite de tempo, então usamos um timeout razoável
+      // Em contextos serverless (Railway), temos limite de tempo, então usamos um timeout razoável
       const receipt = await publicClient.waitForTransactionReceipt({
         hash,
         confirmations: 1,

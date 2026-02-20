@@ -77,17 +77,17 @@ dist/css/            # CSS copiado (build)
 
 ## ⚠️ Nota sobre Preview
 
-O adapter `@astrojs/netlify` não suporta `astro preview` nativamente. Por isso, o script `preview` foi alterado para usar `serve` diretamente no diretório `dist/`.
+O adapter `@astrojs/node` não suporta `astro preview` nativamente. Por isso, o script `preview` foi alterado para usar `serve` diretamente no diretório `dist/`.
 
-## 🔧 Alternativa: Usar Netlify Dev
+## 🔧 Alternativa: Usar npm run dev
 
-Se quiser testar com todas as funcionalidades do Netlify:
+Se quiser testar com todas as funcionalidades do Railway:
 
 ```bash
-npm run dev:netlify
+npm run dev
 # ou
 make dev-woovi
 ```
 
-Isso iniciará o Netlify Dev que simula o ambiente de produção.
+Isso iniciará o npm run dev que simula o ambiente de produção.
 

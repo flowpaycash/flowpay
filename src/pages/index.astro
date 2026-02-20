@@ -1,20 +1,112 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+// Layout
 import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+// Sections — adicione, remova ou reordene livremente abaixo
 import Hero from '../components/Hero.astro';
 import Features from '../components/Features.astro';
 import Blockchain from '../components/Blockchain.astro';
 import CTA from '../components/CTA.astro';
-import Footer from '../components/Footer.astro';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "FlowPay",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "url": "https://flowpay.cash",
+  "description": "Gateway de pagamentos PIX + Cripto com liquidação instantânea e prova de execução on-chain. Powered by NEO Smart Factory™.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL",
+    "description": "Cadastro gratuito. Taxas aplicadas por transação.",
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "FlowOFF",
+    "url": "https://flowoff.xyz",
+  },
+  "featureList": [
+    "Pagamentos via PIX",
+    "Pagamentos em criptomoedas (USDT, USDC)",
+    "Liquidação instantânea",
+    "Prova de existência on-chain (PoE)",
+    "Dashboard de gestão",
+    "Links de pagamento personalizados",
+    "Código embed para sites",
+  ],
+  "inLanguage": "pt-BR",
+  "availableOnDevice": ["Desktop", "Mobile", "Tablet"],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "O que é a FlowPay?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A FlowPay é um gateway de pagamentos que permite receber pagamentos via PIX e criptomoedas (USDT, USDC) com liquidação instantânea e prova de execução on-chain, powered by NEO Smart Factory™.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Como funciona o recebimento via PIX na FlowPay?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Você cria um link ou botão de pagamento no Dashboard, compartilha com seu cliente e o pagamento PIX é confirmado e liquidado instantaneamente, com registro on-chain para auditoria.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "A FlowPay aceita criptomoedas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim. A FlowPay suporta recebimento em USDT e USDC nas redes Polygon, Ethereum e Base, diretamente na carteira do vendedor.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Como criar uma conta na FlowPay?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acesse flowpay.cash/registro, preencha seus dados e aguarde a aprovação manual da equipe FlowPay em até 24 horas.",
+      },
+    },
+  ],
+};
 ---
 
-<Layout>
+<Layout
+  title="FlowPay — Gateway PIX + Cripto"
+  description="Receba pagamentos via PIX e criptomoedas com liquidação instantânea e prova on-chain. Gateway Web3 powered by NEO Smart Factory™. Cadastro gratuito."
+  structuredData={[webAppSchema, faqSchema]}
+>
+
+  <!-- Nav -->
   <Navbar />
+
+  <!-- [1] Hero — apresentação principal e CTAs -->
   <Hero />
+
+  <!-- [2] Features — como funciona (3 passos) -->
   <Features />
+
+  <!-- [3] Blockchain — redes e infraestrutura -->
   <Blockchain />
+
+  <!-- [4] CTA — chamada final para cadastro -->
   <CTA />
+
+  <!-- Footer -->
   <Footer />
+
 
   <script>
     // Smooth scrolling para links internos
@@ -85,4 +177,3 @@ import Footer from '../components/Footer.astro';
     }
   </script>
 </Layout>
-

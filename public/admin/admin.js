@@ -1,141 +1,249 @@
 // FLOWPay - Admin Panel JavaScript
 // Painel administrativo para gerenciar transações e usuários
 
-const SESSION_KEY = "flowpay_admin_session";
-const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 horas
-
 let transactions = [];
-let settlementOrders = [];
 let pendingUsers = [];
 let isAuthenticated = false;
-let adminToken = null;
+let autoRefreshTimer = null;
+let transactionsLoaded = false;
+const MOBILE_BREAKPOINT = 900;
 
-// ────────────────────────────────────────
-// INIT
-// ────────────────────────────────────────
-
-document.addEventListener("DOMContentLoaded", function () {
-  initializeElements();
-  checkAuthentication();
+document.addEventListener("DOMContentLoaded", async () => {
   setupEventListeners();
 
-  if (isAuthenticated) {
+  const authenticated = await checkAuthentication();
+  if (authenticated) {
     showAdminPanel();
-    loadAll();
+    await loadAll();
+  } else {
+    showLoginScreen();
   }
 });
-
-function initializeElements() {
-  // These are resolved on demand via getElementById where needed
-}
 
 function setupEventListeners() {
   const loginForm = document.getElementById("login-form");
   if (loginForm) loginForm.addEventListener("submit", handleLogin);
 
   const refreshBtn = document.getElementById("refresh-btn");
-  if (refreshBtn) refreshBtn.addEventListener("click", loadAll);
+  if (refreshBtn) refreshBtn.addEventListener("click", () => loadAll());
 
   const downloadBtn = document.getElementById("download-btn");
   if (downloadBtn) downloadBtn.addEventListener("click", downloadTransactions);
 
   const logoutBtn = document.getElementById("logout-btn");
-  if (logoutBtn) logoutBtn.addEventListener("click", handleLogout);
+  if (logoutBtn) logoutBtn.addEventListener("click", () => handleLogout(true));
 
   const statusFilter = document.getElementById("status-filter");
   if (statusFilter) statusFilter.addEventListener("change", renderTransactions);
 
   const moedaFilter = document.getElementById("moeda-filter");
   if (moedaFilter) moedaFilter.addEventListener("change", renderTransactions);
+
+  const userStatusFilter = document.getElementById("user-status-filter");
+  if (userStatusFilter) {
+    userStatusFilter.addEventListener("change", () => loadPendingUsers());
+  }
+
+  const loadTransactionsBtn = document.getElementById("load-transactions-btn");
+  if (loadTransactionsBtn) {
+    loadTransactionsBtn.addEventListener("click", handleTransactionsToggle);
+  }
+
+  window.addEventListener("resize", configureMobileTransactionsMode);
 }
 
-// ────────────────────────────────────────
-// AUTH
-// ────────────────────────────────────────
+function isMobileAdminView() {
+  return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
+}
 
-function checkAuthentication() {
-  const session = localStorage.getItem(SESSION_KEY);
-  if (session) {
-    try {
-      const sessionData = JSON.parse(session);
-      if (Date.now() - sessionData.timestamp < SESSION_DURATION) {
-        isAuthenticated = true;
-        adminToken = sessionData.token;
-        return;
-      }
-    } catch (_) {}
-    localStorage.removeItem(SESSION_KEY);
+function isTransactionsBlockOpen() {
+  return document
+    .getElementById("transactions-block")
+    ?.classList.contains("open");
+}
+
+function updateTransactionsToggleLabel() {
+  const button = document.getElementById("load-transactions-btn");
+  if (!button) return;
+
+  if (!isMobileAdminView()) {
+    button.hidden = true;
+    return;
+  }
+
+  button.hidden = false;
+  if (!transactionsLoaded) {
+    button.textContent = "Carregar transações";
+    return;
+  }
+
+  button.textContent = isTransactionsBlockOpen()
+    ? "Ocultar transações"
+    : "Ver transações";
+}
+
+function configureMobileTransactionsMode() {
+  const block = document.getElementById("transactions-block");
+  if (!block) return;
+
+  if (isMobileAdminView()) {
+    block.classList.add("mobile-collapsed");
+    if (!isTransactionsBlockOpen()) block.classList.remove("open");
+  } else {
+    block.classList.remove("mobile-collapsed");
+    block.classList.add("open");
+  }
+
+  updateTransactionsToggleLabel();
+}
+
+async function checkAuthentication() {
+  try {
+    const res = await fetch("/api/admin/auth/session", {
+      method: "GET",
+      credentials: "same-origin",
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      isAuthenticated = false;
+      return false;
+    }
+
+    const data = await safeJson(res);
+    isAuthenticated = Boolean(data?.authenticated);
+    return isAuthenticated;
+  } catch {
+    isAuthenticated = false;
+    return false;
   }
 }
 
 async function handleLogin(e) {
   e.preventDefault();
-  const password = document.getElementById("password").value;
+  const passwordInput = document.getElementById("password");
+  const submitBtn = document.querySelector("#login-form .btn-login");
+  const password = passwordInput?.value || "";
 
-  // Validate against the backend
+  if (!password) {
+    showNotification("❌ Informe a senha de acesso.", "error");
+    return;
+  }
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Entrando...";
+  }
+
   try {
-    const res = await fetch("/api/admin/metrics", {
-      headers: { Authorization: `Bearer ${password}` },
+    const res = await fetch("/api/admin/auth/login", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
     });
 
-    if (res.ok) {
-      isAuthenticated = true;
-      adminToken = password;
-      localStorage.setItem(
-        SESSION_KEY,
-        JSON.stringify({
-          timestamp: Date.now(),
-          token: password,
-        })
-      );
-      showAdminPanel();
-      loadAll();
-      showNotification("✅ Login realizado com sucesso!", "success");
-    } else {
-      showNotification("❌ Senha incorreta!", "error");
+    if (!res.ok) {
+      const data = await safeJson(res);
+      showNotification(`❌ ${data.error || "Senha incorreta."}`, "error");
+      return;
     }
-  } catch (_) {
+
+    isAuthenticated = true;
+    if (passwordInput) passwordInput.value = "";
+    showAdminPanel();
+    await loadAll();
+    showNotification("✅ Login realizado com sucesso!", "success");
+  } catch {
     showNotification("❌ Erro de conexão. Tente novamente.", "error");
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Acessar Painel";
+    }
   }
 }
 
-function handleLogout() {
+async function handleLogout(showToast = true) {
+  try {
+    await fetch("/api/admin/auth/logout", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch {
+    // Ignore network errors on logout; local cleanup still happens.
+  } finally {
+    isAuthenticated = false;
+    showLoginScreen();
+    if (showToast) showNotification("👋 Logout realizado.", "info");
+  }
+}
+
+async function handleSessionExpired() {
+  if (!isAuthenticated) return;
   isAuthenticated = false;
-  adminToken = null;
-  localStorage.removeItem(SESSION_KEY);
-  document.getElementById("admin-panel").style.display = "none";
-  document.getElementById("login-screen").style.display = "flex";
-  showNotification("👋 Logout realizado.", "info");
+  showLoginScreen();
+  showNotification("⚠️ Sessão expirada. Faça login novamente.", "warning");
 }
 
 function getAuthHeaders() {
-  return {
-    Authorization: `Bearer ${adminToken}`,
-    "Content-Type": "application/json",
-  };
+  return { "Content-Type": "application/json" };
 }
 
-// ────────────────────────────────────────
-// LOAD ALL
-// ────────────────────────────────────────
+async function apiFetch(url, options = {}) {
+  const res = await fetch(url, {
+    credentials: "same-origin",
+    cache: "no-store",
+    ...options,
+  });
 
-function loadAll() {
-  loadTransactions();
-  loadPendingUsers();
-  loadMetrics();
+  if (res.status === 401) {
+    await handleSessionExpired();
+    throw new Error("UNAUTHORIZED");
+  }
+
+  return res;
 }
 
-// ────────────────────────────────────────
-// METRICS
-// ────────────────────────────────────────
+async function loadAll() {
+  if (!isAuthenticated) return;
+
+  const shouldLoadTransactions =
+    !isMobileAdminView() || (transactionsLoaded && isTransactionsBlockOpen());
+
+  const tasks = [loadPendingUsers(), loadMetrics()];
+  if (shouldLoadTransactions) tasks.push(loadTransactions(false));
+
+  await Promise.allSettled(tasks);
+}
+
+async function handleTransactionsToggle() {
+  const block = document.getElementById("transactions-block");
+  if (!block) return;
+
+  if (!block.classList.contains("open")) {
+    block.classList.add("open");
+    if (!transactionsLoaded) {
+      await loadTransactions(false);
+    } else {
+      renderTransactions();
+    }
+  } else {
+    block.classList.remove("open");
+  }
+
+  updateTransactionsToggleLabel();
+}
 
 async function loadMetrics() {
   try {
-    const res = await fetch("/api/admin/metrics", {
+    const res = await apiFetch("/api/admin/metrics", {
       headers: getAuthHeaders(),
     });
     if (!res.ok) return;
-    const data = await res.json();
+
+    const data = await safeJson(res);
     if (data.success && data.metrics) {
       const m = data.metrics;
       setEl("pending-count", m.payments_24h ?? 0);
@@ -143,7 +251,11 @@ async function loadMetrics() {
       setEl("processed-count", m.total_wallets ?? 0);
       setEl("total-value", `R$ ${Number(m.volume_24h || 0).toFixed(2)}`);
     }
-  } catch (_) {}
+  } catch (error) {
+    if (error.message !== "UNAUTHORIZED") {
+      showNotification("❌ Erro ao carregar métricas.", "error");
+    }
+  }
 }
 
 function setEl(id, val) {
@@ -151,25 +263,31 @@ function setEl(id, val) {
   if (el) el.textContent = val;
 }
 
-// ────────────────────────────────────────
-// TRANSACTIONS
-// ────────────────────────────────────────
-
-async function loadTransactions() {
+async function loadTransactions(showToast = true) {
   try {
     showLoading(true);
-    const res = await fetch("/api/admin/orders", { headers: getAuthHeaders() });
+    const res = await apiFetch("/api/admin/orders", {
+      headers: getAuthHeaders(),
+    });
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+
+    const data = await safeJson(res);
     transactions = data.orders || [];
+    transactionsLoaded = true;
     updateStatistics();
     renderTransactions();
-    showNotification(
-      `✅ ${transactions.length} transações carregadas`,
-      "success"
-    );
+
+    if (showToast) {
+      showNotification(
+        `✅ ${transactions.length} transações carregadas`,
+        "success"
+      );
+    }
   } catch (error) {
-    showNotification("❌ Erro ao carregar transações", "error");
+    if (error.message !== "UNAUTHORIZED") {
+      showNotification("❌ Erro ao carregar transações", "error");
+    }
   } finally {
     showLoading(false);
   }
@@ -204,10 +322,11 @@ function renderTransactions() {
   let filtered = transactions;
   if (statusFilter)
     filtered = filtered.filter((t) => t.status === statusFilter);
-  if (moedaFilter)
+  if (moedaFilter) {
     filtered = filtered.filter(
       (t) => (t.metadata || "").includes(moedaFilter) || moedaFilter === "BRL"
     );
+  }
 
   tbody.innerHTML = "";
 
@@ -233,19 +352,19 @@ function renderTransactions() {
     );
 
     row.innerHTML = `
-            <td><code title="${esc(t.charge_id)}">${shortId}</code></td>
-            <td>${getStatusBadge(t.status)}</td>
-            <td>BRL</td>
-            <td>R$ ${Number(t.amount_brl || 0).toFixed(2)}</td>
-            <td><code>${wallet}</code></td>
-            <td>${date}</td>
-            <td>
-                ${canComplete ? `<button class="btn-complete" data-id="${esc(t.charge_id)}">✅ Concluir</button>` : '<span style="opacity:.4">—</span>'}
-            </td>
-        `;
+      <td><code title="${esc(t.charge_id)}">${shortId}</code></td>
+      <td>${getStatusBadge(t.status)}</td>
+      <td>BRL</td>
+      <td>R$ ${Number(t.amount_brl || 0).toFixed(2)}</td>
+      <td><code>${wallet}</code></td>
+      <td>${date}</td>
+      <td>
+        ${canComplete ? `<button class="btn-complete" data-id="${esc(t.charge_id)}">✅ Concluir</button>` : '<span style="opacity:.4">—</span>'}
+      </td>
+    `;
 
     if (canComplete) {
-      row.querySelector(".btn-complete").addEventListener("click", (ev) => {
+      row.querySelector(".btn-complete")?.addEventListener("click", (ev) => {
         completeOrder(ev.target.dataset.id);
       });
     }
@@ -256,72 +375,96 @@ function renderTransactions() {
 
 async function completeOrder(chargeId) {
   if (!confirm(`Confirmar conclusão do pedido ${chargeId}?`)) return;
+
   try {
     showLoading(true);
-    const res = await fetch("/api/admin/orders", {
+    const res = await apiFetch("/api/admin/orders", {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify({ action: "complete", chargeId }),
     });
-    const data = await res.json();
+    const data = await safeJson(res);
+
     if (data.success) {
       showNotification("✅ Pedido concluído!", "success");
-      loadTransactions();
+      await loadTransactions(false);
     } else {
-      showNotification(`❌ ${data.error}`, "error");
+      showNotification(
+        `❌ ${data.error || "Erro ao concluir pedido"}`,
+        "error"
+      );
     }
-  } catch (_) {
-    showNotification("❌ Erro ao concluir pedido", "error");
+  } catch (error) {
+    if (error.message !== "UNAUTHORIZED") {
+      showNotification("❌ Erro ao concluir pedido", "error");
+    }
   } finally {
     showLoading(false);
   }
 }
 
-window.loadSettlementOrders = loadTransactions; // backward compat alias
-
-// ────────────────────────────────────────
-// PENDING USERS
-// ────────────────────────────────────────
-
 async function loadPendingUsers() {
   try {
-    const res = await fetch("/api/admin/users?status=PENDING_APPROVAL", {
+    const selectedStatus =
+      document.getElementById("user-status-filter")?.value ||
+      "PENDING_APPROVAL";
+    const query = selectedStatus
+      ? `?status=${encodeURIComponent(selectedStatus)}`
+      : "";
+
+    const res = await apiFetch(`/api/admin/users${query}`, {
       headers: getAuthHeaders(),
     });
     if (!res.ok) return;
-    const data = await res.json();
+    const data = await safeJson(res);
     pendingUsers = data.users || [];
     renderPendingUsers();
-  } catch (_) {}
+  } catch (error) {
+    if (error.message !== "UNAUTHORIZED") {
+      showNotification("❌ Erro ao carregar usuários pendentes.", "error");
+    }
+  }
 }
 
 function renderPendingUsers() {
   const container = document.getElementById("settlement-orders-container");
   if (!container) return;
 
+  const selectedStatus =
+    document.getElementById("user-status-filter")?.value || "PENDING_APPROVAL";
+  const emptyByStatus = {
+    PENDING_APPROVAL: "Nenhum cadastro aguardando aprovação",
+    APPROVED: "Nenhum usuário aprovado encontrado",
+    REJECTED: "Nenhum usuário rejeitado encontrado",
+    "": "Nenhum usuário encontrado",
+  };
+
   if (pendingUsers.length === 0) {
-    container.innerHTML =
-      '<p class="no-orders">Nenhum cadastro aguardando aprovacao</p>';
+    container.innerHTML = `<p class="no-orders">${emptyByStatus[selectedStatus] || emptyByStatus[""]}</p>`;
     return;
   }
 
   container.innerHTML = pendingUsers
     .map(
       (u) => `
-        <div class="user-card">
-            <div class="user-card-header">
-                <span class="user-card-id">#${esc(String(u.id))} — ${esc(u.name)}</span>
-                <span class="badge badge-pending">Aguardando</span>
-            </div>
-            <div class="user-detail-row"><span class="lbl">E-mail</span><span class="val">${esc(u.email)}</span></div>
-            <div class="user-detail-row"><span class="lbl">Tipo</span><span class="val">${esc(u.business_type || "—")}</span></div>
-            <div class="user-detail-row"><span class="lbl">CPF</span><span class="val">${u.cpf ? esc(u.cpf) : "—"}</span></div>
-            <div class="user-detail-row"><span class="lbl">Cadastrado em</span><span class="val">${new Date(u.created_at).toLocaleString("pt-BR")}</span></div>
-            <div class="user-card-actions">
-                <button class="btn btn-success btn-sm btn-approve" data-user-id="${u.id}">Aprovar</button>
-                <button class="btn btn-danger btn-sm btn-reject" data-user-id="${u.id}">Rejeitar</button>
-            </div>
+      <div class="user-card">
+        <div class="user-card-header">
+          <span class="user-card-id">#${esc(String(u.id))} — ${esc(u.name)}</span>
+          ${getUserStatusBadge(u.status)}
         </div>
+        <div class="user-detail-row"><span class="lbl">E-mail</span><span class="val">${esc(u.email)}</span></div>
+        <div class="user-detail-row"><span class="lbl">Tipo</span><span class="val">${esc(u.business_type || "—")}</span></div>
+        <div class="user-detail-row"><span class="lbl">CPF</span><span class="val">${u.cpf ? esc(u.cpf) : "—"}</span></div>
+        <div class="user-detail-row"><span class="lbl">Cadastrado em</span><span class="val">${new Date(u.created_at).toLocaleString("pt-BR")}</span></div>
+        ${
+          u.status === "PENDING_APPROVAL"
+            ? `<div class="user-card-actions">
+          <button class="btn btn-success btn-sm btn-approve" data-user-id="${u.id}">Aprovar</button>
+          <button class="btn btn-danger btn-sm btn-reject" data-user-id="${u.id}">Rejeitar</button>
+        </div>`
+            : ""
+        }
+      </div>
     `
     )
     .join("");
@@ -350,29 +493,31 @@ async function handleUserAction(userId, action) {
   }
 
   try {
-    const res = await fetch("/api/admin/users", {
+    const res = await apiFetch("/api/admin/users", {
       method: "POST",
       headers: getAuthHeaders(),
-      body: JSON.stringify({ action, userId: parseInt(userId), reason }),
+      body: JSON.stringify({ action, userId: parseInt(userId, 10), reason }),
     });
-    const data = await res.json();
+    const data = await safeJson(res);
+
     if (data.success) {
       showNotification(
         `✅ Usuário ${label === "aprovar" ? "aprovado" : "rejeitado"}!`,
         "success"
       );
-      loadPendingUsers();
+      await loadPendingUsers();
     } else {
-      showNotification(`❌ ${data.error}`, "error");
+      showNotification(
+        `❌ ${data.error || "Erro na ação de usuário"}`,
+        "error"
+      );
     }
-  } catch (_) {
-    showNotification(`❌ Erro ao ${label} usuário`, "error");
+  } catch (error) {
+    if (error.message !== "UNAUTHORIZED") {
+      showNotification(`❌ Erro ao ${label} usuário`, "error");
+    }
   }
 }
-
-// ────────────────────────────────────────
-// UI HELPERS
-// ────────────────────────────────────────
 
 function showAdminPanel() {
   const loginScreen = document.getElementById("login-screen");
@@ -380,10 +525,25 @@ function showAdminPanel() {
   if (loginScreen) loginScreen.style.display = "none";
   if (adminPanel) adminPanel.style.display = "flex";
 
-  // Start auto refresh every 30s
-  setInterval(() => {
+  configureMobileTransactionsMode();
+
+  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+  autoRefreshTimer = setInterval(() => {
     if (isAuthenticated) loadAll();
   }, 30000);
+}
+
+function showLoginScreen() {
+  const loginScreen = document.getElementById("login-screen");
+  const adminPanel = document.getElementById("admin-panel");
+  if (adminPanel) adminPanel.style.display = "none";
+  if (loginScreen) loginScreen.style.display = "flex";
+  transactionsLoaded = false;
+
+  if (autoRefreshTimer) {
+    clearInterval(autoRefreshTimer);
+    autoRefreshTimer = null;
+  }
 }
 
 function esc(str) {
@@ -400,9 +560,20 @@ function getStatusBadge(status) {
   const map = {
     CREATED: '<span class="badge badge-pending">Criado</span>',
     PIX_PAID: '<span class="badge badge-paid">PIX Pago</span>',
-    PENDING_REVIEW: '<span class="badge badge-pending">Em Revisao</span>',
+    PENDING_REVIEW: '<span class="badge badge-pending">Em Revisão</span>',
     APPROVED: '<span class="badge badge-paid">Aprovado</span>',
-    COMPLETED: '<span class="badge badge-processed">Concluido</span>',
+    COMPLETED: '<span class="badge badge-processed">Concluído</span>',
+    REJECTED: '<span class="badge badge-unknown">Rejeitado</span>',
+  };
+  return (
+    map[status] || `<span class="badge badge-unknown">${esc(status)}</span>`
+  );
+}
+
+function getUserStatusBadge(status) {
+  const map = {
+    PENDING_APPROVAL: '<span class="badge badge-pending">Aguardando</span>',
+    APPROVED: '<span class="badge badge-paid">Aprovado</span>',
     REJECTED: '<span class="badge badge-unknown">Rejeitado</span>',
   };
   return (
@@ -424,8 +595,11 @@ function showLoading(show) {
 
 async function downloadTransactions() {
   try {
-    const res = await fetch("/api/admin/orders", { headers: getAuthHeaders() });
-    const data = await res.json();
+    const res = await apiFetch("/api/admin/orders", {
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await safeJson(res);
     const blob = new Blob([JSON.stringify(data.orders || [], null, 2)], {
       type: "application/json",
     });
@@ -438,8 +612,10 @@ async function downloadTransactions() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showNotification("✅ Download realizado!", "success");
-  } catch (_) {
-    showNotification("❌ Erro ao fazer download", "error");
+  } catch (error) {
+    if (error.message !== "UNAUTHORIZED") {
+      showNotification("❌ Erro ao fazer download", "error");
+    }
   }
 }
 
@@ -463,8 +639,17 @@ function showNotification(message, type = "info") {
   }, 4000);
 }
 
-// Global for settlement-orders compat
+async function safeJson(response) {
+  try {
+    return await response.json();
+  } catch {
+    return {};
+  }
+}
+
 window.executeSettlement = completeOrder;
+window.loadPendingUsers = loadPendingUsers;
+window.loadSettlementOrders = () => loadTransactions(true);
 window.viewTransaction = function (id) {
   const t = transactions.find(
     (x) => x.charge_id === id || String(x.id) === String(id)

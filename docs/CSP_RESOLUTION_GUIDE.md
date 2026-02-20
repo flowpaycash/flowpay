@@ -18,7 +18,7 @@ script-src  blocked
 
 ## 🛠️ **Soluções Implementadas:**
 
-### **1. 📁 Configuração CSP no netlify.toml**
+### **1. 📁 Configuração CSP no railway.json**
 
 ```toml
 [[headers]]
@@ -81,7 +81,7 @@ if (document.readyState === 'loading') {
 
 ### **1. Página de Teste CSP:**
 
-- **URL:** <http://localhost:8888/csp-test.html>
+- **URL:** <http://localhost:4321/csp-test.html>
 - **Funcionalidades:**
   - ✅ Verificação de status CSP
   - ✅ Teste de scripts inline
@@ -96,7 +96,7 @@ if (document.readyState === 'loading') {
 make test-woovi
 
 # Verificar se CSP está funcionando
-curl -s http://localhost:8888/csp-test.html | grep -i "teste csp"
+curl -s http://localhost:4321/csp-test.html | grep -i "teste csp"
 ```
 
 ## 📱 **Funcionalidades PWA Restauradas:**
@@ -154,9 +154,9 @@ make test-woovi
 
 ### **2. Testar Funcionalidades:**
 
-- **Página Principal:** <http://localhost:8888>
-- **Checkout Pix:** <http://localhost:8888/checkout>
-- **Teste CSP:** <http://localhost:8888/csp-test.html>
+- **Página Principal:** <http://localhost:4321>
+- **Checkout Pix:** <http://localhost:4321/checkout>
+- **Teste CSP:** <http://localhost:4321/csp-test.html>
 
 ### **3. Verificar Console:**
 
@@ -184,7 +184,7 @@ window.FLOWPayCSP.apply();
 
 **🎯 Teste agora:**
 
-- **Checkout:** <http://localhost:8888/checkout>
-- **CSP Test:** <http://localhost:8888/csp-test.html>
+- **Checkout:** <http://localhost:4321/checkout>
+- **CSP Test:** <http://localhost:4321/csp-test.html>
 
 **🔒 CSP configurado e funcionando! 🎉**

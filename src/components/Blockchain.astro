@@ -106,7 +106,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <a href="/checkout" class="modal-cta-btn">Usar ${blockchainData.name}</a>
+            <a href="/cadastro" class="modal-cta-btn">Solicitar cadastro</a>
           </div>
         </div>
       `;
@@ -122,10 +122,16 @@
 
 <style>
   .home-highlight {
-    padding: 8rem 2rem;
+    padding: 5rem 1.25rem;
     position: relative;
     z-index: 2;
     overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .home-highlight {
+      padding: 8rem 2rem;
+    }
   }
 
   .section-bg-glow.cyan {
@@ -170,9 +176,15 @@
     font-size: clamp(1rem, 2.5vw, 1.2rem);
     color: rgba(255, 255, 255, 0.7);
     max-width: 800px;
-    margin: 0 auto 4rem;
+    margin: 0 auto 2.5rem;
     line-height: 1.6;
     animation: fadeInUp 0.8s ease-out 0.4s both;
+  }
+
+  @media (min-width: 768px) {
+    .home-highlight-text {
+      margin: 0 auto 4rem;
+    }
   }
 
   .blockchain-logos {
@@ -188,41 +200,53 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1rem;
     background: rgba(15, 15, 15, 0.4);
     border: 1px solid rgba(0, 212, 255, 0.1);
     border-radius: 24px;
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: background 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 44px;
     animation: fadeInUp 0.8s ease-out var(--delay, 0.6s) both;
   }
 
-  .blockchain-logo:hover {
-    transform: translateY(-8px);
-    background: rgba(0, 212, 255, 0.08);
-    border-color: rgba(0, 212, 255, 0.3);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 212, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  @media (min-width: 480px) {
+    .blockchain-logo {
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  @media (hover: hover) {
+    .blockchain-logo:hover {
+      transform: translateY(-8px);
+      background: rgba(0, 212, 255, 0.08);
+      border-color: rgba(0, 212, 255, 0.3);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 212, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
   }
 
   .blockchain-logo:active {
     transform: scale(0.96);
-    transition: all 0.1s ease;
+    transition: transform 0.1s ease;
   }
 
   .blockchain-logo svg {
     color: #00d4ff;
-    transition: all 0.3s ease;
+    transition: filter 0.3s ease, transform 0.3s ease, color 0.3s ease;
     filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.4));
   }
 
-  .blockchain-logo:hover svg {
-    color: #fff;
-    filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.7));
-    transform: scale(1.1);
+  @media (hover: hover) {
+    .blockchain-logo:hover svg {
+      color: #fff;
+      filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.7));
+      transform: scale(1.1);
+    }
   }
 
   .blockchain-logo span {
@@ -237,18 +261,10 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  @media (max-width: 768px) {
-    .home-highlight {
-      padding: 5rem 1.25rem;
-    }
-
+  @media (max-width: 767px) {
     .blockchain-logos {
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
-    }
-
-    .blockchain-logo {
-      padding: 1.5rem 1rem;
     }
   }
 </style>

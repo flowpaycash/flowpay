@@ -565,7 +565,7 @@ const creatorName = button?.user_name || 'FlowPay';
   }
 </style>
 
-<script define:vars={{ buttonId: button?.button_id, amountFixed, amountBrl, hasPix, hasCrypto, cryptoAddress }}>
+<script is:inline define:vars={{ buttonId: button?.button_id, amountFixed, amountBrl, hasPix, hasCrypto, cryptoAddress }}>
   document.addEventListener('DOMContentLoaded', () => {
     // Tab switching
     if (hasPix && hasCrypto) {

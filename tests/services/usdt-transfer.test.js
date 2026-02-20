@@ -40,7 +40,7 @@ describe('USDTTransfer', () => {
 
   describe('Validação de endereço Ethereum', () => {
     test('deve aceitar endereço válido', () => {
-      const validAddress = '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6';
+      const validAddress = '0x1111111111111111111111111111111111111111';
       expect(walletRegistry.isValidAddress(validAddress)).toBe(true);
     });
 

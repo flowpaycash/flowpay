@@ -2,12 +2,102 @@
 export interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
+  ogType?: string;
+  noindex?: boolean;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
-  title = "FlowPay Gateway Web3 - PIX ou Cripto",
-  description = "Checkout invisível. Auto-custódia. Transparente por padrão.",
+  title = "FlowPay — Gateway PIX + Cripto",
+  description = "Receba pagamentos via PIX e criptomoedas com liquidação instantânea e prova on-chain. Gateway Web3 powered by NEO Smart Factory™.",
+  ogImage = "https://flowpay.cash/img/og-flowpay-premium.png",
+  ogType = "website",
+  noindex = false,
+  structuredData,
 } = Astro.props;
+
+const SITE = "https://flowpay.cash";
+const canonicalURL = new URL(Astro.url.pathname, SITE).toString();
+const pageTitle = title.includes("FlowPay") ? title : `${title} | FlowPay`;
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${SITE}/#organization`,
+  "name": "FlowPay",
+  "alternateName": "FlowOFF",
+  "url": SITE,
+  "logo": {
+    "@type": "ImageObject",
+    "url": `${SITE}/img/flowpay-logo.png`,
+    "width": 512,
+    "height": 512,
+  },
+  "description": "Gateway de pagamentos PIX + Cripto com liquidação instantânea e prova de execução on-chain.",
+  "legalName": "FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA",
+  "taxID": "43.376.355/0001-92",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Avenida 85 esq. com a Rua 137, 556",
+    "addressLocality": "Goiânia",
+    "addressRegion": "GO",
+    "postalCode": "74170-120",
+    "addressCountry": "BR",
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "neo@neoprotocol.space",
+    "contactType": "customer support",
+    "availableLanguage": "Portuguese",
+  },
+  "foundingDate": "2021-09-01",
+  "sameAs": [
+    "https://flowoff.xyz",
+    "https://nsfactory.xyz",
+    "https://neoprotocol.space",
+    "https://github.com/flowpaycash",
+  ],
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE}/#website`,
+  "url": SITE,
+  "name": "FlowPay",
+  "description": description,
+  "publisher": {
+    "@id": `${SITE}/#organization`,
+  },
+  "inLanguage": "pt-BR",
+};
+
+const webpageSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${canonicalURL}#webpage`,
+  "url": canonicalURL,
+  "name": pageTitle,
+  "description": description,
+  "isPartOf": {
+    "@id": `${SITE}/#website`,
+  },
+  "publisher": {
+    "@id": `${SITE}/#organization`,
+  },
+  "inLanguage": "pt-BR",
+};
+
+const defaultStructuredData = [organizationSchema, websiteSchema, webpageSchema];
+
+const extraSchema = structuredData
+  ? Array.isArray(structuredData)
+    ? structuredData
+    : [structuredData]
+  : [];
+
+const allSchemas = [...defaultStructuredData, ...extraSchema];
 ---
 
 <!doctype html>
@@ -15,57 +105,49 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta -->
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <title>{title}</title>
+    <meta name="author" content="FlowOFF — FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA" />
+    <meta name="generator" content={Astro.generator} />
 
-    <!-- SEO & Social -->
-    <link rel="canonical" href="https://flowpay.cash" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://flowpay.cash" />
-    <meta property="og:title" content={title} />
+    <!-- Robots -->
+    {noindex
+      ? <meta name="robots" content="noindex, nofollow" />
+      : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    }
+
+    <!-- Canonical -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta
-      property="og:image"
-      content="https://flowpay.cash/img/og-flowpay-premium.png"
-    />
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://flowpay.cash" />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta
-      property="twitter:image"
-      content="https://flowpay.cash/img/og-flowpay-premium.png"
-    />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={pageTitle} />
+    <meta property="og:site_name" content="FlowPay" />
+    <meta property="og:locale" content="pt_BR" />
 
-    <!-- JSON-LD Structured Data (Elite SEO) -->
-    <script type="application/ld+json" is:inline>
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "FlowPay",
-        "url": "https://flowpay.cash",
-        "logo": "https://flowpay.cash/img/og-flowpay-premium.png",
-        "description": "Gateway de pagamento Pix para Web3 com liquidação instantânea em USDT e prova de execução on-chain.",
-        "sameAs": [
-          "https://twitter.com/flowpaycash",
-          "https://github.com/flowpaycash"
-        ]
-      }
-    </script>
-    <script type="application/ld+json" is:inline>
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "url": "https://flowpay.cash",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://flowpay.cash/search?q={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
-      }
-    </script>
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@flowpaycash" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={pageTitle} />
 
-    <!-- Security (Stage 2 - CSP Hardening Initial) -->
+    <!-- JSON-LD Structured Data -->
+    {allSchemas.map((schema) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+
+    <!-- Security -->
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-inline' https://*.web3auth.io https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' https://*.web3auth.io https://*.quicknode.com https://*.woovi.com https://cloudflareinsights.com;"
@@ -76,101 +158,37 @@ const {
     <meta name="theme-color" content="#000000" />
     <meta name="msapplication-TileColor" content="#000000" />
 
-    <!-- PWA Support - Modern & Apple -->
+    <!-- PWA Support — Modern & Apple -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="FlowPay" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
 
     <!-- Apple Splash Screens -->
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-2048-2732.jpg"
-      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-1668-2388.jpg"
-      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-1536-2048.jpg"
-      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-1125-2436.jpg"
-      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-1242-2688.jpg"
-      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-828-1792.jpg"
-      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-1242-2208.jpg"
-      media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-1334-750.jpg"
-      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-1792-828.jpg"
-      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-2048-1536.jpg"
-      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-1668-2224.jpg"
-      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/assets/splash/apple-splash-dark-1620-2160.jpg"
-      media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
-    />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-2048-2732.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1668-2388.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1536-2048.jpg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1125-2436.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1242-2688.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-828-1792.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1242-2208.jpg" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1334-750.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1792-828.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-2048-1536.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1668-2224.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1620-2160.jpg" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="196x196"
-      href="/assets/icons/favicon-196.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/assets/icons/favicon-196.png"
-    />
+    <link rel="icon" type="image/png" sizes="196x196" href="/assets/icons/favicon-196.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-196.png" />
     <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
 
     <!-- Microsoft Tiles -->
-    <meta
-      name="msapplication-TileImage"
-      content="/assets/manifest/mstile-icon-270.png"
-    />
+    <meta name="msapplication-TileImage" content="/assets/manifest/mstile-icon-270.png" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
 
     <!-- CSS -->
@@ -183,6 +201,7 @@ const {
         --primary-gradient: linear-gradient(90deg, #ff007a 0%, #ff7a00 100%);
       }
     </style>
+
     <!-- Web3 Config & Auth -->
     <script is:inline src="/assets/neo.config.js"></script>
     <script is:inline type="module" src="/assets/js/web3auth.smart.js"></script>

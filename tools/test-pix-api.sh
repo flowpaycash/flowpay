@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configurações
-API_URL="http://localhost:8888/.netlify/functions/create-pix-charge"
+API_URL="http://localhost:4321/api/create-charge"
 WOOVI_API_KEY="${WOOVI_API_KEY:-}"
 
 echo -e "${BLUE}🧪 FLOWPay - Teste da API PIX${NC}"
@@ -66,7 +66,7 @@ test_create_pix_charge() {
 # Teste 1: Cobrança válida
 echo -e "${GREEN}✅ Teste 1: Cobrança PIX válida${NC}"
 test_create_pix_charge "Cobrança válida" '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 50.00,
     "moeda": "BRL",
     "id_transacao": "test_pix_001"
@@ -75,7 +75,7 @@ test_create_pix_charge "Cobrança válida" '{
 # Teste 2: Valor baixo (teste de validação)
 echo -e "${GREEN}✅ Teste 2: Valor baixo${NC}"
 test_create_pix_charge "Valor baixo" '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 0.50,
     "moeda": "BRL",
     "id_transacao": "test_pix_002"
@@ -93,14 +93,14 @@ test_create_pix_charge "Wallet inválido" '{
 # Teste 4: Campos faltando
 echo -e "${GREEN}✅ Teste 4: Campos obrigatórios faltando${NC}"
 test_create_pix_charge "Campos faltando" '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 100.00
 }'
 
 # Teste 5: Valor zero
 echo -e "${GREEN}✅ Teste 5: Valor zero${NC}"
 test_create_pix_charge "Valor zero" '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 0,
     "moeda": "BRL",
     "id_transacao": "test_pix_005"
@@ -109,7 +109,7 @@ test_create_pix_charge "Valor zero" '{
 # Teste 6: Valor negativo
 echo -e "${GREEN}✅ Teste 6: Valor negativo${NC}"
 test_create_pix_charge "Valor negativo" '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": -10.00,
     "moeda": "BRL",
     "id_transacao": "test_pix_006"
@@ -126,7 +126,7 @@ echo "- Teste 5: Deve retornar 400 (valor zero)"
 echo "- Teste 6: Deve retornar 400 (valor negativo)"
 echo ""
 echo -e "${YELLOW}💡 Dicas:${NC}"
-echo "- Verifique se o servidor local está rodando: netlify dev"
+echo "- Verifique se o servidor local está rodando: npm run dev"
 echo "- Configure WOOVI_API_KEY para testes reais"
 echo "- Verifique os logs do servidor para detalhes"
 echo "- Use 'jq' para formatação JSON: brew install jq"

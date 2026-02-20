@@ -20,7 +20,7 @@ const { getQuickNodeREST } = require('./quicknode-rest');
 const rest = getQuickNodeREST();
 
 await rest.monitorWallets(
-  ['0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6', '0x...'],
+  ['0x1111111111111111111111111111111111111111', '0x...'],
   'ethereum',
   'https://flowpay.cash/api/webhooks/quicknode'
 );
@@ -70,7 +70,7 @@ Monitora contratos usando ABI
 ### 1. Testar API Key
 
 ```bash
-./tools/test-quicknode-api.sh QN_5c0bd5ebf5eb4319a5e3c7df48685f93
+./tools/test-quicknode-api.sh <QUICKNODE_API_KEY>
 ```
 
 ### 2. Configurar Webhooks

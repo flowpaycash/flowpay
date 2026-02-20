@@ -31,7 +31,7 @@ npm run test:coverage
 ./tools/test-openpix-integration.sh
 
 # Ou com variáveis customizadas
-API_URL=http://localhost:8888/.netlify/functions \
+API_URL=http://localhost:4321/api \
 WOOVI_API_KEY=your_key \
 WOOVI_WEBHOOK_SECRET=your_secret \
 ./tools/test-openpix-integration.sh
@@ -107,7 +107,7 @@ WOOVI_API_URL=https://api.woovi.com
 WOOVI_WEBHOOK_SECRET=your_webhook_secret_here
 
 # URL da API (para testes de integração)
-API_URL=http://localhost:8888/.netlify/functions
+API_URL=http://localhost:4321/api
 ```
 
 ### Pré-requisitos
@@ -115,7 +115,7 @@ API_URL=http://localhost:8888/.netlify/functions
 1. **Servidor rodando**
 
    ```bash
-   netlify dev
+   npm run dev
    ```
 
 2. **Dependências instaladas**
@@ -141,10 +141,10 @@ API_URL=http://localhost:8888/.netlify/functions
 ```bash
 # Criar cobrança
 curl -X POST \
-  http://localhost:8888/.netlify/functions/create-pix-charge \
+  http://localhost:4321/api/create-charge \
   -H "Content-Type: application/json" \
   -d '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 50.00,
     "moeda": "BRL",
     "id_transacao": "test_manual_001"
@@ -152,7 +152,7 @@ curl -X POST \
 
 # Webhook de confirmação
 curl -X POST \
-  http://localhost:8888/.netlify/functions/webhook-handler \
+  http://localhost:4321/api/webhook \
   -H "Content-Type: application/json" \
   -H "x-woovi-signature: $(echo -n '{"event":"charge.paid","data":{...}}' | openssl dgst -sha256 -hmac 'your_secret' | cut -d' ' -f2)" \
   -d '{
@@ -163,7 +163,7 @@ curl -X POST \
       "status": "CONFIRMED",
       "paidAt": "2024-01-01T12:00:00.000Z",
       "additionalInfo": [
-        {"key": "wallet", "value": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"},
+        {"key": "wallet", "value": "0x1111111111111111111111111111111111111111"},
         {"key": "moeda", "value": "USDT"},
         {"key": "chainId", "value": "137"}
       ]
@@ -186,7 +186,7 @@ curl -X POST \
     "expires_at": "2024-01-01T13:00:00.000Z",
     "status": "ACTIVE"
   },
-  "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+  "wallet": "0x1111111111111111111111111111111111111111",
   "moeda": "BRL",
   "id_transacao": "test_pix_001"
 }
@@ -207,7 +207,7 @@ curl -X POST \
 
 ```bash
 # Iniciar servidor
-netlify dev
+npm run dev
 ```
 
 ### Erro: "WOOVI_API_KEY não configurada"

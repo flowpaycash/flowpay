@@ -14,7 +14,7 @@ Criar um site institucional moderno similar ao [thirdweb.com](https://thirdweb.c
    - Carrega apenas JS necessário para componentes interativos
    - Lighthouse score próximo de 100
 
-2. **Compatibilidade com Netlify**
+2. **Compatibilidade com Railway**
    - Deploy direto sem configuração extra
    - Suporta SSR se necessário no futuro
    - Build rápido e otimizado
@@ -78,16 +78,16 @@ npx astro add react
 # TypeScript (já incluído)
 ```
 
-### 3. Configurar Netlify
+### 3. Configurar Railway
 
 ```toml
-# netlify.toml
+# railway.json
 [build]
   command = "npm run build"
   publish = "dist"
 
 [[plugins]]
-  package = "@astrojs/netlify"
+  package = "@astrojs/node"
 ```
 
 ## 🎨 Design System Similar ao Thirdweb
@@ -243,7 +243,7 @@ npx astro add react
 
 1. **Fase 1: Setup Astro**
    - Criar novo projeto Astro
-   - Configurar Netlify
+   - Configurar Railway
    - Migrar assets estáticos
 
 2. **Fase 2: Componentes Base**
@@ -258,14 +258,14 @@ npx astro add react
    - Admin page (manter funcionalidade atual)
 
 4. **Fase 4: Integração**
-   - Conectar com funções Netlify existentes
+   - Conectar com funções Railway existentes
    - Manter checkout funcional
    - Integrar Web3Auth
 
 ## 📚 Recursos e Referências
 
 - [Astro Documentation](https://docs.astro.build/)
-- [Astro + Netlify](https://docs.astro.build/en/guides/integrations-guide/netlify/)
+- [Astro + Railway](https://docs.astro.build/en/guides/integrations-guide/node/)
 - [Thirdweb Design Inspiration](https://thirdweb.com/)
 - [Glassmorphism CSS](https://css.glass/)
 

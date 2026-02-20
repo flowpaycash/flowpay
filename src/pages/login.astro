@@ -7,14 +7,22 @@ import brandLogo from '../../public/img/flowpay-logo.png';
 <Layout
   title="FlowPay - Acesse"
   description="Entre no FlowPay e conecte-se ao futuro dos pagamentos."
+  noindex={true}
 >
   <main class="login-page">
     <div class="login-bg-glow"></div>
 
+    <a href="/" class="back-home-btn" aria-label="Voltar para a home">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Voltar
+    </a>
+
     <div class="login-content">
-      <div class="login-brand">
+      <a href="/" class="login-brand" aria-label="Voltar para a home">
         <Image src={brandLogo} alt="FlowPay Logo" class="login-logo" height={80} />
-      </div>
+      </a>
 
       <div class="login-card">
         <h1 class="login-title">
@@ -62,8 +70,8 @@ import brandLogo from '../../public/img/flowpay-logo.png';
             <span>ou</span>
           </div>
 
-          <a href="/checkout" class="btn-premium secondary" id="login-guest">
-            Entrar como Convidado
+          <a href="/cadastro" class="btn-premium secondary" id="login-guest">
+            Criar Cadastro
           </a>
         </div>
       </div>
@@ -83,7 +91,63 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 40px 20px;
+    padding: calc(env(safe-area-inset-top, 0px) + 80px) 20px calc(env(safe-area-inset-bottom, 0px) + 40px);
+  }
+
+  @media (min-width: 768px) {
+    .login-page {
+      padding: 80px 20px 40px;
+    }
+  }
+
+  /* Mobile-first: tap target 44pt, safe area aware */
+  .back-home-btn {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 16px);
+    left: calc(env(safe-area-inset-left, 0px) + 16px);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 44px;
+    padding: 0 16px;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    z-index: 10;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .back-home-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .back-home-btn:active {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(0.96);
+    transition: transform 0.1s ease;
+  }
+
+  @media (min-width: 768px) {
+    .back-home-btn {
+      top: 24px;
+      left: 24px;
+      min-height: unset;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      border-radius: 10px;
+    }
   }
 
   .login-bg-glow {
@@ -119,6 +183,7 @@ import brandLogo from '../../public/img/flowpay-logo.png';
       fadeInDown 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     position: relative;
     display: inline-block;
+    text-decoration: none;
   }
 
   .login-brand::before {
@@ -140,17 +205,25 @@ import brandLogo from '../../public/img/flowpay-logo.png';
   }
 
   .login-logo {
-    height: 120px;
+    height: 80px;
     width: auto;
     filter: drop-shadow(0 0 15px rgba(255, 0, 122, 0.6))
       drop-shadow(0 0 30px rgba(0, 212, 255, 0.3));
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: filter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
-  .login-logo:hover {
-    transform: scale(1.08) rotate(2deg);
-    filter: drop-shadow(0 0 25px rgba(255, 0, 122, 0.8))
-      drop-shadow(0 0 50px rgba(0, 212, 255, 0.5));
+  @media (min-width: 768px) {
+    .login-logo {
+      height: 120px;
+    }
+  }
+
+  @media (hover: hover) {
+    .login-logo:hover {
+      transform: scale(1.08) rotate(2deg);
+      filter: drop-shadow(0 0 25px rgba(255, 0, 122, 0.8))
+        drop-shadow(0 0 50px rgba(0, 212, 255, 0.5));
+    }
   }
 
   @keyframes floatingLogo {
@@ -179,14 +252,21 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 32px;
-    padding: 3rem 2.5rem;
+    border-radius: 24px;
+    padding: 2rem 1.5rem;
     box-shadow:
       0 25px 50px rgba(0, 0, 0, 0.4),
       inset 0 1px 1px rgba(255, 255, 255, 0.1);
     width: 100%;
     text-align: center;
     animation: fadeInUp 0.8s ease-out 0.3s both;
+  }
+
+  @media (min-width: 480px) {
+    .login-card {
+      border-radius: 32px;
+      padding: 3rem 2.5rem;
+    }
   }
 
   .login-title {
@@ -223,12 +303,12 @@ import brandLogo from '../../public/img/flowpay-logo.png';
   }
 
   .btn-premium {
-    padding: 18px 32px;
-    border-radius: 18px;
+    padding: 16px 24px;
+    border-radius: 16px;
     font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.2s ease, border-color 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,10 +316,12 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     text-transform: uppercase;
     letter-spacing: 0.05em;
     width: 100%;
+    min-height: 52px;
     border: none;
     cursor: pointer;
     font-family: inherit;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .btn-premium.primary {
@@ -248,14 +330,16 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     box-shadow: 0 0 30px rgba(255, 0, 122, 0.3);
   }
 
-  .btn-premium.primary:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 0 50px rgba(255, 0, 122, 0.5);
+  @media (hover: hover) {
+    .btn-premium.primary:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 0 50px rgba(255, 0, 122, 0.5);
+    }
   }
 
   .btn-premium.primary:active {
     transform: scale(0.96);
-    transition: all 0.1s ease;
+    transition: transform 0.1s ease;
   }
 
   .btn-premium.secondary {
@@ -264,15 +348,17 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     color: white;
   }
 
-  .btn-premium.secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+  @media (hover: hover) {
+    .btn-premium.secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
   }
 
   .btn-premium.secondary:active {
     transform: scale(0.96);
-    transition: all 0.1s ease;
+    transition: transform 0.1s ease;
   }
 
   .login-divider {
@@ -300,7 +386,7 @@ import brandLogo from '../../public/img/flowpay-logo.png';
 
   .login-footer {
     animation: fadeInUp 0.8s ease-out 0.6s both;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
   }
 
   .login-footer p {
@@ -331,20 +417,7 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     }
   }
 
-  @media (max-width: 768px) {
-    .login-page {
-      padding: 30px 16px;
-    }
 
-    .login-card {
-      padding: 2.5rem 1.5rem;
-      border-radius: 28px;
-    }
-
-    .login-logo {
-      height: 90px;
-    }
-  }
 </style>
 
 <script>
@@ -390,7 +463,7 @@ import brandLogo from '../../public/img/flowpay-logo.png';
         if (typeof window !== "undefined" && (window as any).connectWallet) {
           const success = await (window as any).connectWallet();
           if (success) {
-            window.location.href = "/checkout";
+            window.location.href = "/cadastro";
           } else {
             // Reset se não teve sucesso (ex: usuário cancelou)
             btn.disabled = false;
@@ -433,7 +506,7 @@ import brandLogo from '../../public/img/flowpay-logo.png';
 
     const guestBtn = document.getElementById("login-guest");
     if (guestBtn) {
-      guestBtn.addEventListener("click", (e) => {
+      guestBtn.addEventListener("click", () => {
         // Log access in background
         fetch("/api/auth/guest-log", {
           method: "POST",

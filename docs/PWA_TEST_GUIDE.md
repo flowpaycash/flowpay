@@ -34,7 +34,7 @@ make dev
 make dev-simple
 ```
 
-### **Opção 2: Netlify CLI**
+### **Opção 2: Railway CLI**
 
 ```bash
 # Preview local

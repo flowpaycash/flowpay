@@ -1,16 +1,20 @@
 import * as Sentry from "@sentry/astro";
 import { getDatabase } from "../../../services/database/sqlite.mjs";
 import { getCorsHeaders } from "../../../services/api/config.mjs";
+import {
+  requireAdminSession,
+  withAdminNoStoreHeaders,
+} from "../../../services/api/admin-auth.mjs";
 
-export const GET = async ({ request }) => {
-  const headers = getCorsHeaders({
-    headers: Object.fromEntries(request.headers),
+export const GET = async ({ request, cookies }) => {
+  const headers = withAdminNoStoreHeaders({
+    ...getCorsHeaders({
+      headers: Object.fromEntries(request.headers),
+    }),
+    "Content-Type": "application/json",
   });
 
-  const authHeader = request.headers.get("authorization");
-  const adminPassword = process.env.ADMIN_PASSWORD;
-
-  if (!authHeader || authHeader !== `Bearer ${adminPassword}`) {
+  if (!requireAdminSession(cookies)) {
     Sentry.addBreadcrumb({
       category: "admin.metrics",
       message: "Tentativa de acesso nao autorizado",
@@ -81,9 +85,16 @@ export const GET = async ({ request }) => {
       scope.setTag("source", "admin_metrics");
       Sentry.captureException(error);
     });
-    return new Response(
-      JSON.stringify({ error: "Internal error", detail: error.message }),
-      { status: 500, headers }
-    );
+    return new Response(JSON.stringify({ error: "Internal error" }), {
+      status: 500,
+      headers,
+    });
   }
+};
+
+export const OPTIONS = async ({ request }) => {
+  const headers = withAdminNoStoreHeaders(
+    getCorsHeaders({ headers: Object.fromEntries(request.headers) })
+  );
+  return new Response(null, { status: 204, headers });
 };

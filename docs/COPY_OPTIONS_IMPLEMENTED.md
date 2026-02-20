@@ -65,7 +65,7 @@
 **CTAs implementados:**
 
 - **Ver transações** → `/pix_orders.json`
-- **Checar status da plataforma** → `/.netlify/functions/env`
+- **Checar status da plataforma** → `/api/health`
 - **Ver código** → GitHub
 - **Ver segurança** → `/.well-known/security.txt`
 

@@ -13,7 +13,7 @@ NODE_ENV=development
 URL=http://localhost:8888
 
 # Exemplo de API Key da Woovi:
-# WOOVI_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+# WOOVI_API_KEY=<WOOVI_API_KEY>
 
 # Como configurar:
 # 1. Copie este arquivo para .env na raiz do projeto

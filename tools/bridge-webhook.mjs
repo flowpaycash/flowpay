@@ -27,7 +27,7 @@ async function findAndDeleteWebhook() {
         return;
     }
 
-    console.log(`🔍 Procurando webhook antigo (Netlify)...`);
+    console.log(`🔍 Procurando webhook antigo (Railway)...`);
 
     try {
         const response = await fetch(BASE_URL, {
@@ -83,7 +83,7 @@ async function findAndDeleteWebhook() {
                 });
 
                 if (deleteResponse.ok) {
-                    console.log('✅ Webhook antigo (Netlify) removido!');
+                    console.log('✅ Webhook antigo (Railway) removido!');
                 }
             } else {
                 const err = await createResponse.json();
@@ -91,7 +91,7 @@ async function findAndDeleteWebhook() {
             }
 
         } else {
-            console.log('ℹ️ O webhook do Netlify não foi encontrado via API. Pode ser que ele tenha sido criado manualmente como um "Plugin" ou sob outra conta.');
+            console.log('ℹ️ O webhook do Railway não foi encontrado via API. Pode ser que ele tenha sido criado manualmente como um "Plugin" ou sob outra conta.');
         }
 
     } catch (error) {

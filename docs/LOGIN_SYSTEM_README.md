@@ -15,10 +15,10 @@ Sistema de autenticação passwordless implementado com magic links e preparado 
 - `public/assets/js/login.js` - Lógica de login
 - `public/assets/js/auth-verify.js` - Verificação de magic link
 
-### Backend (Netlify Functions)
+### Backend (Railway Functions)
 
-- `netlify/functions/auth-magic-start.js` - Inicia processo de magic link
-- `netlify/functions/auth-magic-verify.js` - Verifica magic link
+- `src/pages/api/auth/magic-start.js` - Inicia processo de magic link
+- `src/pages/api/auth/magic-verify.js` - Verifica magic link
 
 ## Fluxo de Autenticação
 
@@ -41,7 +41,7 @@ Sistema de autenticação passwordless implementado com magic links e preparado 
 
 ### Desenvolvimento Local
 
-1. Inicie o servidor local: `npm run dev` ou `netlify dev`
+1. Inicie o servidor local: `npm run dev`
 2. Acesse `/login`
 3. Insira um e-mail válido
 4. Verifique o console para ver o magic link gerado
@@ -126,7 +126,7 @@ O sistema está preparado para integração com Web3Auth para autenticação via
 
 Para dúvidas ou problemas:
 
-1. Verifique os logs das funções Netlify
-2. Teste localmente com `netlify dev`
+1. Verifique os logs das funções Railway
+2. Teste localmente com `npm run dev`
 3. Valide configurações de CORS e headers
 4. Verifique variáveis de ambiente

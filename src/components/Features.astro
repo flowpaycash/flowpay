@@ -79,11 +79,17 @@
 
 <style>
   .home-process-section {
-    padding: 8rem 2rem;
+    padding: 5rem 1.25rem;
     position: relative;
     z-index: 2;
     text-align: center;
     overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .home-process-section {
+      padding: 8rem 2rem;
+    }
   }
 
   .section-bg-glow {
@@ -126,12 +132,18 @@
   .home-subtitle {
     font-size: clamp(1rem, 2.5vw, 1.25rem);
     color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
     line-height: 1.6;
     animation: fadeInUp 0.8s ease-out 0.4s both;
+  }
+
+  @media (min-width: 768px) {
+    .home-subtitle {
+      margin-bottom: 5rem;
+    }
   }
 
   .process-steps {
@@ -147,9 +159,9 @@
     background: rgba(15, 15, 15, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 28px;
-    padding: 2.5rem 1.5rem;
+    padding: 2rem 1.25rem;
     position: relative;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: background 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
@@ -157,16 +169,24 @@
     animation: fadeInUp 0.8s ease-out var(--delay, 0.6s) both;
   }
 
-  .step-card:hover {
-    transform: translateY(-8px);
-    background: rgba(15, 15, 15, 0.5);
-    border-color: rgba(255, 0, 122, 0.2);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  @media (min-width: 480px) {
+    .step-card {
+      padding: 2.5rem 1.5rem;
+    }
+  }
+
+  @media (hover: hover) {
+    .step-card:hover {
+      transform: translateY(-8px);
+      background: rgba(15, 15, 15, 0.5);
+      border-color: rgba(255, 0, 122, 0.2);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
   }
 
   .step-card:active {
     transform: scale(0.97);
-    transition: all 0.1s ease;
+    transition: transform 0.1s ease;
   }
 
   .step-card.highlight {
@@ -175,9 +195,11 @@
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 0, 122, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.08);
   }
 
-  .step-card.highlight:hover {
-    border-color: rgba(255, 0, 122, 0.4);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 0, 122, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  @media (hover: hover) {
+    .step-card.highlight:hover {
+      border-color: rgba(255, 0, 122, 0.4);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 0, 122, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
   }
 
   .step-icon-wrapper {
@@ -214,12 +236,14 @@
     justify-content: center;
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .step-card:hover .step-icon {
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  @media (hover: hover) {
+    .step-card:hover .step-icon {
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    }
   }
 
   .step-card.highlight .step-icon {
@@ -266,19 +290,7 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  @media (max-width: 768px) {
-    .home-process-section {
-      padding: 5rem 1.25rem;
-    }
-
-    .home-title {
-      font-size: clamp(1.75rem, 5vw, 2.5rem);
-    }
-
-    .home-subtitle {
-      margin-bottom: 3rem;
-    }
-
+  @media (max-width: 767px) {
     .process-steps {
       flex-direction: column;
       gap: 1.25rem;
@@ -292,7 +304,6 @@
 
     .step-card {
       width: 100%;
-      padding: 2rem 1.5rem;
     }
   }
 </style>

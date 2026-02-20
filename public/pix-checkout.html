@@ -1,438 +1,499 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FLOWPay Gateway - Checkout Pix</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/pix-checkout.css">
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/pix-checkout.css" />
     <!-- Font Awesome removido - usar ícones locais ou CSS puro -->
-    
+
     <!-- PWA Support -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#ff007a">
-    <meta name="msapplication-TileColor" content="#ff007a">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="FLOWPay">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="assets/icons/apple-icon-180.png">
-    
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#ff007a" />
+    <meta name="msapplication-TileColor" content="#ff007a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="FLOWPay" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <link rel="apple-touch-icon" href="assets/icons/apple-icon-180.png" />
+
     <!-- Apple Splash Screens -->
-    <link rel="apple-touch-startup-image" href="assets/splash/apple-splash-dark-2048-2732.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-    <link rel="apple-touch-startup-image" href="assets/splash/apple-splash-dark-1668-2388.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-    <link rel="apple-touch-startup-image" href="assets/splash/apple-splash-dark-1536-2048.jpg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-    <link rel="apple-touch-startup-image" href="assets/splash/apple-splash-dark-1125-2436.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-    <link rel="apple-touch-startup-image" href="assets/splash/apple-splash-dark-1242-2688.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-    
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/splash/apple-splash-dark-2048-2732.jpg"
+      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/splash/apple-splash-dark-1668-2388.jpg"
+      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/splash/apple-splash-dark-1536-2048.jpg"
+      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/splash/apple-splash-dark-1125-2436.jpg"
+      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/splash/apple-splash-dark-1242-2688.jpg"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="196x196" href="assets/icons/favicon-196.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-196.png">
-    <link rel="shortcut icon" href="assets/icons/favicon.ico">
-</head>
-<body>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="196x196"
+      href="assets/icons/favicon-196.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/icons/favicon-196.png"
+    />
+    <link rel="shortcut icon" href="assets/icons/favicon.ico" />
+  </head>
+  <body>
     <!-- Header iOS-like -->
     <header class="checkout-header">
-        <div class="header-content">
-            <div class="header-left">
-                <a href="/" class="back-button">
-                    <i class="fas fa-chevron-left"></i>
-                </a>
-            </div>
-            <div class="header-center">
-                <img src="img/flowpay-logo.png" alt="FLOWPay" class="header-logo">
-                <h1>Recebimento direto. Sem rodeios.</h1>
-            </div>
-            <div class="header-right">
-                <button class="help-button">
-                    <i class="fas fa-question-circle"></i>
-                </button>
-            </div>
+      <div class="header-content">
+        <div class="header-left">
+          <a href="/" class="back-button">
+            <i class="fas fa-chevron-left"></i>
+          </a>
         </div>
+        <div class="header-center">
+          <img src="img/flowpay-logo.png" alt="FLOWPay" class="header-logo" />
+          <h1>Recebimento direto. Sem rodeios.</h1>
+        </div>
+        <div class="header-right">
+          <button class="help-button">
+            <i class="fas fa-question-circle"></i>
+          </button>
+        </div>
+      </div>
     </header>
 
     <!-- Main Content -->
     <main class="checkout-main">
-        <!-- Form Section -->
-        <section class="checkout-form-section">
-            <div class="form-container">
-                <div class="form-header">
-                    <div class="form-icon">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <h2>Gerar cobrança PIX</h2>
-                    <p class="form-description">
-                        Sem login. Sem KYC. Só transação.
-                    </p>
-                </div>
-                
-                <form id="pix-form" class="pix-form">
-                    <div class="form-group">
-                        <label for="wallet">Wallet de Destino</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-wallet input-icon"></i>
-                            <input 
-                                type="text" 
-                                id="wallet" 
-                                name="wallet" 
-                                placeholder="0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"
-                                required
-                            >
-                        </div>
-                        <small>Endereço da carteira que receberá o pagamento</small>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="valor">Valor (R$)</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-dollar-sign input-icon"></i>
-                                <input 
-                                    type="number" 
-                                    id="valor" 
-                                    name="valor" 
-                                    step="0.01" 
-                                    min="0.01" 
-                                    placeholder="100.50"
-                                    required
-                                >
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="moeda">Moeda Cripto</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-coins input-icon"></i>
-                                <select id="moeda" name="moeda" required>
-                                    <option value="">Selecione</option>
-                                    <option value="USDT">USDT</option>
-                                    <option value="USDC">USDC</option>
-                                    <option value="ETH">ETH</option>
-                                    <option value="BTC">BTC</option>
-                                    <option value="MATIC">MATIC</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="id_transacao">ID da Transação</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-hashtag input-icon"></i>
-                            <input 
-                                type="text" 
-                                id="id_transacao" 
-                                name="id_transacao" 
-                                placeholder="pix_123456789"
-                                required
-                            >
-                        </div>
-                        <small>Identificador único para esta transação</small>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary btn-large">
-                        <i class="fas fa-qrcode"></i>
-                        Gerar cobrança PIX
-                    </button>
-                </form>
+      <!-- Form Section -->
+      <section class="checkout-form-section">
+        <div class="form-container">
+          <div class="form-header">
+            <div class="form-icon">
+              <i class="fas fa-qrcode"></i>
             </div>
-        </section>
+            <h2>Gerar cobrança PIX</h2>
+            <p class="form-description">Sem login. Sem KYC. Só transação.</p>
+          </div>
 
-        <!-- Result Section -->
-        <section id="result-section" class="result-section" style="display: none;">
-            <div class="result-container">
-                <div class="result-header">
-                    <div class="success-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h2>✅ Cobrança Criada com Sucesso!</h2>
-                    <p class="result-subtitle">Escaneie o QR Code ou copie o BR Code para pagar</p>
-                </div>
-                
-                <div class="result-content">
-                    <div class="qr-code-container">
-                        <h3>QR Code</h3>
-                        <div class="qr-code-wrapper">
-                            <img id="qr-code" src="" alt="QR Code Pix" class="qr-code-image">
-                        </div>
-                        <button id="download-qr" class="btn btn-secondary">
-                            <i class="fas fa-download"></i>
-                            Baixar QR Code
-                        </button>
-                    </div>
-                    
-                    <div class="payment-info">
-                        <div class="info-item">
-                            <span class="label">Valor:</span>
-                            <span id="result-valor" class="value"></span>
-                        </div>
-                        <div class="info-item">
-                            <span class="label">Moeda:</span>
-                            <span id="result-moeda" class="value"></span>
-                        </div>
-                        <div class="info-item">
-                            <span class="label">Wallet:</span>
-                            <span id="result-wallet" class="value wallet-address"></span>
-                        </div>
-                        <div class="info-item">
-                            <span class="label">Expira em:</span>
-                            <span id="result-expira" class="value"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="br-code-section">
-                        <h3>BR Code (Copia e Cola)</h3>
-                        <div class="br-code-container">
-                            <textarea id="br-code" readonly class="br-code-textarea"></textarea>
-                            <button id="copy-br-code" class="btn btn-secondary">
-                                <i class="fas fa-copy"></i>
-                                Copiar
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="payment-link-section">
-                        <h3>Link de Pagamento</h3>
-                        <div class="link-container">
-                            <a id="payment-link" href="#" target="_blank" class="payment-link">
-                                <i class="fas fa-external-link-alt"></i>
-                                Abrir Link de Pagamento
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="result-actions">
-                    <button id="new-charge" class="btn btn-primary">
-                        <i class="fas fa-plus"></i>
-                        Nova Cobrança
-                    </button>
-                    <button id="view-transactions" class="btn btn-secondary">
-                        <i class="fas fa-list"></i>
-                        Ver Transações
-                    </button>
-                </div>
+          <form id="pix-form" class="pix-form">
+            <div class="form-group">
+              <label for="wallet">Wallet de Destino</label>
+              <div class="input-wrapper">
+                <i class="fas fa-wallet input-icon"></i>
+                <input
+                  type="text"
+                  id="wallet"
+                  name="wallet"
+                  placeholder="0x1111111111111111111111111111111111111111"
+                  required
+                />
+              </div>
+              <small>Endereço da carteira que receberá o pagamento</small>
             </div>
-        </section>
 
-        <!-- Loading Section -->
-        <section id="loading-section" class="loading-section" style="display: none;">
-            <div class="loading-container">
-                <div class="loading-spinner"></div>
-                <h3>Gerando Cobrança Pix...</h3>
-                <p>Aguarde enquanto processamos sua solicitação</p>
-            </div>
-        </section>
-
-        <!-- Error Section -->
-        <section id="error-section" class="error-section" style="display: none;">
-            <div class="error-container">
-                <div class="error-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="valor">Valor (R$)</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-dollar-sign input-icon"></i>
+                  <input
+                    type="number"
+                    id="valor"
+                    name="valor"
+                    step="0.01"
+                    min="0.01"
+                    placeholder="100.50"
+                    required
+                  />
                 </div>
-                <h3>Erro ao Gerar Cobrança</h3>
-                <p id="error-message"></p>
-                <button id="try-again" class="btn btn-primary">
-                    <i class="fas fa-redo"></i>
-                    Tentar Novamente
+              </div>
+
+              <div class="form-group">
+                <label for="moeda">Moeda Cripto</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-coins input-icon"></i>
+                  <select id="moeda" name="moeda" required>
+                    <option value="">Selecione</option>
+                    <option value="USDT">USDT</option>
+                    <option value="USDC">USDC</option>
+                    <option value="ETH">ETH</option>
+                    <option value="BTC">BTC</option>
+                    <option value="MATIC">MATIC</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="id_transacao">ID da Transação</label>
+              <div class="input-wrapper">
+                <i class="fas fa-hashtag input-icon"></i>
+                <input
+                  type="text"
+                  id="id_transacao"
+                  name="id_transacao"
+                  placeholder="pix_123456789"
+                  required
+                />
+              </div>
+              <small>Identificador único para esta transação</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-large">
+              <i class="fas fa-qrcode"></i>
+              Gerar cobrança PIX
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Result Section -->
+      <section id="result-section" class="result-section" style="display: none">
+        <div class="result-container">
+          <div class="result-header">
+            <div class="success-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>✅ Cobrança Criada com Sucesso!</h2>
+            <p class="result-subtitle">
+              Escaneie o QR Code ou copie o BR Code para pagar
+            </p>
+          </div>
+
+          <div class="result-content">
+            <div class="qr-code-container">
+              <h3>QR Code</h3>
+              <div class="qr-code-wrapper">
+                <img
+                  id="qr-code"
+                  src=""
+                  alt="QR Code Pix"
+                  class="qr-code-image"
+                />
+              </div>
+              <button id="download-qr" class="btn btn-secondary">
+                <i class="fas fa-download"></i>
+                Baixar QR Code
+              </button>
+            </div>
+
+            <div class="payment-info">
+              <div class="info-item">
+                <span class="label">Valor:</span>
+                <span id="result-valor" class="value"></span>
+              </div>
+              <div class="info-item">
+                <span class="label">Moeda:</span>
+                <span id="result-moeda" class="value"></span>
+              </div>
+              <div class="info-item">
+                <span class="label">Wallet:</span>
+                <span id="result-wallet" class="value wallet-address"></span>
+              </div>
+              <div class="info-item">
+                <span class="label">Expira em:</span>
+                <span id="result-expira" class="value"></span>
+              </div>
+            </div>
+
+            <div class="br-code-section">
+              <h3>BR Code (Copia e Cola)</h3>
+              <div class="br-code-container">
+                <textarea
+                  id="br-code"
+                  readonly
+                  class="br-code-textarea"
+                ></textarea>
+                <button id="copy-br-code" class="btn btn-secondary">
+                  <i class="fas fa-copy"></i>
+                  Copiar
                 </button>
+              </div>
             </div>
-        </section>
+
+            <div class="payment-link-section">
+              <h3>Link de Pagamento</h3>
+              <div class="link-container">
+                <a
+                  id="payment-link"
+                  href="#"
+                  target="_blank"
+                  class="payment-link"
+                >
+                  <i class="fas fa-external-link-alt"></i>
+                  Abrir Link de Pagamento
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <button id="new-charge" class="btn btn-primary">
+              <i class="fas fa-plus"></i>
+              Nova Cobrança
+            </button>
+            <button id="view-transactions" class="btn btn-secondary">
+              <i class="fas fa-list"></i>
+              Ver Transações
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Loading Section -->
+      <section
+        id="loading-section"
+        class="loading-section"
+        style="display: none"
+      >
+        <div class="loading-container">
+          <div class="loading-spinner"></div>
+          <h3>Gerando Cobrança Pix...</h3>
+          <p>Aguarde enquanto processamos sua solicitação</p>
+        </div>
+      </section>
+
+      <!-- Error Section -->
+      <section id="error-section" class="error-section" style="display: none">
+        <div class="error-container">
+          <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h3>Erro ao Gerar Cobrança</h3>
+          <p id="error-message"></p>
+          <button id="try-again" class="btn btn-primary">
+            <i class="fas fa-redo"></i>
+            Tentar Novamente
+          </button>
+        </div>
+      </section>
     </main>
 
     <!-- Footer -->
     <footer class="checkout-footer">
-        <div class="footer-content">
-            <p>&copy; 2026 FLOWPay. Todos os direitos reservados.</p>
-            <div class="footer-links">
-                <a href="/">Voltar ao Início</a>
-                <a href="#" id="help-link">Ajuda</a>
-            </div>
+      <div class="footer-content">
+        <p>&copy; 2026 FLOWPay. Todos os direitos reservados.</p>
+        <div class="footer-links">
+          <a href="/">Voltar ao Início</a>
+          <a href="#" id="help-link">Ajuda</a>
         </div>
+      </div>
     </footer>
 
     <!-- CSP Configuration -->
     <script src="csp-config.js"></script>
-    
+
     <!-- Scripts -->
     <script>
-        // Configurações
-        const API_BASE_URL = '/.netlify/functions';
-        
-        // Elementos DOM
-        const pixForm = document.getElementById('pix-form');
-        const resultSection = document.getElementById('result-section');
-        const loadingSection = document.getElementById('loading-section');
-        const errorSection = document.getElementById('error-section');
-        
-        // Função para mostrar seção
-        function showSection(sectionId) {
-            [resultSection, loadingSection, errorSection].forEach(section => {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
+      // Configurações
+      const API_BASE_URL = "/api";
+
+      // Elementos DOM
+      const pixForm = document.getElementById("pix-form");
+      const resultSection = document.getElementById("result-section");
+      const loadingSection = document.getElementById("loading-section");
+      const errorSection = document.getElementById("error-section");
+
+      // Função para mostrar seção
+      function showSection(sectionId) {
+        [resultSection, loadingSection, errorSection].forEach((section) => {
+          section.style.display = "none";
+        });
+        document.getElementById(sectionId).style.display = "block";
+      }
+
+      // Função para mostrar loading
+      function showLoading() {
+        showSection("loading-section");
+      }
+
+      // Função para mostrar resultado
+      function showResult(data) {
+        // Preencher dados
+        document.getElementById("result-valor").textContent =
+          `R$ ${data.valor}`;
+        document.getElementById("result-moeda").textContent = data.moeda;
+        document.getElementById("result-wallet").textContent = data.wallet;
+        document.getElementById("result-expira").textContent = formatExpiration(
+          data.expiresAt
+        );
+
+        // QR Code
+        const qrCodeImg = document.getElementById("qr-code");
+        qrCodeImg.src = data.qrCodeBase64;
+
+        // BR Code
+        document.getElementById("br-code").value = data.brCode;
+
+        // Link de pagamento
+        const paymentLink = document.getElementById("payment-link");
+        paymentLink.href = data.linkPagamento;
+
+        showSection("result-section");
+      }
+
+      // Função para mostrar erro
+      function showError(message) {
+        document.getElementById("error-message").textContent = message;
+        showSection("error-section");
+      }
+
+      // Função para formatar data de expiração
+      function formatExpiration(expiresAt) {
+        if (!expiresAt) return "1 hora";
+
+        const expires = new Date(expiresAt);
+        const now = new Date();
+        const diffMs = expires - now;
+        const diffMins = Math.floor(diffMs / 60000);
+
+        if (diffMins < 60) {
+          return `${diffMins} minutos`;
+        } else {
+          const diffHours = Math.floor(diffMins / 60);
+          return `${diffHours} horas`;
         }
-        
-        // Função para mostrar loading
-        function showLoading() {
-            showSection('loading-section');
-        }
-        
-        // Função para mostrar resultado
-        function showResult(data) {
-            // Preencher dados
-            document.getElementById('result-valor').textContent = `R$ ${data.valor}`;
-            document.getElementById('result-moeda').textContent = data.moeda;
-            document.getElementById('result-wallet').textContent = data.wallet;
-            document.getElementById('result-expira').textContent = formatExpiration(data.expiresAt);
-            
-            // QR Code
-            const qrCodeImg = document.getElementById('qr-code');
-            qrCodeImg.src = data.qrCodeBase64;
-            
-            // BR Code
-            document.getElementById('br-code').value = data.brCode;
-            
-            // Link de pagamento
-            const paymentLink = document.getElementById('payment-link');
-            paymentLink.href = data.linkPagamento;
-            
-            showSection('result-section');
-        }
-        
-        // Função para mostrar erro
-        function showError(message) {
-            document.getElementById('error-message').textContent = message;
-            showSection('error-section');
-        }
-        
-        // Função para formatar data de expiração
-        function formatExpiration(expiresAt) {
-            if (!expiresAt) return '1 hora';
-            
-            const expires = new Date(expiresAt);
-            const now = new Date();
-            const diffMs = expires - now;
-            const diffMins = Math.floor(diffMs / 60000);
-            
-            if (diffMins < 60) {
-                return `${diffMins} minutos`;
-            } else {
-                const diffHours = Math.floor(diffMins / 60);
-                return `${diffHours} horas`;
-            }
-        }
-        
-        // Função para gerar ID único
-        function generateTransactionId() {
-            return `pix_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        }
-        
-        // Função para criar cobrança
-        async function createPixCharge(formData) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/create-pix-charge`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    return result.data;
-                } else {
-                    throw new Error(result.error || 'Erro desconhecido');
-                }
-                
-            } catch (error) {
-                console.error('❌ Erro na requisição:', error);
-                throw error;
-            }
-        }
-        
-        // Event Listeners
-        pixForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData(pixForm);
-            const data = {
-                wallet: formData.get('wallet'),
-                valor: parseFloat(formData.get('valor')),
-                moeda: formData.get('moeda'),
-                id_transacao: formData.get('id_transacao') || generateTransactionId()
+      }
+
+      // Função para gerar ID único
+      function generateTransactionId() {
+        return `pix_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      }
+
+      // Função para criar cobrança
+      async function createPixCharge(formData) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/create-charge`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const result = await response.json();
+
+          if (result.success && result.pix_data) {
+            return {
+              valor: Number(formData.valor).toFixed(2),
+              moeda: formData.moeda,
+              wallet: formData.wallet,
+              expiresAt: result.pix_data.expires_at,
+              qrCodeBase64: result.pix_data.qr_code,
+              brCode: result.pix_data.br_code,
+              linkPagamento: "#",
             };
-            
-            // Validar dados
-            if (!data.wallet || !data.valor || !data.moeda) {
-                showError('Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
-            
-            if (data.valor <= 0) {
-                showError('O valor deve ser maior que zero.');
-                return;
-            }
-            
-            try {
-                showLoading();
-                
-                const result = await createPixCharge(data);
-                showResult(result);
-                
-            } catch (error) {
-                showError(`Erro ao criar cobrança: ${error.message}`);
-            }
+          } else {
+            throw new Error(result.error || "Erro desconhecido");
+          }
+        } catch (error) {
+          console.error("❌ Erro na requisição:", error);
+          throw error;
+        }
+      }
+
+      // Event Listeners
+      pixForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(pixForm);
+        const data = {
+          wallet: formData.get("wallet"),
+          valor: parseFloat(formData.get("valor")),
+          moeda: formData.get("moeda"),
+          id_transacao: formData.get("id_transacao") || generateTransactionId(),
+        };
+
+        // Validar dados
+        if (!data.wallet || !data.valor || !data.moeda) {
+          showError("Por favor, preencha todos os campos obrigatórios.");
+          return;
+        }
+
+        if (data.valor <= 0) {
+          showError("O valor deve ser maior que zero.");
+          return;
+        }
+
+        try {
+          showLoading();
+
+          const result = await createPixCharge(data);
+          showResult(result);
+        } catch (error) {
+          showError(`Erro ao criar cobrança: ${error.message}`);
+        }
+      });
+
+      // Botão nova cobrança
+      document.getElementById("new-charge").addEventListener("click", () => {
+        pixForm.reset();
+        showSection("checkout-form-section");
+      });
+
+      // Botão copiar BR Code
+      document
+        .getElementById("copy-br-code")
+        .addEventListener("click", async () => {
+          const brCode = document.getElementById("br-code");
+          try {
+            await navigator.clipboard.writeText(brCode.value);
+
+            const button = document.getElementById("copy-br-code");
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+            button.classList.add("copied");
+
+            setTimeout(() => {
+              button.innerHTML = originalText;
+              button.classList.remove("copied");
+            }, 2000);
+          } catch (error) {
+            console.error("Erro ao copiar:", error);
+          }
         });
-        
-        // Botão nova cobrança
-        document.getElementById('new-charge').addEventListener('click', () => {
-            pixForm.reset();
-            showSection('checkout-form-section');
-        });
-        
-        // Botão copiar BR Code
-        document.getElementById('copy-br-code').addEventListener('click', async () => {
-            const brCode = document.getElementById('br-code');
-            try {
-                await navigator.clipboard.writeText(brCode.value);
-                
-                const button = document.getElementById('copy-br-code');
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
-                button.classList.add('copied');
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.classList.remove('copied');
-                }, 2000);
-                
-            } catch (error) {
-                console.error('Erro ao copiar:', error);
-            }
-        });
-        
-        // Botão baixar QR Code
-        document.getElementById('download-qr').addEventListener('click', () => {
-            const qrCode = document.getElementById('qr-code');
-            const link = document.createElement('a');
-            link.download = 'qr-code-pix.png';
-            link.href = qrCode.src;
-            link.click();
-        });
-        
-        // Botão tentar novamente
-        document.getElementById('try-again').addEventListener('click', () => {
-            showSection('checkout-form-section');
-        });
-        
-        // Preencher ID da transação automaticamente
-        document.getElementById('id_transacao').value = generateTransactionId();
-        
-        // Auto-focus no primeiro campo
-        document.getElementById('wallet').focus();
+
+      // Botão baixar QR Code
+      document.getElementById("download-qr").addEventListener("click", () => {
+        const qrCode = document.getElementById("qr-code");
+        const link = document.createElement("a");
+        link.download = "qr-code-pix.png";
+        link.href = qrCode.src;
+        link.click();
+      });
+
+      // Botão tentar novamente
+      document.getElementById("try-again").addEventListener("click", () => {
+        showSection("checkout-form-section");
+      });
+
+      // Preencher ID da transação automaticamente
+      document.getElementById("id_transacao").value = generateTransactionId();
+
+      // Auto-focus no primeiro campo
+      document.getElementById("wallet").focus();
     </script>
-</body>
+  </body>
 </html>

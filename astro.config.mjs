@@ -1,12 +1,14 @@
 import { defineConfig } from "astro/config";
 import node from "@astrojs/node";
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 import sentry from "@sentry/astro";
 
 export default defineConfig({
   site: "https://flowpay.cash",
   output: "server",
   integrations: [
+    sitemap(),
     react(),
     sentry({
       sourceMapsUploadOptions: {

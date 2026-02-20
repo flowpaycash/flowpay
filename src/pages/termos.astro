@@ -1,0 +1,605 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "FlowPay",
+      "item": "https://flowpay.cash",
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Termos de Uso",
+      "item": "https://flowpay.cash/termos",
+    },
+  ],
+};
+---
+
+<Layout
+  title="Termos de Uso — FlowPay"
+  description="Leia os Termos de Uso da FlowPay. Regras de uso, elegibilidade, responsabilidades, limitações e foro de Goiânia — GO. Operado pela FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA."
+  structuredData={breadcrumbSchema}
+>
+  <Navbar />
+
+  <main class="legal-page">
+    <div class="legal-bg-glow"></div>
+
+    <div class="legal-container">
+
+      <header class="legal-header">
+        <span class="legal-badge">Marco Civil da Internet · CDC</span>
+        <h1 class="legal-title">Termos de <span class="gradient-text">Uso</span></h1>
+        <p class="legal-meta">
+          Controlador: <strong>FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA — ME</strong><br />
+          CNPJ: 43.376.355/0001-92<br />
+          Última atualização: 20 de fevereiro de 2026
+        </p>
+      </header>
+
+      <div class="legal-body">
+
+        <section class="legal-section">
+          <h2>1. Das partes e do objeto</h2>
+          <p>
+            Estes Termos de Uso regulam a relação entre a <strong>FLOWOFF MARKETING E
+            ASSESSORIA DIGITAL LTDA — ME</strong>, pessoa jurídica de direito privado,
+            inscrita no CNPJ sob o nº 43.376.355/0001-92, com sede na Avenida 85, esq.
+            com a Rua 137, nº 556 — Setor Marista, Goiânia — GO, CEP 74.170-120,
+            operadora do produto <strong>FlowPay</strong> (doravante "FlowPay", "nós" ou
+            "Empresa"), e você, pessoa física ou jurídica que acessa ou utiliza a
+            plataforma (doravante "Usuário" ou "você").
+          </p>
+          <p>
+            A <strong>FlowPay</strong> é uma plataforma de gateway de pagamentos que
+            viabiliza a realização e o recebimento de transações financeiras via PIX e
+            ativos digitais (criptomoedas), por meio de infraestrutura tecnológica própria
+            baseada na <strong>NEO Smart Factory™</strong>.
+          </p>
+          <p>
+            Ao acessar, cadastrar-se ou utilizar qualquer funcionalidade da plataforma,
+            você declara ter lido, compreendido e concordado integralmente com estes Termos.
+            <strong>Caso não concorde, não utilize a plataforma.</strong>
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>2. Elegibilidade</h2>
+          <p>Para utilizar a FlowPay, você deve:</p>
+          <ul>
+            <li>Ser pessoa física com capacidade civil plena (maior de 18 anos) ou pessoa jurídica regularmente constituída no Brasil</li>
+            <li>Possuir CPF ou CNPJ válido e em situação regular perante a Receita Federal</li>
+            <li>Fornecer informações verdadeiras, completas e atualizadas no momento do cadastro</li>
+            <li>Não estar impedido de contratar por qualquer motivo legal</li>
+          </ul>
+          <p>
+            O cadastro está sujeito à análise e aprovação manual pela equipe FlowPay.
+            A Empresa reserva-se o direito de recusar ou cancelar cadastros a seu
+            exclusivo critério, sem obrigação de justificativa.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>3. Cadastro e acesso</h2>
+          <p>
+            O acesso às funcionalidades da plataforma exige cadastro prévio mediante
+            fornecimento de nome completo, e-mail, CPF, telefone e tipo de uso.
+          </p>
+          <p>
+            Você é integralmente responsável pela confidencialidade das suas credenciais
+            de acesso e por todas as ações realizadas sob sua conta. Em caso de acesso
+            não autorizado, notifique-nos imediatamente pelo e-mail
+            <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>.
+          </p>
+          <p>
+            É vedada a criação de múltiplas contas por um mesmo titular com o intuito
+            de contornar limitações ou restrições aplicadas pela plataforma.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>4. Do serviço prestado</h2>
+          <p>
+            A FlowPay disponibiliza ao Usuário aprovado as seguintes funcionalidades:
+          </p>
+          <ul>
+            <li>Criação de links e botões de pagamento personalizados</li>
+            <li>Recebimento de pagamentos via PIX com liquidação automática</li>
+            <li>Recebimento de criptomoedas (USDT, USDC) em redes compatíveis</li>
+            <li>Painel de gestão de cobranças (Dashboard)</li>
+            <li>Geração de código embed para integração em sites e plataformas externas</li>
+            <li>Provas de existência on-chain (Proof of Existence) para auditabilidade das transações</li>
+          </ul>
+
+          <div class="legal-highlight">
+            A FlowPay atua como facilitador tecnológico de pagamentos. Não somos uma
+            instituição financeira autorizada pelo Banco Central do Brasil, não captamos
+            recursos do público e não realizamos intermediação financeira regulada pelo
+            Sistema Financeiro Nacional.
+          </div>
+        </section>
+
+        <section class="legal-section">
+          <h2>5. Obrigações e responsabilidades do Usuário</h2>
+          <p>Ao utilizar a plataforma, você se compromete a:</p>
+          <ul>
+            <li>Utilizar o serviço exclusivamente para fins lícitos e compatíveis com a legislação brasileira vigente</li>
+            <li>Não utilizar a plataforma para receber pagamentos por atividades ilegais, produtos proibidos, serviços não autorizados ou qualquer prática que configure crime ou contravenção penal</li>
+            <li>Não empregar a plataforma para fins de lavagem de dinheiro, financiamento ao terrorismo, evasão fiscal ou qualquer outro crime financeiro</li>
+            <li>Manter seus dados cadastrais atualizados e verídicos</li>
+            <li>Não tentar acessar, modificar ou comprometer sistemas, servidores ou dados da FlowPay além do que é permitido pela interface pública</li>
+            <li>Respeitar os direitos de propriedade intelectual da Empresa e de terceiros</li>
+            <li>Cumprir as obrigações tributárias decorrentes das transações realizadas, incluindo a emissão de notas fiscais quando exigido</li>
+          </ul>
+          <p>
+            O Usuário é o único responsável pelo conteúdo dos links e cobranças criados,
+            pelas relações com seus clientes e pelo cumprimento das obrigações legais
+            decorrentes das transações que realizar.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>6. Limitação de responsabilidade da FlowPay</h2>
+          <p>
+            Na máxima extensão permitida pela lei, a FlowPay não se responsabiliza por:
+          </p>
+          <ul>
+            <li>Falhas, lentidão ou indisponibilidade de redes blockchain públicas, infraestrutura PIX ou sistemas do Banco Central do Brasil</li>
+            <li>Perdas de ativos digitais decorrentes de falhas nas carteiras do Usuário ou volatilidade de mercado</li>
+            <li>Danos indiretos, consequenciais, lucros cessantes ou perda de dados do Usuário</li>
+            <li>Atos de terceiros, incluindo fraudes praticadas por pagadores contra o Usuário</li>
+            <li>Interrupções temporárias para manutenção, atualizações de segurança ou adequações regulatórias</li>
+            <li>Uso indevido da plataforma pelo próprio Usuário ou por terceiros com acesso às suas credenciais</li>
+          </ul>
+          <p>
+            Nos casos em que a responsabilidade da FlowPay for reconhecida, fica
+            limitada ao valor efetivamente pago pelo Usuário pelo serviço no mês
+            imediatamente anterior ao evento danoso.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>7. Disponibilidade do serviço</h2>
+          <p>
+            Envidamos esforços para manter a plataforma disponível 24 horas por dia,
+            7 dias por semana. No entanto, <strong>não garantimos disponibilidade
+            ininterrupta</strong>. Podem ocorrer interrupções por manutenção programada
+            (com aviso prévio sempre que possível), falhas técnicas, casos fortuitos ou
+            força maior.
+          </p>
+          <p>
+            O status em tempo real da plataforma está disponível em
+            <a href="/transparency">flowpay.cash/transparency</a>.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>8. Tarifas e pagamentos</h2>
+          <p>
+            As tarifas aplicáveis ao uso da plataforma serão informadas ao Usuário
+            no momento do cadastro ou por comunicação oficial. A FlowPay reserva-se o
+            direito de alterar suas tarifas mediante aviso prévio de 30 dias.
+          </p>
+          <p>
+            O Usuário declara ciência de que transações em redes blockchain podem estar
+            sujeitas a taxas de rede (gas fees) cobradas pela própria infraestrutura
+            blockchain, sem qualquer controle ou benefício da FlowPay.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>9. Cancelamento e encerramento de conta</h2>
+          <p>
+            <strong>Pelo Usuário:</strong> você pode solicitar o encerramento de sua
+            conta a qualquer momento pelo e-mail
+            <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>.
+            O encerramento não cancela obrigações já contraídas nem transações em
+            andamento.
+          </p>
+          <p>
+            <strong>Pela FlowPay:</strong> podemos suspender ou encerrar sua conta,
+            com ou sem aviso prévio, nos seguintes casos:
+          </p>
+          <ul>
+            <li>Violação destes Termos de Uso</li>
+            <li>Suspeita de atividade fraudulenta ou ilícita</li>
+            <li>Solicitação de autoridade competente</li>
+            <li>Inatividade prolongada da conta</li>
+            <li>Encerramento da plataforma</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>10. Propriedade intelectual</h2>
+          <p>
+            Todos os direitos relativos à marca <strong>FlowPay</strong>, ao produto,
+            ao software, às interfaces, aos logotipos, à <strong>NEO Smart Factory™</strong>
+            e a todo o conteúdo da plataforma pertencem exclusivamente à Flowoff Marketing
+            e Assessoria Digital Ltda ou a seus licenciantes.
+          </p>
+          <p>
+            É vedada a reprodução, cópia, distribuição, modificação ou uso comercial de
+            qualquer elemento da plataforma sem autorização prévia e expressa por escrito.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>11. Privacidade e proteção de dados</h2>
+          <p>
+            O tratamento de dados pessoais é regido pela nossa
+            <a href="/privacidade">Política de Privacidade</a>, elaborada em
+            conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018),
+            que integra estes Termos por referência.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>12. Riscos de ativos digitais</h2>
+          <p>
+            O Usuário declara conhecer e aceitar os riscos inerentes ao uso de ativos
+            digitais (criptomoedas), incluindo volatilidade de preços, riscos técnicos
+            de redes blockchain e ausência de garantia pelo Fundo Garantidor de Créditos
+            (FGC). Para informações completas, consulte nosso
+            <a href="/riscos">Aviso de Riscos</a>.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>13. Alterações dos Termos</h2>
+          <p>
+            A FlowPay pode alterar estes Termos a qualquer momento. Alterações
+            substanciais serão comunicadas por e-mail ou por aviso na plataforma com
+            antecedência mínima de 10 dias. O uso continuado da plataforma após a
+            vigência das alterações implica aceitação dos novos Termos.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>14. Foro e lei aplicável</h2>
+          <p>
+            Estes Termos são regidos e interpretados exclusivamente de acordo com as
+            leis da República Federativa do Brasil.
+          </p>
+          <p>
+            Fica eleito o foro da comarca de <strong>Goiânia — GO</strong> para dirimir
+            quaisquer controvérsias decorrentes destes Termos, com renúncia expressa a
+            qualquer outro, por mais privilegiado que seja.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>15. Contato</h2>
+          <div class="legal-contact-card">
+            <div class="contact-line">
+              <span class="contact-label">Empresa</span>
+              <span>FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA — ME</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">CNPJ</span>
+              <span>43.376.355/0001-92</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">Endereço</span>
+              <span>Av. 85, esq. c/ Rua 137, nº 556 — Setor Marista, Goiânia — GO, 74.170-120</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">E-mail</span>
+              <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="legal-footer-note">
+        <p>
+          Dúvidas? Entre em contato:
+          <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+        </p>
+        <div class="legal-links">
+          <a href="/privacidade">Política de Privacidade</a>
+          <span>·</span>
+          <a href="/cookies">Política de Cookies</a>
+          <span>·</span>
+          <a href="/riscos">Aviso de Riscos</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .legal-page {
+    position: relative;
+    min-height: 100vh;
+    padding-top: 72px;
+    overflow: hidden;
+  }
+
+  .legal-bg-glow {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 60vh;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255, 0, 122, 0.07) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .legal-container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 5rem;
+  }
+
+  @media (min-width: 768px) {
+    .legal-container {
+      padding: 4rem 2rem 6rem;
+    }
+  }
+
+  /* Header */
+  .legal-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .legal-badge {
+    display: inline-block;
+    background: rgba(255, 0, 122, 0.1);
+    border: 1px solid rgba(255, 0, 122, 0.2);
+    color: rgba(255, 0, 122, 0.9);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 99px;
+    margin-bottom: 1rem;
+  }
+
+  .legal-title {
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #ff007a 0%, #ff7a00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .legal-meta {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.8;
+  }
+
+  .legal-meta strong {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+  }
+
+  /* Body */
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .legal-section {
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .legal-section:last-child {
+    border-bottom: none;
+  }
+
+  .legal-section h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-section p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .legal-section p:last-child {
+    margin-bottom: 0;
+  }
+
+  .legal-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .legal-section ul li {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.7;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .legal-section ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 0, 122, 0.6);
+  }
+
+  .legal-section ul li strong {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+  }
+
+  .legal-section a {
+    color: rgba(255, 0, 122, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .legal-section a:hover {
+      color: #ff007a;
+      text-decoration: underline;
+    }
+  }
+
+  /* Highlight box */
+  .legal-highlight {
+    background: rgba(0, 212, 255, 0.06);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-left: 3px solid rgba(0, 212, 255, 0.5);
+    border-radius: 0 12px 12px 0;
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+
+  /* Contact card */
+  .legal-contact-card {
+    background: rgba(15, 15, 15, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .contact-line {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  @media (min-width: 480px) {
+    .contact-line {
+      flex-direction: row;
+      gap: 1rem;
+      align-items: baseline;
+    }
+  }
+
+  .contact-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .contact-line a {
+    color: rgba(255, 0, 122, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .contact-line a:hover {
+      color: #ff007a;
+      text-decoration: underline;
+    }
+  }
+
+  /* Footer note */
+  .legal-footer-note {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .legal-footer-note p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .legal-footer-note p a {
+    color: rgba(255, 0, 122, 0.8);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  @media (hover: hover) {
+    .legal-footer-note p a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .legal-links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .legal-links a {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.35);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .legal-links a:hover {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .legal-links span {
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 0.85rem;
+  }
+</style>

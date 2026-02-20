@@ -10,7 +10,7 @@ if (window.FLOWPayCSP && window.FLOWPayCSP.loaded) {
     
     // Configuring CSP for FLOWPay
 
-    // Configuração CSP otimizada (sem frame-ancestors - já configurado no Netlify)
+    // Configuração CSP otimizada (sem frame-ancestors - já configurado no Railway)
     const cspConfig = {
       'default-src': ["'self'"],
       'script-src': [
@@ -59,14 +59,14 @@ if (window.FLOWPayCSP && window.FLOWPayCSP.loaded) {
       'object-src': ["'none'"],
       'base-uri': ["'self'"],
       'form-action': ["'self'"]
-      // frame-ancestors removido - já configurado no Netlify
+      // frame-ancestors removido - já configurado no Railway
     };
 
-    // Aplicar CSP apenas se não estiver em produção (Netlify)
+    // Aplicar CSP apenas se não estiver em produção (Railway)
     function applyCSP() {
       try {
-        // Verificar se estamos em produção (Netlify)
-        const isProduction = window.location.hostname.includes('flowpay.cash') || window.location.hostname.includes('netlify.app');
+        // Verificar se estamos em produção (Railway)
+        const isProduction = window.location.hostname.includes('flowpay.cash') || window.location.hostname.includes('railway.app');
         
         if (isProduction) {
           // Production detected - CSP configured server-side
@@ -129,7 +129,7 @@ if (window.FLOWPayCSP && window.FLOWPayCSP.loaded) {
     window.FLOWPayCSP = {
       apply: applyCSP,
       config: cspConfig,
-      isProduction: () => window.location.hostname.includes('flowpay.cash') || window.location.hostname.includes('netlify.app'),
+      isProduction: () => window.location.hostname.includes('flowpay.cash') || window.location.hostname.includes('railway.app'),
       loaded: true
     };
 

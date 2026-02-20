@@ -25,8 +25,8 @@ const web3auth = new Web3Auth({
   web3AuthNetwork,
   // Configuração minimalista
   uiConfig: {
-    logoLight: "https://flowpaypix.netlify.app/assets/logos/flowpay-logo.png",
-    logoDark: "https://flowpaypix.netlify.app/assets/logos/flowpay-logo.png",
+    logoLight: "https://flowpay.cash/assets/logos/flowpay-logo.png",
+    logoDark: "https://flowpay.cash/assets/logos/flowpay-logo.png",
     // Apenas métodos essenciais
     loginMethodsOrder: ["google"],
     // Desabilitar recursos pesados

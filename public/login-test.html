@@ -53,7 +53,7 @@
         <ul>
           <li>✅ Página de login com magic link</li>
           <li>✅ Sistema de notificações (toasts)</li>
-          <li>✅ Funções Netlify para autenticação</li>
+          <li>✅ Funções Railway para autenticação</li>
           <li>✅ Página de verificação de token</li>
           <li>✅ Página do cliente após login</li>
           <li>✅ Estilos responsivos e dark mode</li>
@@ -78,10 +78,10 @@
       </div>
 
       <div class="test-info">
-        <h3>🔧 Funções Netlify</h3>
+        <h3>🔧 Funções Railway</h3>
         <ul>
-          <li><code>/.netlify/functions/auth-magic-start</code> - Inicia magic link</li>
-          <li><code>/.netlify/functions/auth-magic-verify</code> - Verifica token</li>
+          <li><code>/api/auth/magic-start</code> - Inicia magic link</li>
+          <li><code>/api/auth/magic-verify</code> - Verifica token</li>
         </ul>
       </div>
 
@@ -93,7 +93,7 @@
           <li><code>public/assets/js/login.js</code> - Lógica de login</li>
           <li><code>public/auth/verify.html</code> - Verificação</li>
           <li><code>public/client.html</code> - Painel cliente</li>
-          <li><code>netlify/functions/auth-magic-*.js</code> - Backend</li>
+          <li><code>src/pages/api/auth/*.js</code> - Backend</li>
         </ul>
       </div>
 

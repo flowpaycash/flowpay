@@ -52,7 +52,7 @@
 ✅ **test-quicknode-api.sh**
 
 ```bash
-./tools/test-quicknode-api.sh QN_5c0bd5ebf5eb4319a5e3c7df48685f93
+./tools/test-quicknode-api.sh <QUICKNODE_API_KEY>
 ```
 
 ✅ **setup-quicknode-webhooks.js**
@@ -88,7 +88,7 @@ await rest.monitorUSDTTransfers(
 
 ```javascript
 await rest.monitorWallets(
-  ['0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6'],
+  ['0x1111111111111111111111111111111111111111'],
   'ethereum'
 );
 ```
@@ -121,7 +121,7 @@ await rest.monitorWallets(
 
 ```bash
 # QuickNode API Key (obrigatório)
-QUICKNODE_API_KEY=QN_5c0bd5ebf5eb4319a5e3c7df48685f93
+QUICKNODE_API_KEY=<QUICKNODE_API_KEY>
 
 # REST API URLs (opcional, usa padrão se não configurado)
 QUICKNODE_IPFS_REST=https://api.quicknode.com/ipfs/v1
@@ -132,7 +132,7 @@ QUICKNODE_WEBHOOKS_REST=https://api.quicknode.com/webhooks/v1
 # Webhook Security Token (opcional)
 QUICKNODE_WEBHOOK_SECRET=your_secret_token_here
 
-# URL do webhook (Netlify)
+# URL do webhook (Railway)
 URL=https://flowpay.cash
 ```
 
@@ -143,7 +143,7 @@ URL=https://flowpay.cash
 ### 1. Testar API Key
 
 ```bash
-./tools/test-quicknode-api.sh QN_5c0bd5ebf5eb4319a5e3c7df48685f93
+./tools/test-quicknode-api.sh <QUICKNODE_API_KEY>
 ```
 
 ### 2. Criar Webhook USDT

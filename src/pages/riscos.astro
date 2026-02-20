@@ -1,0 +1,639 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "FlowPay",
+      "item": "https://flowpay.cash",
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Aviso de Riscos",
+      "item": "https://flowpay.cash/riscos",
+    },
+  ],
+};
+---
+
+<Layout
+  title="Aviso de Riscos — FlowPay"
+  description="Riscos do uso de ativos digitais e criptomoedas na FlowPay: volatilidade, irreversibilidade de transações, risco regulatório e ausência de garantia FGC. Leia antes de usar."
+  structuredData={breadcrumbSchema}
+>
+  <Navbar />
+
+  <main class="legal-page">
+    <div class="legal-bg-glow"></div>
+
+    <div class="legal-container">
+
+      <header class="legal-header">
+        <span class="legal-badge">CVM · BACEN · Resolução BCB 96/2021</span>
+        <h1 class="legal-title">Aviso de <span class="gradient-text">Riscos</span></h1>
+        <p class="legal-meta">
+          Controlador: <strong>FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA — ME</strong><br />
+          CNPJ: 43.376.355/0001-92<br />
+          Última atualização: 20 de fevereiro de 2026
+        </p>
+      </header>
+
+      <div class="risk-alert">
+        <div class="risk-alert-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <div class="risk-alert-content">
+          <strong>Leia com atenção antes de utilizar a plataforma.</strong>
+          O uso de ativos digitais envolve riscos significativos, incluindo a possibilidade
+          de perda total dos valores investidos ou transacionados. Este aviso não esgota
+          todos os riscos existentes.
+        </div>
+      </div>
+
+      <div class="legal-body">
+
+        <section class="legal-section">
+          <h2>1. Natureza do serviço</h2>
+          <p>
+            A <strong>FlowPay</strong>, operada pela <strong>FLOWOFF MARKETING E
+            ASSESSORIA DIGITAL LTDA — ME</strong> (CNPJ 43.376.355/0001-92), é uma
+            plataforma de gateway de pagamentos que facilita a realização de transações
+            em moeda nacional (BRL via PIX) e em ativos digitais (criptomoedas), por
+            meio de infraestrutura tecnológica baseada em redes blockchain públicas.
+          </p>
+          <p>
+            A FlowPay <strong>não é uma corretora de criptomoedas, não é uma
+            instituição financeira autorizada pelo Banco Central do Brasil e não é
+            uma exchange de ativos virtuais</strong>. Não realizamos custódia de
+            ativos em nome do usuário, não oferecemos rendimento, retorno ou qualquer
+            forma de investimento.
+          </p>
+          <p>
+            As informações contidas nesta plataforma têm caráter exclusivamente
+            operacional e não constituem consultoria financeira, recomendação de
+            investimento ou oferta de valores mobiliários.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>2. Riscos de ativos digitais</h2>
+
+          <h3>2.1 Volatilidade de preços</h3>
+          <p>
+            Ativos digitais como USDT, USDC, Bitcoin, Ethereum e outros apresentam
+            elevada volatilidade de preços. O valor de mercado pode variar
+            significativamente em curtos períodos de tempo, para cima ou para baixo,
+            sem qualquer aviso prévio. Variações de 10%, 50% ou mais em um único dia
+            não são incomuns no mercado de criptomoedas.
+          </p>
+          <p>
+            Mesmo stablecoins (como USDT e USDC), projetadas para manter paridade com
+            o dólar americano, estão sujeitas a riscos de desvinculação (depeg),
+            insolvência do emissor ou instabilidade regulatória.
+          </p>
+
+          <h3>2.2 Irreversibilidade das transações</h3>
+          <p>
+            Transações em redes blockchain são, por natureza, <strong>irreversíveis</strong>.
+            Uma vez confirmada na rede, uma transação não pode ser cancelada, estornada
+            ou revertida pela FlowPay, pelo usuário ou por qualquer terceiro.
+            Erros de endereço de carteira ou de rede resultam em perda permanente dos ativos.
+          </p>
+
+          <h3>2.3 Risco de carteira e autocustódia</h3>
+          <p>
+            Ao optar por receber ativos digitais diretamente em carteira própria
+            (auto-custódia), o usuário assume integral responsabilidade pela segurança
+            das suas chaves privadas e frases de recuperação (seed phrases).
+            A perda das chaves privadas implica a <strong>perda definitiva e irrecuperável</strong>
+            dos ativos armazenados, sem qualquer possibilidade de recuperação pela
+            FlowPay ou por terceiros.
+          </p>
+
+          <h3>2.4 Riscos de rede blockchain</h3>
+          <p>
+            As redes blockchain são sistemas descentralizados operados por terceiros,
+            fora do controle da FlowPay. Os seguintes eventos podem afetar transações:
+          </p>
+          <ul>
+            <li>Congestionamento da rede e aumento de taxas de gas (gas fees)</li>
+            <li>Forks (bifurcações) do protocolo da rede</li>
+            <li>Ataques de 51% ou outras vulnerabilidades de consenso</li>
+            <li>Descontinuação ou migração de redes e contratos inteligentes</li>
+            <li>Falhas em pontes cross-chain (bridges) entre redes diferentes</li>
+          </ul>
+
+          <h3>2.5 Risco regulatório</h3>
+          <p>
+            O marco regulatório de ativos digitais no Brasil e no mundo está em
+            evolução. A Lei nº 14.478/2022 (Marco Legal das Criptomoedas) e as
+            normas do Banco Central do Brasil (Resolução BCB nº 96/2021 e posteriores)
+            estão em processo de regulamentação. Mudanças regulatórias podem afetar
+            a disponibilidade de serviços, a tributação e a legalidade de determinadas
+            operações com ativos digitais.
+          </p>
+
+          <h3>2.6 Risco de contratos inteligentes</h3>
+          <p>
+            Contratos inteligentes (smart contracts) utilizados na plataforma podem
+            conter vulnerabilidades de código que, se exploradas, podem resultar em
+            perda de ativos. Embora o código da plataforma esteja disponível para
+            auditoria pública, nenhum sistema de software é completamente livre de falhas.
+          </p>
+
+          <h3>2.7 Risco de liquidez</h3>
+          <p>
+            Determinados ativos digitais podem apresentar baixa liquidez em mercados
+            secundários, dificultando sua conversão para moeda nacional (BRL) ou
+            outros ativos no momento desejado pelo usuário.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>3. Riscos de pagamentos via PIX</h2>
+          <p>
+            Embora o PIX seja um sistema de pagamento instantâneo regulado pelo
+            Banco Central do Brasil, o usuário deve estar ciente de:
+          </p>
+          <ul>
+            <li>
+              <strong>Fraudes e golpes:</strong> links de pagamento falsos, phishing e
+              engenharia social são riscos reais. Verifique sempre a autenticidade dos
+              links antes de efetuar qualquer pagamento.
+            </li>
+            <li>
+              <strong>Indisponibilidade temporária:</strong> falhas no sistema PIX do
+              Banco Central ou nas instituições financeiras podem causar atrasos na
+              confirmação de pagamentos.
+            </li>
+            <li>
+              <strong>Limites e bloqueios:</strong> bancos podem aplicar limites de
+              transação ou bloquear pagamentos por suspeita de fraude, independentemente
+              da ação da FlowPay.
+            </li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>4. Ausência de garantias</h2>
+          <p>
+            A FlowPay e a Flowoff Marketing e Assessoria Digital Ltda declaram
+            expressamente que:
+          </p>
+          <ul>
+            <li>
+              <strong>Não há garantia do Fundo Garantidor de Créditos (FGC)</strong>
+              para transações ou ativos custodiados na plataforma
+            </li>
+            <li>
+              <strong>Não há garantia de retorno</strong> sobre qualquer ativo digital
+              transacionado ou recebido pela plataforma
+            </li>
+            <li>
+              <strong>Não há seguro</strong> sobre os ativos digitais dos usuários
+            </li>
+            <li>
+              O serviço é fornecido "no estado em que se encontra" (as-is), sem garantias
+              expressas ou implícitas de adequação a uma finalidade específica
+            </li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>5. Tributação</h2>
+          <p>
+            O usuário é integralmente responsável pelo cumprimento das obrigações
+            tributárias decorrentes das operações realizadas com ativos digitais,
+            incluindo mas não se limitando a:
+          </p>
+          <ul>
+            <li>
+              Declaração de posse e movimentação de criptomoedas à Receita Federal
+              (conforme Instrução Normativa RFB nº 1.888/2019)
+            </li>
+            <li>
+              Apuração e recolhimento de Imposto de Renda sobre ganhos de capital
+              em operações com ativos digitais (alíquotas progressivas conforme a
+              legislação vigente)
+            </li>
+            <li>
+              Emissão de notas fiscais pelos serviços prestados, quando aplicável
+            </li>
+          </ul>
+          <p>
+            A FlowPay não presta consultoria tributária e recomenda que o usuário
+            consulte um contador ou advogado tributarista para orientações específicas
+            sobre sua situação fiscal.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>6. Declaração de ciência</h2>
+          <p>
+            Ao utilizar a plataforma FlowPay, o usuário declara expressamente que:
+          </p>
+          <ul>
+            <li>Leu e compreendeu integralmente este Aviso de Riscos</li>
+            <li>Possui conhecimento suficiente sobre o funcionamento de ativos digitais e redes blockchain</li>
+            <li>Está ciente da possibilidade de perda total dos valores transacionados</li>
+            <li>Toma suas decisões de forma autônoma e independente, sem qualquer recomendação ou indução da FlowPay</li>
+            <li>Reconhece que a FlowPay não tem controle sobre redes blockchain, mercados de criptomoedas ou decisões regulatórias</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>7. Recursos e referências regulatórias</h2>
+          <p>Para mais informações sobre a regulação de ativos digitais no Brasil:</p>
+          <ul>
+            <li>
+              <strong>Banco Central do Brasil:</strong>
+              <a href="https://www.bcb.gov.br" target="_blank" rel="noopener noreferrer">bcb.gov.br</a>
+              — regulação e supervisão do sistema de pagamentos
+            </li>
+            <li>
+              <strong>Comissão de Valores Mobiliários (CVM):</strong>
+              <a href="https://www.gov.br/cvm" target="_blank" rel="noopener noreferrer">gov.br/cvm</a>
+              — regulação de tokens com natureza de valor mobiliário
+            </li>
+            <li>
+              <strong>Receita Federal:</strong>
+              <a href="https://www.gov.br/receitafederal" target="_blank" rel="noopener noreferrer">gov.br/receitafederal</a>
+              — obrigações tributárias sobre criptomoedas
+            </li>
+            <li>
+              <strong>Lei nº 14.478/2022</strong> — Marco Legal das Criptomoedas no Brasil
+            </li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>8. Contato</h2>
+          <p>
+            Para dúvidas sobre este Aviso de Riscos ou sobre o funcionamento da
+            plataforma, entre em contato:
+          </p>
+          <div class="legal-contact-card">
+            <div class="contact-line">
+              <span class="contact-label">Empresa</span>
+              <span>FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA — ME</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">CNPJ</span>
+              <span>43.376.355/0001-92</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">Endereço</span>
+              <span>Av. 85, esq. c/ Rua 137, nº 556 — Setor Marista, Goiânia — GO, 74.170-120</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">E-mail</span>
+              <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="legal-footer-note">
+        <p>
+          Dúvidas? Entre em contato:
+          <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+        </p>
+        <div class="legal-links">
+          <a href="/privacidade">Política de Privacidade</a>
+          <span>·</span>
+          <a href="/termos">Termos de Uso</a>
+          <span>·</span>
+          <a href="/cookies">Política de Cookies</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .legal-page {
+    position: relative;
+    min-height: 100vh;
+    padding-top: 72px;
+    overflow: hidden;
+  }
+
+  .legal-bg-glow {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 60vh;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255, 160, 0, 0.07) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .legal-container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 5rem;
+  }
+
+  @media (min-width: 768px) {
+    .legal-container {
+      padding: 4rem 2rem 6rem;
+    }
+  }
+
+  /* Header */
+  .legal-header {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .legal-badge {
+    display: inline-block;
+    background: rgba(255, 160, 0, 0.1);
+    border: 1px solid rgba(255, 160, 0, 0.25);
+    color: rgba(255, 180, 0, 0.95);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 99px;
+    margin-bottom: 1rem;
+  }
+
+  .legal-title {
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #ff7a00 0%, #ff007a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .legal-meta {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.8;
+  }
+
+  .legal-meta strong {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+  }
+
+  /* Risk alert banner */
+  .risk-alert {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    background: rgba(255, 140, 0, 0.08);
+    border: 1px solid rgba(255, 140, 0, 0.25);
+    border-left: 3px solid rgba(255, 140, 0, 0.7);
+    border-radius: 0 16px 16px 0;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .risk-alert-icon {
+    color: rgba(255, 160, 0, 0.9);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .risk-alert-content {
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.65;
+  }
+
+  .risk-alert-content strong {
+    color: rgba(255, 200, 0, 0.95);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  /* Body */
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .legal-section {
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .legal-section:last-child {
+    border-bottom: none;
+  }
+
+  .legal-section h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-section h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.01em;
+  }
+
+  .legal-section p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .legal-section p:last-child {
+    margin-bottom: 0;
+  }
+
+  .legal-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .legal-section ul li {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.7;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .legal-section ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 140, 0, 0.7);
+  }
+
+  .legal-section ul li strong {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+  }
+
+  .legal-section a {
+    color: rgba(255, 0, 122, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .legal-section a:hover {
+      color: #ff007a;
+      text-decoration: underline;
+    }
+  }
+
+  /* Contact card */
+  .legal-contact-card {
+    background: rgba(15, 15, 15, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .contact-line {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  @media (min-width: 480px) {
+    .contact-line {
+      flex-direction: row;
+      gap: 1rem;
+      align-items: baseline;
+    }
+  }
+
+  .contact-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .contact-line a {
+    color: rgba(255, 0, 122, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .contact-line a:hover {
+      color: #ff007a;
+      text-decoration: underline;
+    }
+  }
+
+  /* Footer note */
+  .legal-footer-note {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .legal-footer-note p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .legal-footer-note p a {
+    color: rgba(255, 0, 122, 0.8);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  @media (hover: hover) {
+    .legal-footer-note p a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .legal-links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .legal-links a {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.35);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .legal-links a:hover {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .legal-links span {
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 0.85rem;
+  }
+</style>

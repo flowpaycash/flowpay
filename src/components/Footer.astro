@@ -5,37 +5,129 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
 
 <footer class="site-footer">
   <div class="footer-container">
+
     <div class="footer-content">
+
+      <!-- Coluna 1: Marca -->
       <div class="footer-section brand">
-        <Image src={headerLogo} alt="FlowPay Logo" class="footer-logo" height={28} />
-        <p>
-          Simples. Rápido. <br />
-          Powered by <strong>NEØ Smart Factory™</strong>
+        <Image src={headerLogo} alt="FlowPay" class="footer-logo" height={28} />
+        <p class="footer-tagline">
+          Gateway de pagamentos PIX + Cripto.<br />
+          Simples. Rápido. Auditável.
         </p>
+        <a href="https://flowoff.xyz" target="_blank" rel="noopener noreferrer" class="footer-made-by">
+          Um produto
+          <span class="footer-made-by-brand">FlowOFF</span>
+        </a>
       </div>
 
-      <div class="footer-section links">
-        <h4>Sobre</h4>
+      <!-- Coluna 2: Plataforma -->
+      <div class="footer-section">
+        <h4>Plataforma</h4>
         <ul>
-          <li><a href="#features">Recursos</a></li>
+          <li><a href="/#features">Recursos</a></li>
+          <li><a href="/registro">Criar conta</a></li>
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/transparency">Transparência</a></li>
         </ul>
       </div>
+
+      <!-- Coluna 3: Legal -->
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacidade">Política de Privacidade</a></li>
+          <li><a href="/termos">Termos de Uso</a></li>
+          <li><a href="/cookies">Política de Cookies</a></li>
+          <li><a href="/riscos">Aviso de Riscos</a></li>
+        </ul>
+      </div>
+
+      <!-- Coluna 4: Ecossistema -->
+      <div class="footer-section ecosystem">
+        <h4>Ecossistema</h4>
+
+        <div class="eco-card">
+          <div class="eco-card-header">
+            <span class="eco-label">Infraestrutura</span>
+          </div>
+          <a
+            href="https://nsfactory.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="eco-link"
+          >
+            NEO Smart Factory™
+          </a>
+          <p class="eco-desc">
+            Fábrica de tokens e registros on-chain. Responsável pela tokenização,
+            provas de existência (PoE) e segurança das transações FlowPay.
+          </p>
+          <div class="eco-identifiers">
+            <a
+              href="https://nsfactory.xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="eco-identifier"
+            >
+              nsfactory.xyz
+            </a>
+            <span class="eco-ens">nsfactory.eth</span>
+          </div>
+        </div>
+
+        <div class="eco-card">
+          <div class="eco-card-header">
+            <span class="eco-label">Desenvolvedor do protocolo</span>
+          </div>
+          <a
+            href="https://neoprotocol.space"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="eco-link"
+          >
+            NEO PROTOCOL
+          </a>
+          <p class="eco-desc">
+            Organização responsável pelo desenvolvimento e manutenção da
+            NEO Smart Factory™ e dos protocolos Web3 subjacentes.
+          </p>
+          <div class="eco-identifiers">
+            <a
+              href="https://neoprotocol.space"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="eco-identifier"
+            >
+              neoprotocol.space
+            </a>
+            <span class="eco-ens">neoprotocol.eth</span>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
+    <!-- Bottom bar -->
     <div class="footer-bottom">
-      <p>FlowPay</p>
-      <p>
-        <a href="/checkout">Checkout</a>
-      </p>
+      <div class="footer-bottom-left">
+        <p>&copy; 2026 FlowPay &mdash; FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA &mdash; ME</p>
+        <p class="footer-cnpj">CNPJ 43.376.355/0001-92 &middot; Goiânia &mdash; GO</p>
+      </div>
+      <div class="footer-bottom-right">
+        <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+      </div>
     </div>
+
   </div>
 </footer>
 
 <style>
   .site-footer {
     position: relative;
-    padding: 6rem 2rem 3rem;
-    background: rgba(10, 10, 10, 0.6);
+    padding: 4rem 1.25rem calc(env(safe-area-inset-bottom, 0px) + 2.5rem);
+    background: rgba(10, 10, 10, 0.7);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -52,7 +144,13 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
     width: 80%;
     height: 1px;
     background: linear-gradient(90deg, transparent, #ff007a, transparent);
-    opacity: 0.5;
+    opacity: 0.4;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer {
+      padding: 6rem 2rem calc(env(safe-area-inset-bottom, 0px) + 3rem);
+    }
   }
 
   .footer-container {
@@ -60,116 +158,285 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
     margin: 0 auto;
   }
 
+  /* Grid */
   .footer-content {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 4rem;
-    margin-bottom: 4rem;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
   }
 
-  .footer-logo {
-    height: 40px;
-    width: auto;
-    margin-bottom: 1.5rem;
-    filter: drop-shadow(0 0 10px rgba(255, 0, 122, 0.3));
-  }
-
-  .footer-section h4 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.5);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 1.5rem;
-  }
-
-  .footer-section p {
-    color: rgba(255, 255, 255, 0.5);
-    line-height: 1.6;
-    font-size: 1rem;
-  }
-
-  .footer-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .footer-section ul li {
-    margin-bottom: 0.8rem;
-  }
-
-  .footer-section a {
-    color: rgba(255, 255, 255, 0.4);
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    font-weight: 500;
-    font-size: 0.95rem;
-  }
-
-  .footer-section a:hover {
-    color: #ff007a;
-  }
-
-  .footer-bottom {
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  .footer-bottom p {
-    color: rgba(255, 255, 255, 0.3);
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-
-  .footer-bottom a {
-    color: rgba(255, 255, 255, 0.3);
-    text-decoration: none;
-    transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  .footer-bottom a:hover {
-    color: #ff007a;
-  }
-
-  @media (max-width: 992px) {
+  @media (min-width: 640px) {
     .footer-content {
       grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      gap: 2.5rem 3rem;
     }
+
     .footer-section.brand {
       grid-column: span 2;
     }
   }
 
-  @media (max-width: 768px) {
-    .site-footer {
-      padding: 4rem 1.5rem 2rem;
-    }
-
+  @media (min-width: 1024px) {
     .footer-content {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
+      grid-template-columns: 2fr 1fr 1fr 2fr;
+      gap: 4rem;
     }
 
     .footer-section.brand {
       grid-column: span 1;
+    }
+  }
+
+  /* Brand section */
+  .footer-logo {
+    height: 32px;
+    width: auto;
+    margin-bottom: 1.25rem;
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(255, 0, 122, 0.25));
+  }
+
+  .footer-tagline {
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.65;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .footer-made-by {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .footer-made-by-brand {
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .footer-made-by:hover {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .footer-made-by:hover .footer-made-by-brand {
+      color: #ff007a;
+    }
+  }
+
+  /* Section headings */
+  .footer-section h4 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Nav links */
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .footer-section a {
+    color: rgba(255, 255, 255, 0.45);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .footer-section a:hover {
+      color: #ff007a;
+    }
+  }
+
+  /* Ecosystem cards */
+  .footer-section.ecosystem {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .eco-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: border-color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .eco-card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+  }
+
+  .eco-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .eco-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.25);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .eco-link {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .eco-link:hover {
+      color: #ff007a;
+    }
+  }
+
+  .eco-desc {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.35);
+    line-height: 1.6;
+  }
+
+  .eco-identifiers {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+  }
+
+  .eco-identifier {
+    font-size: 0.75rem;
+    color: rgba(0, 212, 255, 0.5);
+    text-decoration: none;
+    font-weight: 500;
+    font-family: 'SF Mono', 'Fira Mono', 'Courier New', monospace;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .eco-identifier:hover {
+      color: rgba(0, 212, 255, 0.9);
+    }
+  }
+
+  .eco-ens {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.2);
+    font-weight: 500;
+    font-family: 'SF Mono', 'Fira Mono', 'Courier New', monospace;
+  }
+
+  /* Bottom bar */
+  .footer-bottom {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+  }
+
+  .footer-bottom-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .footer-bottom p,
+  .footer-bottom-left p {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .footer-cnpj {
+    color: rgba(255, 255, 255, 0.15) !important;
+    font-size: 0.72rem !important;
+  }
+
+  .footer-bottom-right a {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .footer-bottom-right a:hover {
+      color: rgba(255, 0, 122, 0.7);
+    }
+  }
+
+  /* Mobile centering */
+  @media (max-width: 639px) {
+    .footer-section.brand {
       text-align: center;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
     }
 
     .footer-section {
       text-align: center;
     }
 
+    .footer-section ul {
+      align-items: center;
+    }
+
     .footer-bottom {
-      flex-direction: column;
       text-align: center;
+      align-items: center;
+    }
+
+    .footer-bottom-left {
+      align-items: center;
+    }
+
+    .eco-identifiers {
+      justify-content: center;
     }
   }
 </style>

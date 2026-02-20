@@ -514,6 +514,10 @@
       flex-wrap: wrap;
     }
 
+    #load-transactions-btn {
+      display: none;
+    }
+
     .filter-select {
       padding: 0.45rem 0.85rem;
       background: rgba(255, 255, 255, 0.05);
@@ -536,6 +540,14 @@
       overflow-x: auto;
       border-radius: 8px;
       border: 1px solid var(--border);
+    }
+
+    #transactions-block.mobile-collapsed #transactions-table-wrap {
+      display: none;
+    }
+
+    #transactions-block.mobile-collapsed.open #transactions-table-wrap {
+      display: block;
     }
 
     .data-table {
@@ -681,6 +693,7 @@
     .user-card-actions .btn {
       flex: 1;
       justify-content: center;
+      min-height: 44px;
     }
 
     .no-orders {
@@ -770,6 +783,14 @@
       .sidebar-toggle {
         display: flex;
       }
+
+      #load-transactions-btn {
+        display: inline-flex;
+      }
+
+      #transactions-block.mobile-collapsed:not(.open) .filters select {
+        display: none;
+      }
     }
 
     @media (max-width: 600px) {
@@ -786,8 +807,38 @@
         align-items: flex-start;
       }
 
+      .content-block {
+        padding: 1rem;
+      }
+
+      .content-block-header {
+        margin-bottom: 0.9rem;
+      }
+
+      .content-block-header .filters {
+        width: 100%;
+      }
+
+      .content-block-header .filter-select,
+      .content-block-header .btn {
+        width: 100%;
+      }
+
       #settlement-orders-container {
         grid-template-columns: 1fr;
+      }
+
+      .user-card {
+        padding: 1rem;
+      }
+
+      .user-card-actions {
+        flex-direction: row;
+      }
+
+      .user-card-actions .btn {
+        min-height: 48px;
+        font-size: 0.9rem;
       }
     }
 
@@ -925,8 +976,16 @@
         <!-- Pending Users -->
         <div class="content-block">
           <div class="content-block-header">
-            <div class="content-block-title">Cadastros Aguardando Aprovacao</div>
-            <button onclick="loadPendingUsers()" class="btn btn-ghost btn-sm">Atualizar</button>
+            <div class="content-block-title">Gestão de Usuários</div>
+            <div class="filters">
+              <select id="user-status-filter" class="filter-select">
+                <option value="PENDING_APPROVAL">Pendentes</option>
+                <option value="APPROVED">Aprovados</option>
+                <option value="REJECTED">Rejeitados</option>
+                <option value="">Todos</option>
+              </select>
+              <button onclick="loadPendingUsers()" class="btn btn-ghost btn-sm">Atualizar</button>
+            </div>
           </div>
           <div id="settlement-orders-container">
             <p class="no-orders">Carregando...</p>
@@ -934,10 +993,11 @@
         </div>
 
         <!-- Transactions -->
-        <div class="content-block">
+        <div class="content-block" id="transactions-block">
           <div class="content-block-header">
             <div class="content-block-title">Transacoes</div>
             <div class="filters">
+              <button id="load-transactions-btn" class="btn btn-ghost btn-sm">Carregar transações</button>
               <select id="status-filter" class="filter-select">
                 <option value="">Todos os Status</option>
                 <option value="PENDING">Pendentes</option>
@@ -952,7 +1012,7 @@
               </select>
             </div>
           </div>
-          <div class="table-wrap">
+          <div class="table-wrap" id="transactions-table-wrap">
             <table id="transactions-table" class="data-table">
               <thead>
                 <tr>
@@ -967,7 +1027,7 @@
               </thead>
               <tbody id="transactions-tbody">
                 <tr>
-                  <td colspan="7" class="no-data">Carregando...</td>
+                  <td colspan="7" class="no-data">Use "Carregar transações" para consultar.</td>
                 </tr>
               </tbody>
             </table>

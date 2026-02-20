@@ -1,0 +1,643 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "FlowPay",
+      "item": "https://flowpay.cash",
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Política de Privacidade",
+      "item": "https://flowpay.cash/privacidade",
+    },
+  ],
+};
+---
+
+<Layout
+  title="Política de Privacidade — FlowPay"
+  description="Saiba como a FlowPay coleta, usa e protege seus dados pessoais em conformidade com a LGPD (Lei 13.709/2018). Seus direitos como titular, base legal e contato do DPO."
+  structuredData={breadcrumbSchema}
+>
+  <Navbar />
+
+  <main class="legal-page">
+    <div class="legal-bg-glow"></div>
+
+    <div class="legal-container">
+
+      <header class="legal-header">
+        <span class="legal-badge">LGPD — Lei 13.709/2018</span>
+        <h1 class="legal-title">Política de <span class="gradient-text">Privacidade</span></h1>
+        <p class="legal-meta">
+          Controlador: <strong>FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA — ME</strong><br />
+          CNPJ: 43.376.355/0001-92<br />
+          Última atualização: 20 de fevereiro de 2026
+        </p>
+      </header>
+
+      <div class="legal-body">
+
+        <section class="legal-section">
+          <h2>1. Quem somos</h2>
+          <p>
+            A <strong>FlowPay</strong> é um produto operado pela <strong>FLOWOFF MARKETING E
+            ASSESSORIA DIGITAL LTDA — ME</strong> (doravante "Flowoff" ou "nós"), pessoa jurídica
+            de direito privado, inscrita no CNPJ sob o nº 43.376.355/0001-92, com sede na
+            Avenida 85, esq. com a Rua 137, nº 556 — Setor Marista, Goiânia — GO, CEP
+            74.170-120.
+          </p>
+          <p>
+            A FlowPay é um gateway de pagamentos que permite a realização de transações via PIX
+            e ativos digitais (criptomoedas), conectando pagadores e recebedores por meio de
+            infraestrutura tecnológica própria.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>2. Dados que coletamos</h2>
+          <p>Coletamos os seguintes dados pessoais, conforme a finalidade de uso:</p>
+
+          <h3>2.1 Dados fornecidos diretamente por você</h3>
+          <ul>
+            <li><strong>Nome completo</strong> — identificação do titular da conta</li>
+            <li><strong>Endereço de e-mail</strong> — comunicação e autenticação</li>
+            <li><strong>CPF</strong> — verificação de identidade e obrigações legais</li>
+            <li><strong>Número de telefone / WhatsApp</strong> — comunicação operacional</li>
+            <li><strong>Tipo de uso / segmento de negócio</strong> — personalização do serviço</li>
+          </ul>
+
+          <h3>2.2 Dados gerados automaticamente</h3>
+          <ul>
+            <li><strong>Logs de acesso</strong> — data, hora e origem de requisições (exigido pelo art. 15 do Marco Civil da Internet)</li>
+            <li><strong>Dados técnicos de sessão</strong> — tipo de dispositivo, sistema operacional e navegador, para fins de segurança</li>
+          </ul>
+
+          <h3>2.3 Dados de transações</h3>
+          <p>
+            Valores transacionados, identificadores de cobrança (charge ID), status de
+            liquidação e hashes de transação blockchain. <strong>Dados de chave PIX do
+            pagador não são armazenados</strong> pela FlowPay — o processamento ocorre
+            diretamente via infraestrutura do Banco Central.
+          </p>
+
+          <div class="legal-highlight">
+            Não coletamos dados de cartão de crédito. Não armazenamos senhas de contas
+            bancárias ou credenciais de carteiras digitais.
+          </div>
+        </section>
+
+        <section class="legal-section">
+          <h2>3. Finalidade e base legal</h2>
+          <p>
+            Tratamos seus dados com base nas hipóteses legais previstas no art. 7º da LGPD:
+          </p>
+
+          <div class="legal-table-wrapper">
+            <table class="legal-table">
+              <thead>
+                <tr>
+                  <th>Finalidade</th>
+                  <th>Base Legal (LGPD)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Criação e gestão da conta do vendedor</td>
+                  <td>Execução de contrato — art. 7º, V</td>
+                </tr>
+                <tr>
+                  <td>Processamento de pagamentos PIX e cripto</td>
+                  <td>Execução de contrato — art. 7º, V</td>
+                </tr>
+                <tr>
+                  <td>Prevenção a fraudes e lavagem de dinheiro</td>
+                  <td>Cumprimento de obrigação legal — art. 7º, II</td>
+                </tr>
+                <tr>
+                  <td>Comunicações operacionais (status de pagamento, aprovação de cadastro)</td>
+                  <td>Execução de contrato — art. 7º, V</td>
+                </tr>
+                <tr>
+                  <td>Análise de uso e melhoria da plataforma</td>
+                  <td>Legítimo interesse — art. 7º, IX</td>
+                </tr>
+                <tr>
+                  <td>Cumprimento de obrigações fiscais e regulatórias</td>
+                  <td>Cumprimento de obrigação legal — art. 7º, II</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="legal-section">
+          <h2>4. Compartilhamento de dados</h2>
+          <p>
+            Seus dados podem ser compartilhados com terceiros nas seguintes hipóteses:
+          </p>
+          <ul>
+            <li>
+              <strong>Parceiros de processamento de pagamento</strong> — provedores de
+              infraestrutura PIX e redes blockchain, estritamente para execução da transação
+            </li>
+            <li>
+              <strong>Autoridades e órgãos reguladores</strong> — Banco Central do Brasil,
+              Receita Federal, COAF e demais autoridades competentes, quando exigido por lei
+            </li>
+            <li>
+              <strong>Provedores de infraestrutura de TI</strong> — serviços de hospedagem,
+              monitoramento e segurança, sob acordos de confidencialidade
+            </li>
+          </ul>
+          <p>
+            <strong>Não vendemos, alugamos ou cedemos seus dados pessoais a terceiros
+            para fins comerciais.</strong>
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>5. Retenção de dados</h2>
+          <p>
+            Mantemos seus dados pelo tempo necessário para cumprir as finalidades descritas
+            nesta política, observando os seguintes prazos mínimos legais:
+          </p>
+          <ul>
+            <li><strong>Logs de acesso:</strong> 6 meses (art. 15, Marco Civil da Internet)</li>
+            <li><strong>Registros de transações financeiras:</strong> 5 anos (Resolução BACEN nº 2.554/1998 e legislação tributária)</li>
+            <li><strong>Dados cadastrais:</strong> enquanto durar a relação contratual + 5 anos após o encerramento</li>
+          </ul>
+          <p>
+            Após o vencimento dos prazos, os dados são eliminados ou anonimizados.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>6. Seus direitos como titular</h2>
+          <p>
+            Nos termos dos arts. 17 a 22 da LGPD, você tem os seguintes direitos sobre
+            seus dados pessoais:
+          </p>
+          <ul>
+            <li><strong>Acesso</strong> — confirmar se tratamos seus dados e obter cópia deles</li>
+            <li><strong>Correção</strong> — solicitar a atualização de dados incompletos, inexatos ou desatualizados</li>
+            <li><strong>Eliminação</strong> — solicitar a exclusão de dados tratados com base no consentimento</li>
+            <li><strong>Portabilidade</strong> — receber seus dados em formato estruturado e interoperável</li>
+            <li><strong>Revogação do consentimento</strong> — quando o tratamento se basear nessa hipótese</li>
+            <li><strong>Oposição</strong> — opor-se ao tratamento realizado com base em legítimo interesse</li>
+            <li><strong>Informação sobre compartilhamento</strong> — saber com quem compartilhamos seus dados</li>
+          </ul>
+          <p>
+            Para exercer qualquer um desses direitos, entre em contato pelo e-mail
+            <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>.
+            Responderemos em até 15 dias úteis.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>7. Segurança</h2>
+          <p>
+            Adotamos medidas técnicas e organizacionais para proteger seus dados contra
+            acesso não autorizado, perda, destruição ou divulgação indevida, incluindo:
+          </p>
+          <ul>
+            <li>Transmissão de dados via HTTPS/TLS</li>
+            <li>Controle de acesso por função (role-based access control)</li>
+            <li>Logs de auditoria de operações sensíveis</li>
+            <li>Provas de existência on-chain (Proof of Existence) para integridade de registros</li>
+          </ul>
+          <p>
+            Em caso de incidente de segurança que possa acarretar risco ou dano relevante
+            aos titulares, notificaremos a ANPD e os afetados no prazo previsto na LGPD.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>8. Cookies</h2>
+          <p>
+            Utilizamos cookies e tecnologias similares para funcionamento da plataforma e
+            análise de uso. Para detalhes completos, consulte nossa
+            <a href="/cookies">Política de Cookies</a>.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>9. Transferência internacional de dados</h2>
+          <p>
+            Parte da nossa infraestrutura pode estar localizada fora do Brasil (ex: redes
+            blockchain públicas e provedores de cloud). Quando isso ocorrer, garantimos que
+            o nível de proteção seja equivalente ao exigido pela LGPD, por meio de cláusulas
+            contratuais ou outros instrumentos legais adequados.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>10. Encarregado de dados (DPO)</h2>
+          <p>
+            Nosso Encarregado pelo Tratamento de Dados Pessoais (DPO) está disponível para
+            atender suas solicitações, dúvidas e reclamações relacionadas à privacidade:
+          </p>
+          <div class="legal-contact-card">
+            <div class="contact-line">
+              <span class="contact-label">Empresa</span>
+              <span>FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA — ME</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">CNPJ</span>
+              <span>43.376.355/0001-92</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">Endereço</span>
+              <span>Av. 85, esq. c/ Rua 137, nº 556 — Setor Marista, Goiânia — GO, 74.170-120</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-label">E-mail</span>
+              <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="legal-section">
+          <h2>11. Alterações desta política</h2>
+          <p>
+            Podemos atualizar esta Política de Privacidade periodicamente. Alterações
+            relevantes serão comunicadas por e-mail ou por aviso na plataforma com
+            antecedência mínima de 10 dias. A versão vigente estará sempre disponível
+            em <a href="/privacidade">flowpay.cash/privacidade</a>.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>12. Autoridade de proteção de dados</h2>
+          <p>
+            Caso considere que o tratamento de seus dados viola a LGPD, você tem o direito
+            de apresentar reclamação à <strong>Autoridade Nacional de Proteção de Dados
+            (ANPD)</strong>, pelo site
+            <a href="https://www.gov.br/anpd" target="_blank" rel="noopener noreferrer">gov.br/anpd</a>.
+          </p>
+        </section>
+
+      </div>
+
+      <div class="legal-footer-note">
+        <p>
+          Dúvidas? Entre em contato:
+          <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+        </p>
+        <div class="legal-links">
+          <a href="/termos">Termos de Uso</a>
+          <span>·</span>
+          <a href="/cookies">Política de Cookies</a>
+          <span>·</span>
+          <a href="/riscos">Aviso de Riscos</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .legal-page {
+    position: relative;
+    min-height: 100vh;
+    padding-top: 72px;
+    overflow: hidden;
+  }
+
+  .legal-bg-glow {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 60vh;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255, 0, 122, 0.07) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .legal-container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 5rem;
+  }
+
+  @media (min-width: 768px) {
+    .legal-container {
+      padding: 4rem 2rem 6rem;
+    }
+  }
+
+  /* Header */
+  .legal-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .legal-badge {
+    display: inline-block;
+    background: rgba(255, 0, 122, 0.1);
+    border: 1px solid rgba(255, 0, 122, 0.2);
+    color: rgba(255, 0, 122, 0.9);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 99px;
+    margin-bottom: 1rem;
+  }
+
+  .legal-title {
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #ff007a 0%, #ff7a00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .legal-meta {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.8;
+  }
+
+  .legal-meta strong {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+  }
+
+  /* Body */
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .legal-section {
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .legal-section:last-child {
+    border-bottom: none;
+  }
+
+  .legal-section h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-section h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.01em;
+  }
+
+  .legal-section p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .legal-section p:last-child {
+    margin-bottom: 0;
+  }
+
+  .legal-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .legal-section ul li {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.7;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .legal-section ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 0, 122, 0.6);
+  }
+
+  .legal-section ul li strong {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+  }
+
+  .legal-section a {
+    color: rgba(255, 0, 122, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .legal-section a:hover {
+      color: #ff007a;
+      text-decoration: underline;
+    }
+  }
+
+  /* Highlight box */
+  .legal-highlight {
+    background: rgba(0, 212, 255, 0.06);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-left: 3px solid rgba(0, 212, 255, 0.5);
+    border-radius: 0 12px 12px 0;
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+
+  /* Table */
+  .legal-table-wrapper {
+    overflow-x: auto;
+    margin-top: 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .legal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  .legal-table thead {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .legal-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .legal-table td {
+    padding: 12px 16px;
+    color: rgba(255, 255, 255, 0.65);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    line-height: 1.5;
+  }
+
+  .legal-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Contact card */
+  .legal-contact-card {
+    background: rgba(15, 15, 15, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .contact-line {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  @media (min-width: 480px) {
+    .contact-line {
+      flex-direction: row;
+      gap: 1rem;
+      align-items: baseline;
+    }
+  }
+
+  .contact-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .contact-line a {
+    color: rgba(255, 0, 122, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .contact-line a:hover {
+      color: #ff007a;
+      text-decoration: underline;
+    }
+  }
+
+  /* Footer note */
+  .legal-footer-note {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .legal-footer-note p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .legal-footer-note p a {
+    color: rgba(255, 0, 122, 0.8);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  @media (hover: hover) {
+    .legal-footer-note p a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .legal-links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .legal-links a {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.35);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .legal-links a:hover {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .legal-links span {
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 0.85rem;
+  }
+</style>

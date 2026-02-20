@@ -3,6 +3,9 @@ Allow: /
 Disallow: /admin
 Disallow: /api
 Disallow: /login
-Disallow: /private
+Disallow: /dashboard
+Disallow: /client
+Disallow: /auth
+Disallow: /pay
 
 Sitemap: https://flowpay.cash/sitemap-index.xml

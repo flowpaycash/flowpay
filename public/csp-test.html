@@ -139,7 +139,7 @@
                 }
                 
                 // Teste 3: Fetch
-                fetch('/.netlify/functions/env')
+                fetch('/api/health')
                     .then(res => res.json())
                     .then(data => {
                         log('✅ Fetch funcionando', 'success');
@@ -180,7 +180,7 @@
         // Teste específico: Fetch
         function testFetch() {
             log('🌐 Testando fetch...', 'info');
-            fetch('/.netlify/functions/env')
+            fetch('/api/health')
                 .then(res => res.json())
                 .then(data => {
                     log('🎯 Fetch executado com sucesso!', 'success');

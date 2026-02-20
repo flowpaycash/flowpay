@@ -199,7 +199,7 @@ async function processCryptoTransaction(formData) {
         // Create transaction object
         const transaction = {
             from: await getWalletAddress(),
-            to: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6', // FLOWPay contract (mock)
+            to: '0x1111111111111111111111111111111111111111', // FLOWPay contract (mock)
             value: web3.utils.toWei(amount.toString(), 'ether'),
             gas: '21000',
             gasPrice: await getGasPrice()

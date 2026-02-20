@@ -21,8 +21,8 @@ declare global {
 
 // Configuração ultra-minimal
 const uiConfig = {
-  logoLight: "https://flowpaypix.netlify.app/assets/logos/flowpay-logo.png",
-  logoDark: "https://flowpaypix.netlify.app/assets/logos/flowpay-logo.png",
+  logoLight: "https://flowpay.cash/assets/logos/flowpay-logo.png",
+  logoDark: "https://flowpay.cash/assets/logos/flowpay-logo.png",
   loginMethodsOrder: ["google"],
   displayErrorsOnModal: false,
   addPreviousLoginHint: false,

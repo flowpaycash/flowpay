@@ -3,8 +3,8 @@ import { Web3Auth } from "@web3auth/modal";
 
 // Configuração do Web3Auth
 const uiConfig = {
-  logoLight: "https://flowpaypix.netlify.app/assets/logos/flowpay-logo.png",
-  logoDark: "https://flowpaypix.netlify.app/assets/logos/flowpay-logo.png",
+  logoLight: "https://flowpay.cash/assets/logos/flowpay-logo.png",
+  logoDark: "https://flowpay.cash/assets/logos/flowpay-logo.png",
   loginMethodsOrder: ["google"],
   displayErrorsOnModal: false,
   addPreviousLoginHint: false,

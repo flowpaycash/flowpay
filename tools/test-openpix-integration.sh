@@ -12,7 +12,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Configurações
-API_URL="${API_URL:-http://localhost:8888/.netlify/functions}"
+API_URL="${API_URL:-http://localhost:4321/api}"
 WOOVI_API_KEY="${WOOVI_API_KEY:-}"
 WOOVI_WEBHOOK_SECRET="${WOOVI_WEBHOOK_SECRET:-test_secret}"
 
@@ -21,9 +21,9 @@ echo "=========================================="
 echo ""
 
 # Verificar se servidor está rodando
-if ! curl -s "${API_URL}/create-pix-charge" > /dev/null 2>&1; then
+if ! curl -s "${API_URL}/create-charge" > /dev/null 2>&1; then
     echo -e "${RED}❌ Servidor não está rodando${NC}"
-    echo "Execute: netlify dev"
+    echo "Execute: npm run dev"
     exit 1
 fi
 
@@ -46,7 +46,7 @@ test_create_charge() {
         -X POST \
         -H "Content-Type: application/json" \
         -d "$payload" \
-        "${API_URL}/create-pix-charge")
+        "${API_URL}/create-charge")
 
     http_status=$(echo "$response" | grep "HTTP_STATUS:" | cut -d: -f2)
     response_body=$(echo "$response" | grep -v "HTTP_STATUS:")
@@ -80,7 +80,7 @@ test_webhook() {
         -H "Content-Type: application/json" \
         -H "x-woovi-signature: $signature" \
         -d "$payload" \
-        "${API_URL}/webhook-handler")
+        "${API_URL}/webhook")
 
     http_status=$(echo "$response" | grep "HTTP_STATUS:" | cut -d: -f2)
     response_body=$(echo "$response" | grep -v "HTTP_STATUS:")
@@ -104,7 +104,7 @@ test_webhook() {
 calculate_hmac() {
     local secret="$1"
     local payload="$2"
-    echo -n "$payload" | openssl dgst -sha256 -hmac "$secret" | cut -d' ' -f2
+    echo -n "$payload" | openssl dgst -sha256 -hmac "$secret" -binary | openssl base64
 }
 
 # Teste 1: Criar cobrança válida
@@ -113,7 +113,7 @@ echo -e "${GREEN}TESTE 1: Criar Cobrança PIX Válida${NC}"
 echo -e "${GREEN}═══════════════════════════════════════${NC}"
 
 test_create_charge "Cobrança válida" '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 50.00,
     "moeda": "BRL",
     "id_transacao": "test_openpix_001"
@@ -125,7 +125,7 @@ echo -e "${GREEN}TESTE 2: Cobrança com Valor Baixo${NC}"
 echo -e "${GREEN}═══════════════════════════════════════${NC}"
 
 test_create_charge "Valor baixo" '{
-    "wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "wallet": "0x1111111111111111111111111111111111111111",
     "valor": 0.50,
     "moeda": "BRL",
     "id_transacao": "test_openpix_002"
@@ -151,15 +151,17 @@ echo -e "${GREEN}═════════════════════
 webhook_payload='{
     "event": "charge.paid",
     "data": {
-        "correlationID": "test_openpix_001",
-        "value": 5000,
-        "status": "CONFIRMED",
-        "paidAt": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
-        "additionalInfo": [
-            {"key": "wallet", "value": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"},
-            {"key": "moeda", "value": "USDT"},
-            {"key": "chainId", "value": "137"}
-        ]
+        "charge": {
+            "correlationID": "test_openpix_001",
+            "value": 5000,
+            "status": "CONFIRMED",
+            "paidAt": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
+            "additionalInfo": [
+                {"key": "wallet", "value": "0x1111111111111111111111111111111111111111"},
+                {"key": "moeda", "value": "USDT"},
+                {"key": "chainId", "value": "137"}
+            ]
+        }
     }
 }'
 
@@ -200,4 +202,3 @@ echo "- Verifique os logs do servidor para detalhes"
 echo "- Use 'jq' para formatação JSON: brew install jq"
 echo ""
 echo -e "${GREEN}🎉 Testes concluídos!${NC}"
-

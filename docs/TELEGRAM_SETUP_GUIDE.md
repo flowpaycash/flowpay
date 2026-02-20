@@ -56,17 +56,17 @@ Keep your token secure and store it safely!
 
 ### **1. Variáveis de Ambiente**
 
-Configure no seu arquivo `.env` ou no painel do Netlify:
+Configure no seu arquivo `.env` ou no painel do Railway:
 
 ```bash
 # Telegram Notifications
-TELEGRAM_BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
+TELEGRAM_BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 TELEGRAM_CHAT_ID=123456789
 ```
 
 ### **2. Ativar Notificações**
 
-No arquivo `.netlify/functions/webhook-handler.js`, remova o comentário:
+No arquivo `src/pages/api/webhook.js`, remova o comentário:
 
 ```javascript
 // Antes (comentado)
@@ -82,7 +82,7 @@ await sendToTelegram(payload);
 
 ```bash
 # Teste o webhook localmente
-curl -X POST http://localhost:8888/.netlify/functions/webhook-handler \
+curl -X POST http://localhost:4321/api/webhook \
   -H "Content-Type: application/json" \
   -H "X-OpenPix-Signature: test-signature" \
   -d '{"test": "webhook", "charge": {"status": "COMPLETED"}, "pix": {"value": "100.00"}}'
@@ -90,7 +90,7 @@ curl -X POST http://localhost:8888/.netlify/functions/webhook-handler \
 
 ### **2. Teste em Produção**
 
-1. Configure as variáveis no Netlify
+1. Configure as variáveis no Railway
 2. Faça uma cobrança Pix real
 3. Verifique se a notificação chega no Telegram
 
@@ -157,14 +157,14 @@ async function sendToTelegram(payload) {
 
 1. Verifique se as variáveis estão configuradas
 2. Verifique se a função está descomentada
-3. Verifique os logs do Netlify
+3. Verifique os logs do Railway
 4. Teste o bot manualmente
 
 ## 📊 **Monitoramento**
 
-### **1. Logs do Netlify**
+### **1. Logs do Railway**
 
-Acesse: `Netlify Dashboard > Functions > Logs`
+Acesse: `Railway Dashboard > Functions > Logs`
 
 ### **2. Arquivo de Payloads**
 
@@ -172,7 +172,7 @@ O webhook salva todos os payloads em `webhook_payloads.json`
 
 ### **3. Status das Funcionalidades**
 
-Acesse: `/.netlify/functions/env` para ver o status
+Acesse: `/api/health` para ver o status
 
 ## 🔮 **Funcionalidades Futuras**
 
@@ -203,7 +203,7 @@ Acesse: `/.netlify/functions/env` para ver o status
 - [ ] Token do bot obtido
 - [ ] Chat ID identificado
 - [ ] Variáveis configuradas no .env
-- [ ] Variáveis configuradas no Netlify
+- [ ] Variáveis configuradas no Railway
 - [ ] Função descomentada no webhook
 - [ ] Teste local realizado
 - [ ] Teste em produção realizado
