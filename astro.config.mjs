@@ -32,9 +32,9 @@ export default defineConfig({
     build: {
       assetsInlineLimit: 0,
     },
-    // Mantendo externalização do better-sqlite3 por segurança
     ssr: {
       external: ["better-sqlite3"],
+      noExternal: ["@sentry/astro", "@sentry/core", "@sentry/browser"],
     },
   },
   publicDir: "public",
