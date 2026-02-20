@@ -23,9 +23,19 @@ export const POST = async ({ request, clientAddress }) => {
       return new Response(rateLimitResult.body, { status: 429, headers });
     }
 
-    const clientIP = clientAddress;
-    const normalizedIP = clientIP.replace("::ffff:", "");
     const { config } = await import("../../services/api/config.mjs");
+
+    // Cloudflare injeta o IP real do cliente em CF-Connecting-IP.
+    // Sem esse header (acesso direto ao Railway), usa clientAddress como fallback.
+    const cfIP = request.headers.get("cf-connecting-ip");
+    const rawIP = cfIP || clientAddress;
+    const normalizedIP = rawIP.replace("::ffff:", "");
+
+    secureLog("info", "Woovi Webhook: IP recebido", {
+      cf_connecting_ip: cfIP || "ausente",
+      client_address: clientAddress,
+      resolved_ip: normalizedIP,
+    });
 
     if (!config.woovi.allowedIPs.includes(normalizedIP)) {
       secureLog(
@@ -36,7 +46,11 @@ export const POST = async ({ request, clientAddress }) => {
         scope.setLevel("warning");
         scope.setTag("security.violation", "unauthorized_ip");
         scope.setTag("source", "woovi_webhook");
-        scope.setContext("request", { ip: normalizedIP });
+        scope.setContext("request", {
+          ip: normalizedIP,
+          cf_connecting_ip: cfIP || "ausente",
+          client_address: clientAddress,
+        });
         Sentry.captureMessage(
           `Woovi Webhook: IP nao autorizado bloqueado — ${normalizedIP}`,
           "warning"
