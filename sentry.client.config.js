@@ -14,12 +14,16 @@ Sentry.init({
   replaysSessionSampleRate: 0.05,
   replaysOnErrorSampleRate: 1.0,
 
+  // Captura logs do console como logs estruturados no Sentry
+  enableLogs: true,
+
   integrations: [
     Sentry.replayIntegration({
       maskAllText: true,
       blockAllMedia: true,
     }),
     Sentry.browserTracingIntegration(),
+    Sentry.consoleLoggingIntegration({ levels: ["warn", "error"] }),
   ],
 
   // Filter out noise

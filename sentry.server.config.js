@@ -12,8 +12,14 @@ Sentry.init({
   // Performance monitoring - amostragem conservadora em producao
   tracesSampleRate: process.env.NODE_ENV === "development" ? 1.0 : 0.2,
 
+  // Captura logs do console como logs estruturados no Sentry
+  enableLogs: true,
+
   // Nao captura spans de filesystem, apenas HTTP e DB
-  integrations: [Sentry.httpIntegration()],
+  integrations: [
+    Sentry.httpIntegration(),
+    Sentry.consoleLoggingIntegration({ levels: ["warn", "error"] }),
+  ],
 
   // Nao vaza dados sensiveis nos eventos
   beforeSend(event) {
