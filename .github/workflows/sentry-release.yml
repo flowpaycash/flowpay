@@ -1,0 +1,32 @@
+name: Sentry Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sentry-release:
+    name: Create Sentry Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read version from package.json
+        id: version
+        run: echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: flowpay-ms
+          SENTRY_PROJECT: javascript-astro
+        with:
+          environment: production
+          version: flowpay@${{ steps.version.outputs.VERSION }}
+          set_commits: auto
+          finalize: true

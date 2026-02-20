@@ -1,20 +1,30 @@
-import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
-import react from '@astrojs/react';
+import { defineConfig } from "astro/config";
+import node from "@astrojs/node";
+import react from "@astrojs/react";
+import sentry from "@sentry/astro";
 
 export default defineConfig({
-  site: 'https://flowpay.cash',
-  output: 'server',
-  integrations: [react()],
+  site: "https://flowpay.cash",
+  output: "server",
+  integrations: [
+    react(),
+    sentry({
+      dsn: process.env.SENTRY_DSN,
+      sourceMapsUploadOptions: {
+        project: process.env.SENTRY_PROJECT,
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      },
+    }),
+  ],
   adapter: node({
-    mode: 'standalone'
+    mode: "standalone",
   }),
   server: {
-    host: '0.0.0.0',
-    port: parseInt(process.env.PORT || '4321')
+    host: "0.0.0.0",
+    port: parseInt(process.env.PORT || "4321"),
   },
   build: {
-    assets: 'assets',
+    assets: "assets",
   },
   vite: {
     build: {
@@ -22,9 +32,9 @@ export default defineConfig({
     },
     // Mantendo externalização do better-sqlite3 por segurança
     ssr: {
-      external: ['better-sqlite3']
-    }
+      external: ["better-sqlite3"],
+    },
   },
-  publicDir: 'public',
-  outDir: 'dist',
+  publicDir: "public",
+  outDir: "dist",
 });
