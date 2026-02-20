@@ -1,66 +1,39 @@
+import { emailTemplate } from './base.mjs';
+
 /**
- * Template de e-mail para Confirmação de Pagamento
+ * Template de e-mail para Confirmação de Pagamento PIX
  * @param {object} params
  * @param {string} params.orderId - ID do pedido
- * @param {number} params.amount - Valor da transação
+ * @param {number} params.amount  - Valor da transação
  * @returns {string} HTML formatado
  */
-export const paymentConfirmedTemplate = ({ orderId, amount }) => `
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0d0d0d; color: #ffffff; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: #1a1a1a; padding: 40px; border-radius: 16px; border: 1px solid #333; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { color: #ff007a; font-size: 24px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
-        .status-badge { display: inline-block; background: rgba(0, 255, 122, 0.1); color: #00ff7a; padding: 8px 16px; border-radius: 20px; font-size: 14px; margin-bottom: 20px; }
-        h1 { color: #ffffff; font-size: 28px; margin-bottom: 10px; }
-        p { color: #b3b3b3; line-height: 1.6; }
-        .order-details { background: #000; padding: 20px; border-radius: 12px; margin: 30px 0; border: 1px solid #1a1a1a; }
-        .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #1a1a1a; padding-bottom: 10px; }
-        .detail-label { color: #666; font-size: 13px; }
-        .detail-value { color: #fff; font-weight: 500; font-family: monospace; }
-        .footer { text-align: center; margin-top: 40px; color: #444; font-size: 12px; }
-        .btn { display: inline-block; background: #ff007a; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">FLOWPay</div>
-        </div>
-        
-        <div style="text-align: center;">
-            <div class="status-badge">Pagamento Confirmado</div>
-            <h1>O Fluxo começou! 🚀</h1>
-            <p>Acabamos de confirmar seu pagamento via Pix. Sua liquidação em cripto já está sendo processada de forma autônoma.</p>
-        </div>
-
-        <div class="order-details">
-            <div class="detail-row">
-                <span class="detail-label">ID DO PEDIDO</span>
-                <span class="detail-value">${orderId}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">VALOR PAGO</span>
-                <span class="detail-value">R$ ${amount.toFixed(2)}</span>
-            </div>
-            <div class="detail-row" style="border: none;">
-                <span class="detail-label">STATUS</span>
-                <span class="detail-value">COMPLETED</span>
-            </div>
-        </div>
-
-        <div style="text-align: center;">
-            <p>Você pode acompanhar o status da sua transação diretamente no nosso dashboard.</p>
-            <a href="https://flowpay.cash/dashboard" class="btn">Ver meu Dashboard</a>
-        </div>
-
-        <div class="footer">
-            <p>Este é um e-mail automático gerado por FLOWPay Autonomous Protocol.<br>NΞØ Protocol · No Banks, Just Flow.</p>
-        </div>
-    </div>
-</body>
-</html>
-`;
+export const paymentConfirmedTemplate = ({ orderId, amount }) => emailTemplate({
+    badge: 'Pagamento confirmado',
+    badgeColor: 'green',
+    title: 'O Fluxo começou! 🚀',
+    body: `
+        <p style="margin:0 0 24px">
+            Confirmamos seu pagamento via PIX. Sua liquidação já está sendo processada de forma autônoma.
+        </p>
+        <table width="100%" cellpadding="0" cellspacing="0"
+               style="background:#0a0a0a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden">
+            <tr>
+                <td style="padding:14px 20px;color:rgba(255,255,255,0.4);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid rgba(255,255,255,0.05)">ID do pedido</td>
+                <td style="padding:14px 20px;font-family:monospace;font-size:0.9rem;border-bottom:1px solid rgba(255,255,255,0.05)">${orderId}</td>
+            </tr>
+            <tr>
+                <td style="padding:14px 20px;color:rgba(255,255,255,0.4);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid rgba(255,255,255,0.05)">Valor pago</td>
+                <td style="padding:14px 20px;font-weight:700;color:#00c864;border-bottom:1px solid rgba(255,255,255,0.05)">R$ ${amount.toFixed(2)}</td>
+            </tr>
+            <tr>
+                <td style="padding:14px 20px;color:rgba(255,255,255,0.4);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px">Status</td>
+                <td style="padding:14px 20px;font-weight:600;color:#00c864">CONCLUÍDO</td>
+            </tr>
+        </table>
+    `,
+    cta: {
+        label: 'Ver meu Dashboard →',
+        url: 'https://flowpay.cash/dashboard',
+    },
+    footer: 'E-mail automático do FlowPay Autonomous Protocol · NΞØ Protocol — No Banks, Just Flow.',
+});

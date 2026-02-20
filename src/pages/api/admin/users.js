@@ -11,6 +11,9 @@ import {
   getUserById,
 } from "../../../services/database/sqlite.mjs";
 import { sendEmail } from "../../../services/api/email-service.mjs";
+import { aprovacaoTemplate } from "../../../services/api/email/templates/aprovacao.mjs";
+import { rejeicaoTemplate } from "../../../services/api/email/templates/rejeicao.mjs";
+import { adminAprovacaoTemplate, adminRejeicaoTemplate } from "../../../services/api/email/templates/admin-notificacao.mjs";
 
 // GET /api/admin/users - list all users
 export const GET = async ({ request, cookies }) => {
@@ -132,18 +135,7 @@ export const POST = async ({ request, cookies }) => {
       sendEmail({
         to: user.email,
         subject: "Sua conta FlowPay foi aprovada! 🎉",
-        html: `
-          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0a0a0a;color:#fff;padding:40px;border-radius:16px">
-            <img src="https://flowpay.cash/img/flowpay-logo.png" alt="FlowPay" style="height:48px;margin-bottom:32px" />
-            <h1 style="font-size:1.5rem;margin-bottom:8px">Conta aprovada, ${user.name}!</h1>
-            <p style="color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:32px">
-              Sua conta FlowPay foi aprovada. Acesse o dashboard para começar a criar seus links de pagamento.
-            </p>
-            <a href="https://flowpay.cash/dashboard" style="display:inline-block;background:linear-gradient(135deg,#ff007a,#ff7a00);color:#fff;text-decoration:none;padding:14px 28px;border-radius:12px;font-weight:700;font-size:1rem">
-              Acessar Dashboard →
-            </a>
-          </div>
-        `,
+        html: aprovacaoTemplate({ name: user.name }),
       }).catch((err) => {
         secureLog("error", "Erro ao enviar email de aprovacao", { userId, error: err.message });
         Sentry.withScope((scope) => {
@@ -162,19 +154,7 @@ export const POST = async ({ request, cookies }) => {
         sendEmail({
           to: adminEmailApprove,
           subject: `[FlowPay] ✅ Aprovado: ${user.name}`,
-          html: `
-            <div style="font-family:sans-serif;max-width:520px;margin:0 auto;background:#0a0a0a;color:#fff;padding:40px;border-radius:16px">
-              <img src="https://flowpay.cash/img/flowpay-logo.png" alt="FlowPay" style="height:40px;margin-bottom:28px" />
-              <div style="background:rgba(0,200,100,0.1);border:1px solid rgba(0,200,100,0.3);border-radius:12px;padding:20px;margin-bottom:28px">
-                <p style="margin:0;font-size:0.8rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px">Cadastro aprovado</p>
-                <p style="margin:8px 0 0;font-size:1.4rem;font-weight:700">${user.name}</p>
-              </div>
-              <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
-                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.06)">E-mail</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)">${user.email}</td></tr>
-                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4)">Aprovado em</td><td style="padding:10px 0">${approvedAt}</td></tr>
-              </table>
-            </div>
-          `,
+          html: adminAprovacaoTemplate({ name: user.name, email: user.email, approvedAt }),
         }).catch(() => {});
       }
 
@@ -207,17 +187,7 @@ export const POST = async ({ request, cookies }) => {
       sendEmail({
         to: user.email,
         subject: "Atualização sobre seu cadastro FlowPay",
-        html: `
-          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0a0a0a;color:#fff;padding:40px;border-radius:16px">
-            <img src="https://flowpay.cash/img/flowpay-logo.png" alt="FlowPay" style="height:48px;margin-bottom:32px" />
-            <h1 style="font-size:1.5rem;margin-bottom:8px">Olá, ${user.name}</h1>
-            <p style="color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:16px">
-              Infelizmente não foi possível aprovar seu cadastro no FlowPay no momento.
-            </p>
-            ${rejectReason !== "Reprovado pelo administrador" ? `<p style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-bottom:24px">Motivo: ${rejectReason}</p>` : ""}
-            <p style="color:rgba(255,255,255,0.4);font-size:0.85rem">Em caso de dúvidas, entre em contato com nosso suporte.</p>
-          </div>
-        `,
+        html: rejeicaoTemplate({ name: user.name, reason: rejectReason }),
       }).catch((err) => {
         secureLog("error", "Erro ao enviar email de rejeicao", { userId, error: err.message });
         Sentry.withScope((scope) => {
@@ -236,20 +206,7 @@ export const POST = async ({ request, cookies }) => {
         sendEmail({
           to: adminEmailReject,
           subject: `[FlowPay] ❌ Rejeitado: ${user.name}`,
-          html: `
-            <div style="font-family:sans-serif;max-width:520px;margin:0 auto;background:#0a0a0a;color:#fff;padding:40px;border-radius:16px">
-              <img src="https://flowpay.cash/img/flowpay-logo.png" alt="FlowPay" style="height:40px;margin-bottom:28px" />
-              <div style="background:rgba(255,50,50,0.1);border:1px solid rgba(255,50,50,0.3);border-radius:12px;padding:20px;margin-bottom:28px">
-                <p style="margin:0;font-size:0.8rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px">Cadastro rejeitado</p>
-                <p style="margin:8px 0 0;font-size:1.4rem;font-weight:700">${user.name}</p>
-              </div>
-              <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
-                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.06)">E-mail</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)">${user.email}</td></tr>
-                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.06)">Motivo</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)">${rejectReason}</td></tr>
-                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4)">Rejeitado em</td><td style="padding:10px 0">${rejectedAt}</td></tr>
-              </table>
-            </div>
-          `,
+          html: adminRejeicaoTemplate({ name: user.name, email: user.email, reason: rejectReason, rejectedAt }),
         }).catch(() => {});
       }
 
