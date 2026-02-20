@@ -32,6 +32,7 @@ export default defineConfig({
     build: {
       assetsInlineLimit: 0,
       target: "es2020",
+      sourcemap: true,
     },
     ssr: {
       external: ["better-sqlite3"],

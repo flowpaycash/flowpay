@@ -3,6 +3,10 @@
  * Exposes FlowPay database and services to AI Agents.
  * Monitored with Sentry for full visibility.
  */
+import { createRequire } from "node:module";
+if (typeof require === "undefined") {
+    globalThis.require = createRequire(import.meta.url);
+}
 import * as Sentry from "@sentry/astro";
 // Note: You must install @modelcontextprotocol/sdk to use this
 // npm install @modelcontextprotocol/sdk

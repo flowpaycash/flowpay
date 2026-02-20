@@ -29,6 +29,9 @@ importers:
       '@sentry/astro':
         specifier: ^10.39.0
         version: 10.39.0(astro@5.17.3(@types/node@25.3.0)(ioredis@5.9.3)(rollup@4.57.1)(typescript@5.9.3)(yaml@2.8.2))
+      '@sentry/vite-plugin':
+        specifier: ^4.9.1
+        version: 4.9.1
       '@web3auth/ethereum-provider':
         specifier: ^8.12.4
         version: 8.12.4(@babel/runtime@7.28.6)

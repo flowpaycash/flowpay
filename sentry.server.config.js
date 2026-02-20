@@ -1,3 +1,7 @@
+import { createRequire } from "node:module";
+if (typeof require === "undefined") {
+  globalThis.require = createRequire(import.meta.url);
+}
 import * as Sentry from "@sentry/astro";
 
 Sentry.init({
