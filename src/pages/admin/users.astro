@@ -10,7 +10,7 @@
   <title>FLOWPay Admin | Usuários</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="/admin/admin.css" />
+  <link rel="stylesheet" href="/admin/panel.css" />
 
   <style>
     /* ── Page-specific styles ── */
@@ -202,6 +202,7 @@
       <h1>Admin</h1>
       <p>Acesso restrito</p>
       <form id="login-form" autocomplete="off">
+        <input type="text" name="username" value="admin" autocomplete="username" style="display:none" aria-hidden="true" />
         <label for="password">Senha de Acesso</label>
         <input
           type="password"
