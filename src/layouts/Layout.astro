@@ -191,10 +191,12 @@ const allSchemas = [...defaultStructuredData, ...extraSchema];
     <meta name="msapplication-TileImage" content="/assets/manifest/mstile-icon-270.png" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
 
-    <!-- CSS -->
+    <!-- CSS: design-system is critical/blocking, others load async -->
     <link rel="stylesheet" href="/css/design-system.css" />
-    <link rel="stylesheet" href="/css/navbar.css" />
-    <link rel="stylesheet" href="/css/landing.css" />
+    <link rel="preload" href="/css/navbar.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="/css/navbar.css" /></noscript>
+    <link rel="preload" href="/css/landing.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="/css/landing.css" /></noscript>
     <style is:global>
       :root {
         --primary: #ff007a;

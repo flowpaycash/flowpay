@@ -31,6 +31,7 @@ export default defineConfig({
   vite: {
     build: {
       assetsInlineLimit: 0,
+      target: "es2020",
     },
     ssr: {
       external: ["better-sqlite3"],
