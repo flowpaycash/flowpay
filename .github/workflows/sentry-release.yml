@@ -17,7 +17,9 @@ jobs:
 
       - name: Read version from package.json
         id: version
-        run: echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
