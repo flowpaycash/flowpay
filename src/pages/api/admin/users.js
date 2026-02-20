@@ -128,26 +128,24 @@ export const POST = async ({ request, cookies }) => {
         data: { userId },
       });
 
+      // Email para o usuário aprovado
       sendEmail({
         to: user.email,
-        subject: "Sua conta FlowPay foi aprovada!",
+        subject: "Sua conta FlowPay foi aprovada! 🎉",
         html: `
           <div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0a0a0a;color:#fff;padding:40px;border-radius:16px">
             <img src="https://flowpay.cash/img/flowpay-logo.png" alt="FlowPay" style="height:48px;margin-bottom:32px" />
             <h1 style="font-size:1.5rem;margin-bottom:8px">Conta aprovada, ${user.name}!</h1>
             <p style="color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:32px">
-              Sua conta FlowPay foi aprovada. Acesse o dashboard para comecar a criar seus links de pagamento.
+              Sua conta FlowPay foi aprovada. Acesse o dashboard para começar a criar seus links de pagamento.
             </p>
             <a href="https://flowpay.cash/dashboard" style="display:inline-block;background:linear-gradient(135deg,#ff007a,#ff7a00);color:#fff;text-decoration:none;padding:14px 28px;border-radius:12px;font-weight:700;font-size:1rem">
-              Acessar Dashboard
+              Acessar Dashboard →
             </a>
           </div>
         `,
       }).catch((err) => {
-        secureLog("error", "Erro ao enviar email de aprovacao", {
-          userId,
-          error: err.message,
-        });
+        secureLog("error", "Erro ao enviar email de aprovacao", { userId, error: err.message });
         Sentry.withScope((scope) => {
           scope.setLevel("warning");
           scope.setTag("source", "admin_users_email");
@@ -156,6 +154,29 @@ export const POST = async ({ request, cookies }) => {
           Sentry.captureException(err);
         });
       });
+
+      // Confirmação para o admin
+      const adminEmailApprove = process.env.ADMIN_NOTIFY_EMAIL;
+      if (adminEmailApprove) {
+        const approvedAt = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+        sendEmail({
+          to: adminEmailApprove,
+          subject: `[FlowPay] ✅ Aprovado: ${user.name}`,
+          html: `
+            <div style="font-family:sans-serif;max-width:520px;margin:0 auto;background:#0a0a0a;color:#fff;padding:40px;border-radius:16px">
+              <img src="https://flowpay.cash/img/flowpay-logo.png" alt="FlowPay" style="height:40px;margin-bottom:28px" />
+              <div style="background:rgba(0,200,100,0.1);border:1px solid rgba(0,200,100,0.3);border-radius:12px;padding:20px;margin-bottom:28px">
+                <p style="margin:0;font-size:0.8rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px">Cadastro aprovado</p>
+                <p style="margin:8px 0 0;font-size:1.4rem;font-weight:700">${user.name}</p>
+              </div>
+              <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
+                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.06)">E-mail</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)">${user.email}</td></tr>
+                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4)">Aprovado em</td><td style="padding:10px 0">${approvedAt}</td></tr>
+              </table>
+            </div>
+          `,
+        }).catch(() => {});
+      }
 
       return new Response(
         JSON.stringify({ success: true, message: "Usuario aprovado." }),
@@ -182,25 +203,23 @@ export const POST = async ({ request, cookies }) => {
         data: { userId, reason: rejectReason },
       });
 
+      // Email para o usuário rejeitado
       sendEmail({
         to: user.email,
-        subject: "Atualizacao sobre seu cadastro FlowPay",
+        subject: "Atualização sobre seu cadastro FlowPay",
         html: `
           <div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0a0a0a;color:#fff;padding:40px;border-radius:16px">
             <img src="https://flowpay.cash/img/flowpay-logo.png" alt="FlowPay" style="height:48px;margin-bottom:32px" />
-            <h1 style="font-size:1.5rem;margin-bottom:8px">Ola, ${user.name}</h1>
+            <h1 style="font-size:1.5rem;margin-bottom:8px">Olá, ${user.name}</h1>
             <p style="color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:16px">
-              Infelizmente nao foi possivel aprovar seu cadastro no FlowPay no momento.
+              Infelizmente não foi possível aprovar seu cadastro no FlowPay no momento.
             </p>
             ${rejectReason !== "Reprovado pelo administrador" ? `<p style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-bottom:24px">Motivo: ${rejectReason}</p>` : ""}
-            <p style="color:rgba(255,255,255,0.4);font-size:0.85rem">Em caso de duvidas, entre em contato com nosso suporte.</p>
+            <p style="color:rgba(255,255,255,0.4);font-size:0.85rem">Em caso de dúvidas, entre em contato com nosso suporte.</p>
           </div>
         `,
       }).catch((err) => {
-        secureLog("error", "Erro ao enviar email de rejeicao", {
-          userId,
-          error: err.message,
-        });
+        secureLog("error", "Erro ao enviar email de rejeicao", { userId, error: err.message });
         Sentry.withScope((scope) => {
           scope.setLevel("warning");
           scope.setTag("source", "admin_users_email");
@@ -209,6 +228,30 @@ export const POST = async ({ request, cookies }) => {
           Sentry.captureException(err);
         });
       });
+
+      // Confirmação para o admin
+      const adminEmailReject = process.env.ADMIN_NOTIFY_EMAIL;
+      if (adminEmailReject) {
+        const rejectedAt = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+        sendEmail({
+          to: adminEmailReject,
+          subject: `[FlowPay] ❌ Rejeitado: ${user.name}`,
+          html: `
+            <div style="font-family:sans-serif;max-width:520px;margin:0 auto;background:#0a0a0a;color:#fff;padding:40px;border-radius:16px">
+              <img src="https://flowpay.cash/img/flowpay-logo.png" alt="FlowPay" style="height:40px;margin-bottom:28px" />
+              <div style="background:rgba(255,50,50,0.1);border:1px solid rgba(255,50,50,0.3);border-radius:12px;padding:20px;margin-bottom:28px">
+                <p style="margin:0;font-size:0.8rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px">Cadastro rejeitado</p>
+                <p style="margin:8px 0 0;font-size:1.4rem;font-weight:700">${user.name}</p>
+              </div>
+              <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
+                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.06)">E-mail</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)">${user.email}</td></tr>
+                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.06)">Motivo</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)">${rejectReason}</td></tr>
+                <tr><td style="padding:10px 0;color:rgba(255,255,255,0.4)">Rejeitado em</td><td style="padding:10px 0">${rejectedAt}</td></tr>
+              </table>
+            </div>
+          `,
+        }).catch(() => {});
+      }
 
       return new Response(
         JSON.stringify({ success: true, message: "Usuario rejeitado." }),
