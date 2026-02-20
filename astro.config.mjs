@@ -1,4 +1,4 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, passthroughImageService } from "astro/config";
 import node from "@astrojs/node";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
@@ -38,6 +38,9 @@ export default defineConfig({
       external: ["better-sqlite3"],
       noExternal: ["@sentry/astro", "@sentry/core", "@sentry/browser"],
     },
+  },
+  image: {
+    service: passthroughImageService(),
   },
   publicDir: "public",
   outDir: "dist",
