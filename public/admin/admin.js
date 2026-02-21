@@ -449,20 +449,46 @@ function renderPendingUsers() {
       (u) => `
       <div class="user-card">
         <div class="user-card-header">
-          <span class="user-card-id">#${esc(String(u.id))} — ${esc(u.name)}</span>
+          <span class="user-card-id">#${esc(String(u.id))}</span>
           ${getUserStatusBadge(u.status)}
         </div>
-        <div class="user-detail-row"><span class="lbl">E-mail</span><span class="val">${esc(u.email)}</span></div>
-        <div class="user-detail-row"><span class="lbl">Tipo</span><span class="val">${esc(u.business_type || "—")}</span></div>
-        <div class="user-detail-row"><span class="lbl">CPF</span><span class="val">${u.cpf ? esc(u.cpf) : "—"}</span></div>
-        <div class="user-detail-row"><span class="lbl">Cadastrado em</span><span class="val">${new Date(u.created_at).toLocaleString("pt-BR")}</span></div>
-        ${
-          u.status === "PENDING_APPROVAL"
-            ? `<div class="user-card-actions">
-          <button class="btn btn-success btn-sm btn-approve" data-user-id="${u.id}">Aprovar</button>
-          <button class="btn btn-danger btn-sm btn-reject" data-user-id="${u.id}">Rejeitar</button>
+        
+        <div class="user-main-info">
+          <div class="user-name">${esc(u.name)}</div>
+          <div class="user-email-chip">${esc(u.email)}</div>
+        </div>
+
+        <div class="user-details-grid">
+          <div class="user-detail-item">
+            <span class="lbl">${esc(u.document_type || "CPF")}</span>
+            <span class="val highlight">${u.cpf ? esc(u.cpf) : "—"}</span>
+          </div>
+          <div class="user-detail-item">
+            <span class="lbl">Segmento</span>
+            <span class="val">${esc(u.business_type || "—")}</span>
+          </div>
+          <div class="user-detail-item">
+            <span class="lbl">WhatsApp</span>
+            <span class="val">${u.phone ? esc(u.phone) : "—"}</span>
+          </div>
+          <div class="user-detail-item">
+            <span class="lbl">Cadastro</span>
+            <span class="val">${new Date(u.created_at).toLocaleString("pt-BR", { dateStyle: 'short', timeStyle: 'short' })}</span>
+          </div>
+        </div>
+
+        ${u.status === "PENDING_APPROVAL"
+          ? `<div class="user-card-actions">
+          <button class="btn btn-success btn-approve" data-user-id="${u.id}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Aprovar
+          </button>
+          <button class="btn btn-outline btn-reject" data-user-id="${u.id}">
+             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            Rejeitar
+          </button>
         </div>`
-            : ""
+          : ""
         }
       </div>
     `

@@ -10,7 +10,7 @@ import { emailTemplate } from './base.mjs';
  * @param {string} params.registeredAt  - Data/hora formatada
  * @returns {string} HTML formatado
  */
-export const adminNovoCadastroTemplate = ({ name, email, businessType, phone, registeredAt }) =>
+export const adminNovoCadastroTemplate = ({ name, email, businessType, phone, registeredAt, document, documentType }) =>
     emailTemplate({
         badge: 'Novo cadastro',
         badgeColor: 'orange',
@@ -19,15 +19,19 @@ export const adminNovoCadastroTemplate = ({ name, email, businessType, phone, re
             <table width="100%" cellpadding="0" cellspacing="0"
                    style="background:#0a0a0a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;font-size:0.88rem">
                 <tr>
+                    <td style="padding:12px 18px;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.05)">${documentType || 'CPF'}</td>
+                    <td style="padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.05)">${document || '—'}</td>
+                </tr>
+                <tr>
                     <td style="padding:12px 18px;color:rgba(255,255,255,0.4);width:38%;border-bottom:1px solid rgba(255,255,255,0.05)">E-mail</td>
                     <td style="padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.05)">${email}</td>
                 </tr>
                 <tr>
-                    <td style="padding:12px 18px;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.05)">Tipo de uso</td>
+                    <td style="padding:12px 18px;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.05)">Setor</td>
                     <td style="padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.05)">${businessType}</td>
                 </tr>
                 <tr>
-                    <td style="padding:12px 18px;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.05)">Telefone</td>
+                    <td style="padding:12px 18px;color:rgba(255,255,255,0.4);border-bottom:1px solid rgba(255,255,255,0.05)">WhatsApp</td>
                     <td style="padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.05)">${phone || '—'}</td>
                 </tr>
                 <tr>

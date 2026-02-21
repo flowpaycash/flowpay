@@ -1,16 +1,28 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { Image } from 'astro:assets';
-import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
-import brandLogo from '../../public/img/flowpay-logo.png';
+import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import headerLogo from "../../public/assets/icons/flowpay-header-logo.png";
+import brandLogo from "../../public/img/flowpay-logo.png";
 ---
 
-<Layout title="Cadastro — FlowPay" description="Crie sua conta FlowPay e comece a receber pagamentos com PIX e cripto.">
+<Layout
+  title="Cadastro — FlowPay"
+  description="Crie sua conta FlowPay e comece a receber pagamentos com PIX e cripto."
+>
   <main class="register-page">
     <div class="register-bg-glow"></div>
 
     <a href="/" class="back-home-btn" aria-label="Voltar para a home">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
       Voltar
@@ -19,57 +31,116 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     <div class="register-content">
       <div class="register-brand">
         <a href="/">
-          <Image src={brandLogo} alt="FlowPay Logo" class="register-logo" height={80} />
+          <Image
+            src={brandLogo}
+            alt="FlowPay Logo"
+            class="register-logo"
+            height={80}
+          />
         </a>
       </div>
 
       <div class="register-card" id="form-card">
-        <Image src={headerLogo} alt="FlowPay" class="register-header-logo" height={36} />
+        <Image
+          src={headerLogo}
+          alt="FlowPay"
+          class="register-header-logo"
+          height={36}
+        />
         <h1 class="register-title">Criar sua conta</h1>
         <p class="register-subtitle">
-          Preencha os dados abaixo. Sua conta será analisada e aprovada manualmente em até 24h.
+          Preencha os dados abaixo. Sua conta será analisada e aprovada
+          manualmente em até 24h.
         </p>
 
         <form id="register-form" class="register-form" novalidate>
-          <div class="field-group">
-            <label for="name">Nome completo *</label>
-            <input type="text" id="name" name="name" placeholder="Seu nome completo" required autocomplete="name" />
+          <div class="type-selector">
+            <button type="button" class="type-btn active" data-type="CPF"
+              >Pessoa Física</button
+            >
+            <button type="button" class="type-btn" data-type="CNPJ"
+              >Empresa (PJ)</button
+            >
+            <input
+              type="hidden"
+              id="document_type"
+              name="document_type"
+              value="CPF"
+            />
           </div>
 
           <div class="field-group">
-            <label for="email">E-mail *</label>
-            <input type="email" id="email" name="email" placeholder="seu@email.com" required autocomplete="email" />
+            <label for="name" id="label-name">Nome completo *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Como devemos chamar você?"
+              required
+              autocomplete="name"
+            />
           </div>
 
           <div class="field-group">
-            <label for="cpf">CPF</label>
-            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" autocomplete="off" maxlength="14" />
+            <label for="email">E-mail corporativo ou pessoal *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="seu@email.com"
+              required
+              autocomplete="email"
+            />
           </div>
 
           <div class="field-group">
-            <label for="phone">WhatsApp / Telefone</label>
-            <input type="tel" id="phone" name="phone" placeholder="(11) 99999-9999" autocomplete="tel" />
+            <label for="document" id="label-document">CPF *</label>
+            <input
+              type="text"
+              id="document"
+              name="document"
+              placeholder="000.000.000-00"
+              required
+              autocomplete="off"
+            />
           </div>
 
           <div class="field-group">
-            <label for="business_type">Tipo de uso *</label>
+            <label for="phone">WhatsApp / Telefone *</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="(11) 99999-9999"
+              required
+              autocomplete="tel"
+            />
+          </div>
+
+          <div class="field-group">
+            <label for="business_type">Segmento de atuação *</label>
             <select id="business_type" name="business_type" required>
-              <option value="" disabled selected>Selecione...</option>
+              <option value="" disabled selected>O que você faz?</option>
               <option value="ecommerce">E-commerce / Loja online</option>
               <option value="services">Prestação de serviços</option>
-              <option value="content">Criador de conteúdo / Infoprodutos</option>
-              <option value="saas">SaaS / Plataforma digital</option>
-              <option value="freelancer">Freelancer</option>
+              <option value="content">Marketing / Infoprodutos</option>
+              <option value="saas">SaaS / Tecnologia</option>
+              <option value="freelancer">Freelancer / Autônomo</option>
               <option value="other">Outro</option>
             </select>
           </div>
 
           <div id="form-error" class="form-error" hidden></div>
 
-          <button type="submit" class="btn-submit" id="submit-btn">
-            <span class="btn-text">Solicitar Cadastro</span>
+          <button
+            type="submit"
+            class="btn-submit"
+            id="submit-btn"
+            style="margin-top: 1.5rem;"
+          >
+            <span class="btn-text">Começar agora — Grátis</span>
             <span class="btn-loader" hidden>
-              <span class="spinner"></span> Enviando...
+              <span class="spinner"></span> Criando sua conta...
             </span>
           </button>
         </form>
@@ -82,7 +153,8 @@ import brandLogo from '../../public/img/flowpay-logo.png';
         <div class="success-icon">✅</div>
         <h2 class="success-title">Cadastro enviado!</h2>
         <p class="success-message">
-          Recebemos seu pedido de cadastro. Nossa equipe irá analisar e você receberá uma resposta por e-mail em até 24 horas.
+          Recebemos seu pedido de cadastro. Nossa equipe irá analisar e você
+          receberá uma resposta por e-mail em até 24 horas.
         </p>
         <a href="/" class="btn-home">Voltar ao início</a>
       </div>
@@ -102,7 +174,8 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: calc(env(safe-area-inset-top, 0px) + 80px) 20px calc(env(safe-area-inset-bottom, 0px) + 40px);
+    padding: calc(env(safe-area-inset-top, 0px) + 80px) 20px
+      calc(env(safe-area-inset-bottom, 0px) + 40px);
   }
 
   @media (min-width: 768px) {
@@ -129,7 +202,10 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease;
     z-index: 10;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -168,7 +244,11 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     transform: translate(-50%, -50%);
     width: 100vw;
     height: 100vw;
-    background: radial-gradient(circle at center, rgba(0, 212, 255, 0.1) 0%, transparent 60%);
+    background: radial-gradient(
+      circle at center,
+      rgba(0, 212, 255, 0.1) 0%,
+      transparent 60%
+    );
     z-index: 0;
     pointer-events: none;
   }
@@ -208,7 +288,9 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px;
     padding: 1.75rem 1.25rem;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 25px 50px rgba(0, 0, 0, 0.4),
+      inset 0 1px 1px rgba(255, 255, 255, 0.08);
     width: 100%;
     animation: fadeInUp 0.8s ease-out 0.2s both;
   }
@@ -269,19 +351,47 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     text-transform: uppercase;
   }
 
+  .type-selector {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px;
+    border-radius: 14px;
+    margin-bottom: 0.5rem;
+  }
+
+  .type-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .type-btn.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
   .field-group input,
   .field-group select {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 14px 16px;
     color: #fff;
-    font-size: 1rem; /* mínimo 16px — previne zoom automático no iOS */
+    font-size: 1rem;
     font-family: inherit;
-    transition: border-color 0.2s, background 0.2s;
+    transition: all 0.2s;
     outline: none;
     width: 100%;
-    min-height: 44px; /* tap target iOS */
+    min-height: 44px;
     touch-action: manipulation;
     -webkit-appearance: none;
     appearance: none;
@@ -323,7 +433,10 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.2s ease;
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.3s ease,
+      opacity 0.2s ease;
     margin-top: 0.5rem;
     box-shadow: 0 0 25px rgba(255, 0, 122, 0.25);
     min-height: 52px;
@@ -373,7 +486,9 @@ import brandLogo from '../../public/img/flowpay-logo.png';
   }
 
   @media (hover: hover) {
-    .login-link a:hover { text-decoration: underline; }
+    .login-link a:hover {
+      text-decoration: underline;
+    }
   }
 
   /* Success card */
@@ -416,7 +531,10 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     min-height: 52px;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    transition:
+      background 0.2s,
+      border-color 0.2s,
+      transform 0.2s;
   }
 
   @media (hover: hover) {
@@ -442,54 +560,124 @@ import brandLogo from '../../public/img/flowpay-logo.png';
   }
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
-
-
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('register-form') as HTMLFormElement;
-    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
-    const btnText = submitBtn.querySelector('.btn-text') as HTMLElement;
-    const btnLoader = submitBtn.querySelector('.btn-loader') as HTMLElement;
-    const formError = document.getElementById('form-error') as HTMLElement;
-    const formCard = document.getElementById('form-card') as HTMLElement;
-    const successCard = document.getElementById('success-card') as HTMLElement;
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("register-form") as HTMLFormElement;
+    const submitBtn = document.getElementById(
+      "submit-btn"
+    ) as HTMLButtonElement;
+    const btnText = submitBtn.querySelector(".btn-text") as HTMLElement;
+    const btnLoader = submitBtn.querySelector(".btn-loader") as HTMLElement;
+    const formError = document.getElementById("form-error") as HTMLElement;
+    const formCard = document.getElementById("form-card") as HTMLElement;
+    const successCard = document.getElementById("success-card") as HTMLElement;
 
-    // CPF mask
-    const cpfInput = document.getElementById('cpf') as HTMLInputElement;
-    cpfInput.addEventListener('input', () => {
-      let v = cpfInput.value.replace(/\D/g, '');
-      if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
-      else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
-      else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/, '$1.$2');
-      cpfInput.value = v;
+    const docTypeInput = document.getElementById(
+      "document_type"
+    ) as HTMLInputElement;
+    const docInput = document.getElementById("document") as HTMLInputElement;
+    const labelName = document.getElementById("label-name") as HTMLElement;
+    const labelDoc = document.getElementById("label-document") as HTMLElement;
+    const typeButtons = document.querySelectorAll(".type-btn");
+
+    // Type Toggle logic
+    typeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const type = (btn as HTMLElement).dataset.type;
+        if (!type) return;
+
+        typeButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        docTypeInput.value = type;
+
+        if (type === "CNPJ") {
+          labelName.textContent = "Nome da Empresa *";
+          labelDoc.textContent = "CNPJ *";
+          docInput.placeholder = "00.000.000/0000-00";
+        } else {
+          labelName.textContent = "Nome completo *";
+          labelDoc.textContent = "CPF *";
+          docInput.placeholder = "000.000.000-00";
+        }
+      });
     });
 
-    form.addEventListener('submit', async (e) => {
+    // Masking
+    docInput.addEventListener("input", () => {
+      let v = docInput.value.replace(/\D/g, "");
+      const type = docTypeInput.value;
+
+      if (type === "CNPJ") {
+        if (v.length > 12)
+          v = v.replace(
+            /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+            "$1.$2.$3/$4-$5"
+          );
+        else if (v.length > 8)
+          v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/, "$1.$2.$3/$4");
+        else if (v.length > 5)
+          v = v.replace(/^(\d{2})(\d{3})(\d{0,3})/, "$1.$2.$3");
+        else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3})/, "$1.$2");
+      } else {
+        if (v.length > 9)
+          v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, "$1.$2.$3-$4");
+        else if (v.length > 6)
+          v = v.replace(/(\d{3})(\d{3})(\d{0,3})/, "$1.$2.$3");
+        else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/, "$1.$2");
+      }
+      docInput.value = v;
+    });
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       formError.hidden = true;
 
-      const name = (document.getElementById('name') as HTMLInputElement).value.trim();
-      const email = (document.getElementById('email') as HTMLInputElement).value.trim();
-      const cpf = cpfInput.value.trim();
-      const phone = (document.getElementById('phone') as HTMLInputElement).value.trim();
-      const business_type = (document.getElementById('business_type') as HTMLSelectElement).value;
+      const name = (
+        document.getElementById("name") as HTMLInputElement
+      ).value.trim();
+      const email = (
+        document.getElementById("email") as HTMLInputElement
+      ).value.trim();
+      const docType = docTypeInput.value;
+      const documentValue = docInput.value.trim();
+      const phone = (
+        document.getElementById("phone") as HTMLInputElement
+      ).value.trim();
+      const business_type = (
+        document.getElementById("business_type") as HTMLSelectElement
+      ).value;
 
-      if (!name || !email || !business_type) {
-        formError.textContent = 'Preencha todos os campos obrigatórios.';
+      if (!name || !email || !documentValue || !phone || !business_type) {
+        formError.textContent =
+          "Por favor, preencha todos os campos obrigatórios.";
         formError.hidden = false;
         return;
       }
@@ -499,10 +687,17 @@ import brandLogo from '../../public/img/flowpay-logo.png';
       btnLoader.hidden = false;
 
       try {
-        const res = await fetch('/api/auth/registro', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, cpf, phone, business_type })
+        const res = await fetch("/api/auth/registro", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            document: documentValue,
+            document_type: docType,
+            phone,
+            business_type,
+          }),
         });
 
         const data = await res.json();
@@ -511,14 +706,15 @@ import brandLogo from '../../public/img/flowpay-logo.png';
           formCard.hidden = true;
           successCard.hidden = false;
         } else {
-          formError.textContent = data.error || 'Erro ao enviar cadastro. Tente novamente.';
+          formError.textContent =
+            data.error || "Erro ao criar conta. Tente novamente.";
           formError.hidden = false;
           submitBtn.disabled = false;
           btnText.hidden = false;
           btnLoader.hidden = true;
         }
       } catch {
-        formError.textContent = 'Erro de conexão. Verifique sua internet e tente novamente.';
+        formError.textContent = "Erro de conexão. Verifique sua internet.";
         formError.hidden = false;
         submitBtn.disabled = false;
         btnText.hidden = false;

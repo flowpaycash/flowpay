@@ -13,7 +13,7 @@ export const GET = async ({ request, cookies }) => {
   const session = getAdminSession(cookies);
   if (!session) {
     return new Response(JSON.stringify({ authenticated: false }), {
-      status: 401,
+      status: 200,
       headers,
     });
   }

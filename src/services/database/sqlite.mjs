@@ -146,6 +146,7 @@ function initializeSchema() {
                     name TEXT NOT NULL,
                     email TEXT NOT NULL UNIQUE,
                     cpf TEXT,
+                    document_type TEXT DEFAULT 'CPF',
                     phone TEXT,
                     business_type TEXT,
                     status TEXT DEFAULT 'PENDING_APPROVAL',
@@ -159,6 +160,13 @@ function initializeSchema() {
             `);
             db.exec("CREATE UNIQUE INDEX idx_users_email ON users(email)");
             db.exec("CREATE INDEX idx_users_status ON users(status)");
+        } else {
+            // Ensure document_type exists for existing tables
+            const userCols = db.prepare("PRAGMA table_info(users)").all();
+            const colNames = userCols.map(c => c.name);
+            if (!colNames.includes('document_type')) {
+                db.prepare("ALTER TABLE users ADD COLUMN document_type TEXT DEFAULT 'CPF'").run();
+            }
         }
 
         // PAYMENT BUTTONS MIGRATION: User-created payment buttons
@@ -521,10 +529,17 @@ export function createUser(user) {
     return dbOp(() => {
         const db = getDatabase();
         const stmt = db.prepare(`
-            INSERT INTO users (name, email, cpf, phone, business_type, status)
-            VALUES (?, ?, ?, ?, ?, 'PENDING_APPROVAL')
+            INSERT INTO users (name, email, cpf, document_type, phone, business_type, status)
+            VALUES (?, ?, ?, ?, ?, ?, 'PENDING_APPROVAL')
         `);
-        const result = stmt.run(user.name, user.email, user.cpf || null, user.phone || null, user.business_type || null);
+        const result = stmt.run(
+            user.name,
+            user.email.toLowerCase().trim(),
+            user.cpf || user.cnpj || null,
+            user.document_type || 'CPF',
+            user.phone || null,
+            user.business_type || null
+        );
         return result.lastInsertRowid;
     });
 }

@@ -18,16 +18,13 @@ export const POST = async ({ request, clientAddress }) => {
 
     try {
         const body = await request.json();
-        const { name, email, cpf, phone, business_type } = body;
+        const { name, email, document: docValue, document_type, phone, business_type } = body;
 
-        if (!name || typeof name !== 'string' || name.trim().length < 3) {
-            return new Response(JSON.stringify({ error: 'Nome inválido (mínimo 3 caracteres).' }), { status: 400, headers });
+        if (!name || typeof name !== 'string' || name.trim().length < 2) {
+            return new Response(JSON.stringify({ error: 'Nome inválido.' }), { status: 400, headers });
         }
         if (!email || typeof email !== 'string' || !email.includes('@')) {
             return new Response(JSON.stringify({ error: 'E-mail inválido.' }), { status: 400, headers });
-        }
-        if (!business_type || typeof business_type !== 'string') {
-            return new Response(JSON.stringify({ error: 'Tipo de uso obrigatório.' }), { status: 400, headers });
         }
 
         const cleanEmail = email.toLowerCase().trim();
@@ -42,27 +39,25 @@ export const POST = async ({ request, clientAddress }) => {
             if (existing.status === 'PENDING_APPROVAL') {
                 return new Response(JSON.stringify({ error: 'Seu cadastro já foi enviado e está aguardando aprovação.' }), { status: 409, headers });
             }
-            if (existing.status === 'REJECTED') {
-                return new Response(JSON.stringify({ error: 'Este e-mail foi rejeitado. Entre em contato com o suporte.' }), { status: 409, headers });
-            }
         }
 
         const userId = createUser({
             name: cleanName,
             email: cleanEmail,
-            cpf: cpf ? cpf.replace(/\D/g, '').substring(0, 11) : null,
+            document: docValue ? docValue.replace(/\D/g, '') : null,
+            document_type: document_type || 'CPF',
             phone: phone ? phone.replace(/\D/g, '').substring(0, 15) : null,
-            business_type: business_type.substring(0, 50)
+            business_type: business_type ? business_type.substring(0, 50) : 'not_specified'
         });
 
-        secureLog('info', 'Novo cadastro recebido', { userId, email: cleanEmail, business_type });
+        secureLog('info', 'Novo cadastro recebido', { userId, email: cleanEmail, document_type });
 
         // Confirmação para o usuário (fire-and-forget)
         sendEmail({
             to: cleanEmail,
             subject: 'Cadastro recebido — FlowPay',
             html: registroTemplate({ name: cleanName }),
-        }).catch(() => {});
+        }).catch(() => { });
 
         // Notificação para o admin (fire-and-forget)
         const adminEmail = process.env.ADMIN_NOTIFY_EMAIL;
@@ -77,8 +72,10 @@ export const POST = async ({ request, clientAddress }) => {
                     businessType: business_type,
                     phone: phone || null,
                     registeredAt,
+                    document: docValue || '—',
+                    documentType: document_type || 'CPF',
                 }),
-            }).catch(() => {});
+            }).catch(() => { });
         }
 
         return new Response(JSON.stringify({
