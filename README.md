@@ -92,7 +92,7 @@ graph TD
 
 A segurança do FlowPay é baseada em **Blindagem Tripla**:
 
-1. **Segregação:** O FlowPay não armazena `MINTING_KEYS`. Ele apenas solicita execuções à Factory via canal seguro.
+1. **Segregação:** A FlowPay não armazena `MINTING_KEYS`. Ele apenas solicita execuções à NEØ Smart Factory via node do protocolo.
 2. **Auditabilidade:** Toda transação é acompanhada por uma **Proof of Integrity (PoI)** assinada pelo Neobot.
 3. **Isolamento de Rede:** Comunicação via **NΞØ Tunnel** com handshake de `TUNNEL_SECRET`.
 
