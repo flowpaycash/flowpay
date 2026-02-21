@@ -1,72 +1,67 @@
 <!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
+
 ```text
 ========================================
-      FLOWPay - KNOWLEDGE BASE
-========================================
-Index of Protocol & Architecture
-Jan/2026 - v2.3.0 (Railway Migration)
+       FLOWPAY · DOCUMENTATION
+              INDEX
 ========================================
 ```
 
-▓▓▓ ESSENTIALS
+Centralized technical library for the FlowPay Settlement Engine.
+**Version:** v2.3.0 (Sovereign Core)
+
 ────────────────────────────────────────
-└─ <WOOVI_INTEGRATION_GUIDE.md> ⭐
-   (SSOT) Guia oficial de integração Pix/Woovi.
-   Autenticação, Webhooks e Segurança.
 
-└─ <DEPLOY_GUIDE.md> ⭐
-   Deploy em produção no Railway.
-   Variáveis de ambiente e configuração.
+## 📂 Documentation Structure
 
-└─ <SYSTEM_OVERVIEW_2026.md>
-   Panorama geral da arquitetura.
+```text
+docs/
+├── architecture/       System designs and ADRs
+├── security/           Audits and protection protocols
+├── integration/        WooVi, QuickNode, and Nexus guides
+├── operations/         Deployment and scaling manuals
+└── archive/            Historical records
+```
 
-└─ <SECURITY_AUDIT.md>
-   Auditoria de segurança e correções.
-
-▓▓▓ FRONTEND & DESIGN
 ────────────────────────────────────────
-└─ <FRONTEND_GUIDE.md>
-   Arquitetura Astro, Design System e CSS.
 
-└─ <IOS_DESIGN_COMPLETE.md>
-   Especificação visual NΞØ (iOS-like).
+## 🔗 Essential Guides
 
-└─ <PWA_ASSETS_GUIDE.md>
-   Geração de ícones e splash screens.
+**Must Read:**
+- [SYSTEM_OVERVIEW_2026](./SYSTEM_OVERVIEW_2026.md) — The master architecture.
+- [WOOVI_INTEGRATION_GUIDE](./WOOVI_INTEGRATION_GUIDE.md) — SSOT for PIX flow.
+- [SECURITY_AUDIT](./SECURITY_AUDIT.md) — Current security posture.
+- [DEPLOY_GUIDE](./DEPLOY_GUIDE.md) — Railway & Production deployment.
 
-▓▓▓ BACKEND & BLOCKCHAIN
+**Integration & Logic:**
+- [QUICKNODE_INTEGRATION](./QUICKNODE_INTEGRATION.md) — Crypto event monitoring.
+- [PAYMENT_FLOW](./PAYMENT_FLOW.md) — Technical transaction lifecycle.
+- [CRYPTO_SERVICES](./CRYPTO_SERVICES.md) — USDT and ERC20 logic.
+- [TELEGRAM_SETUP_GUIDE](./TELEGRAM_SETUP_GUIDE.md) — Notification bot setup.
+
+**Frontend & Design:**
+- [FRONTEND_GUIDE](./FRONTEND_GUIDE.md) — Astro architecture & Design System.
+- [IOS_DESIGN_COMPLETE](./IOS_DESIGN_COMPLETE.md) — Visual specs (iOS-like).
+- [PWA_ASSETS_GUIDE](./PWA_ASSETS_GUIDE.md) — Iconography & Splash screens.
+
 ────────────────────────────────────────
-└─ <BLOCKCHAIN_GUIDE.md>
-   Integração QuickNode e Registro de Provas.
 
-└─ <CRYPTO_SERVICES.md>
-   Lógica de USDT e contratos ERC20.
+## 📊 Knowledge Base Status
 
-└─ <LIQUIDATION_GUIDE.md>
-   Guia de liquidação assistida PIX-Crypto.
+| Category | Files | Status |
+|----------|-------|--------|
+| Architecture | 5 | ✅ Updated |
+| Security | 4 | 🛡️ Audited |
+| Integration | 8 | ✅ Stable |
+| Operations | 6 | 🚀 Active |
+| Technical ADRs | 12 | 📝 Detailed |
 
-▓▓▓ LEGACY & REFERENCE
 ────────────────────────────────────────
-└─ <ADMIN_PANEL_GUIDE.md>
-   Gerenciamento e autenticação.
-
-└─ <TELEGRAM_SETUP_GUIDE.md>
-   Configuração de bots de notificação.
-
-└─ <CSP_RESOLUTION_GUIDE.md>
-   Segurança e Content Security Policy.
-
-Para instalação técnica, use: <../SETUP.md>
 
 ▓▓▓ NΞØ MELLØ
 ────────────────────────────────────────
 Core Architect · NΞØ Protocol
 neo@neoprotocol.space
 
-"Code is law. Expand until
- chaos becomes protocol."
-
-Security by design.
-Exploits find no refuge here.
+"Documentation is the blueprint of sovereignty."
 ────────────────────────────────────────

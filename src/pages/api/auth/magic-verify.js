@@ -1,14 +1,6 @@
-import crypto from 'crypto';
+import { signSessionToken } from '../../../services/auth/session.mjs';
 import { verifyAuthToken } from '../../../services/database/sqlite.mjs';
 import { secureLog, getCorsHeaders } from '../../../services/api/config.mjs';
-
-function signSessionToken(payload) {
-    const secret = process.env.TOKEN_SECRET || process.env.FLOWPAY_JWT_SECRET;
-    if (!secret) throw new Error('TOKEN_SECRET not configured');
-    const data = Buffer.from(JSON.stringify(payload)).toString('base64url');
-    const sig = crypto.createHmac('sha256', secret).update(data).digest('base64url');
-    return `${data}.${sig}`;
-}
 
 export const POST = async ({ request, cookies }) => {
     const headers = getCorsHeaders({ headers: Object.fromEntries(request.headers) });

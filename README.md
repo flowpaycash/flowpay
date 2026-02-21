@@ -1,122 +1,101 @@
 <!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
 
-# FlowPay: Gateway de Liquidação Autonoma
-
 ```text
 ========================================
-     FlowPay - SETTLEMENT ENGINE
-========================================
-Node: mio-flowpay
-NΞØ Protocol
-Infra: Railway + NΞØ Tunnel + NΞØ Nexus 
+       FLOWPAY · SETTLEMENT ENGINE
 ========================================
 ```
 
-## Visão Arquitetural
+Autonomous Settlement Gateway for the NΞØ Protocol.
+Converting Web2 liquidity into Web3 sovereignty.
 
-O **FlowPay** é o motor de liquidação determinística do ecossistema NΞØ. Ele orquestra a conversão de capital Web2 (PIX/WooVi) em ativos Web3, utilizando uma arquitetura de **Relayer Proxy** isolada para garantir a soberania das chaves privadas.
+> **Node:** mio-flowpay  
+> **Infrastructure:** Railway + NΞØ Tunnel + NΞØ Nexus  
+> **Version:** v1.0.1  
 
-## Fluxo Operacional (Conceitual)
+────────────────────────────────────────
 
-```mermaid
-graph TD
-    classDef web2 fill:#0b1220,stroke:#38bdf8,stroke-width:2px,color:#e2e8f0;
-    classDef engine fill:#111827,stroke:#22c55e,stroke-width:2px,color:#f9fafb;
-    classDef gate fill:#1f2937,stroke:#f59e0b,stroke-width:2px,stroke-dasharray: 5 4,color:#fde68a;
-    classDef tunnel fill:#052e2b,stroke:#14b8a6,stroke-width:2px,color:#ccfbf1;
-    classDef nexus fill:#2a1238,stroke:#a78bfa,stroke-width:2px,color:#ede9fe;
-    classDef chain fill:#172554,stroke:#60a5fa,stroke-width:2px,color:#dbeafe;
-    classDef audit fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#dcfce7;
-    classDef error fill:#3f1d1d,stroke:#f87171,stroke-width:2px,color:#fee2e2;
+## 🛰️ Architectural Vision
 
-    subgraph WEB2 ["CAMADA WEB2"]
-        START((WOOVI API<br/>Pagamento PIX))
-    end
+**FlowPay** is the deterministic settlement engine of the NΞØ ecosystem. 
+It orchestrates the conversion of Web2 capital (PIX/WooVi) into Web3 assets, 
+utilizing an isolated **Relayer Proxy** architecture to ensure the 
+sovereignty of private keys.
 
-    subgraph NEO ["INFRA NΞØ SOBERANA"]
-        RELAYER["FLOWPAY ENGINE<br/>Relayer de Liquidação"]
-        HMAC{"HMAC OK?"}
-        TUNNEL["NΞØ TUNNEL<br/>Ponte Cripto"]
-        SECRET{"Tunnel Secret OK?"}
-        NEXUS["NΞØ NEXUS<br/>Gestor de Estado"]
-        AUTH{"Auth de Execução?"}
-    end
-
-    subgraph ONCHAIN ["BLOCKCHAIN / RPC"]
-        FACTORY["SMART FACTORY<br/>Mint / Execução"]
-        RPC{"RPC ADAPTER<br/>Confirmado?"}
-    end
-
-    subgraph AUDIT ["FINALIDADE / AUDITORIA"]
-        WATCHER["NEØBOT AUDIT<br/>Watcher"]
-        POI["PROOF OF INTEGRITY"]
-        LOG["LOG LOCAL"]
-        END[[RECIBO TRANSAÇÃO<br/>LIQUIDADO]]
-    end
-
-    START -->|Webhook PIX| RELAYER
-    RELAYER --> HMAC
-
-    HMAC -- NÃO --> DROP1["Descartar + Log"]
-    HMAC -- SIM --> TUNNEL
-
-    TUNNEL --> SECRET
-    SECRET -- NÃO --> DROP2["Bloqueio IP / Rate Limit"]
-    SECRET -- SIM --> NEXUS
-
-    NEXUS --> AUTH
-    AUTH -- NÃO --> RETRY["Retry / Fila Local"]
-    AUTH -- SIM --> FACTORY
-
-    FACTORY --> RPC
-    RPC -- PENDENTE --> RPC
-    RPC -- OK --> WATCHER
-
-    WATCHER --> POI
-    POI --> LOG
-    LOG --> END
-
-    END -.->|TRANSAÇÃO CONFIRMADA | START
-
-    class START web2;
-    class RELAYER engine;
-    class HMAC,SECRET,AUTH,RPC gate;
-    class TUNNEL tunnel;
-    class NEXUS nexus;
-    class FACTORY chain;
-    class WATCHER,POI,LOG,END audit;
-    class DROP1,DROP2,RETRY error;
+```text
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┃ SYSTEM FLOW
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┃
+┃ 🟢 WOOVI API (PIX)
+┃    └─ Webhook Ingress
+┃
+┃ 🛡️ FLOWPAY ENGINE
+┃    └─ HMAC-SHA256 Validation
+┃    └─ SQL Alchemy (SQLite/Neon)
+┃
+┃ 🔗 NΞØ TUNNEL / NEXUS
+┃    └─ State Synchronization
+┃
+┃ 🏭 SMART FACTORY
+┃    └─ Digital Asset Minting
+┃
+┃ 💎 PROOF OF INTEGRITY (PoI)
+┃    └─ Blockchain Settlement
+┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-## Segurança e Conformidade
+────────────────────────────────────────
 
-A segurança do FlowPay é baseada em **Blindagem Tripla**:
+## 🛡️ Triple Blinded Security
 
-1. **Segregação:** A FlowPay não armazena `MINTING_KEYS`. Ele apenas solicita execuções à NEØ Smart Factory via node do protocolo.
-2. **Auditabilidade:** Toda transação é acompanhada por uma **Proof of Integrity (PoI)** assinada pelo Neobot.
-3. **Isolamento de Rede:** Comunicação via **NΞØ Tunnel** com handshake de `TUNNEL_SECRET`.
+FlowPay's defense is built on three sovereign pillars:
 
-## Estado Atual do Projeto
+1.  **Segregation:** FlowPay does NOT store `MINTING_KEYS`. It only requests executions to the Factory via secure, encrypted channels.
+2.  **Auditability:** Every transaction is accompanied by a **Proof of Integrity (PoI)** signed by Neobot.
+3.  **Network Isolation:** Communication via **NΞØ Tunnel** with mandatory `TUNNEL_SECRET` handshake.
 
-- Runtime principal em **Astro server mode** com adapter `@astrojs/node`.
-- Deploy e operação em **Railway**.
-- Endpoints de aplicação padronizados em **`/api/*`**.
-- Segurança consolidada com documento canônico em `docs/SECURITY_AUDIT.md`.
-- Documento histórico de auditoria mantido em `docs/archive/SECURITY_AUDIT_2026-02-08.md`.
+────────────────────────────────────────
 
-## Fronteiras de Documentação
+## 📂 Project Structure
 
-- Este `README.md` descreve **arquitetura, contexto e direção**.
-- Toda configuração técnica, execução local, comandos e deploy ficam em **`SETUP.md`**.
+```text
+flowpay/
+├── src/
+│   ├── pages/api/      Serverless endpoints (Astro)
+│   ├── services/       Core business logic
+│   └── layouts/        Checkout & Admin UI
+├── docs/               Sovereign documentation library
+├── tests/              Financial integrity test suite
+├── tools/              Ecosystem config generators
+└── schemas/            Data integrity definitions
+```
 
-## Índice Canônico
+────────────────────────────────────────
 
-- `SETUP.md` -> Setup técnico, execução e operação.
-- `docs/README.md` -> Mapa da base de conhecimento.
-- `docs/WOOVI_INTEGRATION_GUIDE.md` -> SSOT de integração PIX/WooVi.
-- `docs/SECURITY_AUDIT.md` -> Estado de segurança vigente.
+## 🚀 Navigation
+
+| Guide | Purpose | Link |
+|-------|---------|------|
+| **[SETUP.md](./SETUP.md)** | Technical setup & operation | [View](./SETUP.md) |
+| **[NEXTSTEPS.md](./NEXTSTEPS.md)** | Critical roadmap & pending fixes | [View](./NEXTSTEPS.md) |
+| **[DOCS INDEX](./docs/README.md)** | Complete technical documentation | [View](./docs/README.md) |
+
+────────────────────────────────────────
+
+## ⚖️ Legal Status & IP
+
+- **Lead Architect:** Eurycles Ramos Neto / NODE NEØ
+- **Sovereignty:** All architecture is sealed and timestamped.
+- **Licenses:** MIT (Engine) / CC BY 4.0 (Docs).
 
 ---
 
-NΞØ MELLØ
+▓▓▓ NΞØ MELLØ
+────────────────────────────────────────
 Core Architect · NΞØ Protocol
+neo@neoprotocol.space
+
+"Settlement finalized. Sovereign assets unlocked."
+────────────────────────────────────────

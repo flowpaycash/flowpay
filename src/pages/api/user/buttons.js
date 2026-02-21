@@ -1,14 +1,30 @@
 import { getCorsHeaders, secureLog } from '../../../services/api/config.mjs';
 import { getUserByEmail, createPaymentButton, listPaymentButtonsByUser } from '../../../services/database/sqlite.mjs';
 import crypto from 'crypto';
+import { verifySessionToken } from '../../../services/auth/session.mjs';
 
 function validateUserSession(request) {
-    // Simple session: email + token stored in localStorage, validated server-side
-    // The email is passed as a header for authenticated requests
-    const email = request.headers.get('x-user-email');
-    const token = request.headers.get('x-user-token');
-    if (!email || !token) return null;
-    return { email: email.toLowerCase().trim(), token };
+    // 1. Check for signed cookie first (preferred)
+    const cookies = request.headers.get('cookie') || '';
+    const sessionCookie = cookies.split(';').find(c => c.trim().startsWith('flowpay_session='));
+
+    let token = null;
+    if (sessionCookie) {
+        token = sessionCookie.split('=')[1];
+    } else {
+        // 2. Fallback to header if cookie is missing (for API compatibility)
+        token = request.headers.get('x-user-token');
+    }
+
+    if (!token) return null;
+
+    const payload = verifySessionToken(token);
+    if (!payload) {
+        secureLog('warn', 'Tentativa de acesso com token invalido', { token: token.substring(0, 10) + '...' });
+        return null;
+    }
+
+    return { email: payload.email.toLowerCase().trim(), token };
 }
 
 // GET /api/user/buttons - list user's payment buttons
