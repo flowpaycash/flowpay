@@ -11,7 +11,8 @@
             "@playwright/test",
             "node"
         ],
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "noEmit": true
     },
     "include": [
         "**/*.spec.js",
