@@ -1,14 +1,7 @@
 # FlowPay — Nixpacks build config
-# Needed for better-sqlite3 (native C++ addon) compilation
+# Only declares extra system libs needed for better-sqlite3 (C++ native addon).
+# Everything else (Node 20, pnpm via corepack, install, build, start)
+# is auto-detected from package.json + pnpm-lock.yaml.
 
 [phases.setup]
-nixPkgs = ["nodejs_20", "python3", "gcc", "gnumake"]
-
-[phases.install]
-cmds = ["pnpm install --frozen-lockfile"]
-
-[phases.build]
-cmds = ["pnpm run build"]
-
-[start]
-cmd = "node ./dist/server/entry.mjs"
+nixPkgs = ["python3", "gcc", "gnumake"]
