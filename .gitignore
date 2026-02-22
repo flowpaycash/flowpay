@@ -47,3 +47,6 @@ secrets/
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+.claude
+
