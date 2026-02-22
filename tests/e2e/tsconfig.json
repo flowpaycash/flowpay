@@ -1,0 +1,18 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "strict": false,
+        "noImplicitAny": false,
+        "checkJs": false,
+        "allowJs": true,
+        "moduleResolution": "bundler",
+        "types": [
+            "@playwright/test",
+            "node"
+        ]
+    },
+    "include": [
+        "**/*.spec.js",
+        "**/*.spec.ts"
+    ]
+}

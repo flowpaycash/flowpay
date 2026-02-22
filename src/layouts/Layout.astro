@@ -27,34 +27,35 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": `${SITE}/#organization`,
-  "name": "FlowPay",
-  "alternateName": "FlowOFF",
-  "url": SITE,
-  "logo": {
+  name: "FlowPay",
+  alternateName: "FlowOFF",
+  url: SITE,
+  logo: {
     "@type": "ImageObject",
-    "url": `${SITE}/img/flowpay-logo.png`,
-    "width": 512,
-    "height": 512,
+    url: `${SITE}/img/flowpay-logo.png`,
+    width: 512,
+    height: 512,
   },
-  "description": "Gateway de pagamentos PIX + Cripto com liquidação instantânea e prova de execução on-chain.",
-  "legalName": "FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA",
-  "taxID": "43.376.355/0001-92",
-  "address": {
+  description:
+    "Gateway de pagamentos PIX + Cripto com liquidação instantânea e prova de execução on-chain.",
+  legalName: "FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA",
+  taxID: "43.376.355/0001-92",
+  address: {
     "@type": "PostalAddress",
-    "streetAddress": "Avenida 85 esq. com a Rua 137, 556",
-    "addressLocality": "Goiânia",
-    "addressRegion": "GO",
-    "postalCode": "74170-120",
-    "addressCountry": "BR",
+    streetAddress: "Avenida 85 esq. com a Rua 137, 556",
+    addressLocality: "Goiânia",
+    addressRegion: "GO",
+    postalCode: "74170-120",
+    addressCountry: "BR",
   },
-  "contactPoint": {
+  contactPoint: {
     "@type": "ContactPoint",
-    "email": "neo@neoprotocol.space",
-    "contactType": "customer support",
-    "availableLanguage": "Portuguese",
+    email: "neo@neoprotocol.space",
+    contactType: "customer support",
+    availableLanguage: "Portuguese",
   },
-  "foundingDate": "2021-09-01",
-  "sameAs": [
+  foundingDate: "2021-09-01",
+  sameAs: [
     "https://flowoff.xyz",
     "https://nsfactory.xyz",
     "https://neoprotocol.space",
@@ -66,32 +67,36 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": `${SITE}/#website`,
-  "url": SITE,
-  "name": "FlowPay",
-  "description": description,
-  "publisher": {
+  url: SITE,
+  name: "FlowPay",
+  description: description,
+  publisher: {
     "@id": `${SITE}/#organization`,
   },
-  "inLanguage": "pt-BR",
+  inLanguage: "pt-BR",
 };
 
 const webpageSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   "@id": `${canonicalURL}#webpage`,
-  "url": canonicalURL,
-  "name": pageTitle,
-  "description": description,
-  "isPartOf": {
+  url: canonicalURL,
+  name: pageTitle,
+  description: description,
+  isPartOf: {
     "@id": `${SITE}/#website`,
   },
-  "publisher": {
+  publisher: {
     "@id": `${SITE}/#organization`,
   },
-  "inLanguage": "pt-BR",
+  inLanguage: "pt-BR",
 };
 
-const defaultStructuredData = [organizationSchema, websiteSchema, webpageSchema];
+const defaultStructuredData = [
+  organizationSchema,
+  websiteSchema,
+  webpageSchema,
+];
 
 const extraSchema = structuredData
   ? Array.isArray(structuredData)
@@ -111,13 +116,22 @@ const allSchemas = [...defaultStructuredData, ...extraSchema];
     <!-- Primary Meta -->
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta name="author" content="FlowOFF — FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA" />
+    <meta
+      name="author"
+      content="FlowOFF — FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA"
+    />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Robots -->
-    {noindex
-      ? <meta name="robots" content="noindex, nofollow" />
-      : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <meta
+          name="robots"
+          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        />
+      )
     }
 
     <!-- Canonical -->
@@ -145,9 +159,15 @@ const allSchemas = [...defaultStructuredData, ...extraSchema];
     <meta name="twitter:image:alt" content={pageTitle} />
 
     <!-- JSON-LD Structured Data -->
-    {allSchemas.map((schema) => (
-      <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
-    ))}
+    {
+      allSchemas.map((schema) => (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(schema)}
+        />
+      ))
+    }
 
     <!-- Security -->
     <meta
@@ -164,40 +184,128 @@ const allSchemas = [...defaultStructuredData, ...extraSchema];
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="FlowPay" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <meta name="format-detection" content="telephone=no" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
 
     <!-- Apple Splash Screens -->
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-2048-2732.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1668-2388.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1536-2048.jpg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1125-2436.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1242-2688.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-828-1792.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1242-2208.jpg" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1334-750.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1792-828.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-2048-1536.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1668-2224.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/assets/splash/apple-splash-dark-1620-2160.jpg" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-2048-2732.jpg"
+      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-1668-2388.jpg"
+      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-1536-2048.jpg"
+      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-1125-2436.jpg"
+      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-1242-2688.jpg"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-828-1792.jpg"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-1242-2208.jpg"
+      media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-1334-750.jpg"
+      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-1792-828.jpg"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-2048-1536.jpg"
+      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-1668-2224.jpg"
+      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/assets/splash/apple-splash-dark-1620-2160.jpg"
+      media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="196x196" href="/assets/icons/favicon-196.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-196.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="196x196"
+      href="/assets/icons/favicon-196.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/icons/favicon-196.png"
+    />
     <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
 
     <!-- Microsoft Tiles -->
-    <meta name="msapplication-TileImage" content="/assets/manifest/mstile-icon-270.png" />
+    <meta
+      name="msapplication-TileImage"
+      content="/assets/manifest/mstile-icon-270.png"
+    />
     <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- Performance: DNS Prefetch for third-party origins -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Performance: LCP Image Preload (hero logo — above the fold) -->
+    <link
+      rel="preload"
+      href="/img/flowpay-logo.png"
+      as="image"
+      type="image/png"
+      fetchpriority="high"
+    />
 
     <!-- CSS: design-system is critical/blocking, others load async -->
     <link rel="stylesheet" href="/css/design-system.css" />
-    <link rel="preload" href="/css/navbar.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link
+      rel="preload"
+      href="/css/navbar.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
     <noscript><link rel="stylesheet" href="/css/navbar.css" /></noscript>
-    <link rel="preload" href="/css/landing.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link
+      rel="preload"
+      href="/css/landing.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
     <noscript><link rel="stylesheet" href="/css/landing.css" /></noscript>
     <style is:global>
       :root {

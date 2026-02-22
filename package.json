@@ -25,6 +25,11 @@
     "test:validation": "jest tests/validation-middleware.test.js",
     "test:openpix": "jest tests/openpix.test.js",
     "test:openpix:watch": "jest tests/openpix.test.js --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
+    "e2e:install": "playwright install --with-deps chromium",
     "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore docs --ignore standards --ignore tools --ignore tests --ignore services --ignore scripts --ignore '~/Desktop/**' --config .markdownlint.json",
     "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore docs --ignore standards --ignore tools --ignore tests --ignore services --ignore scripts --ignore '~/Desktop/**' --config .markdownlint.json --fix",
     "mcp:start": "node scripts/mcp-server.mjs"
@@ -52,6 +57,7 @@
     "viem": "^2.43.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.0",
     "@types/better-sqlite3": "^7.6.13",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",

@@ -1,4 +1,49 @@
+# ─────────────────────────────────────────────
+# FlowPay · HTTP Cache Headers (Cloudflare/Railway)
+# ─────────────────────────────────────────────
+
+# pix_orders.json — sem cache (dados dinâmicos)
 /pix_orders.json
   Content-Type: application/json; charset=utf-8
   Cache-Control: no-store
   Access-Control-Allow-Origin: *
+
+# ── CSS estáticos: long-lived (1 ano) ──────────
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── Assets de imagem/ícones: long-lived ────────
+/img/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/icons/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/splash/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/manifest/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── JS built: long-lived ───────────────────────
+/assets/js/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── fonts: long-lived ───────────────────────
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── Favicons: long-lived ─────────────────────
+/favicon.ico
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── Manifest / SW: curto (1 dia, revalidar) ───
+/manifest.json
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# ── HTML (default Astro SSR): sem cache ────────
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate

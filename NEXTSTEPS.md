@@ -8,7 +8,7 @@
 ```
 
 Priority-ordered execution plan for security and scalability.
-**Status:** Phase Transition (v1.1.0) — Sprint 1 & 2 concluídos ✅
+**Status:** Phase Transition (v1.2.0) — Sprint 4 concluído ✅
 
 ────────────────────────────────────────
 
@@ -38,18 +38,18 @@ Priority-ordered execution plan for security and scalability.
 | Service Tests | `tests/services/services.test.js` — Email, Rate Limiter, Config, DB | ✅ Done |
 | CSP Middleware | `src/middleware.js` — CSP movido de meta tag para HTTP header | ✅ Done |
 
+## 🟢 COMPLETED (Sprint 4 — Otimização)
+
+| Item | Description | Status |
+|------|-------------|--------|
+| Performance LCP | `Layout.astro` — `<link rel=preload>` para hero image + DNS prefetch | ✅ Done |
+| HTTP Caching | `public/_headers` — `Cache-Control: immutable` para CSS/JS/img (1 ano) | ✅ Done |
+| E2E Playwright | `tests/e2e/` — 18 testes: PIX journey, bridge, erros, performance | ✅ Done |
+| playwright.config.js | Config com webServer, mobile viewport, Chromium + WebKit | ✅ Done |
+
 ────────────────────────────────────────
 
-## 🟡 PENDING (Level 4 — Otimização)
-
-### 9. Performance & Lighthouse
-
-- Configure LCP image discovery (preload).
-- Implement long-lived caching for static assets in `/public/css/`.
-
-### 10. E2E Testing (Playwright)
-
-Simulate full user journeys: from PIX selection to QR code payment and bridge confirmation.
+## ✅ LEVEL 4 COMPLETE — Otimização
 
 ────────────────────────────────────────
 
@@ -66,6 +66,9 @@ Simulate full user journeys: from PIX selection to QR code payment and bridge co
 | Admin Routes | `/transactions`, `/settings`, `/logs` — todas funcionais | ✅ Done |
 | QuickNode | USDT/USDC ERC-20 settlement com Nexus Bridge | ✅ Done |
 | CSP Header | Migrado de meta tag para HTTP header no middleware | ✅ Done |
+| LCP Preload | `<link rel=preload as=image>` no Layout.astro para hero logo | ✅ Done |
+| HTTP Caching | `_headers` com `immutable` 1 ano para CSS/JS/img | ✅ Done |
+| E2E Playwright | 18 testes cobrindo PIX → QR → bridge → sucesso | ✅ Done |
 
 ────────────────────────────────────────
 
