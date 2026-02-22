@@ -1,0 +1,527 @@
+---
+// Admin Logs — audit log com paginação e filtros por tipo de evento
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLOWPay Admin | Logs de Sistema</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/admin/panel.css" />
+
+    <style>
+      .log-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.83rem;
+      }
+      .log-table th {
+        text-align: left;
+        padding: 10px 14px;
+        color: #555;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid #1e1e1e;
+        white-space: nowrap;
+      }
+      .log-table td {
+        padding: 10px 14px;
+        border-bottom: 1px solid #111;
+        vertical-align: top;
+      }
+      .log-table tbody tr:hover td {
+        background: rgba(255, 255, 255, 0.015);
+      }
+      .log-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .event-type {
+        font-family: monospace;
+        font-size: 0.78rem;
+        padding: 2px 8px;
+        border-radius: 8px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .ev-PAYMENT {
+        background: rgba(0, 204, 102, 0.12);
+        color: #00cc66;
+      }
+      .ev-SECURITY {
+        background: rgba(255, 68, 68, 0.12);
+        color: #ff4444;
+      }
+      .ev-AUTH {
+        background: rgba(0, 162, 255, 0.12);
+        color: #00a2ff;
+      }
+      .ev-ADMIN {
+        background: rgba(168, 85, 247, 0.12);
+        color: #a855f7;
+      }
+      .ev-SYSTEM {
+        background: rgba(255, 170, 0, 0.1);
+        color: #ffaa00;
+      }
+      .ev-ERROR {
+        background: rgba(255, 68, 68, 0.2);
+        color: #ff6666;
+      }
+
+      .details-json {
+        font-family: monospace;
+        font-size: 0.72rem;
+        color: #555;
+        max-width: 280px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .actor-cell {
+        color: #888;
+        font-size: 0.8rem;
+      }
+      .time-cell {
+        color: #555;
+        font-size: 0.78rem;
+        white-space: nowrap;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border-radius: 12px;
+        border: 1px solid #1e1e1e;
+      }
+
+      .log-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .search-input {
+        flex: 1;
+        min-width: 160px;
+        background: #0e0e0e;
+        border: 1px solid #2a2a2a;
+        border-radius: 10px;
+        padding: 8px 14px;
+        color: #ddd;
+        font-size: 0.85rem;
+        font-family: inherit;
+      }
+      .search-input:focus {
+        outline: none;
+        border-color: #a855f7;
+      }
+      .search-input::placeholder {
+        color: #444;
+      }
+
+      select.filter-select {
+        background: #0e0e0e;
+        border: 1px solid #2a2a2a;
+        border-radius: 10px;
+        padding: 8px 12px;
+        color: #ccc;
+        font-size: 0.83rem;
+        font-family: inherit;
+        cursor: pointer;
+      }
+      select.filter-select:focus {
+        outline: none;
+        border-color: #a855f7;
+      }
+
+      .pagination {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 16px;
+      }
+      .page-btn {
+        padding: 5px 12px;
+        border-radius: 8px;
+        border: 1px solid #2a2a2a;
+        background: #111;
+        color: #aaa;
+        font-size: 0.8rem;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .page-btn:hover:not(:disabled) {
+        border-color: #444;
+        color: #fff;
+      }
+      .page-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+      .page-info {
+        color: #555;
+        font-size: 0.8rem;
+        padding: 0 6px;
+      }
+
+      .empty-row td {
+        text-align: center;
+        color: #555;
+        padding: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="login-screen">
+      <div class="login-box">
+        <div class="login-logo">FLOWPay</div>
+        <h1>Admin</h1>
+        <p>Acesso restrito</p>
+        <form id="login-form" autocomplete="off">
+          <input
+            type="text"
+            name="username"
+            value="admin"
+            autocomplete="username"
+            style="display:none"
+            aria-hidden="true"
+          />
+          <label for="password">Senha de Acesso</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+          <div id="login-error" class="error-msg"></div>
+          <button type="submit" class="btn-login">Acessar Painel</button>
+        </form>
+        <a href="/" class="login-back">Voltar ao site</a>
+      </div>
+    </div>
+
+    <div id="admin-panel">
+      <div class="admin-wrapper">
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-brand">
+            <div class="sidebar-brand-name">FLOWPay</div>
+            <div class="sidebar-brand-version">v2.2.0 — Admin</div>
+          </div>
+          <nav class="sidebar-nav">
+            <div class="nav-group">
+              <div class="nav-group-label">Dashboard</div>
+              <a href="/admin" class="nav-link"
+                ><span class="nav-dot"></span>Visao Geral</a
+              >
+              <a href="/admin/transactions" class="nav-link"
+                ><span class="nav-dot"></span>Transacoes</a
+              >
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-label">Gestao</div>
+              <a href="/admin/users" class="nav-link"
+                ><span class="nav-dot"></span>Usuarios</a
+              >
+              <a href="/admin/settings" class="nav-link"
+                ><span class="nav-dot"></span>Configuracoes</a
+              >
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-label">Sistema</div>
+              <a href="/admin/logs" class="nav-link active"
+                ><span class="nav-dot"></span>Logs</a
+              >
+            </div>
+          </nav>
+          <div class="sidebar-footer">
+            <button id="logout-btn" class="btn-logout">Sair</button>
+          </div>
+        </aside>
+
+        <main class="main-content">
+          <div class="topbar">
+            <div class="topbar-title">Logs de Auditoria</div>
+            <div class="topbar-actions">
+              <button class="btn-secondary" onclick="loadLogs()"
+                >↻ Atualizar</button
+              >
+            </div>
+          </div>
+
+          <div class="content-area">
+            <div class="log-controls">
+              <input
+                class="search-input"
+                id="search-input"
+                type="text"
+                placeholder="Buscar por ator, ação ou order ID..."
+                oninput="applyLocalFilter()"
+              />
+              <select
+                class="filter-select"
+                id="type-filter"
+                onchange="applyLocalFilter()"
+              >
+                <option value="">Todos os tipos</option>
+                <option value="PAYMENT">PAYMENT</option>
+                <option value="SECURITY">SECURITY</option>
+                <option value="AUTH">AUTH</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="SYSTEM">SYSTEM</option>
+                <option value="ERROR">ERROR</option>
+              </select>
+            </div>
+
+            <div class="table-wrap">
+              <table class="log-table">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Ator</th>
+                    <th>Ação</th>
+                    <th>Detalhes</th>
+                    <th>Order ID</th>
+                    <th>Data/Hora</th>
+                  </tr>
+                </thead>
+                <tbody id="log-tbody">
+                  <tr class="empty-row"><td colspan="6">Carregando...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination" id="pagination" style="display:none">
+              <button
+                class="page-btn"
+                id="prev-btn"
+                onclick="changePage(-1)"
+                disabled>← Anterior</button
+              >
+              <span class="page-info" id="page-info">—</span>
+              <button class="page-btn" id="next-btn" onclick="changePage(1)"
+                >Próxima →</button
+              >
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="notification"></div>
+    <script is:inline src="/csp-config.js"></script>
+
+    <script is:inline>
+      const PAGE_SIZE = 50;
+      let allLogs = [];
+      let filteredLogs = [];
+      let currentPage = 1;
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        const ok = await checkAuthentication();
+        if (ok) {
+          showAdminPanel();
+          await loadLogs();
+        } else {
+          showLoginScreen();
+          setupLoginForm();
+        }
+        setupLogout();
+      });
+
+      async function checkAuthentication() {
+        try {
+          const res = await fetch("/api/admin/auth/session", {
+            credentials: "same-origin",
+            cache: "no-store",
+          });
+          return Boolean((await res.json())?.authenticated);
+        } catch {
+          return false;
+        }
+      }
+
+      function setupLoginForm() {
+        const form = document.getElementById("login-form");
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const password = document.getElementById("password").value;
+          if (!password) return;
+          try {
+            const res = await fetch("/api/admin/auth/login", {
+              method: "POST",
+              credentials: "same-origin",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ password }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              document.getElementById("password").value = "";
+              showAdminPanel();
+              await loadLogs();
+            } else {
+              document.getElementById("login-error").textContent =
+                data.error || "Senha incorreta.";
+            }
+          } catch {
+            document.getElementById("login-error").textContent =
+              "Erro de conexão.";
+          }
+        });
+      }
+
+      function setupLogout() {
+        document
+          .getElementById("logout-btn")
+          ?.addEventListener("click", async () => {
+            await fetch("/api/admin/auth/logout", {
+              method: "POST",
+              credentials: "same-origin",
+              headers: { "Content-Type": "application/json" },
+            });
+            showLoginScreen();
+            setupLoginForm();
+          });
+      }
+
+      function showAdminPanel() {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("admin-panel").style.display = "flex";
+      }
+      function showLoginScreen() {
+        document.getElementById("login-screen").style.display = "flex";
+        document.getElementById("admin-panel").style.display = "none";
+      }
+
+      async function loadLogs() {
+        try {
+          const res = await fetch("/api/admin/logs", {
+            credentials: "same-origin",
+            cache: "no-store",
+          });
+          if (res.status === 401) {
+            showLoginScreen();
+            setupLoginForm();
+            return;
+          }
+          const data = await res.json();
+          if (!data.success) throw new Error(data.error || "Erro");
+          allLogs = data.logs || [];
+          applyLocalFilter();
+        } catch (err) {
+          showNotification("Erro ao carregar logs: " + err.message, "error");
+        }
+      }
+
+      function applyLocalFilter() {
+        const search = document
+          .getElementById("search-input")
+          .value.toLowerCase();
+        const type = document.getElementById("type-filter").value;
+
+        filteredLogs = allLogs.filter((l) => {
+          const matchType = !type || (l.event_type || "").startsWith(type);
+          const matchSearch =
+            !search ||
+            [l.actor, l.action, l.order_id, l.details].some(
+              (f) => f && String(f).toLowerCase().includes(search)
+            );
+          return matchType && matchSearch;
+        });
+
+        currentPage = 1;
+        renderLogs();
+      }
+
+      function changePage(delta) {
+        const totalPages = Math.ceil(filteredLogs.length / PAGE_SIZE);
+        currentPage = Math.max(1, Math.min(totalPages, currentPage + delta));
+        renderLogs();
+      }
+
+      function renderLogs() {
+        const tbody = document.getElementById("log-tbody");
+        const pag = document.getElementById("pagination");
+
+        if (filteredLogs.length === 0) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="6">Nenhum log encontrado.</td></tr>';
+          pag.style.display = "none";
+          return;
+        }
+
+        const totalPages = Math.ceil(filteredLogs.length / PAGE_SIZE);
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const page = filteredLogs.slice(start, start + PAGE_SIZE);
+
+        tbody.innerHTML = page
+          .map((l) => {
+            const dt = new Date(l.created_at).toLocaleString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            });
+            const evType = (l.event_type || "SYSTEM").split("_")[0];
+            const evClass = `ev-${evType}`;
+
+            let details = "";
+            try {
+              const parsed = JSON.parse(l.details || "{}");
+              details = JSON.stringify(parsed).substring(0, 80);
+            } catch {
+              details = l.details || "—";
+            }
+
+            return `
+          <tr>
+            <td><span class="event-type ${evClass}">${esc(l.event_type || "SYSTEM")}</span></td>
+            <td class="actor-cell">${esc(l.actor || "—")}</td>
+            <td style="color:#bbb">${esc(l.action || "—")}</td>
+            <td><span class="details-json" title="${esc(l.details || "")}">${esc(details)}</span></td>
+            <td><span style="font-family:monospace;font-size:0.75rem;color:#555">${esc(l.order_id || "—")}</span></td>
+            <td class="time-cell">${dt}</td>
+          </tr>
+        `;
+          })
+          .join("");
+
+        document.getElementById("page-info").textContent =
+          `Pág. ${currentPage} / ${totalPages} (${filteredLogs.length} registros)`;
+        document.getElementById("prev-btn").disabled = currentPage <= 1;
+        document.getElementById("next-btn").disabled =
+          currentPage >= totalPages;
+        pag.style.display = totalPages > 1 ? "flex" : "none";
+      }
+
+      function esc(str) {
+        return String(str || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      let notifTimer;
+      function showNotification(msg, type = "info") {
+        const el = document.getElementById("notification");
+        el.textContent = msg;
+        el.className = `notif-${type}`;
+        el.style.display = "block";
+        clearTimeout(notifTimer);
+        notifTimer = setTimeout(() => {
+          el.style.display = "none";
+        }, 4000);
+      }
+    </script>
+  </body>
+</html>

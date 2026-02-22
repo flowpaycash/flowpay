@@ -1,0 +1,605 @@
+---
+// Admin Transactions — lista todos os pedidos com status e bridge
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLOWPay Admin | Transações</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/admin/panel.css" />
+
+    <style>
+      .status-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .status-CREATED {
+        background: rgba(100, 100, 100, 0.15);
+        color: #888;
+        border: 1px solid rgba(100, 100, 100, 0.25);
+      }
+      .status-PIX_PAID {
+        background: rgba(0, 162, 255, 0.15);
+        color: #00a2ff;
+        border: 1px solid rgba(0, 162, 255, 0.25);
+      }
+      .status-PENDING_REVIEW {
+        background: rgba(255, 170, 0, 0.15);
+        color: #ffaa00;
+        border: 1px solid rgba(255, 170, 0, 0.25);
+      }
+      .status-APPROVED {
+        background: rgba(0, 204, 102, 0.12);
+        color: #00cc66;
+        border: 1px solid rgba(0, 204, 102, 0.2);
+      }
+      .status-COMPLETED {
+        background: rgba(0, 204, 102, 0.2);
+        color: #00ee77;
+        border: 1px solid rgba(0, 204, 102, 0.35);
+      }
+      .status-SETTLED {
+        background: rgba(168, 85, 247, 0.15);
+        color: #a855f7;
+        border: 1px solid rgba(168, 85, 247, 0.25);
+      }
+      .status-REJECTED {
+        background: rgba(255, 68, 68, 0.15);
+        color: #ff4444;
+        border: 1px solid rgba(255, 68, 68, 0.25);
+      }
+
+      .bridge-PENDING {
+        color: #555;
+      }
+      .bridge-SENT {
+        color: #a855f7;
+        font-weight: 700;
+      }
+      .bridge-FAILED {
+        color: #ff4444;
+        font-weight: 700;
+      }
+
+      .tx-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+      }
+      .tx-table th {
+        text-align: left;
+        padding: 10px 14px;
+        color: #555;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid #1e1e1e;
+        white-space: nowrap;
+      }
+      .tx-table td {
+        padding: 11px 14px;
+        border-bottom: 1px solid #151515;
+        color: #ccc;
+        vertical-align: middle;
+      }
+      .tx-table tbody tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .tx-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .amount-brl {
+        font-weight: 700;
+        color: #fff;
+      }
+      .charge-id {
+        font-family: monospace;
+        font-size: 0.78rem;
+        color: #666;
+      }
+      .customer {
+        font-size: 0.82rem;
+        color: #888;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border-radius: 12px;
+        border: 1px solid #1e1e1e;
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .stat-card {
+        background: #111;
+        border: 1px solid #1e1e1e;
+        border-radius: 12px;
+        padding: 16px 18px;
+        text-align: center;
+      }
+      .stat-card .stat-num {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .stat-card .stat-label {
+        font-size: 0.72rem;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .stat-card.volume .stat-num {
+        color: #00cc66;
+      }
+      .stat-card.pending .stat-num {
+        color: #ffaa00;
+      }
+      .stat-card.bridge .stat-num {
+        color: #a855f7;
+      }
+
+      .filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .filter-btn {
+        padding: 5px 14px;
+        border-radius: 20px;
+        border: 1px solid #2a2a2a;
+        background: #111;
+        color: #aaa;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s;
+      }
+      .filter-btn:hover {
+        border-color: #444;
+        color: #fff;
+      }
+      .filter-btn.active {
+        background: linear-gradient(135deg, #ff007a, #a855f7);
+        border-color: transparent;
+        color: #fff;
+      }
+
+      .empty-row td {
+        text-align: center;
+        color: #555;
+        padding: 40px;
+      }
+
+      @media (max-width: 768px) {
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .tx-table th:nth-child(n + 4),
+        .tx-table td:nth-child(n + 4) {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Login screen -->
+    <div id="login-screen">
+      <div class="login-box">
+        <div class="login-logo">FLOWPay</div>
+        <h1>Admin</h1>
+        <p>Acesso restrito</p>
+        <form id="login-form" autocomplete="off">
+          <input
+            type="text"
+            name="username"
+            value="admin"
+            autocomplete="username"
+            style="display:none"
+            aria-hidden="true"
+          />
+          <label for="password">Senha de Acesso</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+          <div id="login-error" class="error-msg"></div>
+          <button type="submit" class="btn-login">Acessar Painel</button>
+        </form>
+        <a href="/" class="login-back">Voltar ao site</a>
+      </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel">
+      <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-brand">
+            <div class="sidebar-brand-name">FLOWPay</div>
+            <div class="sidebar-brand-version">v2.2.0 — Admin</div>
+          </div>
+
+          <nav class="sidebar-nav">
+            <div class="nav-group">
+              <div class="nav-group-label">Dashboard</div>
+              <a href="/admin" class="nav-link">
+                <span class="nav-dot"></span>
+                Visao Geral
+              </a>
+              <a href="/admin/transactions" class="nav-link active">
+                <span class="nav-dot"></span>
+                Transacoes
+              </a>
+            </div>
+
+            <div class="nav-group">
+              <div class="nav-group-label">Gestao</div>
+              <a href="/admin/users" class="nav-link">
+                <span class="nav-dot"></span>
+                Usuarios
+              </a>
+              <a href="/admin/settings" class="nav-link">
+                <span class="nav-dot"></span>
+                Configuracoes
+              </a>
+            </div>
+
+            <div class="nav-group">
+              <div class="nav-group-label">Sistema</div>
+              <a href="/admin/logs" class="nav-link">
+                <span class="nav-dot"></span>
+                Logs
+              </a>
+            </div>
+          </nav>
+
+          <div class="sidebar-footer">
+            <button id="logout-btn" class="btn-logout">Sair</button>
+          </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+          <div class="topbar">
+            <div class="topbar-title">Transações & Pagamentos</div>
+            <div class="topbar-actions">
+              <button
+                id="refresh-btn"
+                class="btn-secondary"
+                onclick="loadTransactions()">↻ Atualizar</button
+              >
+            </div>
+          </div>
+
+          <div class="content-area">
+            <!-- Stats -->
+            <div class="stats-row">
+              <div class="stat-card volume">
+                <div class="stat-num" id="stat-volume">R$ —</div>
+                <div class="stat-label">Volume Total (BRL)</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num" id="stat-total">—</div>
+                <div class="stat-label">Transações</div>
+              </div>
+              <div class="stat-card pending">
+                <div class="stat-num" id="stat-pending">—</div>
+                <div class="stat-label">Aguardando</div>
+              </div>
+              <div class="stat-card bridge">
+                <div class="stat-num" id="stat-bridge">—</div>
+                <div class="stat-label">Bridge Enviadas</div>
+              </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+              <button class="filter-btn active" onclick="setFilter('', this)"
+                >Todas</button
+              >
+              <button class="filter-btn" onclick="setFilter('CREATED', this)"
+                >Criadas</button
+              >
+              <button class="filter-btn" onclick="setFilter('PIX_PAID', this)"
+                >PIX Pago</button
+              >
+              <button
+                class="filter-btn"
+                onclick="setFilter('PENDING_REVIEW', this)">Em Revisão</button
+              >
+              <button class="filter-btn" onclick="setFilter('COMPLETED', this)"
+                >Concluídas</button
+              >
+              <button class="filter-btn" onclick="setFilter('SETTLED', this)"
+                >Liquidadas</button
+              >
+            </div>
+
+            <!-- Table -->
+            <div class="table-wrap">
+              <table class="tx-table">
+                <thead>
+                  <tr>
+                    <th>Charge ID</th>
+                    <th>Cliente</th>
+                    <th>Valor (BRL)</th>
+                    <th>Status</th>
+                    <th>Bridge</th>
+                    <th>Data</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tx-tbody">
+                  <tr class="empty-row"><td colspan="7">Carregando...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="notification"></div>
+
+    <script is:inline src="/csp-config.js"></script>
+
+    <script is:inline>
+      let allOrders = [];
+      let currentFilter = "";
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        const ok = await checkAuthentication();
+        if (ok) {
+          showAdminPanel();
+          await loadTransactions();
+        } else {
+          showLoginScreen();
+          setupLoginForm();
+        }
+        setupLogout();
+      });
+
+      async function checkAuthentication() {
+        try {
+          const res = await fetch("/api/admin/auth/session", {
+            credentials: "same-origin",
+            cache: "no-store",
+          });
+          const data = await res.json();
+          return Boolean(data?.authenticated);
+        } catch {
+          return false;
+        }
+      }
+
+      function setupLoginForm() {
+        const form = document.getElementById("login-form");
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const password = document.getElementById("password").value;
+          const errEl = document.getElementById("login-error");
+          if (!password) return;
+          try {
+            const res = await fetch("/api/admin/auth/login", {
+              method: "POST",
+              credentials: "same-origin",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ password }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              document.getElementById("password").value = "";
+              showAdminPanel();
+              await loadTransactions();
+            } else {
+              errEl.textContent = data.error || "Senha incorreta.";
+            }
+          } catch {
+            errEl.textContent = "Erro de conexão.";
+          }
+        });
+      }
+
+      function setupLogout() {
+        document
+          .getElementById("logout-btn")
+          ?.addEventListener("click", async () => {
+            await fetch("/api/admin/auth/logout", {
+              method: "POST",
+              credentials: "same-origin",
+              headers: { "Content-Type": "application/json" },
+            });
+            showLoginScreen();
+            setupLoginForm();
+          });
+      }
+
+      function showAdminPanel() {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("admin-panel").style.display = "flex";
+      }
+      function showLoginScreen() {
+        document.getElementById("login-screen").style.display = "flex";
+        document.getElementById("admin-panel").style.display = "none";
+      }
+
+      async function loadTransactions() {
+        try {
+          const res = await fetch("/api/admin/orders", {
+            credentials: "same-origin",
+            cache: "no-store",
+          });
+          if (res.status === 401) {
+            showLoginScreen();
+            setupLoginForm();
+            return;
+          }
+          const data = await res.json();
+          if (!data.success)
+            throw new Error(data.error || "Erro ao carregar transações");
+          allOrders = data.orders || [];
+          updateStats();
+          renderTable(currentFilter);
+        } catch (err) {
+          showNotification("Erro: " + err.message, "error");
+        }
+      }
+
+      function updateStats() {
+        const total = allOrders.length;
+        const volume = allOrders
+          .filter((o) =>
+            [
+              "COMPLETED",
+              "SETTLED",
+              "PIX_PAID",
+              "PENDING_REVIEW",
+              "APPROVED",
+            ].includes(o.status)
+          )
+          .reduce((s, o) => s + (o.amount_brl || 0), 0);
+        const pending = allOrders.filter((o) =>
+          ["PIX_PAID", "PENDING_REVIEW"].includes(o.status)
+        ).length;
+        const bridge = allOrders.filter(
+          (o) => o.bridge_status === "SENT"
+        ).length;
+
+        document.getElementById("stat-volume").textContent =
+          "R$ " + volume.toFixed(2).replace(".", ",");
+        document.getElementById("stat-total").textContent = total;
+        document.getElementById("stat-pending").textContent = pending;
+        document.getElementById("stat-bridge").textContent = bridge;
+      }
+
+      function setFilter(status, btn) {
+        currentFilter = status;
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderTable(status);
+      }
+
+      function renderTable(statusFilter) {
+        const tbody = document.getElementById("tx-tbody");
+        const filtered = statusFilter
+          ? allOrders.filter((o) => o.status === statusFilter)
+          : allOrders;
+
+        if (filtered.length === 0) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="7">Nenhuma transação encontrada.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = filtered
+          .map((o) => {
+            const date = new Date(o.created_at).toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const shortId = o.charge_id
+              ? o.charge_id.substring(0, 16) + "…"
+              : "—";
+            const customer =
+              o.customer_email ||
+              o.customer_ref ||
+              o.customer_wallet?.substring(0, 12) + "…" ||
+              "—";
+            const bridgeClass = `bridge-${o.bridge_status || "PENDING"}`;
+            const statusClass = `status-${o.status}`;
+            const isReviewable = [
+              "PIX_PAID",
+              "PENDING_REVIEW",
+              "APPROVED",
+            ].includes(o.status);
+
+            return `
+          <tr>
+            <td><span class="charge-id" title="${esc(o.charge_id)}">${esc(shortId)}</span></td>
+            <td><span class="customer">${esc(customer)}</span></td>
+            <td><span class="amount-brl">R$ ${Number(o.amount_brl || 0)
+              .toFixed(2)
+              .replace(".", ",")}</span></td>
+            <td><span class="status-badge ${statusClass}">${esc(o.status)}</span></td>
+            <td><span class="${bridgeClass}">${esc(o.bridge_status || "PENDING")}</span></td>
+            <td><span style="color:#555;font-size:0.8rem">${date}</span></td>
+            <td>
+              ${isReviewable ? `<button class="btn-approve" style="font-size:0.75rem;padding:4px 10px" onclick="completeOrder('${esc(o.charge_id)}', this)">✓ Concluir</button>` : "—"}
+            </td>
+          </tr>
+        `;
+          })
+          .join("");
+      }
+
+      async function completeOrder(chargeId, btn) {
+        if (!confirm("Confirmar conclusão desta transação?")) return;
+        btn.disabled = true;
+        btn.textContent = "...";
+        try {
+          const res = await fetch("/api/admin/orders", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "complete", chargeId }),
+          });
+          const data = await res.json();
+          if (!data.success) throw new Error(data.error);
+          showNotification("✅ Transação concluída.", "success");
+          await loadTransactions();
+        } catch (err) {
+          showNotification("Erro: " + err.message, "error");
+          btn.disabled = false;
+          btn.textContent = "✓ Concluir";
+        }
+      }
+
+      function esc(str) {
+        return String(str || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      let notifTimer;
+      function showNotification(msg, type = "info") {
+        const el = document.getElementById("notification");
+        el.textContent = msg;
+        el.className = `notif-${type}`;
+        el.style.display = "block";
+        clearTimeout(notifTimer);
+        notifTimer = setTimeout(() => {
+          el.style.display = "none";
+        }, 4000);
+      }
+    </script>
+  </body>
+</html>

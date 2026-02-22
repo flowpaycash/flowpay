@@ -1,0 +1,541 @@
+---
+// Admin Settings — configurações via ENV vars e sistema
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLOWPay Admin | Configurações</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/admin/panel.css" />
+
+    <style>
+      .settings-section {
+        background: #111;
+        border: 1px solid #1e1e1e;
+        border-radius: 14px;
+        padding: 24px 28px;
+        margin-bottom: 20px;
+      }
+      .section-title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .section-title .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff007a, #a855f7);
+        flex-shrink: 0;
+      }
+      .section-desc {
+        font-size: 0.8rem;
+        color: #555;
+        margin-bottom: 20px;
+      }
+      .config-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      @media (max-width: 600px) {
+        .config-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .config-item {
+        background: #0a0a0a;
+        border: 1px solid #1a1a1a;
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+      .config-key {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+      .config-value {
+        font-size: 0.88rem;
+        font-family: monospace;
+        color: #ccc;
+        word-break: break-all;
+      }
+      .config-value.secret {
+        color: #444;
+        font-style: italic;
+      }
+      .config-value.ok {
+        color: #00cc66;
+      }
+      .config-value.warn {
+        color: #ffaa00;
+      }
+      .config-value.err {
+        color: #ff4444;
+      }
+
+      .badge-env {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .badge-env.set {
+        background: rgba(0, 204, 102, 0.12);
+        color: #00cc66;
+        border: 1px solid rgba(0, 204, 102, 0.2);
+      }
+      .badge-env.missing {
+        background: rgba(255, 68, 68, 0.12);
+        color: #ff4444;
+        border: 1px solid rgba(255, 68, 68, 0.2);
+      }
+
+      .health-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      @media (max-width: 600px) {
+        .health-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .health-card {
+        background: #0e0e0e;
+        border: 1px solid #1a1a1a;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .health-icon {
+        font-size: 1.4rem;
+      }
+      .health-label {
+        font-size: 0.8rem;
+        color: #777;
+        margin-bottom: 2px;
+      }
+      .health-status {
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+      .health-status.ok {
+        color: #00cc66;
+      }
+      .health-status.warn {
+        color: #ffaa00;
+      }
+      .health-status.err {
+        color: #ff4444;
+      }
+
+      .btn-run-health {
+        padding: 8px 20px;
+        background: linear-gradient(135deg, #ff007a, #a855f7);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        font-family: inherit;
+        transition: opacity 0.2s;
+      }
+      .btn-run-health:hover {
+        opacity: 0.85;
+      }
+      .btn-run-health:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="login-screen">
+      <div class="login-box">
+        <div class="login-logo">FLOWPay</div>
+        <h1>Admin</h1>
+        <p>Acesso restrito</p>
+        <form id="login-form" autocomplete="off">
+          <input
+            type="text"
+            name="username"
+            value="admin"
+            autocomplete="username"
+            style="display:none"
+            aria-hidden="true"
+          />
+          <label for="password">Senha de Acesso</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+          <div id="login-error" class="error-msg"></div>
+          <button type="submit" class="btn-login">Acessar Painel</button>
+        </form>
+        <a href="/" class="login-back">Voltar ao site</a>
+      </div>
+    </div>
+
+    <div id="admin-panel">
+      <div class="admin-wrapper">
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-brand">
+            <div class="sidebar-brand-name">FLOWPay</div>
+            <div class="sidebar-brand-version">v2.2.0 — Admin</div>
+          </div>
+          <nav class="sidebar-nav">
+            <div class="nav-group">
+              <div class="nav-group-label">Dashboard</div>
+              <a href="/admin" class="nav-link"
+                ><span class="nav-dot"></span>Visao Geral</a
+              >
+              <a href="/admin/transactions" class="nav-link"
+                ><span class="nav-dot"></span>Transacoes</a
+              >
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-label">Gestao</div>
+              <a href="/admin/users" class="nav-link"
+                ><span class="nav-dot"></span>Usuarios</a
+              >
+              <a href="/admin/settings" class="nav-link active"
+                ><span class="nav-dot"></span>Configuracoes</a
+              >
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-label">Sistema</div>
+              <a href="/admin/logs" class="nav-link"
+                ><span class="nav-dot"></span>Logs</a
+              >
+            </div>
+          </nav>
+          <div class="sidebar-footer">
+            <button id="logout-btn" class="btn-logout">Sair</button>
+          </div>
+        </aside>
+
+        <main class="main-content">
+          <div class="topbar">
+            <div class="topbar-title">Configurações do Sistema</div>
+            <div class="topbar-actions">
+              <button
+                class="btn-run-health"
+                id="health-btn"
+                onclick="runHealthCheck()">⚡ Health Check</button
+              >
+            </div>
+          </div>
+
+          <div class="content-area">
+            <!-- Health Cards -->
+            <div class="health-row" id="health-row">
+              <div class="health-card">
+                <div class="health-icon">🗄️</div>
+                <div>
+                  <div class="health-label">DATABASE</div>
+                  <div class="health-status warn" id="h-db">Verificando...</div>
+                </div>
+              </div>
+              <div class="health-card">
+                <div class="health-icon">📧</div>
+                <div>
+                  <div class="health-label">EMAIL (Resend)</div>
+                  <div class="health-status warn" id="h-email">
+                    Verificando...
+                  </div>
+                </div>
+              </div>
+              <div class="health-card">
+                <div class="health-icon">🌐</div>
+                <div>
+                  <div class="health-label">NEXUS BRIDGE</div>
+                  <div class="health-status warn" id="h-nexus">
+                    Verificando...
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ENV Config -->
+            <div class="settings-section">
+              <div class="section-title">
+                <span class="dot"></span>Variáveis de Ambiente
+              </div>
+              <div class="section-desc">
+                Status das variáveis críticas do sistema. Valores sensíveis são
+                ocultados.
+              </div>
+              <div class="config-grid" id="env-grid">
+                <div class="config-item">
+                  <div class="config-key">Status</div>
+                  <div class="config-value warn">Carregando...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Info -->
+            <div class="settings-section">
+              <div class="section-title">
+                <span class="dot"></span>Informações do Sistema
+              </div>
+              <div class="section-desc">Runtime e build info.</div>
+              <div class="config-grid" id="sys-grid">
+                <div class="config-item">
+                  <div class="config-key">Node.js</div>
+                  <div class="config-value" id="sys-node">—</div>
+                </div>
+                <div class="config-item">
+                  <div class="config-key">Ambiente</div>
+                  <div class="config-value" id="sys-env">—</div>
+                </div>
+                <div class="config-item">
+                  <div class="config-key">App Version</div>
+                  <div class="config-value">v2.2.0</div>
+                </div>
+                <div class="config-item">
+                  <div class="config-key">Uptime</div>
+                  <div class="config-value" id="sys-uptime">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="notification"></div>
+    <script is:inline src="/csp-config.js"></script>
+
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const ok = await checkAuthentication();
+        if (ok) {
+          showAdminPanel();
+          await loadSettings();
+        } else {
+          showLoginScreen();
+          setupLoginForm();
+        }
+        setupLogout();
+      });
+
+      async function checkAuthentication() {
+        try {
+          const res = await fetch("/api/admin/auth/session", {
+            credentials: "same-origin",
+            cache: "no-store",
+          });
+          return Boolean((await res.json())?.authenticated);
+        } catch {
+          return false;
+        }
+      }
+
+      function setupLoginForm() {
+        const form = document.getElementById("login-form");
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const password = document.getElementById("password").value;
+          if (!password) return;
+          try {
+            const res = await fetch("/api/admin/auth/login", {
+              method: "POST",
+              credentials: "same-origin",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ password }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              document.getElementById("password").value = "";
+              showAdminPanel();
+              await loadSettings();
+            } else {
+              document.getElementById("login-error").textContent =
+                data.error || "Senha incorreta.";
+            }
+          } catch {
+            document.getElementById("login-error").textContent =
+              "Erro de conexão.";
+          }
+        });
+      }
+
+      function setupLogout() {
+        document
+          .getElementById("logout-btn")
+          ?.addEventListener("click", async () => {
+            await fetch("/api/admin/auth/logout", {
+              method: "POST",
+              credentials: "same-origin",
+              headers: { "Content-Type": "application/json" },
+            });
+            showLoginScreen();
+            setupLoginForm();
+          });
+      }
+
+      function showAdminPanel() {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("admin-panel").style.display = "flex";
+      }
+      function showLoginScreen() {
+        document.getElementById("login-screen").style.display = "flex";
+        document.getElementById("admin-panel").style.display = "none";
+      }
+
+      async function loadSettings() {
+        try {
+          const res = await fetch("/api/health", {
+            credentials: "same-origin",
+          });
+          const data = await res.json();
+
+          // System info
+          document.getElementById("sys-node").textContent =
+            data.node || process?.version || "—";
+          document.getElementById("sys-env").textContent =
+            data.env || "production";
+          document.getElementById("sys-uptime").textContent = data.uptime
+            ? Math.floor(data.uptime / 60) + " min"
+            : "—";
+
+          // ENV grid
+          const envKeys = [
+            { key: "WOOVI_API_KEY", label: "Woovi API Key", sensitive: true },
+            {
+              key: "WOOVI_WEBHOOK_SECRET",
+              label: "Woovi Webhook Secret",
+              sensitive: true,
+            },
+            { key: "RESEND_API_KEY", label: "Resend API Key", sensitive: true },
+            { key: "ADMIN_PASSWORD", label: "Admin Password", sensitive: true },
+            {
+              key: "DASHBOARD_SECRET",
+              label: "Dashboard Secret",
+              sensitive: true,
+            },
+            {
+              key: "QUICKNODE_WEBHOOK_SECRET",
+              label: "QuickNode Secret",
+              sensitive: true,
+            },
+            { key: "URL", label: "App URL", sensitive: false },
+            { key: "NODE_ENV", label: "Node ENV", sensitive: false },
+          ];
+
+          const envGrid = document.getElementById("env-grid");
+          envGrid.innerHTML = envKeys
+            .map((ev) => {
+              const isSet = data.env_status?.[ev.key] ?? null;
+              const badge =
+                isSet === true
+                  ? '<span class="badge-env set">✓ SET</span>'
+                  : isSet === false
+                    ? '<span class="badge-env missing">✗ MISSING</span>'
+                    : '<span class="badge-env missing">—</span>';
+              const val = ev.sensitive
+                ? '<span class="config-value secret">••••••••</span>'
+                : `<span class="config-value">${esc(data.env_values?.[ev.key] || "—")}</span>`;
+              return `
+            <div class="config-item">
+              <div class="config-key">${esc(ev.label)} ${badge}</div>
+              ${val}
+            </div>
+          `;
+            })
+            .join("");
+        } catch (err) {
+          showNotification("Erro ao carregar configurações.", "error");
+        }
+
+        await runHealthCheck();
+      }
+
+      async function runHealthCheck() {
+        const btn = document.getElementById("health-btn");
+        btn.disabled = true;
+        btn.textContent = "Verificando...";
+
+        const setH = (id, text, status) => {
+          const el = document.getElementById(id);
+          el.textContent = text;
+          el.className = `health-status ${status}`;
+        };
+
+        try {
+          const res = await fetch("/api/health", {
+            credentials: "same-origin",
+            cache: "no-store",
+          });
+          const data = await res.json();
+
+          setH(
+            "h-db",
+            data.db === "ok" ? "Conectado" : "Falha",
+            data.db === "ok" ? "ok" : "err"
+          );
+          setH(
+            "h-email",
+            data.email === "ok" ? "Configurado" : "Falha",
+            data.email === "ok" ? "ok" : "warn"
+          );
+          setH(
+            "h-nexus",
+            data.nexus === "ok" ? "Online" : "Offline",
+            data.nexus === "ok" ? "ok" : "warn"
+          );
+        } catch {
+          ["h-db", "h-email", "h-nexus"].forEach((id) =>
+            setH(id, "Erro", "err")
+          );
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "⚡ Health Check";
+        }
+      }
+
+      function esc(str) {
+        return String(str || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      let notifTimer;
+      function showNotification(msg, type = "info") {
+        const el = document.getElementById("notification");
+        el.textContent = msg;
+        el.className = `notif-${type}`;
+        el.style.display = "block";
+        clearTimeout(notifTimer);
+        notifTimer = setTimeout(() => {
+          el.style.display = "none";
+        }, 4000);
+      }
+    </script>
+  </body>
+</html>

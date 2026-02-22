@@ -8,70 +8,47 @@
 ```
 
 Priority-ordered execution plan for security and scalability.
-**Status:** Phase Transition (v1.0.1)
+**Status:** Phase Transition (v1.1.0) — Sprint 1 & 2 concluídos ✅
 
 ────────────────────────────────────────
 
-## 🔴 CRITICAL (Level 1)
-*Financial Security & Data Integrity*
+## 🟢 COMPLETED (Sprint 1 — Segurança Financeira)
 
-### 1. Dashboard Authentication Fix (URGENT)
-Current implementation uses unauthenticated base64 encoding `btoa(email:timestamp)`.
-- **Vulnerability:** Trivial to forge `x-user-token` headers.
-- **Fix:** Implement signed session cookies or JWT with a secure `DASHBOARD_SECRET`.
-- **Files:** `src/pages/api/user/buttons.js`, `src/pages/dashboard.astro`.
+| Item | Description | Status |
+|------|-------------|--------|
+| Auth Session | HMAC-SHA256 signed cookies + `verifySessionToken` | ✅ Done |
+| Webhook Test Suite | `tests/webhook.test.js` — HMAC, idempotência, status transitions | ✅ Done |
+| DB Migration Neon | `migrations/001_initial_schema.sql` + `002_migrate_sqlite_to_neon.js` | ✅ Done |
 
-### 2. Financial Webhook Testing suite
-Zero coverage for the PIX payment confirmation flow (Woovi → HMAC → DB → Bridge).
-- **Target:** Create `tests/webhook.test.js`.
-- **Must cover:** HMAC validation, Idempotency, Status transitions.
+## 🟢 COMPLETED (Sprint 2 — Funcionalidades)
 
-### 3. Database Migration: Neon PostgreSQL
-Move from local SQLite (Railway Volume) to **Neon PostgreSQL** for production-grade backups and scalability.
-- **Status:** Schema definition complete in `NEXTSTEPS.md`.
-- **Action:** Create migration scripts in `migrations/`.
+| Item | Description | Status |
+|------|-------------|--------|
+| Admin Transactions | `/admin/transactions` — listagem com stats + ação de conclusão | ✅ Done |
+| Admin Settings | `/admin/settings` — health check + status das ENV vars | ✅ Done |
+| Admin Logs | `/admin/logs` — audit log com busca, filtros e paginação | ✅ Done |
+| Admin Logs API | `GET /api/admin/logs` — server-side com filtro por tipo | ✅ Done |
+| Seller Delete/Edit | `DELETE /PATCH /api/user/buttons/[id]` com soft-delete + ownership | ✅ Done |
+| QuickNode Processing | `quicknode.js` — processa USDT/USDC ERC-20, atualiza DB e notifica Nexus | ✅ Done |
 
-────────────────────────────────────────
+## 🟢 COMPLETED (Sprint 3 — Qualidade)
 
-## 🟠 HIGH (Level 2)
-*Incomplete Functionality*
-
-### 4. Admin Dashboard Completion
-Several administrative routes are currently returning 404.
-- **Routes to build:** `/admin/transactions`, `/admin/settings`, `/admin/logs`.
-
-### 5. Seller Dashboard Features
-- **Integrate:** Delete/Edit links (`DELETE /api/user/buttons/:id`).
-- **Stats:** View payment history and total received per link.
-
-### 6. QuickNode Event Processing
-Incoming crypto events are received but not processed.
-- **Action:** Update `src/pages/api/webhooks/quicknode.js` to confirm USDT/USDC arrivals.
+| Item | Description | Status |
+|------|-------------|--------|
+| Service Tests | `tests/services/services.test.js` — Email, Rate Limiter, Config, DB | ✅ Done |
+| CSP Middleware | `src/middleware.js` — CSP movido de meta tag para HTTP header | ✅ Done |
 
 ────────────────────────────────────────
 
-## 🟡 MEDIUM (Level 3)
-*Maintainability & Quality*
-
-### 7. Global Service Testing
-Lack of isolated tests for critical services:
-- **Email (Resend):** Test template rendering and API failover.
-- **Rate Limiter (Redis):** Validate windows and fallback logic.
-- **Config Validator:** Ensure all critical ENV vars are present at startup.
-
-### 8. Content Security Policy (Middleware)
-Move CSP from HTML meta tags to server-side `src/middleware.js` as an HTTP header.
-
-────────────────────────────────────────
-
-## 🟢 LOW (Level 4)
-*Optimization & Polishing*
+## 🟡 PENDING (Level 4 — Otimização)
 
 ### 9. Performance & Lighthouse
+
 - Configure LCP image discovery (preload).
 - Implement long-lived caching for static assets in `/public/css/`.
 
 ### 10. E2E Testing (Playwright)
+
 Simulate full user journeys: from PIX selection to QR code payment and bridge confirmation.
 
 ────────────────────────────────────────
@@ -83,6 +60,12 @@ Simulate full user journeys: from PIX selection to QR code payment and bridge co
 | CSP Refactor | Unblocked Sentry and Sentry Worker | ✅ Fixed |
 | CSS Preload | Resolved render-blocking stylesheets | ✅ Fixed |
 | Admin Panel | Initial `/admin/users` listing + Action buttons | ✅ Live |
+| Auth Session | HMAC-SHA256 sessions (substituiu btoa inseguro) | ✅ Fixed |
+| Webhook Tests | Suite completa PIX: HMAC + idempotência + status | ✅ Done |
+| Neon Migration | Schema SQL + script de migração SQLite → PostgreSQL | ✅ Done |
+| Admin Routes | `/transactions`, `/settings`, `/logs` — todas funcionais | ✅ Done |
+| QuickNode | USDT/USDC ERC-20 settlement com Nexus Bridge | ✅ Done |
+| CSP Header | Migrado de meta tag para HTTP header no middleware | ✅ Done |
 
 ────────────────────────────────────────
 
