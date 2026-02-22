@@ -29,7 +29,9 @@
       "Bash(# Deeper check: scan git history for DSN patterns that look like real Sentry DSNs git -C /usr/local/projects/flowpay log --all -p --follow -- astro.config.mjs)",
       "Bash(git pull:*)",
       "Bash(git stash:*)",
-      "Bash(git stash pop:*)"
+      "Bash(git stash pop:*)",
+      "Bash(gh run list:*)",
+      "Bash(railway status:*)"
     ]
   }
 }
