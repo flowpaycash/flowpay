@@ -1,13 +1,11 @@
 # FlowPay — Nixpacks build config
 #
 # nodejs_20: mantém Node.js vivo após nix-collect-garbage -d
+# nodePackages.pnpm: instala pnpm via Nix — mesmo PATH que node (sem shenanigans)
 # python3/gcc/gnumake: compilação do better-sqlite3 (C++ nativo)
-# corepack: gerenciador oficial do pnpm, usa o mesmo PATH do node/npm
-#           (npm install -g pnpm falha pois o prefix do Nix nao fica no PATH)
 
 [phases.setup]
-nixPkgs = ["nodejs_20", "python3", "gcc", "gnumake"]
-cmds = ["corepack enable && corepack prepare pnpm@latest --activate"]
+nixPkgs = ["nodejs_20", "nodePackages.pnpm", "python3", "gcc", "gnumake"]
 
 [phases.install]
 cmds = ["PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 pnpm install --frozen-lockfile"]
