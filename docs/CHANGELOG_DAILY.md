@@ -14,16 +14,19 @@
 **"SANDBOX COMPATIBILITY & AUTH BUNDLING OPTIMIZATION"**
 
 ### └─ Agent Sandbox Standards (Critical Discovery)
+
 - **Problem**: Claude Code sandbox reads `.gitignore` and blocks writes to all listed paths (e.g., `.astro/`), causing build failures (`EPERM`).
 - **Solution**: Creation of `.agyignore` to override behavior, allowing writes to build artifacts while protecting sensitive secrets.
 - **Automation**: Updated `package.json` with `prebuild` scripts to ensure a clean state before every compilation.
 
 ### └─ Auth Logic & UX
+
 - **Refactor**: Optimized dynamic script loading in `login.astro`.
 - **Race Condition Prevention**: Implemented `loadScriptOnce` to prevent duplicate provider injections.
 - **UX Feedback**: Added `loading-spinner` and disabled button states during authentication module fetching.
 
 ### └─ Type Safety & Code Quality
+
 - **TS Fixes**: Removed unused variables (`addressDisplay` in Navbar) and cleaned parameters in Checkout to eliminate `ts(6133)` warnings.
 - **Engine Consistency**: Updated Node.js requirement to `>=20.x` in `package.json` for environment alignment.
 
@@ -31,23 +34,25 @@
 
 ## ▓▓▓ CHANGELOG: 05-FEB-2026
 
-
 ────────────────────────────────────────
 **"PROOF-OF-EXECUTION & AUTONOMOUS AUTHENTICATION"**
 
 ### └─ Proof-of-Execution (PoE)
+
 - **Engine**: Implementação de Merkle Tree SHA-256 (`merkle.js`).
 - **Service**: `poe-service.js` orquestrando batches criptográficos.
 - **Persistence**: Tabela `poe_batches` integrada e migrada.
 - **Evidence**: Ordens agora são vinculadas a raízes Merkle ancoradas em Base L2.
 
 ### └─ Auth & Security
+
 - **Magic Link**: Login passwordless completo (API + DB + Token logic).
 - **Security Audit Suite**: Novo diretório `scripts/tests/` com auditoria de headers, segurança de webhook e integridade de DB.
 - **Global Middleware**: Header protection (HSTS, CSP, X-Frame) forçado em todas as rotas via Astro middleware.
 - **CSP Upgrade**: Suporte oficial para Cloudflare Insights beacon.
 
 ### └─ UI/UX Refinement
+
 - **Branding**: Logo oficial integrada no Checkout e Navbar com efeitos neon.
 - **Modernization**: Remoção de APIs legadas (`execCommand`) em favor de `navigator.clipboard`.
 
@@ -97,7 +102,7 @@
 ### └─ [MÉDIO PRAZO] Fase 3 & 4
 
 - Modularização: Adapter Pix/USDT.
-- Rota `/transparency` (Observabilidade).
+- Endpoint `/api/transparency` (Observabilidade).
 - Verificação de assinatura (Proof).
 
 ### └─ [LONGO PRAZO] Fase 7 & 10
@@ -125,5 +130,5 @@ Core Architect · NΞØ Protocol
 <neo@neoprotocol.space>
 
 "Code is law. Expand until
- chaos becomes protocol."
+chaos becomes protocol."
 ────────────────────────────────────────

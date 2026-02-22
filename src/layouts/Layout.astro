@@ -325,6 +325,12 @@ const allSchemas = [...defaultStructuredData, ...extraSchema];
         window.global = window;
       }
     </script>
+    <script>
+      import * as Sentry from "@sentry/astro";
+      if (typeof window !== "undefined") {
+        Sentry.metrics.count("user_action", 1);
+      }
+    </script>
   </head>
   <body class={bodyClass ?? ""}>
     <slot />

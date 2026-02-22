@@ -1,7 +1,11 @@
 import * as Sentry from "@sentry/astro";
 
+const SENTRY_DSN =
+  import.meta.env.PUBLIC_SENTRY_DSN ||
+  "https://7794b30fca5fa43d77da7314bdc29748@o4510916616519680.ingest.us.sentry.io/4510916639653888";
+
 Sentry.init({
-  dsn: import.meta.env.PUBLIC_SENTRY_DSN,
+  dsn: SENTRY_DSN,
 
   environment: import.meta.env.PUBLIC_ENV || "production",
 

@@ -14,7 +14,7 @@
 **CTAs:**
 
 - **Primário:** "Começar checkout" → `/checkout`
-- **Secundário:** "Ver como operamos" → `/transparency`
+- **Secundário:** "Ver como operamos" → `/api/transparency`
 
 ---
 
@@ -27,10 +27,7 @@
 
 1. **PIX Dinâmico** - Rastreabilidade personalizada com webhooks assinados
 
-(HMAC‑SHA256) e idempotência garantida
-2. **Ethereum + Polygon** - Cripto em redes EVM-ready com auto-custódia total
-3. **Log Público** - Zero blackbox. Todas as transações em `/transparency`
-4. **Webhooks Assinados** - HMAC‑SHA256 com retry exponencial e idempotência garantida
+(HMAC‑SHA256) e idempotência garantida 2. **Ethereum + Polygon** - Cripto em redes EVM-ready com auto-custódia total 3. **Log Público** - Zero blackbox. Todas as transações em `/api/transparency` 4. **Webhooks Assinados** - HMAC‑SHA256 com retry exponencial e idempotência garantida
 
 ---
 
@@ -48,7 +45,7 @@
 
 ---
 
-## **`/transparency` – Transparência Real IMPLEMENTADO**
+## **`/api/transparency` – Transparência Real IMPLEMENTADO**
 
 ### **Hero (Opção A implementada)**
 
@@ -134,7 +131,7 @@
 
 - ✅ `public/index.html` - Hero e prova social técnica
 - ✅ `public/checkout.html` - Hero e CTAs
-- ✅ `public/transparency.html` - Hero e blocos de transparência
+- ✅ Página de transparência legada removida
 - ✅ `public/pix-checkout.html` - Hero e descrições
 - ✅ `public/img/logos/` - Estrutura de assets organizada
 

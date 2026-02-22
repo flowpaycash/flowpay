@@ -21,10 +21,7 @@
       "FACTORY:MINT_FAILED",
       "NEOBOT:ACCESS_UNLOCKED"
     ],
-    "eventsEmitted": [
-      "FLOWPAY:PAYMENT_RECEIVED",
-      "FLOWPAY:PAYMENT_FAILED"
-    ],
+    "eventsEmitted": ["FLOWPAY:PAYMENT_RECEIVED", "FLOWPAY:PAYMENT_FAILED"],
     "neobotApiUrl": "https://nexus.neoprotocol.space",
     "neobotApiUrlDev": "http://localhost:19000"
   },
@@ -85,9 +82,9 @@
         "type": "redirect"
       },
       {
-        "path": "/transparency",
+        "path": "/api/transparency",
         "function": "Transparência e auditoria",
-        "type": "static"
+        "type": "api"
       },
       {
         "path": "/admin",
@@ -128,9 +125,7 @@
       "header": "default-src 'self'; script-src 'self' 'nonce-{{NONCE}}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.woovi.com https://api.woovi-sandbox.com https://rpc.ankr.com https://mainnet.infura.io; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'",
       "dev_overrides": {
         "allow_cdn": true,
-        "script_src_extra": [
-          "https://cdn.jsdelivr.net"
-        ],
+        "script_src_extra": ["https://cdn.jsdelivr.net"],
         "notes": "Somente desenvolvimento. Produção deve self-host/bundler."
       }
     },
@@ -145,11 +140,7 @@
   },
   "custody": {
     "model": "self-custody",
-    "wallets_supported": [
-      "injected",
-      "walletconnect",
-      "ledger"
-    ],
+    "wallets_supported": ["injected", "walletconnect", "ledger"],
     "web3auth": {
       "enabled": true,
       "client_id_ref": "ENV:WEB3AUTH_CLIENT_ID",
@@ -185,24 +176,15 @@
               "https://rpc.ankr.com/eth",
               "https://mainnet.infura.io/v3/${INFURA_KEY}"
             ],
-            "assets": [
-              "ETH",
-              "USDC",
-              "USDT"
-            ],
+            "assets": ["ETH", "USDC", "USDT"],
             "explorer": "https://etherscan.io"
           },
           {
             "name": "Polygon",
             "type": "EVM",
             "chain_id": 137,
-            "rpc": [
-              "https://rpc.ankr.com/polygon"
-            ],
-            "assets": [
-              "MATIC",
-              "USDC"
-            ],
+            "rpc": ["https://rpc.ankr.com/polygon"],
+            "assets": ["MATIC", "USDC"],
             "explorer": "https://polygonscan.com"
           }
         ],
@@ -250,11 +232,7 @@
       },
       "webhooks": {
         "file": "webhook_events.json",
-        "fields": [
-          "receivedAt",
-          "event",
-          "ref_hash"
-        ],
+        "fields": ["receivedAt", "event", "ref_hash"],
         "redacted": true
       }
     },
@@ -294,16 +272,13 @@
   "ui": {
     "routes": {
       "checkout": "/checkout",
-      "transparency": "/transparency"
+      "transparency": "/api/transparency"
     },
     "flags": {
       "show_crypto": true,
       "sandbox_mode": true
     },
-    "i18n": [
-      "pt-BR",
-      "en-US"
-    ]
+    "i18n": ["pt-BR", "en-US"]
   },
   "integration": {
     "examples": {
@@ -322,10 +297,7 @@
     }
   },
   "environment": {
-    "required": [
-      "WOOVI_API_KEY",
-      "WOOVI_WEBHOOK_SECRET"
-    ],
+    "required": ["WOOVI_API_KEY", "WOOVI_WEBHOOK_SECRET"],
     "optional": [
       "WEB3AUTH_CLIENT_ID",
       "WALLETCONNECT_PROJECT_ID",
