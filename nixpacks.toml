@@ -1,7 +1,16 @@
 # FlowPay — Nixpacks build config
-# Only declares extra system libs needed for better-sqlite3 (C++ native addon).
-# Everything else (Node 20, pnpm via corepack, install, build, start)
-# is auto-detected from package.json + pnpm-lock.yaml.
+#
+# Por que este arquivo existe:
+# 1. A imagem Ubuntu do Railway tem npm/node mas NAO tem pnpm
+#    → pnpm e instalado explicitamente via npm antes do install
+# 2. better-sqlite3 e um modulo C++ nativo que precisa de ferramentas de compilacao
+#    → python3, gcc, gnumake adicionados via Nix
+# 3. @playwright/test em devDeps aciona download do Chromium (imagem enorme)
+#    → --prod no install pula todas as devDependencies
 
 [phases.setup]
 nixPkgs = ["python3", "gcc", "gnumake"]
+cmds = ["npm install -g pnpm"]
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile --prod"]
