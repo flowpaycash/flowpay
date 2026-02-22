@@ -1,16 +1,18 @@
 # FlowPay — Nixpacks build config
 #
-# Por que este arquivo existe:
-# 1. A imagem Ubuntu do Railway tem npm/node mas NAO tem pnpm
-#    → pnpm e instalado explicitamente via npm antes do install
-# 2. better-sqlite3 e um modulo C++ nativo que precisa de ferramentas de compilacao
-#    → python3, gcc, gnumake adicionados via Nix
-# 3. @playwright/test em devDeps aciona download do Chromium (imagem enorme)
-#    → --prod no install pula todas as devDependencies
+# Por que nodejs_20 esta aqui explicitamente:
+#   O step "nix-collect-garbage -d" remove tudo que nao esta referenciado
+#   no nixpacks.toml — incluindo o Node.js da imagem base. Sem nodejs_20
+#   aqui, npm/node somem depois do garbage-collect.
+#
+# Por que PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 e nao --prod:
+#   --prod pula @types/* e quebra o astro check (TypeScript).
+#   A variavel de ambiente impede so o download do Chromium (~170MB),
+#   mantendo todos os tipos e dependencias necessarios para o build.
 
 [phases.setup]
-nixPkgs = ["python3", "gcc", "gnumake"]
+nixPkgs = ["nodejs_20", "python3", "gcc", "gnumake"]
 cmds = ["npm install -g pnpm"]
 
 [phases.install]
-cmds = ["pnpm install --frozen-lockfile --prod"]
+cmds = ["PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 pnpm install --frozen-lockfile"]
