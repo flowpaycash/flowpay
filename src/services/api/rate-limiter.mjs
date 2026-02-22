@@ -11,6 +11,7 @@ export const RATE_LIMITS = {
   "auth-magic-start": { windowMs: 15 * 60 * 1000, maxRequests: 5 },
   "nexus-webhook": { windowMs: 60 * 1000, maxRequests: 60 },
   "pix-orders": { windowMs: 60 * 1000, maxRequests: 30 },
+  "user-status": { windowMs: 15 * 60 * 1000, maxRequests: 20 },
   "debug-env": { windowMs: 60 * 1000, maxRequests: 10 },
   "get-admin-config": { windowMs: 60 * 1000, maxRequests: 20 },
   "admin-login": { windowMs: 15 * 60 * 1000, maxRequests: 8 },

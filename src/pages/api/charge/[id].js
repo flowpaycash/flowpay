@@ -18,7 +18,7 @@ export const GET = async ({ params, request, clientAddress }) => {
   }
 
   // Rate limit to prevent enumeration
-  const rateLimitResult = applyRateLimit("pix-orders")({
+  const rateLimitResult = await applyRateLimit("pix-orders")({
     headers: Object.fromEntries(request.headers),
     context: { clientIP: clientAddress },
   });

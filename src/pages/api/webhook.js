@@ -14,7 +14,7 @@ export const POST = async ({ request, clientAddress }) => {
   });
 
   try {
-    const rateLimitResult = applyRateLimit("webhook-handler")({
+    const rateLimitResult = await applyRateLimit("webhook-handler")({
       headers: Object.fromEntries(request.headers),
       context: { clientIP: clientAddress },
     });
@@ -348,10 +348,10 @@ export const POST = async ({ request, clientAddress }) => {
       scope.setTag("failure", "unhandled_webhook_error");
       Sentry.captureException(error);
     });
-    // Retorna 200 para a Woovi nao re-tentar em erros de logica
+    // Em erro critico, retornar 5xx para permitir retentativa do provedor
     return new Response(JSON.stringify({ error: "Internal error" }), {
-      status: 200,
-      headers,
+      status: 500,
+      headers: { ...headers, "Content-Type": "application/json" },
     });
   }
 };

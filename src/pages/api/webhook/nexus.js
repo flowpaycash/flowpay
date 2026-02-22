@@ -32,7 +32,7 @@ export const POST = async ({ request, clientAddress }) => {
 
   try {
     // Rate limiting
-    const rateLimitResult = applyRateLimit("nexus-webhook")({
+    const rateLimitResult = await applyRateLimit("nexus-webhook")({
       headers: Object.fromEntries(request.headers),
       context: { clientIP: clientAddress },
     });

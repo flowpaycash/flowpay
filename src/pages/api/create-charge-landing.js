@@ -77,7 +77,7 @@ export const POST = async ({ request, clientAddress }) => {
 
   try {
     // Rate Limiting
-    const rateLimitResult = applyRateLimit("create-pix-charge")({
+    const rateLimitResult = await applyRateLimit("create-pix-charge")({
       headers: Object.fromEntries(request.headers),
       context: { clientIP: clientAddress },
     });

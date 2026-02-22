@@ -27,7 +27,7 @@ export const POST = async ({ request, clientAddress }) => {
   try {
     // 🚦 Rate Limiting (Aproximado para Astro)
     // No Astro, podemos usar o clientAddress
-    const rateLimitResult = applyRateLimit("create-pix-charge")({
+    const rateLimitResult = await applyRateLimit("create-pix-charge")({
       headers: Object.fromEntries(request.headers),
       context: { clientIP: clientAddress },
     });

@@ -10,7 +10,7 @@ export const POST = async ({ request, clientAddress }) => {
 
     try {
         // Rate limiting to prevent email enumeration/spam
-        const rateLimitResult = applyRateLimit('auth-magic-start')({
+        const rateLimitResult = await applyRateLimit('auth-magic-start')({
             headers: Object.fromEntries(request.headers),
             context: { clientIP: clientAddress }
         });

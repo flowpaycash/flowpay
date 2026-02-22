@@ -15,31 +15,61 @@ export const POST = async ({ request }) => {
       request.headers.get("x-quicknode-signature");
     const secret = process.env.QUICKNODE_WEBHOOK_SECRET;
 
-    // Validação HMAC se o secret estiver configurado
-    if (secret && signature) {
-      const hmac = crypto.createHmac("sha256", secret);
-      const digest = hmac.update(rawBody).digest("hex");
+    // Segurança: assinatura é obrigatória para evitar forja de evento
+    if (!secret) {
+      secureLog(
+        "error",
+        "QuickNode Webhook: QUICKNODE_WEBHOOK_SECRET nao configurado"
+      );
+      return new Response(
+        JSON.stringify({ error: "Webhook not configured securely" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
-      if (signature !== digest) {
-        secureLog("error", "QuickNode Webhook: Assinatura invalida");
-        Sentry.withScope((scope) => {
-          scope.setLevel("error");
-          scope.setTag("security.violation", "invalid_hmac_signature");
-          scope.setTag("source", "quicknode_webhook");
-          scope.setContext("request", {
-            signature_received: signature
-              ? signature.substring(0, 10) + "..."
-              : "none",
-          });
-          Sentry.captureMessage(
-            "QuickNode: assinatura HMAC invalida — possivel tentativa de forja",
-            "error"
-          );
+    if (!signature) {
+      secureLog("warn", "QuickNode Webhook: Assinatura ausente");
+      return new Response(JSON.stringify({ error: "Missing signature" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const normalizedSignature = signature.replace(/^sha256=/i, "").trim();
+    const digest = crypto
+      .createHmac("sha256", secret)
+      .update(rawBody)
+      .digest("hex");
+
+    const sigBuffer = Buffer.from(normalizedSignature, "utf8");
+    const digestBuffer = Buffer.from(digest, "utf8");
+
+    if (
+      sigBuffer.length !== digestBuffer.length ||
+      !crypto.timingSafeEqual(sigBuffer, digestBuffer)
+    ) {
+      secureLog("error", "QuickNode Webhook: Assinatura invalida");
+      Sentry.withScope((scope) => {
+        scope.setLevel("error");
+        scope.setTag("security.violation", "invalid_hmac_signature");
+        scope.setTag("source", "quicknode_webhook");
+        scope.setContext("request", {
+          signature_received: signature
+            ? signature.substring(0, 10) + "..."
+            : "none",
         });
-        return new Response(JSON.stringify({ error: "Invalid signature" }), {
-          status: 401,
-        });
-      }
+        Sentry.captureMessage(
+          "QuickNode: assinatura HMAC invalida - possivel tentativa de forja",
+          "error"
+        );
+      });
+      return new Response(JSON.stringify({ error: "Invalid signature" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const data = JSON.parse(rawBody);
@@ -60,22 +90,31 @@ export const POST = async ({ request }) => {
 
     // Processa todos os eventos em paralelo
     const results = await Promise.allSettled(
-      events.map(evt => processQuickNodeEvent(evt))
+      events.map((evt) => processQuickNodeEvent(evt))
     );
 
-    const processed = results.filter(r => r.status === "fulfilled" && r.value?.processed).length;
-    const skipped = results.filter(r => r.status === "fulfilled" && !r.value?.processed).length;
-    const failed = results.filter(r => r.status === "rejected").length;
+    const processed = results.filter(
+      (r) => r.status === "fulfilled" && r.value?.processed
+    ).length;
+    const skipped = results.filter(
+      (r) => r.status === "fulfilled" && !r.value?.processed
+    ).length;
+    const failed = results.filter((r) => r.status === "rejected").length;
 
-    secureLog("info", "QuickNode Webhook finalizado", { processed, skipped, failed });
+    secureLog("info", "QuickNode Webhook finalizado", {
+      processed,
+      skipped,
+      failed,
+    });
 
     return new Response(
       JSON.stringify({ success: true, processed, skipped, failed }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
-
   } catch (error) {
-    secureLog("error", "QuickNode Webhook: Erro critico", { error: error.message });
+    secureLog("error", "QuickNode Webhook: Erro critico", {
+      error: error.message,
+    });
     Sentry.withScope((scope) => {
       scope.setLevel("fatal");
       scope.setTag("source", "quicknode_webhook");
@@ -164,7 +203,9 @@ async function processQuickNodeEvent(evt) {
   // Tolerância de ±2% no valor para cobrir variações de câmbio leve
   const tol = amountFormatted * 0.02;
 
-  const order = db.prepare(`
+  const order = db
+    .prepare(
+      `
     SELECT * FROM orders
     WHERE LOWER(customer_wallet) = ?
       AND bridge_status IN ('PENDING')
@@ -172,7 +213,9 @@ async function processQuickNodeEvent(evt) {
       AND amount_usdt BETWEEN ? AND ?
     ORDER BY created_at ASC
     LIMIT 1
-  `).get(toAddress, amountFormatted - tol, amountFormatted + tol);
+  `
+    )
+    .get(toAddress, amountFormatted - tol, amountFormatted + tol);
 
   if (!order) {
     secureLog("warn", "QuickNode: Nenhuma ordem pendente para wallet/valor", {
@@ -198,7 +241,8 @@ async function processQuickNodeEvent(evt) {
 
   // ── Atualiza o banco: SETTLED ───────────────────────────────────────────
 
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE orders
     SET bridge_status   = 'SENT',
         bridge_attempts = bridge_attempts + 1,
@@ -208,7 +252,8 @@ async function processQuickNodeEvent(evt) {
         network         = ?,
         updated_at      = CURRENT_TIMESTAMP
     WHERE charge_id = ?
-  `).run(txHash || "quicknode-confirmed", network, order.charge_id);
+  `
+  ).run(txHash || "quicknode-confirmed", network, order.charge_id);
 
   secureLog("info", "QuickNode: Ordem SETTLED com sucesso", {
     chargeId: order.charge_id,
@@ -226,7 +271,8 @@ async function processQuickNodeEvent(evt) {
 
   // ── Notifica Nexus Bridge (non-blocking) ───────────────────────────────
 
-  const { notifyNexus } = await import("../../../services/api/nexus-bridge.mjs");
+  const { notifyNexus } =
+    await import("../../../services/api/nexus-bridge.mjs");
 
   notifyNexus("CRYPTO_SETTLED", {
     transactionId: order.charge_id,

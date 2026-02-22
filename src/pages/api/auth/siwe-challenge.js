@@ -8,7 +8,7 @@ export const POST = async ({ request, clientAddress }) => {
 
     try {
         // Rate limit: same bucket as magic-start (5 req/15min)
-        const rateLimitResult = applyRateLimit('auth-magic-start')({
+        const rateLimitResult = await applyRateLimit('auth-magic-start')({
             headers: Object.fromEntries(request.headers),
             context: { clientIP: clientAddress }
         });

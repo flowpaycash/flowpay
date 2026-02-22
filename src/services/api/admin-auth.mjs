@@ -9,7 +9,6 @@ function getSessionSecret() {
     process.env.ADMIN_SESSION_SECRET ||
     process.env.TOKEN_SECRET ||
     process.env.FLOWPAY_JWT_SECRET ||
-    process.env.ADMIN_PASSWORD ||
     null
   );
 }

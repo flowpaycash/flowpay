@@ -8,7 +8,7 @@ import { adminNovoCadastroTemplate } from '../../../services/api/email/templates
 export const POST = async ({ request, clientAddress }) => {
     const headers = getCorsHeaders({ headers: Object.fromEntries(request.headers) });
 
-    const rateLimitResult = applyRateLimit('registro')({
+    const rateLimitResult = await applyRateLimit('registro')({
         headers: Object.fromEntries(request.headers),
         context: { clientIP: clientAddress }
     });
