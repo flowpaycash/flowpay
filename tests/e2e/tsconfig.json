@@ -1,15 +1,17 @@
 {
-    "extends": "../../tsconfig.json",
     "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
         "strict": false,
         "noImplicitAny": false,
         "checkJs": false,
         "allowJs": true,
-        "moduleResolution": "bundler",
         "types": [
             "@playwright/test",
             "node"
-        ]
+        ],
+        "skipLibCheck": true
     },
     "include": [
         "**/*.spec.js",
