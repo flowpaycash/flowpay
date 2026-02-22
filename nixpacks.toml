@@ -1,18 +1,13 @@
 # FlowPay — Nixpacks build config
 #
-# Por que nodejs_20 esta aqui explicitamente:
-#   O step "nix-collect-garbage -d" remove tudo que nao esta referenciado
-#   no nixpacks.toml — incluindo o Node.js da imagem base. Sem nodejs_20
-#   aqui, npm/node somem depois do garbage-collect.
-#
-# Por que PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 e nao --prod:
-#   --prod pula @types/* e quebra o astro check (TypeScript).
-#   A variavel de ambiente impede so o download do Chromium (~170MB),
-#   mantendo todos os tipos e dependencias necessarios para o build.
+# nodejs_20: mantém Node.js vivo após nix-collect-garbage -d
+# python3/gcc/gnumake: compilação do better-sqlite3 (C++ nativo)
+# corepack: gerenciador oficial do pnpm, usa o mesmo PATH do node/npm
+#           (npm install -g pnpm falha pois o prefix do Nix nao fica no PATH)
 
 [phases.setup]
 nixPkgs = ["nodejs_20", "python3", "gcc", "gnumake"]
-cmds = ["npm install -g pnpm"]
+cmds = ["corepack enable && corepack prepare pnpm@latest --activate"]
 
 [phases.install]
 cmds = ["PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 pnpm install --frozen-lockfile"]
