@@ -1,67 +1,78 @@
-<!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
+# FLOWPAY ⟁ DOCUMENTATION INDEX
 
 ```text
-========================================
-       FLOWPAY · DOCUMENTATION
-              INDEX
-========================================
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+.                                                         .
+.   F L O W P A Y   K N O W L E D G E   N O D E           .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+.                                                         .
+.   Node      : mio-flowpay                               .
+.   Role      : Documentation Hub                         .
+.   Status    : Organized & Audited                       .
+.                                                         .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ```
 
-Centralized technical library for the FlowPay Settlement Engine.
-**Version:** v2.3.0 (Sovereign Core)
+Índice central de conhecimento e guias operacionais do Protocolo NΞØ.
 
 ────────────────────────────────────────
 
-## 📂 Documentation Structure
+## ⦿ CORE STRATEGY
 
-```text
-docs/
-├── architecture/       System designs and ADRs
-├── security/           Audits and protection protocols
-├── integration/        WooVi, QuickNode, and Nexus guides
-├── operations/         Deployment and scaling manuals
-└── archive/            Historical records
-```
+- **[MARKETING_STRATEGY.md](./MARKETING_STRATEGY.md)** ........ Estritégia de Copy (BR/Young)
+- **[MANIFESTO.md](./MANIFESTO.md)** ......................... Visão e Princípios NΞØ
+- **[ROADMAP.md](./ROADMAP.md)** ............................. Visão de Longo Prazo
 
 ────────────────────────────────────────
 
-## 🔗 Essential Guides
+## ⟁ OPERATIONAL GUIDES
 
-**Must Read:**
-- [SYSTEM_OVERVIEW_2026](./SYSTEM_OVERVIEW_2026.md) — The master architecture.
-- [WOOVI_INTEGRATION_GUIDE](./WOOVI_INTEGRATION_GUIDE.md) — SSOT for PIX flow.
-- [SECURITY_AUDIT](./SECURITY_AUDIT.md) — Current security posture.
-- [DEPLOY_GUIDE](./DEPLOY_GUIDE.md) — Railway & Production deployment.
-
-**Integration & Logic:**
-- [QUICKNODE_INTEGRATION](./QUICKNODE_INTEGRATION.md) — Crypto event monitoring.
-- [PAYMENT_FLOW](./PAYMENT_FLOW.md) — Technical transaction lifecycle.
-- [CRYPTO_SERVICES](./CRYPTO_SERVICES.md) — USDT and ERC20 logic.
-- [TELEGRAM_SETUP_GUIDE](./TELEGRAM_SETUP_GUIDE.md) — Notification bot setup.
-
-**Frontend & Design:**
-- [FRONTEND_GUIDE](./FRONTEND_GUIDE.md) — Astro architecture & Design System.
-- [IOS_DESIGN_COMPLETE](./IOS_DESIGN_COMPLETE.md) — Visual specs (iOS-like).
-- [PWA_ASSETS_GUIDE](./PWA_ASSETS_GUIDE.md) — Iconography & Splash screens.
+- **[guides/](./guides/)** .................................. Pasta de Manuais do Usuário
+  - [ADMIN_PANEL_GUIDE.md](./guides/ADMIN_PANEL_GUIDE.md) ..... Gestão do Painel Admin
+  - [DEPLOY_GUIDE.md](./guides/DEPLOY_GUIDE.md) ............ Guia de Deploy (Railway)
+  - [LOGIN_SYSTEM_README.md](./guides/LOGIN_SYSTEM_README.md) .. Autenticação Magic Link
+  - [TELEGRAM_SETUP_GUIDE.md](./guides/TELEGRAM_SETUP_GUIDE.md) . Configuração de Alertas
 
 ────────────────────────────────────────
 
-## 📊 Knowledge Base Status
+## ⚙️ TECHNICAL SPECS
 
-| Category | Files | Status |
-|----------|-------|--------|
-| Architecture | 5 | ✅ Updated |
-| Security | 4 | 🛡️ Audited |
-| Integration | 8 | ✅ Stable |
-| Operations | 6 | 🚀 Active |
-| Technical ADRs | 12 | 📝 Detailed |
+- **[technical/](./technical/)** ............................ Arquitetura e Engenharia
+  - [ADR-003-persistence.md](./technical/ADR-003-sqlite-persistence.md) . Decisão de DB
+  - [PAYMENT_FLOW.md](./technical/PAYMENT_FLOW.md) ........... Fluxo de Transação (Deep)
+  - [QUICKNODE_INTEGRATION.md](./technical/QUICKNODE_INTEGRATION.md) .. On-chain Ingress
+  - [PIX_API_TESTING.md](./technical/PIX_API_TESTING.md) ...... Suite de Testes PIX
+
+────────────────────────────────────────
+
+## 🎨 VISUAL & EXPERIENCE
+
+- **[visual/](./visual/)** ................................. Design System & Apple-like
+  - [IOS_DESIGN_GUIDE.md](./visual/IOS_DESIGN_GUIDE.md) ........ Estética Glassmorphism
+  - [PWA_ASSETS_GUIDE.md](./visual/PWA_ASSETS_GUIDE.md) ........ Configuração de Apps Web
+
+────────────────────────────────────────
+
+## 🛡️ SECURITY & AUDIT
+
+- **[audit/](./audit/)** ................................... Registros de Segurança
+  - [REGISTER_2026.md](./audit/SECURITY_ISSUES_REGISTER_2026-02-22.md) .. Log de Correções
+  - [SECURITY_AUDIT.md](./audit/SECURITY_AUDIT.md) ............ Status da Infraestrutura
+
+────────────────────────────────────────
+
+## 📂 SYSTEM FILES
+
+- **[CHANGELOG_DAILY.md](./CHANGELOG_DAILY.md)** ............. Histórico de Mudanças
+- **[SYSTEM_OVERVIEW_2026.md](./SYSTEM_OVERVIEW_2026.md)** ..... Visão Macro do Ano
+- **[archive/](./archive/)** ................................ Documentos Legados / Lixo
 
 ────────────────────────────────────────
 
 ▓▓▓ NΞØ MELLØ
+
 ────────────────────────────────────────
 Core Architect · NΞØ Protocol
-neo@neoprotocol.space
 
-"Documentation is the blueprint of sovereignty."
+"Information must be as fluid as liquidity."
 ────────────────────────────────────────

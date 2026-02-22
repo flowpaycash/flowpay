@@ -1,18 +1,30 @@
 ---
-import { Image } from 'astro:assets';
-import flowpayLogo from '../../public/img/flowpay-logo.png';
+import { Image } from "astro:assets";
+import flowpayLogo from "../../public/img/logos/flowpay-header-logo.png";
 ---
 
 <nav class="premium-nav">
   <div class="nav-wrapper">
     <div class="nav-left">
       <a href="/" class="brand-logo">
-        <Image src={flowpayLogo} alt="FlowPay" height={36} loading="eager" />
+        <Image src={flowpayLogo} alt="FlowPay" height={24} loading="eager" />
       </a>
       <div class="nav-links">
-        <a href="/registro" class="nav-item">Cadastro</a>
-        <a href="/dashboard" class="nav-item">Dashboard</a>
-        <a href="/transparency" class="nav-item">Transparência</a>
+        <a href="/#features" class="nav-item">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path d="M12 2v20M2 12h20M12 2l-3 5h6l-3-5zM12 22l-3-5h6l-3 5z"
+            ></path></svg
+          >
+          Recursos
+        </a>
       </div>
     </div>
 
@@ -21,7 +33,42 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
         <div class="dot"></div>
         <span id="wallet-address-display">Conectado</span>
       </div>
-      <a href="/registro" class="btn-nav primary">Começar</a>
+      <a href="/registro" class="btn-nav primary desktop-only"
+        >Criar / Acessar Conta</a
+      >
+
+      <!-- Mobile Burger -->
+      <button class="mobile-burger" id="burger-menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" id="mobile-menu">
+    <div class="mobile-menu-content">
+      <div class="mobile-menu-header">MENU</div>
+      <a href="/#features" class="mobile-nav-item">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          ><path d="M12 2v20M2 12h20M12 2l-3 5h6l-3-5zM12 22l-3-5h6l-3 5z"
+          ></path></svg
+        >
+        Recursos
+      </a>
+      <div class="mobile-menu-divider"></div>
+      <a href="/registro" class="btn-nav primary mobile-only"
+        >Criar / Acessar Conta</a
+      >
     </div>
   </div>
 </nav>
@@ -37,14 +84,20 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
     left: 0;
     right: 0;
     height: 72px;
-    background: rgba(10, 10, 10, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* iOS Acqua-like Glassmorphism */
+    background: rgba(15, 15, 20, 0.45);
+    backdrop-filter: blur(40px) saturate(210%);
+    -webkit-backdrop-filter: blur(40px) saturate(210%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.2),
+      inset 0 -1px 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 1px rgba(255, 255, 255, 0.1);
     z-index: 1000;
     display: flex;
     align-items: center;
     padding: 0 40px;
+    transition: all 0.3s ease;
   }
 
   .nav-wrapper {
@@ -63,46 +116,162 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
   }
 
   .brand-logo img {
-    height: 36px;
+    height: 24px;
     width: auto;
     filter: drop-shadow(0 0 10px rgba(255, 0, 122, 0.3));
+    transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .premium-nav.scrolled .brand-logo img {
+    filter: grayscale(100%) blur(1px) opacity(0.6);
+  }
+
+  .nav-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 10px;
   }
 
   .nav-links {
     display: flex;
-    gap: 32px;
+    gap: 8px;
   }
 
   .nav-item {
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
     font-weight: 600;
-    transition: all 0.2s ease;
-    letter-spacing: 0.02em;
+    padding: 8px 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.01em;
+  }
+
+  .nav-item svg {
+    opacity: 0.6;
+    transition: transform 0.2s ease;
   }
 
   .nav-item:hover {
     color: #ffffff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
   }
 
-  .nav-item.admin {
+  .nav-item:hover svg {
+    opacity: 1;
+    transform: translateY(-1px);
     color: #ff007a;
-    background: rgba(255, 0, 122, 0.1);
-    padding: 4px 12px;
-    border-radius: 8px;
-  }
-
-  .nav-item.admin:hover {
-    background: rgba(255, 0, 122, 0.2);
-    box-shadow: 0 0 15px rgba(255, 0, 122, 0.3);
   }
 
   .nav-right {
     display: flex;
     align-items: center;
     gap: 24px;
+  }
+
+  /* Hamburger Menu */
+  .mobile-burger {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1001;
+  }
+
+  .mobile-burger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #ff007a;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px rgba(255, 0, 122, 0.5);
+  }
+
+  /* Burger Animation */
+  .mobile-burger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .mobile-burger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-burger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  /* Mobile Overlay */
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-menu-overlay.active {
+    right: 0;
+  }
+
+  .mobile-menu-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 80%;
+  }
+
+  .mobile-menu-header {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 2rem;
+  }
+
+  .mobile-nav-item {
+    font-size: 1.35rem;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    border-radius: 16px;
+    transition: background 0.2s ease;
+  }
+
+  .mobile-nav-item svg {
+    color: #ff007a;
+    opacity: 0.8;
+  }
+
+  .mobile-nav-item:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .mobile-menu-divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(255, 0, 122, 0.3);
   }
 
   .wallet-pill {
@@ -144,22 +313,73 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
   }
 
   .btn-nav {
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 0.9rem;
+    padding: 10px 20px;
+    border-radius: 14px;
+    font-size: 0.85rem;
     font-weight: 700;
     text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.02em;
   }
 
   .btn-nav.primary {
-    background: #ffffff;
-    color: #000000;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.05)
+    );
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-nav.primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s ease;
   }
 
   .btn-nav.primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.1)
+    );
+    border-color: rgba(255, 0, 122, 0.5);
+    box-shadow:
+      0 8px 25px rgba(255, 0, 122, 0.2),
+      inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-nav.primary:hover::before {
+    left: 100%;
+  }
+
+  .btn-nav.primary:active {
+    transform: scale(0.96);
+  }
+
+  .mobile-only {
+    display: none;
   }
 
   @media (max-width: 768px) {
@@ -167,15 +387,58 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
       padding: 0 20px;
     }
     .nav-links,
-    .wallet-pill {
+    .wallet-pill,
+    .desktop-only {
       display: none;
+    }
+    .mobile-burger {
+      display: flex;
+    }
+    .mobile-only {
+      display: flex;
     }
   }
 </style>
 
 <script>
-  // NEO Layout Injector compatibility
   if (typeof window !== "undefined") {
+    const burger = document.getElementById("burger-menu");
+    const menu = document.getElementById("mobile-menu");
+    const nav = document.querySelector(".premium-nav");
+
+    // Lógica Scrolled
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 20) {
+        nav?.classList.add("scrolled");
+      } else {
+        nav?.classList.remove("scrolled");
+      }
+    });
+
+    burger?.addEventListener("click", () => {
+      burger.classList.toggle("active");
+      menu?.classList.toggle("active");
+
+      if (menu?.classList.contains("active")) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+    });
+
+    // Close menu when clicking links
+    const mobileLinks = document.querySelectorAll(
+      ".mobile-nav-item, .mobile-only"
+    );
+    mobileLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        burger?.classList.remove("active");
+        menu?.classList.remove("active");
+        document.body.style.overflow = "";
+      });
+    });
+
+    // NEO Layout Injector compatibility
     document.addEventListener("DOMContentLoaded", () => {
       const navbar = document.querySelector(".neo-navbar");
       if (navbar) {

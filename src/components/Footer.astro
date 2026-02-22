@@ -1,52 +1,52 @@
 ---
-import { Image } from 'astro:assets';
-import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
+import { Image } from "astro:assets";
+import headerLogo from "../../public/assets/icons/flowpay-header-logo.png";
 ---
 
 <footer class="site-footer">
   <div class="footer-container">
-
     <div class="footer-content">
-
       <!-- Coluna 1: Marca -->
       <div class="footer-section brand">
         <Image src={headerLogo} alt="FlowPay" class="footer-logo" height={28} />
         <p class="footer-tagline">
-          Gateway de pagamentos PIX + Cripto.<br />
+          Seu dinheiro, suas regras, seu movimento.
+          <br />
+          Exatamente como deveria ser.
+          <br />
           Simples. Rápido. Auditável.
         </p>
-        <a href="https://flowoff.xyz" target="_blank" rel="noopener noreferrer" class="footer-made-by">
-          Um produto
-          <span class="footer-made-by-brand">FlowOFF</span>
+        <a
+          href="https://flowoff.xyz"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer-made-by"
+        >
         </a>
       </div>
 
       <!-- Coluna 2: Plataforma -->
       <div class="footer-section">
-        <h4>Plataforma</h4>
+        <h4 color="#7F7F7F">Plataforma</h4>
         <ul>
           <li><a href="/#features">Recursos</a></li>
-          <li><a href="/registro">Criar conta</a></li>
-          <li><a href="/dashboard">Dashboard</a></li>
-          <li><a href="/transparency">Transparência</a></li>
+          <li><a href="/registro">Criar / Acessar Conta</a></li>
         </ul>
       </div>
 
       <!-- Coluna 3: Legal -->
       <div class="footer-section">
-        <h4>Legal</h4>
+        <h4 color="#7F7F7F">Legal</h4>
         <ul>
-          <li><a href="/privacidade">Política de Privacidade</a></li>
-          <li><a href="/termos">Termos de Uso</a></li>
-          <li><a href="/cookies">Política de Cookies</a></li>
-          <li><a href="/riscos">Aviso de Riscos</a></li>
+          <li><a href="/privacidade">Privacy Policy</a></li>
+          <li><a href="/termos">Terms of Use</a></li>
+          <li><a href="/cookies">Cookies Policy</a></li>
+          <li><a href="/riscos">Risk Warning</a></li>
         </ul>
       </div>
 
       <!-- Coluna 4: Ecossistema -->
       <div class="footer-section ecosystem">
-        <h4>Ecossistema</h4>
-
         <div class="eco-card">
           <div class="eco-card-header">
             <span class="eco-label">Infraestrutura</span>
@@ -60,8 +60,9 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
             NEO Smart Factory™
           </a>
           <p class="eco-desc">
-            Fábrica de tokens e registros on-chain. Responsável pela tokenização,
-            provas de existência (PoE) e segurança das transações FlowPay.
+            Fábrica de tokens e registros on-chain. Responsável pela
+            tokenização, provas de existência (PoE) e segurança das transações
+            FlowPay.
           </p>
           <div class="eco-identifiers">
             <a
@@ -89,8 +90,8 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
             NEO PROTOCOL
           </a>
           <p class="eco-desc">
-            Organização responsável pelo desenvolvimento e manutenção da
-            NEO Smart Factory™ e dos protocolos Web3 subjacentes.
+            Organização responsável pelo desenvolvimento e manutenção da NEO
+            Smart Factory™ e dos protocolos Web3 subjacentes.
           </p>
           <div class="eco-identifiers">
             <a
@@ -104,22 +105,28 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
             <span class="eco-ens">neoprotocol.eth</span>
           </div>
         </div>
-
       </div>
 
-    </div>
-
-    <!-- Bottom bar -->
-    <div class="footer-bottom">
+      <!-- Bottom bar -->
+      <div class="footer-bottom">
+        <img
+          src="/img/logos/icon-512.webp"
+          alt="NEØ FlowOFF"
+          class="footer-brand-logo"
+          width="120"
+          height="120"
+        />
+      </div>
       <div class="footer-bottom-left">
-        <p>&copy; 2026 FlowPay &mdash; FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA &mdash; ME</p>
-        <p class="footer-cnpj">CNPJ 43.376.355/0001-92 &middot; Goiânia &mdash; GO</p>
-      </div>
-      <div class="footer-bottom-right">
-        <a href="mailto:neo@neoprotocol.space">neo@neoprotocol.space</a>
+        <p>
+          &copy; 2026 FlowPay &mdash; FLOWOFF MARKETING E ASSESSORIA DIGITAL
+          LTDA &mdash; ME
+        </p>
+        <p class="footer-cnpj">
+          CNPJ 43.376.355/0001-92 &middot; Goiânia &mdash; GO
+        </p>
       </div>
     </div>
-
   </div>
 </footer>
 
@@ -136,7 +143,7 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
   }
 
   .site-footer::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 50%;
@@ -161,9 +168,18 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
   /* Grid */
   .footer-content {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1.5rem;
     margin-bottom: 3rem;
+  }
+
+  .footer-section.brand {
+    grid-column: span 2;
+    margin-bottom: 1rem;
+  }
+
+  .footer-section.ecosystem {
+    grid-column: span 2;
   }
 
   @media (min-width: 640px) {
@@ -184,6 +200,11 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
     }
 
     .footer-section.brand {
+      grid-column: span 1;
+      margin-bottom: 0;
+    }
+
+    .footer-section.ecosystem {
       grid-column: span 1;
     }
   }
@@ -215,11 +236,24 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
     -webkit-tap-highlight-color: transparent;
   }
 
-  .footer-made-by-brand {
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.55);
-    letter-spacing: 0.04em;
-    transition: color 0.2s;
+  .footer-brand-logo {
+    height: 20px;
+    width: auto;
+    margin-left: 8px;
+    filter: grayscale(100%) brightness(0.8);
+    opacity: 0.4;
+    transition:
+      filter 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    vertical-align: middle;
+  }
+
+  .footer-bottom:hover .footer-brand-logo,
+  .footer-brand-logo:active {
+    filter: grayscale(0%) brightness(1);
+    opacity: 1;
+    transform: scale(1.1);
   }
 
   @media (hover: hover) {
@@ -340,7 +374,7 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
     color: rgba(0, 212, 255, 0.5);
     text-decoration: none;
     font-weight: 500;
-    font-family: 'SF Mono', 'Fira Mono', 'Courier New', monospace;
+    font-family: "SF Mono", "Fira Mono", "Courier New", monospace;
     transition: color 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
@@ -355,7 +389,7 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.2);
     font-weight: 500;
-    font-family: 'SF Mono', 'Fira Mono', 'Courier New', monospace;
+    font-family: "SF Mono", "Fira Mono", "Courier New", monospace;
   }
 
   /* Bottom bar */
@@ -412,31 +446,29 @@ import headerLogo from '../../public/assets/icons/flowpay-header-logo.png';
   /* Mobile centering */
   @media (max-width: 639px) {
     .footer-section.brand {
-      text-align: center;
-      align-items: center;
-      display: flex;
-      flex-direction: column;
+      text-align: left;
+      align-items: flex-start;
     }
 
     .footer-section {
-      text-align: center;
+      text-align: left;
     }
 
     .footer-section ul {
-      align-items: center;
+      align-items: flex-start;
     }
 
     .footer-bottom {
-      text-align: center;
-      align-items: center;
+      text-align: left;
+      align-items: flex-start;
     }
 
     .footer-bottom-left {
-      align-items: center;
+      align-items: flex-start;
     }
 
     .eco-identifiers {
-      justify-content: center;
+      justify-content: flex-start;
     }
   }
 </style>

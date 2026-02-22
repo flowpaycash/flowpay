@@ -18,7 +18,7 @@ export function emailTemplate({ title, body, cta, badge, badgeColor = 'orange', 
 
     const badgePalette = {
         green:  { bg: 'rgba(0,200,100,0.12)',  border: 'rgba(0,200,100,0.3)',  color: '#00c864' },
-        orange: { bg: 'rgba(255,122,0,0.12)',  border: 'rgba(255,122,0,0.3)',  color: '#ff7a00' },
+        orange: { bg: 'rgba(255,122,0,0.12)',  border: 'rgba(255,122,0,0.3)',  color: '#ff4da6' },
         red:    { bg: 'rgba(255,50,50,0.12)',  border: 'rgba(255,50,50,0.3)',  color: '#ff3232' },
         blue:   { bg: 'rgba(0,180,255,0.12)',  border: 'rgba(0,180,255,0.3)',  color: '#00b4ff' },
     };
@@ -32,7 +32,7 @@ export function emailTemplate({ title, body, cta, badge, badgeColor = 'orange', 
     const ctaHtml = cta ? `
         <div style="margin-top:36px;text-align:center">
             <a href="${cta.url}"
-               style="display:inline-block;background:linear-gradient(135deg,#ff007a,#ff7a00);color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:12px;font-weight:700;font-size:0.95rem;letter-spacing:0.3px">
+               style="display:inline-block;background:linear-gradient(135deg,#ff007a,#ff4da6);color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:12px;font-weight:700;font-size:0.95rem;letter-spacing:0.3px">
                 ${cta.label}
             </a>
         </div>` : '';

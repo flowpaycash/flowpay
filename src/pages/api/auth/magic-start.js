@@ -2,6 +2,8 @@ import crypto from 'crypto';
 import { saveAuthToken } from '../../../services/database/sqlite.mjs';
 import { applyRateLimit } from '../../../services/api/rate-limiter.mjs';
 import { config, secureLog, getCorsHeaders } from '../../../services/api/config.mjs';
+import { sendEmail } from '../../../services/api/email-service.mjs';
+import { magicLinkTemplate } from '../../../services/api/email/templates/magic-link.mjs';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -35,10 +37,15 @@ export const POST = async ({ request, clientAddress }) => {
         const domain = process.env.URL || 'https://flowpay.cash';
         const magicLink = `${domain}/auth/verify?token=${token}`;
 
-        // Send magic link via SMTP
-        if (process.env.SMTP_HOST) {
-            // SMTP send logic
-            secureLog('info', 'Magic link sent via SMTP', { email });
+        // Send magic link via Resend
+        const emailResult = await sendEmail({
+            to: email,
+            subject: 'Seu link de acesso ao FlowPay',
+            html: magicLinkTemplate({ magicLink })
+        });
+
+        if (emailResult.success) {
+            secureLog('info', 'Magic link sent via Resend', { email, id: emailResult.id });
 
             return new Response(JSON.stringify({
                 success: true,
@@ -47,12 +54,12 @@ export const POST = async ({ request, clientAddress }) => {
             }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
         }
 
-        secureLog('warn', 'SMTP not configured, magic link generated but not sent', { email });
+        secureLog('error', 'Failed to send magic link via Resend', { email, error: emailResult.error });
 
         return new Response(JSON.stringify({
             success: true,
             sent: false,
-            message: 'Serviço de e-mail em configuração.'
+            message: 'Erro ao enviar e-mail. Tente novamente em instantes.'
         }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
 
     } catch (error) {

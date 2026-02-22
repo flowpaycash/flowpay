@@ -1,85 +1,285 @@
 ---
+
 ---
 
 <section id="blockchain" class="home-highlight">
   <div class="section-bg-glow cyan"></div>
   <div class="home-highlight-container">
     <div class="home-highlight-content">
-      <h2 class="highlight-title">Conectado com o <span class="gradient-text-cyan">Mundo</span></h2>
-      <p class="home-highlight-text">
-        A FLOWPay conecta você automaticamente aos maiores mercados digitais do planeta.
-        Uma infraestrutura global otimizada para velocidade e segurança.
+      <p class="highlight-pre-title">
+        Cada transação flui instantaneamente através da
       </p>
-      <div class="blockchain-logos">
-        <div class="blockchain-logo" style="--delay: 0.6s" onclick="showBlockchainInfo('ethereum')">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
-            <path d="M16 0L6 8v8l10 8 10-8V8L16 0z" />
-            <path d="M6 20l10 8 10-8v8l-10 8L6 28v-8z" />
-          </svg>
-          <span>Global</span>
-        </div>
-        <div class="blockchain-logo" style="--delay: 0.7s" onclick="showBlockchainInfo('polygon')">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
-            <polygon points="16,2 30,8 30,24 16,30 2,24 2,8" />
-          </svg>
-          <span>Rápido</span>
-        </div>
-        <div class="blockchain-logo" style="--delay: 0.8s" onclick="showBlockchainInfo('linea')">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
-            <path d="M16 2L2 8v16l14 6 14-6V8L16 2z" />
-          </svg>
-          <span>Seguro</span>
-        </div>
-        <div class="blockchain-logo" style="--delay: 0.9s" onclick="showBlockchainInfo('base')">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
-            <rect x="4" y="4" width="24" height="24" rx="4" />
-          </svg>
-          <span>Verificado</span>
-        </div>
+      <h2 class="highlight-title">
+        <strong class="highlight-brand">NEØ Smart Factory™</strong>
+        <span class="highlight-description">
+          nossa tecnologia exclusiva que protege seu dinheiro com a mesma
+          segurança que protege os maiores patrimônios <span
+            class="gradient-text-cyan">digitais do Mundo</span
+          >
+        </span>
+      </h2>
+    </div>
+    <div class="home-highlight-glass">
+      <p class="home-highlight-text">
+        A FlowPay conecta você automaticamente aos maiores mercados digitais do
+        planeta. Uma infraestrutura global otimizada para velocidade e
+        segurança.
+      </p>
+    </div>
+    <div class="blockchain-logos">
+      <div
+        class="blockchain-logo"
+        style="--delay: 0.6s"
+        data-type="ethereum"
+        onclick="showBlockchainInfo('ethereum')"
+      >
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle
+            cx="9"
+            cy="7"
+            r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg
+        >
+        <span>Ative sua conta</span>
+      </div>
+      <div
+        class="blockchain-logo"
+        style="--delay: 0.7s"
+        data-type="polygon"
+        onclick="showBlockchainInfo('polygon')"
+      >
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+          ></path><path
+            d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+          ></path></svg
+        >
+        <span>Crie seu link</span>
+      </div>
+      <div
+        class="blockchain-logo"
+        style="--delay: 0.8s"
+        data-type="linea"
+        onclick="showBlockchainInfo('linea')"
+      >
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"
+          ></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg
+        >
+        <span>Escolha onde receber</span>
+      </div>
+      <div
+        class="blockchain-logo"
+        style="--delay: 0.9s"
+        data-type="base"
+        onclick="showBlockchainInfo('base')"
+      >
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
+          ></polygon></svg
+        >
+        <span>Se liberte</span>
       </div>
     </div>
   </div>
 </section>
 
 <script>
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
+    // Audio Context Singleton
+    let audioCtx: AudioContext | null = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (
+          window.AudioContext || (window as any).webkitAudioContext
+        )();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+    }
+
+    function playNote(
+      frequency: number,
+      type: OscillatorType = "sine",
+      duration: number = 0.5
+    ) {
+      if (!audioCtx) initAudio();
+      if (!audioCtx) return;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        audioCtx.currentTime + duration
+      );
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playCashSound() {
+      if (!audioCtx) initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+
+      // Layer 1: The "Click" (Noise burst for texture)
+      const bufferSize = audioCtx.sampleRate * 0.05;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.setValueAtTime(0.05, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      noise.connect(noiseGain);
+      noiseGain.connect(audioCtx.destination);
+      noise.start(now);
+
+      // Layer 2: High metallic "Ding" (Primary harmonic)
+      const osc1 = audioCtx.createOscillator();
+      const gain1 = audioCtx.createGain();
+      osc1.type = "sine";
+      osc1.frequency.setValueAtTime(3500, now);
+      gain1.gain.setValueAtTime(0.15, now);
+      gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+      osc1.connect(gain1);
+      gain1.connect(audioCtx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.6);
+
+      // Layer 3: Secondary "Ring" (Harmony for more body)
+      const osc2 = audioCtx.createOscillator();
+      const gain2 = audioCtx.createGain();
+      osc2.type = "triangle";
+      osc2.frequency.setValueAtTime(4200, now + 0.02);
+      gain2.gain.setValueAtTime(0.08, now + 0.02); // Corrected from gain1.gain
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+      osc2.connect(gain2);
+      gain2.connect(audioCtx.destination);
+      osc2.start(now + 0.02);
+      osc2.stop(now + 0.8);
+
+      // Layer 4: Foundation "Body" (Lower shimmer)
+      const osc3 = audioCtx.createOscillator();
+      const gain3 = audioCtx.createGain();
+      osc3.type = "sine";
+      osc3.frequency.setValueAtTime(2800, now + 0.05);
+      gain3.gain.setValueAtTime(0.1, now + 0.05);
+      gain3.gain.exponentialRampToValueAtTime(0.0001, now + 1.2); // Longer tail for reverb feel
+      osc3.connect(gain3);
+      gain3.connect(audioCtx.destination);
+      osc3.start(now + 0.05);
+      osc3.stop(now + 1.2);
+    }
+
+    const sounds: Record<string, () => void> = {
+      ethereum: () => playNote(261.63, "triangle", 0.8), // Do
+      polygon: () => playNote(293.66, "triangle", 0.8), // Re
+      linea: () => playNote(329.63, "triangle", 0.8), // Mi
+      base: () => playCashSound(), // Cash
+    };
+
+    // Attach listeners to cards
+    document.querySelectorAll(".blockchain-logo").forEach((card) => {
+      card.addEventListener("mouseenter", () => {
+        // Only on desktop (no touch)
+        if (window.matchMedia("(hover: hover)").matches) {
+          const type = card.getAttribute("data-type");
+          if (type && sounds[type]) {
+            sounds[type]();
+          }
+        }
+      });
+    });
+
     (window as any).showBlockchainInfo = function (blockchain: string) {
+      // ... (existing showBlockchainInfo code)
       const info: Record<string, any> = {
         ethereum: {
-          name: 'Global',
-          description: 'A rede mais utilizada do mundo.',
-          features: ['Liquidez Global', 'Segurança Máxima'],
-          gas: 'Padrão',
-          speed: 'Seguro',
+          name: "Global",
+          description: "A rede mais utilizada do mundo.",
+          features: ["Liquidez Global", "Segurança Máxima"],
+          gas: "Padrão",
+          speed: "Seguro",
         },
         polygon: {
-          name: 'Speed',
-          description: 'Velocidade otimizada para transações rápidas.',
-          features: ['Ultra Rápido', 'Custo Baixo'],
-          gas: 'Mínimo',
-          speed: 'Instantâneo',
+          name: "Speed",
+          description: "Velocidade otimizada para transações rápidas.",
+          features: ["Ultra Rápido", "Custo Baixo"],
+          gas: "Mínimo",
+          speed: "Instantâneo",
         },
         linea: {
-          name: 'Secure',
-          description: 'Proteção avançada para seus ativos.',
-          features: ['Privacidade', 'Auditoria Contínua'],
-          gas: 'Otimizado',
-          speed: 'Rápido',
+          name: "Secure",
+          description: "Proteção avançada para seus ativos.",
+          features: ["Privacidade", "Auditoria Contínua"],
+          gas: "Otimizado",
+          speed: "Rápido",
         },
         base: {
-          name: 'Verified',
-          description: 'Infraestrutura certificada por grandes players.',
-          features: ['Certificado', 'Confiável'],
-          gas: 'Baixo',
-          speed: 'Fluido',
+          name: "Verified",
+          description: "Infraestrutura certificada por grandes players.",
+          features: ["Certificado", "Confiável"],
+          gas: "Baixo",
+          speed: "Fluido",
         },
       };
 
       const blockchainData = info[blockchain];
       if (!blockchainData) return;
 
-      const modal = document.createElement('div');
-      modal.className = 'blockchain-modal';
+      const modal = document.createElement("div");
+      modal.className = "blockchain-modal";
       modal.innerHTML = `
         <div class="modal-content">
           <div class="modal-header">
@@ -91,7 +291,7 @@
             <div class="modal-features">
               <h4>Características:</h4>
               <ul>
-                ${blockchainData.features.map((f: string) => `<li>${f}</li>`).join('')}
+                ${blockchainData.features.map((f: string) => `<li>${f}</li>`).join("")}
               </ul>
             </div>
             <div class="modal-stats">
@@ -113,7 +313,7 @@
 
       document.body.appendChild(modal);
 
-      modal.addEventListener('click', (e) => {
+      modal.addEventListener("click", (e) => {
         if (e.target === modal) modal.remove();
       });
     };
@@ -141,7 +341,11 @@
     transform: translate(-50%, -50%);
     width: 80vw;
     height: 80vw;
-    background: radial-gradient(circle at center, rgba(0, 212, 255, 0.06) 0%, transparent 70%);
+    background: radial-gradient(
+      circle at center,
+      rgba(0, 212, 255, 0.06) 0%,
+      transparent 70%
+    );
     z-index: 0;
     pointer-events: none;
   }
@@ -154,15 +358,43 @@
     z-index: 1;
   }
 
+  .highlight-pre-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 0.5rem;
+    animation: fadeInUp 0.8s ease-out 0.1s both;
+  }
+
   .highlight-title {
-    font-size: clamp(2rem, 6vw, 2.5rem);
+    font-size: clamp(2rem, 6vw, 2.75rem);
     font-weight: 800;
     margin-bottom: 2rem;
     color: #fff;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
+    letter-spacing: -0.04em;
+    line-height: 1.15;
     text-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
     animation: fadeInUp 0.8s ease-out 0.2s both;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .highlight-brand {
+    color: #fff;
+    filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.3));
+  }
+
+  .highlight-description {
+    font-weight: 500;
+    font-size: 0.55em;
+    max-width: 800px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: -0.01em;
+    line-height: 1.4;
   }
 
   .gradient-text-cyan {
@@ -172,13 +404,26 @@
     background-clip: text;
   }
 
+  .home-highlight-glass {
+    background: rgba(15, 15, 15, 0.4);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 2rem;
+    max-width: 850px;
+    margin: 0 auto 3rem;
+    box-shadow:
+      0 30px 60px rgba(0, 0, 0, 0.4),
+      inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    animation: fadeInUp 1s ease-out 0.4s both;
+  }
+
   .home-highlight-text {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    color: rgba(255, 255, 255, 0.7);
-    max-width: 800px;
-    margin: 0 auto 2.5rem;
-    line-height: 1.6;
-    animation: fadeInUp 0.8s ease-out 0.4s both;
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.7;
+    margin: 0;
   }
 
   @media (min-width: 768px) {
@@ -189,16 +434,31 @@
 
   .blockchain-logos {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 2rem auto;
+    position: relative;
+    /* Animação de Órbita Circular no Mobile */
+    animation: orbitRotate 40s linear infinite;
+    transform-origin: center center;
+    padding: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .blockchain-logos {
+      grid-template-columns: repeat(4, 1fr);
+      animation: none;
+      padding: 0;
+      margin: 0 auto;
+    }
   }
 
   .blockchain-logo {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
     padding: 1.5rem 1rem;
     background: rgba(15, 15, 15, 0.4);
@@ -207,12 +467,27 @@
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     cursor: pointer;
-    transition: background 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    transition:
+      background 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      border-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow:
+      0 15px 40px rgba(0, 0, 0, 0.3),
+      inset 0 1px 1px rgba(255, 255, 255, 0.05);
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    min-height: 44px;
-    animation: fadeInUp 0.8s ease-out var(--delay, 0.6s) both;
+    min-height: 120px;
+    /* Contra-rotação para manter o ícone e texto sempre de pé */
+    animation:
+      fadeInUp 0.8s ease-out var(--delay, 0.6s) both,
+      counterRotate 40s linear infinite;
+  }
+
+  @media (min-width: 768px) {
+    .blockchain-logo {
+      animation: fadeInUp 0.8s ease-out var(--delay, 0.6s) both;
+    }
   }
 
   @media (min-width: 480px) {
@@ -226,7 +501,10 @@
       transform: translateY(-8px);
       background: rgba(0, 212, 255, 0.08);
       border-color: rgba(0, 212, 255, 0.3);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 212, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(0, 212, 255, 0.1),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
     }
   }
 
@@ -237,7 +515,10 @@
 
   .blockchain-logo svg {
     color: #00d4ff;
-    transition: filter 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    transition:
+      filter 0.3s ease,
+      transform 0.3s ease,
+      color 0.3s ease;
     filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.4));
   }
 
@@ -250,15 +531,41 @@
   }
 
   .blockchain-logo span {
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.8);
-    letter-spacing: 0.05em;
-    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.2;
   }
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes orbitRotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes counterRotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-360deg);
+    }
   }
 
   @media (max-width: 767px) {

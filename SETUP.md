@@ -1,90 +1,94 @@
-<!-- markdownlint-disable MD003 MD007 MD013 MD022 MD023 MD025 MD029 MD032 MD033 MD034 -->
-
+# FLOWPAY ⟁ SETUP GUIDE
+ 
 ```text
-========================================
-       FLOWPAY · SETUP GUIDE
-========================================
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+.                                                         .
+.   F L O W P A Y   S Y S T E M   O P E R A T I O N S     .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+.                                                         .
+.   Sovereign Node : mio-flowpay                          .
+.   Role           : Settlement Core                      .
+.   Engine         : SSR / Astro                          .
+.   Protocol       : NΞØ Sovereign v1.0.1                 .
+.                                                         .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ```
-
+ 
 Technical Configuration and Operational Manual.
-Sovereign Node: mio-flowpay (Settlement).
-
+ 
 ────────────────────────────────────────
-
-## 🏗️ System Requirements
-
-- **Node.js:** v22.x (Sovereign Environment)
-- **Database:** SQLite (Temporary) / Neon PostgreSQL (Production)
-- **Infrastructure:** Railway CLI
-- **Network:** NΞØ Tunnel for local webhook exposure
-
+ 
+## REQUISITOS DO SISTEMA
+ 
+- Node.js ........................................... v22.x
+- Database .......................... SQLite / Neon / PostG
+- Infra ....................................... Railway CLI
+- Network ....................................... NΞØ Tunnel
+ 
 ────────────────────────────────────────
-
-## 🛡️ Security Gates (Conditional Execution)
-
-The engine enforces absolute validation gates. Failure in any gate results in immediate execution block:
-
-1.  **HMAC GATE:** Validates the WooVi webhook signature. Prevents replay attacks and payload forgery.
-2.  **TUNNEL GATE:** Layer 4/7 handshake using `TUNNEL_SECRET`. Ensures only authorized tunnels touch the Nexus.
-3.  **FINALITY GATE:** On-chain state verification via **RPC Adapter**. Receipts are only issued after block confirmation and **Proof of Integrity (PoI)** generation.
-
+ 
+## SECURITY GATES (CONDITIONAL EXECUTION)
+ 
+O motor do FlowPay impõe portões de validação absolutos.
+ 
+1. HMAC GATE ............ Valida assinaturas (WooVi/Nexus)
+2. TUNNEL GATE .......... Handshake L4/7 (TUNNEL_SECRET)
+3. FINALITY GATE ........ On-chain Verification (PoI)
+ 
 ────────────────────────────────────────
-
-## 🔑 Environment Variables (.env)
-
-| Variable | Technical Function | Severity |
-| :--- | :--- | :--- |
-| `TUNNEL_SECRET` | Tunnel authentication token | **CRITICAL** |
-| `WOOVI_API_KEY` | PIX API communication key | **CRITICAL** |
-| `WOOVI_WEBHOOK_SECRET` | HMAC validation secret | **CRITICAL** |
-| `NEXUS_WEBHOOK_URL` | Nexus Core endpoint via Tunnel | **SYSTEM** |
-| `QUICKNODE_RPC_URL` | On-chain monitoring endpoint | **SYSTEM** |
-
-────────────────────────────────────────
-
-## 🚀 Operational Workflow
-
-### 1. Bootstrap
-```bash
-# Clean ecosystem installation
-npm run setup
+ 
+## VARIÁVEIS DE AMBIENTE (.env)
+ 
+```text
+...........................................................
+. ITEM ................. FUNCTION ............. SEVERITY  .
+...........................................................
+.                                                         .
+. TUNNEL_SECRET ........ NΞØ Tunnel Auth ...... [ CRIT ]  .
+. WOOVI_API_KEY ........ Pix API Comm ......... [ CRIT ]  .
+. WOOVI_WEBHOOK_SEC .... HMAC Key ............. [ CRIT ]  .
+. NEXUS_WEBHOOK_URL .... Nexus Endpoint ....... [ SYST ]  .
+. QUICKNODE_RPC_URL .... On-chain Mon ......... [ SYST ]  .
+.                                                         .
+...........................................................
 ```
-
-### 2. Sovereign Provisioning
-```bash
-# Generate local NΞØ assets and configurations
-npm run neo:cfg
-```
-
-### 3. Local Development (with Tunnel)
-```bash
-# Start Railway local environment exposing endpoints
-railway run npm run dev
-```
-
-### 4. Production Build
-```bash
-# Astro compilation for server mode
-npm run build
-```
-
+ 
 ────────────────────────────────────────
-
-## 📊 Verification & Audit
-
-FlowPay operates in a **Closed Loop**. To validate node health, use the integrated tools:
-
-| Command | Action |
-|---------|--------|
-| `npm run test` | Run financial integrity test suite |
-| `make check` | Execute health check for API, Tunnel, and RPC |
-| `make logs` | Stream structured audit logs from DB |
-
+ 
+## FLUXO OPERACIONAL
+ 
+```text
+- BOOTSTRAP .................................. npm install
+- PROVISIONING ........................... npm run neo:cfg
+- DEVELOPMENT ..................... railway run npm run dev
+- PRODUCTION ................................ npm run build
+```
+ 
 ────────────────────────────────────────
-
+ 
+## VERIFICAÇÃO & AUDITORIA
+ 
+O FlowPay opera em **Closed Loop**. Use as ferramentas integradas:
+ 
+```text
+...........................................................
+. COMMAND ............................. ACTION ............
+...........................................................
+.                                                         .
+. npm run test ................. Finance Integrity Suite  .
+. make check .................. Health (API/Tunnel/RPC)   .
+. make logs ................... Audit Streaming (DB)      .
+.                                                         .
+...........................................................
+```
+ 
+─+++++────────────────────────────────
+ 
 ▓▓▓ NΞØ MELLØ
+ 
 ────────────────────────────────────────
 Core Architect · NΞØ Protocol
-
+ 
 "Infrastructure finalized. Flow established."
 ────────────────────────────────────────
+```

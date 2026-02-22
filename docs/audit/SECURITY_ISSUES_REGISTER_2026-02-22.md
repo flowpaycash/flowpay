@@ -189,7 +189,14 @@ Evidências:
 
 ### 8) Médio - Magic start não envia e-mail de fato
 
-Status: `PENDENTE`
+Status: `CONCLUÍDO`
+Concluído em: 2026-02-22
+
+Ação aplicada:
+
+- Implementada integração real com a API do Resend
+- Criado template de e-mail `magic-link.mjs` seguindo o design system NΞØ
+- Substituído o mock de envio por chamada ao `sendEmail` do serviço centralizado
 
 Sintoma:
 
@@ -201,8 +208,8 @@ Impacto:
 
 Evidências:
 
-- `src/pages/api/auth/magic-start.js:38`
-- `src/pages/api/auth/magic-start.js:41`
+- `src/pages/api/auth/magic-start.js`
+- `src/services/api/email/templates/magic-link.mjs`
 
 ## Plano de execução objetivo
 
