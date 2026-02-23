@@ -7,6 +7,8 @@ const DEFAULT_FROM = "FlowPay <noreply@flowpay.cash>";
 const DOMAIN_CHECK_TTL_MS = Number(
   process.env.EMAIL_DOMAIN_CHECK_TTL_MS || 10 * 60 * 1000
 );
+const RESEND_MAX_RETRIES = Number(process.env.RESEND_MAX_RETRIES || 1);
+const RESEND_RETRY_BASE_MS = Number(process.env.RESEND_RETRY_BASE_MS || 1200);
 const VERIFIED_DOMAIN_STATES = new Set(["verified", "valid", "active"]);
 
 const domainStatusCache = new Map();
@@ -187,38 +189,55 @@ function hasSmtpFallbackConfig() {
 }
 
 async function sendViaResend({ apiKey, from, to, subject, html }) {
-  try {
-    const response = await fetch(RESEND_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({ from, to, subject, html }),
-    });
+  let attempt = 0;
 
-    const data = await safeReadJson(response);
-    if (response.ok) {
+  while (attempt <= RESEND_MAX_RETRIES) {
+    try {
+      const response = await fetch(RESEND_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({ from, to, subject, html }),
+      });
+
+      const data = await safeReadJson(response);
+      if (response.ok) {
+        return {
+          success: true,
+          id: data?.id,
+          provider: "resend",
+        };
+      }
+
+      if (response.status === 429 && attempt < RESEND_MAX_RETRIES) {
+        const retryAfterMs = parseRetryAfterMs(response, attempt);
+        await sleep(retryAfterMs);
+        attempt += 1;
+        continue;
+      }
+
       return {
-        success: true,
-        id: data?.id,
+        success: false,
+        statusCode: response.status,
+        error: data || { message: `Resend error ${response.status}` },
+        provider: "resend",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: { message: error.message },
         provider: "resend",
       };
     }
-
-    return {
-      success: false,
-      statusCode: response.status,
-      error: data || { message: `Resend error ${response.status}` },
-      provider: "resend",
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: { message: error.message },
-      provider: "resend",
-    };
   }
+
+  return {
+    success: false,
+    error: { message: "Resend retry limit reached" },
+    provider: "resend",
+  };
 }
 
 async function safeReadJson(response) {
@@ -233,6 +252,18 @@ function isUnverifiedDomainError(error, statusCode) {
   if (statusCode !== 403) return false;
   const message = String(error?.message || "").toLowerCase();
   return message.includes("domain is not verified");
+}
+
+function parseRetryAfterMs(response, attempt) {
+  const retryAfter = Number(response.headers.get("retry-after"));
+  if (Number.isFinite(retryAfter) && retryAfter > 0) {
+    return Math.ceil(retryAfter * 1000);
+  }
+  return RESEND_RETRY_BASE_MS * (attempt + 1);
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function validateDomainBeforeSend(apiKey, fromHeader) {
@@ -282,7 +313,7 @@ async function validateDomainBeforeSend(apiKey, fromHeader) {
 
     const match = domains.find((domainEntry) => {
       const candidate = String(domainEntry?.name || "").toLowerCase();
-      return from.domain === candidate || from.domain.endsWith(`.${candidate}`);
+      return from.domain === candidate;
     });
 
     if (!match) {

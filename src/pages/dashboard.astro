@@ -25,6 +25,7 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
         <p class="dash-sub">Digite seu e-mail cadastrado para acessar o painel.</p>
         <form id="auth-form" class="auth-form" novalidate>
           <input type="email" id="auth-email" placeholder="seu@email.com" required autocomplete="email" />
+          <div id="auth-success" class="msg-success" hidden></div>
           <div id="auth-error" class="msg-error" hidden></div>
           <button type="submit" class="btn-primary" id="auth-btn">Acessar painel</button>
         </form>
@@ -589,6 +590,16 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
     margin-bottom: 0.5rem;
   }
 
+  .msg-success {
+    background: rgba(0, 255, 136, 0.12);
+    border: 1px solid rgba(0, 255, 136, 0.35);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    color: #8effc4;
+    margin-bottom: 0.5rem;
+  }
+
   /* Spinner */
   .spinner {
     display: inline-block;
@@ -617,37 +628,55 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
 </style>
 
 <script>
-  const SESSION_KEY = 'fp_user_session';
+  const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
   document.addEventListener('DOMContentLoaded', async () => {
-    // Check existing session
-    const session = getSession();
-    if (session) {
-      await showDashboard(session.email, session.name);
+    setupAuthForm();
+    await bootstrapSession();
+  });
+
+  async function bootstrapSession() {
+    try {
+      const res = await fetch('/api/user/status', {
+        method: 'GET',
+        credentials: 'same-origin',
+        cache: 'no-store',
+      });
+
+      if (!res.ok) {
+        showScreen('auth');
+        return;
+      }
+
+      const data = await res.json();
+      routeUserByStatus(data);
+    } catch {
+      showScreen('auth');
+    }
+  }
+
+  function routeUserByStatus(data: any) {
+    if (!data || !data.status) {
+      showScreen('auth');
       return;
     }
 
-    // Show auth screen
+    if (data.status === 'PENDING_APPROVAL') {
+      showScreen('pending');
+      return;
+    }
+
+    if (data.status === 'REJECTED') {
+      showScreen('rejected');
+      return;
+    }
+
+    if (data.status === 'APPROVED') {
+      showDashboard(data.name || data.email || 'Cliente');
+      return;
+    }
+
     showScreen('auth');
-    setupAuthForm();
-  });
-
-  function getSession() {
-    try {
-      const s = localStorage.getItem(SESSION_KEY);
-      if (!s) return null;
-      const data = JSON.parse(s);
-      // 7 day session
-      if (Date.now() - data.ts > 7 * 24 * 60 * 60 * 1000) {
-        localStorage.removeItem(SESSION_KEY);
-        return null;
-      }
-      return data;
-    } catch { return null; }
-  }
-
-  function saveSession(email: string, name: string) {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ email, name, ts: Date.now() }));
   }
 
   function showScreen(id: string) {
@@ -662,6 +691,10 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
     const form = document.getElementById('auth-form') as HTMLFormElement;
     const authBtn = document.getElementById('auth-btn') as HTMLButtonElement;
     const authError = document.getElementById('auth-error') as HTMLElement;
+    const authSuccess = document.getElementById('auth-success') as HTMLElement;
+
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -669,25 +702,24 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
       if (!email) return;
 
       authBtn.disabled = true;
-      authBtn.textContent = 'Verificando...';
+      authBtn.textContent = 'Enviando...';
       authError.hidden = true;
+      authSuccess.hidden = true;
 
       try {
-        const res = await fetch(`/api/user/status?email=${encodeURIComponent(email)}`);
+        const res = await fetch('/api/auth/magic-start', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: JSON_HEADERS,
+          body: JSON.stringify({ email })
+        });
         const data = await res.json();
 
-        if (!data.found) {
-          authError.textContent = 'E-mail não cadastrado. Crie sua conta primeiro.';
-          authError.hidden = false;
-        } else if (data.status === 'PENDING_APPROVAL') {
-          showScreen('pending');
-        } else if (data.status === 'REJECTED') {
-          showScreen('rejected');
-        } else if (data.status === 'APPROVED') {
-          saveSession(email, data.name);
-          await showDashboard(email, data.name);
+        if (res.ok && data.success) {
+          authSuccess.textContent = 'Link mágico enviado. Verifique seu e-mail para entrar no painel.';
+          authSuccess.hidden = false;
         } else {
-          authError.textContent = 'Status desconhecido. Entre em contato com o suporte.';
+          authError.textContent = data.error || 'Não foi possível enviar o link de acesso.';
           authError.hidden = false;
         }
       } catch {
@@ -700,31 +732,35 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
     });
   }
 
-  async function showDashboard(email: string, name: string) {
+  async function showDashboard(name: string) {
     showScreen('dashboard');
     (document.getElementById('user-name-display') as HTMLElement).textContent = `Olá, ${name.split(' ')[0]}`;
 
-    document.getElementById('logout-btn')?.addEventListener('click', () => {
-      localStorage.removeItem(SESSION_KEY);
-      showScreen('auth');
-      setupAuthForm();
-    });
+    const logoutBtn = document.getElementById('logout-btn') as HTMLButtonElement | null;
+    if (logoutBtn) {
+      logoutBtn.onclick = async () => {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: JSON_HEADERS,
+        }).catch(() => {});
+        (document.getElementById('auth-success') as HTMLElement).hidden = true;
+        (document.getElementById('auth-error') as HTMLElement).hidden = true;
+        (document.getElementById('auth-form') as HTMLFormElement).reset();
+        (document.getElementById('buttons-list') as HTMLElement).innerHTML = '<p class="empty-state">Nenhum link criado ainda.</p>';
+        showScreen('auth');
+      };
+    }
 
-    setupCreateForm(email);
-    loadExistingButtons(email);
+    setupCreateForm();
+    loadExistingButtons();
   }
 
-  function getUserHeaders(email: string) {
-    // Simple token: base64(email:timestamp) — server just checks email + approved status
-    const token = btoa(`${email}:${Date.now()}`);
-    return {
-      'Content-Type': 'application/json',
-      'x-user-email': email,
-      'x-user-token': token
-    };
+  function getUserHeaders() {
+    return JSON_HEADERS;
   }
 
-  function setupCreateForm(email: string) {
+  function setupCreateForm() {
     const form = document.getElementById('create-btn-form') as HTMLFormElement;
     const createBtn = document.getElementById('create-btn') as HTMLButtonElement;
     const btnText = createBtn.querySelector('.btn-text') as HTMLElement;
@@ -733,6 +769,9 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
     const cryptoFields = document.getElementById('crypto-fields') as HTMLElement;
     const amountInput = document.getElementById('btn-amount') as HTMLInputElement;
     const fixedCheckbox = document.getElementById('btn-fixed') as HTMLInputElement;
+
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
 
     // Show/hide crypto fields based on checkbox
     document.querySelectorAll('input[name="payment_method"]').forEach((cb: any) => {
@@ -788,7 +827,8 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
       try {
         const res = await fetch('/api/user/buttons', {
           method: 'POST',
-          headers: getUserHeaders(email),
+          credentials: 'same-origin',
+          headers: getUserHeaders(),
           body: JSON.stringify({ title, description, amount_brl, amount_fixed, payment_methods, crypto_address, crypto_network })
         });
 
@@ -798,7 +838,7 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
           showEmbedResult(data.embed_url, data.embed_code);
           form.reset();
           cryptoFields.hidden = true;
-          loadExistingButtons(email);
+          loadExistingButtons();
         } else {
           createError.textContent = data.error || 'Erro ao criar botão.';
           createError.hidden = false;
@@ -837,10 +877,14 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
     }, { once: true });
   }
 
-  async function loadExistingButtons(email: string) {
+  async function loadExistingButtons() {
     const list = document.getElementById('buttons-list') as HTMLElement;
     try {
-      const res = await fetch('/api/user/buttons', { headers: getUserHeaders(email) });
+      const res = await fetch('/api/user/buttons', {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: getUserHeaders(),
+      });
       const data = await res.json();
 
       if (!data.success || data.buttons.length === 0) {

@@ -527,7 +527,19 @@
         const data = await res.json();
         if (!data.success) throw new Error(data.error);
 
-        showNotification('✅ Usuario aprovado com sucesso.', 'success');
+        if (data.emailSent === false) {
+          showNotification('⚠️ Usuario aprovado, mas e-mail falhou. Use o Magic Link de contingência.', 'warning');
+          if (data.magicLink) {
+            try {
+              await navigator.clipboard.writeText(data.magicLink);
+              showNotification('⚠️ Aprovado sem e-mail. Magic Link copiado para área de transferência.', 'warning');
+            } catch {
+              console.warn('Falha ao copiar magic link');
+            }
+          }
+        } else {
+          showNotification('✅ Usuario aprovado com sucesso.', 'success');
+        }
         await loadUsers();
       } catch (err) {
         showNotification('Erro: ' + err.message, 'error');

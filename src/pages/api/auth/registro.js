@@ -53,17 +53,32 @@ export const POST = async ({ request, clientAddress }) => {
         secureLog('info', 'Novo cadastro recebido', { userId, email: cleanEmail, document_type });
 
         // Confirmação para o usuário (fire-and-forget)
-        sendEmail({
+        void sendEmail({
             to: cleanEmail,
             subject: 'Cadastro recebido — FlowPay',
             html: registroTemplate({ name: cleanName }),
-        }).catch(() => { });
+        }).then((result) => {
+            if (!result.success) {
+                secureLog('warn', 'Falha no envio de e-mail de confirmação de cadastro', {
+                    userId,
+                    email: cleanEmail,
+                    error: result.error || 'unknown_email_error',
+                    attempts: result.attempts || []
+                });
+            }
+        }).catch((err) => {
+            secureLog('error', 'Erro inesperado no envio de e-mail de cadastro', {
+                userId,
+                email: cleanEmail,
+                error: err.message
+            });
+        });
 
         // Notificação para o admin (fire-and-forget)
         const adminEmail = process.env.ADMIN_NOTIFY_EMAIL;
         if (adminEmail) {
             const registeredAt = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-            sendEmail({
+            void sendEmail({
                 to: adminEmail,
                 subject: `[FlowPay] Novo cadastro: ${cleanName}`,
                 html: adminNovoCadastroTemplate({
@@ -75,7 +90,21 @@ export const POST = async ({ request, clientAddress }) => {
                     document: docValue || '—',
                     documentType: document_type || 'CPF',
                 }),
-            }).catch(() => { });
+            }).then((result) => {
+                if (!result.success) {
+                    secureLog('warn', 'Falha no envio de e-mail de notificação para admin (cadastro)', {
+                        userId,
+                        email: cleanEmail,
+                        error: result.error || 'unknown_email_error'
+                    });
+                }
+            }).catch((err) => {
+                secureLog('error', 'Erro inesperado no envio de e-mail para admin (cadastro)', {
+                    userId,
+                    email: cleanEmail,
+                    error: err.message
+                });
+            });
         }
 
         return new Response(JSON.stringify({

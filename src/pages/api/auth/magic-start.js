@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { saveAuthToken } from "../../../services/database/sqlite.mjs";
+import { getUserByEmail, saveAuthToken } from "../../../services/database/sqlite.mjs";
 import { applyRateLimit } from "../../../services/api/rate-limiter.mjs";
 import {
   config,
@@ -42,11 +42,48 @@ export const POST = async ({ request, clientAddress }) => {
     }
 
     // Generate secure random token
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = getUserByEmail(normalizedEmail);
+
+    if (!user) {
+      return new Response(
+        JSON.stringify({ error: "E-mail não cadastrado. Crie sua conta primeiro." }),
+        {
+          status: 404,
+          headers: { ...headers, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    if (user.status === "PENDING_APPROVAL") {
+      return new Response(
+        JSON.stringify({ error: "Seu cadastro ainda está em análise." }),
+        {
+          status: 409,
+          headers: { ...headers, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    if (user.status === "REJECTED") {
+      return new Response(
+        JSON.stringify({
+          error:
+            "Seu cadastro foi reprovado. Entre em contato com o suporte para revisão.",
+        }),
+        {
+          status: 403,
+          headers: { ...headers, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Generate secure random token
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + config.auth.tokenExpiration);
 
     // Save to DB
-    saveAuthToken(email, token, expiresAt);
+    saveAuthToken(normalizedEmail, token, expiresAt);
 
     const domain = process.env.URL || "https://flowpay.cash";
     const magicLink = `${domain}/auth/verify?token=${token}`;
@@ -60,7 +97,7 @@ export const POST = async ({ request, clientAddress }) => {
 
     if (emailResult.success) {
       secureLog("info", "Magic link sent via Resend", {
-        email,
+        email: normalizedEmail,
         id: emailResult.id,
       });
 
@@ -78,7 +115,7 @@ export const POST = async ({ request, clientAddress }) => {
     }
 
     secureLog("error", "Failed to send magic link via Resend", {
-      email,
+      email: normalizedEmail,
       error: emailResult.error,
     });
 

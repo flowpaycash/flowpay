@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/astro";
+import crypto from "crypto";
 import { getCorsHeaders, secureLog } from "../../../services/api/config.mjs";
 import {
   requireAdminSession,
@@ -9,6 +10,7 @@ import {
   approveUser,
   rejectUser,
   getUserById,
+  saveAuthToken,
 } from "../../../services/database/sqlite.mjs";
 import { sendEmail } from "../../../services/api/email-service.mjs";
 import { aprovacaoTemplate } from "../../../services/api/email/templates/aprovacao.mjs";
@@ -131,35 +133,74 @@ export const POST = async ({ request, cookies }) => {
         data: { userId },
       });
 
-      // Email para o usuário aprovado
-      sendEmail({
+      const token = crypto.randomBytes(32).toString("hex");
+      const expiresHours = 48;
+      const expiresAt = new Date(Date.now() + expiresHours * 60 * 60 * 1000);
+      saveAuthToken(user.email, token, expiresAt);
+      const baseUrl = process.env.URL || "https://flowpay.cash";
+      const magicLink = `${baseUrl}/auth/verify?token=${token}`;
+
+      // Email para o usuário aprovado (com magic link)
+      const approvalEmailResult = await sendEmail({
         to: user.email,
-        subject: "Sua conta FlowPay foi aprovada! 🎉",
-        html: aprovacaoTemplate({ name: user.name }),
-      }).catch((err) => {
-        secureLog("error", "Erro ao enviar email de aprovacao", { userId, error: err.message });
+        subject: "Sua conta FlowPay foi aprovada! Acesse com seu link mágico",
+        html: aprovacaoTemplate({
+          name: user.name,
+          loginUrl: magicLink,
+          expiresHours,
+        }),
+      });
+
+      if (!approvalEmailResult.success) {
+        secureLog("error", "Erro ao enviar email de aprovacao", {
+          userId,
+          error: approvalEmailResult.error || "unknown_email_error",
+          attempts: approvalEmailResult.attempts || [],
+        });
         Sentry.withScope((scope) => {
           scope.setLevel("warning");
           scope.setTag("source", "admin_users_email");
           scope.setTag("email.type", "approval");
           scope.setContext("user", { userId });
-          Sentry.captureException(err);
+          Sentry.captureMessage(
+          "Falha no envio do e-mail de aprovação com magic link",
+            "warning"
+          );
         });
-      });
+      }
 
       // Confirmação para o admin
       const adminEmailApprove = process.env.ADMIN_NOTIFY_EMAIL;
       if (adminEmailApprove) {
         const approvedAt = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-        sendEmail({
+        void sendEmail({
           to: adminEmailApprove,
           subject: `[FlowPay] ✅ Aprovado: ${user.name}`,
           html: adminAprovacaoTemplate({ name: user.name, email: user.email, approvedAt }),
-        }).catch(() => {});
+        }).then((result) => {
+          if (!result.success) {
+            secureLog("warn", "Falha ao enviar e-mail de confirmacao para admin (approve)", {
+              userId,
+              error: result.error || "unknown_email_error",
+            });
+          }
+        }).catch((err) => {
+          secureLog("error", "Erro inesperado no envio de e-mail para admin (approve)", {
+            userId,
+            error: err.message,
+          });
+        });
       }
 
       return new Response(
-        JSON.stringify({ success: true, message: "Usuario aprovado." }),
+        JSON.stringify({
+          success: true,
+          message: approvalEmailResult.success
+            ? "Usuario aprovado."
+            : "Usuario aprovado, mas houve falha no envio do e-mail.",
+          emailSent: Boolean(approvalEmailResult.success),
+          magicLink: approvalEmailResult.success ? null : magicLink,
+        }),
         {
           status: 200,
           headers,
@@ -184,18 +225,32 @@ export const POST = async ({ request, cookies }) => {
       });
 
       // Email para o usuário rejeitado
-      sendEmail({
+      void sendEmail({
         to: user.email,
         subject: "Atualização sobre seu cadastro FlowPay",
         html: rejeicaoTemplate({ name: user.name, reason: rejectReason }),
+      }).then((result) => {
+        if (!result.success) {
+          secureLog("error", "Erro ao enviar email de rejeicao", {
+            userId,
+            error: result.error || "unknown_email_error",
+            attempts: result.attempts || [],
+          });
+          Sentry.withScope((scope) => {
+            scope.setLevel("warning");
+            scope.setTag("source", "admin_users_email");
+            scope.setTag("email.type", "rejection");
+            scope.setContext("user", { userId });
+            Sentry.captureMessage(
+              "Falha no envio do e-mail de rejeição",
+              "warning"
+            );
+          });
+        }
       }).catch((err) => {
-        secureLog("error", "Erro ao enviar email de rejeicao", { userId, error: err.message });
-        Sentry.withScope((scope) => {
-          scope.setLevel("warning");
-          scope.setTag("source", "admin_users_email");
-          scope.setTag("email.type", "rejection");
-          scope.setContext("user", { userId });
-          Sentry.captureException(err);
+        secureLog("error", "Erro inesperado no envio de email de rejeicao", {
+          userId,
+          error: err.message,
         });
       });
 
@@ -203,11 +258,23 @@ export const POST = async ({ request, cookies }) => {
       const adminEmailReject = process.env.ADMIN_NOTIFY_EMAIL;
       if (adminEmailReject) {
         const rejectedAt = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-        sendEmail({
+        void sendEmail({
           to: adminEmailReject,
           subject: `[FlowPay] ❌ Rejeitado: ${user.name}`,
           html: adminRejeicaoTemplate({ name: user.name, email: user.email, reason: rejectReason, rejectedAt }),
-        }).catch(() => {});
+        }).then((result) => {
+          if (!result.success) {
+            secureLog("warn", "Falha ao enviar e-mail de confirmacao para admin (reject)", {
+              userId,
+              error: result.error || "unknown_email_error",
+            });
+          }
+        }).catch((err) => {
+          secureLog("error", "Erro inesperado no envio de e-mail para admin (reject)", {
+            userId,
+            error: err.message,
+          });
+        });
       }
 
       return new Response(

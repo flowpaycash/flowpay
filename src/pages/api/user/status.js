@@ -62,11 +62,18 @@ export const GET = async ({ request, clientAddress }) => {
 
     return new Response(
       JSON.stringify({
+        found: true,
         status: user.status,
+        name: user.name,
+        email: user.email,
       }),
       {
         status: 200,
-        headers: { ...headers, "Content-Type": "application/json" },
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store",
+        },
       }
     );
   } catch (error) {

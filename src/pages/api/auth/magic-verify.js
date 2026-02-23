@@ -31,7 +31,7 @@ export const POST = async ({ request, cookies }) => {
         cookies.set('flowpay_session', sessionToken, {
             path: '/',
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
             maxAge: 24 * 60 * 60 // 24h
         });
