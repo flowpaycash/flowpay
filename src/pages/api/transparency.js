@@ -1,5 +1,6 @@
 import { getDatabase } from '../../services/database/sqlite.mjs';
 import { getCorsHeaders } from '../../services/api/config.mjs';
+import { getCapabilityStatus } from '../../services/compliance/capability-status.mjs';
 
 export const GET = async ({ request }) => {
   const headers = getCorsHeaders({ headers: Object.fromEntries(request.headers) });
@@ -79,6 +80,7 @@ export const GET = async ({ request }) => {
         version: '1.0.1',
         network: 'base',
       },
+      capabilities: getCapabilityStatus(),
       stats: {
         total_orders: settled.total_orders,
         settled_count: settled.settled_count,

@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/astro";
 import { getDatabase } from "../../services/database/sqlite.mjs";
+import { getCapabilityStatus } from "../../services/compliance/capability-status.mjs";
 
 export const GET = async () => {
   const start = Date.now();
@@ -48,6 +49,7 @@ export const GET = async () => {
       URL: process.env.URL || process.env.RAILWAY_PUBLIC_DOMAIN || "—",
       NODE_ENV: process.env.NODE_ENV || "production",
     },
+    capabilities: getCapabilityStatus(),
   };
 
   Sentry.metrics.count("user_action", 1);

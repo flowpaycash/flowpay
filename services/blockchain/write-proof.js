@@ -5,6 +5,7 @@
 const { getQuickNodeBase } = require('./quicknode-base');
 const { secureLog } = require('../../src/services/api/config.mjs');
 const crypto = require('crypto');
+const EVM_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 
 class WriteProof {
   constructor() {
@@ -13,7 +14,13 @@ class WriteProof {
 
     // Endereço do contrato de prova (se existir)
     // Em produção, deployar um contrato simples para registrar eventos
-    this.proofContractAddress = process.env.PROOF_CONTRACT_ADDRESS || '';
+    this.proofContractAddress = (process.env.PROOF_CONTRACT_ADDRESS || '').trim();
+    this.proofContractEnabled = EVM_ADDRESS_REGEX.test(this.proofContractAddress);
+    if (this.proofContractAddress && !this.proofContractEnabled) {
+      secureLog('warn', 'PROOF_CONTRACT_ADDRESS inválido. Fallback para modo alternativo.', {
+        configured: true
+      });
+    }
 
     // IPFS desabilitado no v0 (não usar agora)
     this.useIPFS = false;
@@ -191,7 +198,7 @@ class WriteProof {
       const networkForProof = 'base';
 
       // Se não houver contrato configurado, usar método alternativo
-      if (!this.proofContractAddress || process.env.NODE_ENV === 'development') {
+      if (!this.proofContractEnabled || process.env.NODE_ENV === 'development') {
         return await this.writeProofAlternative(proofId, pixChargeId, txHash, metadata, networkForProof);
       }
 
@@ -283,7 +290,7 @@ class WriteProof {
    */
   async verifyProof(proofId, network = 'ethereum') {
     try {
-      if (!this.proofContractAddress) {
+      if (!this.proofContractEnabled) {
         // Sem contrato, verificar logs
         secureLog('info', 'Verificação de prova (sem contrato)', {
           proofId
@@ -341,4 +348,3 @@ module.exports = {
   WriteProof,
   getWriteProof
 };
-
