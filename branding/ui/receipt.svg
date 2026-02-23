@@ -1,0 +1,38 @@
+<svg width="1080" height="1560" viewBox="0 0 1080 1560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1080" y2="1560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#050007"/>
+      <stop offset="1" stop-color="#120018"/>
+    </linearGradient>
+    <linearGradient id="line" x1="180" y1="320" x2="900" y2="1220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF2BD6"/>
+      <stop offset="0.55" stop-color="#7A1CFF"/>
+      <stop offset="1" stop-color="#2DE2FF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1080" height="1560" fill="url(#bg)"/>
+  <rect x="140" y="120" width="800" height="1320" rx="42" fill="rgba(18,0,24,0.62)" stroke="rgba(255,255,255,0.14)"/>
+
+  <text x="220" y="240" fill="#F7F4FB" font-size="54" font-family="Space Grotesk, Inter, Arial, sans-serif" font-weight="700">FLOWPay Receipt</text>
+  <text x="220" y="292" fill="#C9B6FF" font-size="28" font-family="Inter, Arial, sans-serif">Unlock Receipt</text>
+
+  <line x1="220" y1="340" x2="860" y2="340" stroke="url(#line)" stroke-width="4"/>
+
+  <text x="220" y="430" fill="#EEE6FF" font-size="30" font-family="JetBrains Mono, monospace">ORDER: FP-2026-000184</text>
+  <text x="220" y="500" fill="#EEE6FF" font-size="30" font-family="JetBrains Mono, monospace">AMOUNT: R$ 1.500,00</text>
+  <text x="220" y="570" fill="#EEE6FF" font-size="30" font-family="JetBrains Mono, monospace">METHOD: PIX</text>
+  <text x="220" y="640" fill="#EEE6FF" font-size="30" font-family="JetBrains Mono, monospace">STATUS: PAID</text>
+
+  <rect x="220" y="710" width="640" height="88" rx="20" fill="#00F5A0"/>
+  <text x="540" y="767" text-anchor="middle" fill="#050007" font-size="38" font-family="Inter, Arial, sans-serif" font-weight="800">ACCESS UNLOCKED</text>
+
+  <text x="220" y="900" fill="#F7F4FB" font-size="36" font-family="Inter, Arial, sans-serif" font-weight="700">Messaging</text>
+  <text x="220" y="954" fill="#EEE6FF" font-size="28" font-family="Inter, Arial, sans-serif">Pix confirmado. Acesso liberado.</text>
+  <text x="220" y="1006" fill="#EEE6FF" font-size="28" font-family="Inter, Arial, sans-serif">O pagamento vira permissao.</text>
+
+  <rect x="220" y="1100" width="640" height="250" rx="22" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)"/>
+  <text x="252" y="1170" fill="#6EE7FF" font-size="24" font-family="JetBrains Mono, monospace">TX: a93f...f7b2</text>
+  <text x="252" y="1230" fill="#6EE7FF" font-size="24" font-family="JetBrains Mono, monospace">CHAIN: OFFCHAIN + HMAC RECEIPT</text>
+  <text x="252" y="1290" fill="#6EE7FF" font-size="24" font-family="JetBrains Mono, monospace">ISSUER: FLOWPAY/NEO</text>
+</svg>

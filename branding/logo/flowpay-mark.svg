@@ -1,0 +1,27 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(512 400) rotate(90) scale(520)">
+      <stop stop-color="#FF2BD6" stop-opacity="0.45"/>
+      <stop offset="0.65" stop-color="#120018" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#050007"/>
+    </radialGradient>
+    <linearGradient id="g2" x1="246" y1="266" x2="768" y2="770" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF2BD6"/>
+      <stop offset="0.55" stop-color="#7A1CFF"/>
+      <stop offset="1" stop-color="#2DE2FF"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" rx="96" fill="url(#g1)"/>
+  <circle cx="512" cy="512" r="286" fill="#1A0A2B" fill-opacity="0.72" stroke="url(#g2)" stroke-width="10"/>
+  <circle cx="512" cy="512" r="210" fill="#120018" stroke="#6EE7FF" stroke-opacity="0.42" stroke-width="3"/>
+
+  <path filter="url(#glow)" d="M480 320H560L508 474H600L438 704L486 542H392L480 320Z" fill="url(#g2)"/>
+</svg>

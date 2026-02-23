@@ -1,0 +1,18 @@
+<svg width="1280" height="480" viewBox="0 0 1280 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="badge" x1="0" y1="0" x2="1280" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF2BD6"/>
+      <stop offset="0.5" stop-color="#7A1CFF"/>
+      <stop offset="1" stop-color="#2DE2FF"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="24" y="24" width="1232" height="432" rx="72" fill="#050007" stroke="url(#badge)" stroke-width="6"/>
+  <rect x="58" y="58" width="1164" height="364" rx="56" fill="rgba(255,255,255,0.03)"/>
+
+  <circle cx="236" cy="240" r="84" fill="#120018" stroke="#FF4DE3" stroke-width="4"/>
+  <path d="M214 208H258L228 254H274L196 338L222 274H176L214 208Z" fill="#2DE2FF"/>
+
+  <text x="360" y="226" fill="#F7F4FB" font-size="62" font-family="Space Grotesk, Inter, Arial, sans-serif" font-weight="800" letter-spacing="4">UNLOCK INSIDE</text>
+  <text x="360" y="298" fill="#C9B6FF" font-size="34" font-family="Inter, Arial, sans-serif" font-weight="600">Payment to Permission</text>
+</svg>
