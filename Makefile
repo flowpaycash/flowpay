@@ -42,7 +42,7 @@ help: ## Show available commands
 
 install: ## Install dependencies
 	@echo -e "$(CYAN)Installing dependencies...$(NC)"
-	@npm install
+	@pnpm install
 	@echo -e "$(GREEN)Done.$(NC)"
 
 clean: ## Remove build artifacts and caches
@@ -58,24 +58,24 @@ clean-all: clean ## Full clean including node_modules
 
 dev: ## Start dev server (clears cache first)
 	@rm -rf .astro
-	@npm run dev
+	@pnpm run dev
 
 start: ## Start production server (requires build first)
 	@test -f dist/server/entry.mjs || (echo -e "$(RED)No build found. Run 'make build' first.$(NC)" && exit 1)
 	@node ./dist/server/entry.mjs
 
 preview: ## Build and serve production preview
-	@npm run preview
+	@pnpm run preview
 
 # ── Build & Validation ───────────────────────────────
 
 check: ## Run Astro type-checking
 	@echo -e "$(CYAN)Type checking...$(NC)"
-	@npx astro check
+	@pnpm exec astro check
 
 build: ## Production build (type-check + build)
 	@echo -e "$(CYAN)Building v$(VERSION)...$(NC)"
-	@npm run build
+	@pnpm run build
 	@echo -e "$(GREEN)Build complete.$(NC)"
 
 rebuild: clean build ## Clean and build from scratch
@@ -90,7 +90,7 @@ test: ## Run all tests (unit + DB flow)
 
 test-unit: ## Run Jest unit tests
 	@echo -e "$(CYAN)Running unit tests...$(NC)"
-	@npx jest --passWithNoTests
+	@pnpm exec jest --passWithNoTests
 
 test-db: ## Run database flow integration tests
 	@echo -e "$(CYAN)Running DB flow tests...$(NC)"
@@ -100,11 +100,11 @@ test-db: ## Run database flow integration tests
 
 lint: ## Strict markdown lint (fails on issues)
 	@echo -e "$(CYAN)Linting markdown...$(NC)"
-	@npm run lint:md
+	@pnpm run lint:md
 
 lint-soft: ## Non-blocking markdown lint (local convenience)
 	@echo -e "$(CYAN)Linting markdown (soft mode)...$(NC)"
-	@npm run lint:md 2>/dev/null || echo -e "$(YELLOW)Lint warnings found.$(NC)"
+	@pnpm run lint:md 2>/dev/null || echo -e "$(YELLOW)Lint warnings found.$(NC)"
 
 env-check: ## Validate required env vars in .env
 	@test -f "$(ENV_FILE)" || (echo -e "$(RED)$(ENV_FILE) missing.$(NC)" && exit 1)
@@ -130,7 +130,7 @@ audit: ## Strict full audit (fails on vulnerabilities/issues)
 	@echo -e "$(BOLD)$(CYAN)FlowPay Audit (strict)$(NC)"
 	@echo ""
 	@echo -e "$(YELLOW)[1/6] Dependencies$(NC)"
-	@npm audit --audit-level=high
+	@pnpm audit --audit-level=high
 	@echo ""
 	@echo -e "$(YELLOW)[2/6] Environment$(NC)"
 	@$(MAKE) env-check
@@ -153,7 +153,7 @@ audit-soft: ## Non-blocking audit for local diagnosis
 	@echo -e "$(BOLD)$(CYAN)FlowPay Audit (soft)$(NC)"
 	@echo ""
 	@echo -e "$(YELLOW)[1/6] Dependencies$(NC)"
-	@npm audit --audit-level=high || echo -e "$(YELLOW)  Vulnerabilities found (non-blocking).$(NC)"
+	@pnpm audit --audit-level=high || echo -e "$(YELLOW)  Vulnerabilities found (non-blocking).$(NC)"
 	@echo ""
 	@echo -e "$(YELLOW)[2/6] Environment$(NC)"
 	@$(MAKE) env-check || echo -e "$(YELLOW)  Environment issues found (non-blocking).$(NC)"
@@ -191,7 +191,7 @@ status: ## Show project status overview
 	@echo -e "$(BOLD)$(CYAN)FlowPay v$(VERSION) — Status$(NC)"
 	@echo ""
 	@echo -e "  Node:    $$(node -v)"
-	@echo -e "  NPM:     $$(npm -v)"
+	@echo -e "  PNPM:    $$(pnpm -v)"
 	@test -f dist/server/entry.mjs && echo -e "  Build:   $(GREEN)exists$(NC)" || echo -e "  Build:   $(YELLOW)not built$(NC)"
 	@test -f data/flowpay.db && echo -e "  DB:      $(GREEN)$$(du -h data/flowpay.db | cut -f1)$(NC)" || echo -e "  DB:      $(YELLOW)not created$(NC)"
 	@test -f "$(ENV_FILE)" && echo -e "  $(ENV_FILE): $(GREEN)present$(NC)" || echo -e "  $(ENV_FILE): $(RED)missing$(NC)"

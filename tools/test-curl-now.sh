@@ -13,7 +13,7 @@ if curl -s -I "http://localhost:4321/api/create-charge" > /dev/null 2>&1; then
     echo "✅ Servidor acessível!"
 else
     echo "❌ Servidor não acessível!"
-    echo "💡 Execute: npm run dev"
+    echo "💡 Execute: pnpm run dev"
     exit 1
 fi
 

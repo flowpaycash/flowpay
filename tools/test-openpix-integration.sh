@@ -23,7 +23,7 @@ echo ""
 # Verificar se servidor está rodando
 if ! curl -s "${API_URL}/create-charge" > /dev/null 2>&1; then
     echo -e "${RED}❌ Servidor não está rodando${NC}"
-    echo "Execute: npm run dev"
+    echo "Execute: pnpm run dev"
     exit 1
 fi
 

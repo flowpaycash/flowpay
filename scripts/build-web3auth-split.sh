@@ -7,7 +7,7 @@ rm -f public/assets/js/wallet.boot.js
 rm -f public/assets/js/web3auth.inner-*.js
 
 # Build com splitting inteligente
-npx esbuild public/assets/js/wallet.boot.ts public/assets/js/web3auth.inner.ts \
+pnpm exec esbuild public/assets/js/wallet.boot.ts public/assets/js/web3auth.inner.ts \
   --bundle \
   --format=esm \
   --target=es2022 \

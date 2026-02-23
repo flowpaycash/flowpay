@@ -7,17 +7,17 @@
     "dev": "astro dev",
     "prebuild": "rm -rf .astro",
     "build": "astro check && astro build",
-    "preview": "npm run build && npx serve dist -p 4321",
+    "preview": "pnpm run build && pnpm dlx serve dist -p 4321",
     "astro": "astro",
     "start": "node ./dist/server/entry.mjs",
-    "setup": "npm install && echo '✅ Dependências instaladas!'",
+    "setup": "pnpm install && echo '✅ Dependências instaladas!'",
     "neo:cfg": "node tools/neo-generate-config.mjs",
-    "neo:build:wallet": "npx esbuild public/assets/js/web3auth.init.ts --bundle --format=esm --target=es2022 --minify --outfile=public/assets/js/web3auth.js",
+    "neo:build:wallet": "pnpm exec esbuild public/assets/js/web3auth.init.ts --bundle --format=esm --target=es2022 --minify --outfile=public/assets/js/web3auth.js",
     "neo:build:smart": "./scripts/build-web3auth-smart.sh",
     "neo:build:minimal": "./scripts/build-web3auth-minimal.sh",
     "clean": "rm -rf .astro dist node_modules/.vite public/assets/js/*.js public/assets/js/*.json",
-    "neo:build:aa": "npx esbuild public/assets/js/wallet.metamask-aa.ts --bundle --format=esm --target=es2022 --minify --tree-shaking=true --legal-comments=none --outfile=public/assets/js/metamask-aa.js",
-    "neo:build": "npm run clean && npm run neo:cfg && npm run neo:build:smart && npm run neo:build:aa",
+    "neo:build:aa": "pnpm exec esbuild public/assets/js/wallet.metamask-aa.ts --bundle --format=esm --target=es2022 --minify --tree-shaking=true --legal-comments=none --outfile=public/assets/js/metamask-aa.js",
+    "neo:build": "pnpm run clean && pnpm run neo:cfg && pnpm run neo:build:smart && pnpm run neo:build:aa",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -83,6 +83,7 @@
   "engines": {
     "node": ">=20.x"
   },
+  "packageManager": "pnpm@10.30.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/flowpaycash/flowpay.git"

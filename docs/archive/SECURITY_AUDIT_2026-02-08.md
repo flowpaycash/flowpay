@@ -100,7 +100,7 @@ export const GET = async ({ request, cookies }) => {
 
 ### 3. 📦 Vulnerabilidades em Dependências
 **Severidade:** 🟢 RESOLVIDO (Parcialmente)
-**Fonte:** `npm audit`
+**Fonte:** `pnpm audit`
 
 **✅ Estatísticas APÓS correção:**
 - 🔴 Moderate: 4 vulnerabilidades (↓ de 5)
@@ -110,7 +110,7 @@ export const GET = async ({ request, cookies }) => {
 
 **✅ Ações Concluídas:**
 ```bash
-npm audit fix --force  # ✅ Executado com sucesso
+pnpm audit fix --force  # ✅ Executado com sucesso
 ```
 
 **Pacotes Atualizados:**
@@ -284,7 +284,7 @@ db.prepare(`UPDATE orders SET ${updates.join(', ')} WHERE charge_id = ?`).run(..
 - [ ] Rotar todas as chaves privadas expostas
 - [ ] Adicionar autenticação ao endpoint `/api/admin/metrics`
 - [ ] Corrigir erro de build (caminho do sqlite.mjs)
-- [ ] Rodar `npm audit fix` e resolver vulnerabilidades
+- [ ] Rodar `pnpm audit fix` e resolver vulnerabilidades
 
 ### 🟡 Alta Prioridade (Fazer na semana de lançamento)
 - [ ] Implementar autenticação server-side para admin panel
@@ -344,7 +344,7 @@ add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" alway
 1. ✅ Rodar `mkdir -p .astro && chmod 755 .astro` (já feito)
 2. 🔧 Corrigir import em `src/pages/api/admin/metrics.js`
 3. 🔐 Adicionar autenticação ao endpoint admin
-4. 📦 Rodar `npm audit fix`
+4. 📦 Rodar `pnpm audit fix`
 
 ### Esta Semana
 1. 🔑 Rotar todas as chaves privadas

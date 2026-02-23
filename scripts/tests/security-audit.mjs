@@ -34,7 +34,7 @@ async function runAudit() {
 
     if (!finalUrl) {
         console.error('❌ Could not connect to any target URL (localhost or production).');
-        console.log('TIP: Start the server with "npm run dev" before running this test.');
+        console.log('TIP: Start the server with "pnpm run dev" before running this test.');
         process.exit(1);
     }
 

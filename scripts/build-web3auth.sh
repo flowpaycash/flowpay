@@ -3,7 +3,7 @@
 echo "🔧 Build Web3Auth otimizado..."
 
 # Configurações agressivas para reduzir bundle size
-npx esbuild public/assets/js/web3auth.init.ts \
+pnpm exec esbuild public/assets/js/web3auth.init.ts \
   --bundle \
   --format=esm \
   --target=es2022 \

@@ -26,9 +26,9 @@ Este documento descreve como testar a API PIX da FLOWPay integrada com a Woovi/O
 1. **Servidor rodando**
 
    ```bash
-   npm run dev
+   pnpm run dev
    # ou
-   npm run dev
+   pnpm run dev
    ```
 
 2. **API Key configurada**
@@ -161,7 +161,7 @@ nano .env
 
 ### Erro: "Servidor não acessível"
 
-- Verifique se `npm run dev` está rodando
+- Verifique se `pnpm run dev` está rodando
 - Confirme a porta (padrão: 4321)
 - Verifique logs do servidor
 
@@ -217,7 +217,7 @@ ab -n 100 -c 10 -p test-payload.json \
 
 ```bash
 # Monitore logs em tempo real
-npm run dev --debug
+pnpm run dev -- --debug
 
 # Ou verifique logs específicos
 railway logs -f
@@ -247,7 +247,7 @@ curl -X POST \
 
 ## 📋 Checklist de Teste
 
-- [ ] Servidor rodando (`npm run dev`)
+- [ ] Servidor rodando (`pnpm run dev`)
 - [ ] API Key configurada (`WOOVI_API_KEY`)
 - [ ] Função acessível (teste OPTIONS)
 - [ ] Testes de validação passando

@@ -41,7 +41,7 @@ Sistema de autenticação passwordless implementado com magic links e preparado 
 
 ### Desenvolvimento Local
 
-1. Inicie o servidor local: `npm run dev`
+1. Inicie o servidor local: `pnpm run dev`
 2. Acesse `/login`
 3. Insira um e-mail válido
 4. Verifique o console para ver o magic link gerado
@@ -127,6 +127,6 @@ O sistema está preparado para integração com Web3Auth para autenticação via
 Para dúvidas ou problemas:
 
 1. Verifique os logs das funções Railway
-2. Teste localmente com `npm run dev`
+2. Teste localmente com `pnpm run dev`
 3. Valide configurações de CORS e headers
 4. Verifique variáveis de ambiente

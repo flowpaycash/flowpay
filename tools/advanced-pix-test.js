@@ -123,7 +123,7 @@ async function runTests() {
     console.log(`\n${colors.green}✅ Servidor acessível${colors.reset}`);
   } catch (error) {
     console.log(`\n${colors.red}❌ Servidor não acessível:${colors.reset}`, error.message);
-    console.log(`${colors.yellow}💡 Certifique-se de que 'npm run dev' está rodando${colors.reset}`);
+    console.log(`${colors.yellow}💡 Certifique-se de que 'pnpm run dev' está rodando${colors.reset}`);
     return;
   }
 
@@ -217,7 +217,7 @@ async function runTests() {
   console.log(`\n${colors.cyan}💡 Dicas:${colors.reset}`);
   console.log("- Verifique se WOOVI_API_KEY está configurada");
   console.log("- Monitore os logs do servidor para detalhes");
-  console.log("- Use 'npm run dev' para desenvolvimento local");
+  console.log("- Use 'pnpm run dev' para desenvolvimento local");
 }
 
 // Executar testes se o script for chamado diretamente

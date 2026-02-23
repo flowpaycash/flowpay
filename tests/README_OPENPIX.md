@@ -15,13 +15,13 @@ Suíte completa de testes para integração com OpenPix/Woovi API, cobrindo:
 
 ```bash
 # Todos os testes OpenPix
-npm run test:openpix
+pnpm run test:openpix
 
 # Modo watch
-npm run test:openpix:watch
+pnpm run test:openpix:watch
 
 # Com cobertura
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ### Testes de Integração (Bash)
@@ -115,13 +115,13 @@ API_URL=http://localhost:4321/api
 1. **Servidor rodando**
 
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 2. **Dependências instaladas**
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. **Ferramentas opcionais**
@@ -207,7 +207,7 @@ curl -X POST \
 
 ```bash
 # Iniciar servidor
-npm run dev
+pnpm run dev
 ```
 
 ### Erro: "WOOVI_API_KEY não configurada"

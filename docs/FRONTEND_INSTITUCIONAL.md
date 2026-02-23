@@ -61,19 +61,19 @@ Criar um site institucional moderno similar ao [thirdweb.com](https://thirdweb.c
 ### 1. Instalar Astro
 
 ```bash
-npm create astro@latest -- --template minimal
+pnpm create astro@latest --template minimal
 cd flowpay-institucional
-npm install
+pnpm install
 ```
 
 ### 2. Adicionar Integrações
 
 ```bash
 # Tailwind CSS (opcional, mas recomendado)
-npx astro add tailwind
+pnpm exec astro add tailwind
 
 # React (para componentes interativos)
-npx astro add react
+pnpm exec astro add react
 
 # TypeScript (já incluído)
 ```
@@ -83,7 +83,7 @@ npx astro add react
 ```toml
 # railway.json
 [build]
-  command = "npm run build"
+  command = "pnpm run build"
   publish = "dist"
 
 [[plugins]]
@@ -290,4 +290,3 @@ Se preferir manter estrutura atual mas melhorar design:
 3. Implementar componentes principais
 4. Migrar conteúdo existente
 5. Otimizar performance e SEO
-

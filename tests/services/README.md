@@ -15,11 +15,11 @@ tests/services/
 
 ```bash
 # Todos os testes
-npm test
+pnpm test
 
 # Testes específicos
-npm test -- usdt-transfer.test.js
-npm test -- liquidity-provider.test.js
+pnpm test -- usdt-transfer.test.js
+pnpm test -- liquidity-provider.test.js
 ```
 
 ## Cobertura

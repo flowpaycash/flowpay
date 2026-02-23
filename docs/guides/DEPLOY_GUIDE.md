@@ -8,8 +8,8 @@ Este guia cobre o processo de deploy da aplicação **FlowPay** na plataforma **
 - **Plataforma:** Railway (railway.app)
 - **Framework:** Astro (SSR - Server Side Rendering)
 - **Runtime:** Node.js v20+
-- **Build Command:** `npm run build`
-- **Start Command:** `npm run start`
+- **Build Command:** `pnpm run build`
+- **Start Command:** `pnpm run start`
 
 ## ⚙️ Configuração (railway.json)
 
@@ -20,10 +20,10 @@ O projeto utiliza um arquivo `railway.json` na raiz para controlar o comportamen
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "npm run build"
+    "buildCommand": "pnpm run build"
   },
   "deploy": {
-    "startCommand": "npm run start",
+    "startCommand": "pnpm run start",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 5
   }

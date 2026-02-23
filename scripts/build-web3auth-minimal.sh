@@ -3,7 +3,7 @@
 echo "🔧 Build Web3Auth ULTRA-MINIMAL..."
 
 # Configurações AGGRESSIVAS para máxima redução
-npx esbuild public/assets/js/web3auth.minimal.ts \
+pnpm exec esbuild public/assets/js/web3auth.minimal.ts \
   --bundle \
   --format=esm \
   --target=es2022 \

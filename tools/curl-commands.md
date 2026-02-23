@@ -2,7 +2,7 @@
 
 ## Pré-requisitos
 
-1. **Servidor rodando**: `npm run dev` ou `npm run dev`
+1. **Servidor rodando**: `pnpm run dev` ou `pnpm run dev`
 2. **API Key configurada**: `export WOOVI_API_KEY='sua_chave_aqui'`
 
 ## 🧪 Teste Básico
@@ -170,7 +170,7 @@ done
 
 ## 💡 Dicas de Uso
 
-1. **Verifique o servidor**: Certifique-se de que `npm run dev` está rodando
+1. **Verifique o servidor**: Certifique-se de que `pnpm run dev` está rodando
 2. **Configure a API key**: `export WOOVI_API_KEY='sua_chave'`
 3. **Monitore os logs**: Veja os logs do servidor para detalhes
 4. **Use jq para formatação**: `brew install jq` para macOS

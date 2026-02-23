@@ -58,10 +58,10 @@ O motor do FlowPay impõe portões de validação absolutos.
 ## FLUXO OPERACIONAL
  
 ```text
-- BOOTSTRAP .................................. npm install
-- PROVISIONING ........................... npm run neo:cfg
-- DEVELOPMENT ..................... railway run npm run dev
-- PRODUCTION ................................ npm run build
+- BOOTSTRAP .................................. pnpm install
+- PROVISIONING ........................... pnpm run neo:cfg
+- DEVELOPMENT ..................... railway run pnpm run dev
+- PRODUCTION ................................ pnpm run build
 ```
  
 ────────────────────────────────────────
@@ -75,7 +75,7 @@ O FlowPay opera em **Closed Loop**. Use as ferramentas integradas:
 . COMMAND ............................. ACTION ............
 ...........................................................
 .                                                         .
-. npm run test ................. Finance Integrity Suite  .
+. pnpm run test ................. Finance Integrity Suite  .
 . make check .................. Health (API/Tunnel/RPC)   .
 . make logs ................... Audit Streaming (DB)      .
 .                                                         .

@@ -12,7 +12,7 @@
 ### Desenvolvimento
 
 ```bash
-npm run dev
+pnpm run dev
 # Acessar http://localhost:4321 (ou porta que aparecer)
 # CSS deve carregar automaticamente
 ```
@@ -21,10 +21,10 @@ npm run dev
 
 ```bash
 # Build primeiro
-npm run build
+pnpm run build
 
 # Preview (agora usa serve ao invés de astro preview)
-npm run preview
+pnpm run preview
 # Acessar http://localhost:4321
 ```
 
@@ -79,15 +79,15 @@ dist/css/            # CSS copiado (build)
 
 O adapter `@astrojs/node` não suporta `astro preview` nativamente. Por isso, o script `preview` foi alterado para usar `serve` diretamente no diretório `dist/`.
 
-## 🔧 Alternativa: Usar npm run dev
+## 🔧 Alternativa: Usar pnpm run dev
 
 Se quiser testar com todas as funcionalidades do Railway:
 
 ```bash
-npm run dev
+pnpm run dev
 # ou
 make dev-woovi
 ```
 
-Isso iniciará o npm run dev que simula o ambiente de produção.
+Isso iniciará o pnpm run dev que simula o ambiente de produção.
 

@@ -78,6 +78,6 @@ USDC_CONTRACT_ADDRESS=...
 ## 5. Próximos Passos (Imediato)
 
 1. Instalar dependências no FlowPay:
-    `npm install @metamask/smart-accounts-kit viem`
+    `pnpm install @metamask/smart-accounts-kit viem`
 2. Criar os arquivos de serviço vazios (`services/wallet/`, `services/settlement/`).
 3. Copiar e refatorar o código conforme mapeamento acima.

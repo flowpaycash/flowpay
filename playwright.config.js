@@ -5,13 +5,13 @@
 // Runs full user journeys against the running Astro dev server.
 //
 // Usage:
-//   npx playwright test                  # run all E2E tests
-//   npx playwright test --ui             # interactive UI mode
-//   npx playwright test --headed         # with browser visible
-//   npx playwright show-report          # open last HTML report
+//   pnpm exec playwright test             # run all E2E tests
+//   pnpm exec playwright test --ui        # interactive UI mode
+//   pnpm exec playwright test --headed    # with browser visible
+//   pnpm exec playwright show-report      # open last HTML report
 //
 // First time: install browsers with:
-//   npx playwright install --with-deps chromium
+//   pnpm exec playwright install --with-deps chromium
 // ════════════════════════════════════════════════════════════════
 
 const { defineConfig, devices } = require('@playwright/test');
@@ -69,7 +69,7 @@ module.exports = defineConfig({
     // if it is not already running. Remove this block if you
     // prefer to start the server manually before running tests.
     webServer: {
-        command: 'npm run dev',
+        command: 'pnpm run dev',
         url: 'http://localhost:4321',
         reuseExistingServer: !process.env.CI,
         timeout: 60_000,

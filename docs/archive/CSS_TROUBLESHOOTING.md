@@ -31,7 +31,7 @@ Deve mostrar:
 
 **Solução:** O Astro serve arquivos de `public/` automaticamente. Se não funcionar:
 
-1. Verificar se está usando `npm run dev` (não `make dev` diretamente)
+1. Verificar se está usando `pnpm run dev` (não `make dev` diretamente)
 2. Verificar console do navegador para erros 404
 3. Limpar cache do navegador (Ctrl+Shift+R ou Cmd+Shift+R)
 
@@ -41,10 +41,10 @@ Deve mostrar:
 
 ```bash
 # Build primeiro
-npm run build
+pnpm run build
 
 # Depois preview
-npm run preview
+pnpm run preview
 ```
 
 ### Problema: CSS não carrega em produção (Railway)
@@ -54,7 +54,7 @@ npm run preview
 ```toml
 [build]
   publish = "dist"
-  command = "npm run build"
+  command = "pnpm run build"
 ```
 
 ## 🧪 Teste Manual
@@ -62,7 +62,7 @@ npm run preview
 ### 1. Testar desenvolvimento
 
 ```bash
-npm run dev
+pnpm run dev
 # Acessar http://localhost:4321
 # Abrir DevTools > Network > Recarregar
 # Verificar se CSS retorna 200 OK
@@ -71,8 +71,8 @@ npm run dev
 ### 2. Testar build
 
 ```bash
-npm run build
-npm run preview
+pnpm run build
+pnpm run preview
 # Acessar http://localhost:4321
 # Verificar se CSS carrega
 ```
@@ -126,7 +126,7 @@ dist/
 ```bash
 # Limpar e rebuild
 rm -rf dist .astro
-npm run build
+pnpm run build
 ```
 
 ### 4. Servidor não está servindo arquivos estáticos

@@ -12,7 +12,7 @@ Account Abstraction (ERC-4337) para FlowPay Autonomous v3.
 - `sendUserOperation` (gasless) ou `sendTransaction` (fallback)
 - ERC-20 transfer via encodeCalls/encodeFunctionData
 
-**Dependência opcional:** `npm install @metamask/smart-accounts-kit` (sem ela, createWallet/executeTransaction indicam instalação).
+**Dependência opcional:** `pnpm install @metamask/smart-accounts-kit` (sem ela, createWallet/executeTransaction indicam instalação).
 
 **Variaveis:** `BUNDLER_URL` ou `INFURA_API_KEY`, `PRIVATE_KEY` ou `SERVICE_WALLET_PRIVATE_KEY`, `QUICKNODE_POLYGON_RPC` (ver `.env.example`).
 

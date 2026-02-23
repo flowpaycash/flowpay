@@ -9,7 +9,7 @@ if (typeof require === "undefined") {
 }
 import * as Sentry from "@sentry/astro";
 // Note: You must install @modelcontextprotocol/sdk to use this
-// npm install @modelcontextprotocol/sdk
+// pnpm install @modelcontextprotocol/sdk
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {

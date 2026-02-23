@@ -3,7 +3,7 @@
 echo "🔧 Build Web3Auth LIGHT (no-modal)..."
 
 # Configurações para versão light
-npx esbuild public/assets/js/web3auth.light.ts \
+pnpm exec esbuild public/assets/js/web3auth.light.ts \
   --bundle \
   --format=esm \
   --target=es2022 \

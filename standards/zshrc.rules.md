@@ -67,6 +67,6 @@ alias dcd='docker-compose down'
 
 scalar-api() {
   cd ~/CODIGOS/neo-dev/projects/scalar-api-starter
-  npm run "$@"
+  pnpm run "$@"
 }
 ```

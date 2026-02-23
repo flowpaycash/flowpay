@@ -28,7 +28,7 @@ ln -s ~/Projects/flowpay /Users/nettomello/neomello/01-neo-protocol-org/flowpay
 cd ~/Projects/flowpay
 
 # 5. Testar
-npm run dev
+pnpm run dev
 ```
 
 ### Opção 2: Usar Docker (Alternativa)
@@ -41,10 +41,10 @@ cat > Dockerfile <<'EOF'
 FROM node:22-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN pnpm install
 COPY . .
 EXPOSE 4321
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]
 EOF
 
 # Criar docker-compose.yml

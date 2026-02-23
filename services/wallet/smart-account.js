@@ -53,7 +53,7 @@ function normalizePrivateKey(raw) {
  * Portado de: delegation-toolkit/integrate-token-smart-accounts.ts
  * (toMetaMaskSmartAccount, createInfuraBundlerClient, sendUserOperation/sendTransaction).
  *
- * Requer opcionalmente: npm install @metamask/smart-accounts-kit
+ * Requer opcionalmente: pnpm install @metamask/smart-accounts-kit
  * Variaveis: BUNDLER_URL ou INFURA_API_KEY, PRIVATE_KEY ou SERVICE_WALLET_PRIVATE_KEY.
  */
 class SmartWalletService {
@@ -123,7 +123,7 @@ class SmartWalletService {
     } catch (e) {
       if (e.code === 'ERR_MODULE_NOT_FOUND' || e.message?.includes('smart-accounts-kit')) {
         throw new Error(
-          'SmartWalletService: instale @metamask/smart-accounts-kit (npm install @metamask/smart-accounts-kit) e configure INFURA_API_KEY ou BUNDLER_URL.'
+          'SmartWalletService: instale @metamask/smart-accounts-kit (pnpm install @metamask/smart-accounts-kit) e configure INFURA_API_KEY ou BUNDLER_URL.'
         );
       }
       throw e;

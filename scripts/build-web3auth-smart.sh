@@ -32,7 +32,7 @@ STUB_PATH="$STUB_DIR/empty-module.js"
 # - @segment/analytics-next: substituído por stub vazio (analytics, não crítico)
 # - viem: bundado (necessário para operações blockchain)
 # - buffer: bundado (polyfill necessário)
-npx esbuild public/assets/js/web3auth.smart.ts \
+pnpm exec esbuild public/assets/js/web3auth.smart.ts \
   --bundle \
   --format=esm \
   --target=es2022 \
