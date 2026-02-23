@@ -509,7 +509,11 @@
           );
           setH(
             "h-nexus",
-            nexusState === "ok" ? "Online" : "Offline",
+            nexusState === "ok"
+              ? "Online"
+              : nexusState === "disabled"
+                ? "Desativado"
+                : "Offline",
             nexusState === "ok" ? "ok" : "warn"
           );
         } catch {

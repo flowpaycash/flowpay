@@ -24,10 +24,15 @@ export const GET = async () => {
     URL: Boolean(process.env.URL || process.env.RAILWAY_PUBLIC_DOMAIN),
     NODE_ENV: Boolean(process.env.NODE_ENV),
     NEXUS_SECRET: Boolean(process.env.NEXUS_SECRET),
+    NEXUS_BRIDGE_ENABLED: process.env.NEXUS_BRIDGE_ENABLED !== "false",
   };
 
   const email = envStatus.RESEND_API_KEY ? "ok" : "fail";
-  const nexus = envStatus.NEXUS_SECRET ? "ok" : "offline";
+  const nexus = !envStatus.NEXUS_BRIDGE_ENABLED
+    ? "disabled"
+    : envStatus.NEXUS_SECRET
+      ? "ok"
+      : "offline";
 
   const responseBody = {
     status: db === "ok" ? "ok" : "degraded",

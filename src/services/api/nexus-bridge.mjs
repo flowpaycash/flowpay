@@ -9,14 +9,32 @@ import { secureLog } from './config.mjs';
 export async function notifyNexus(eventName, payload) {
     const NEXUS_BASE_URL = process.env.NEXUS_API_URL || 'https://nexus.neoprotocol.space/api';
     const NEXUS_SECRET = process.env.NEXUS_SECRET;
+    const bridgeEnabled = process.env.NEXUS_BRIDGE_ENABLED !== 'false';
+
+    if (!bridgeEnabled) {
+        secureLog('info', 'Nexus Bridge: disabled by NEXUS_BRIDGE_ENABLED=false. Notification skipped.', {
+            eventName
+        });
+        return { success: false, skipped: true, reason: 'bridge_disabled' };
+    }
 
     if (!NEXUS_SECRET) {
         secureLog('warn', 'Nexus Bridge: NEXUS_SECRET not found in environment. Notification skipped.');
         return { success: false, error: 'Missing NEXUS_SECRET' };
     }
 
-    // Endpoint específico para o webhook do FlowPay no Nexus
-    const endpoint = process.env.NEXUS_WEBHOOK_URL || 'https://nexus.neoprotocol.space/api/webhooks/flowpay';
+    // Canonical ingress endpoint for { event, payload } envelope.
+    let endpoint = process.env.NEXUS_WEBHOOK_URL || `${NEXUS_BASE_URL.replace(/\/$/, '')}/events`;
+    // Backward compatibility: if env is still set to legacy flowpay webhook path,
+    // rewrite to /events so payload schema matches Nexus contract.
+    if (endpoint.includes('/api/webhooks/flowpay')) {
+        const rewritten = endpoint.replace('/api/webhooks/flowpay', '/api/events');
+        secureLog('warn', 'Nexus Bridge: legacy endpoint detected, rewriting to /api/events', {
+            from: endpoint,
+            to: rewritten
+        });
+        endpoint = rewritten;
+    }
     const body = JSON.stringify({
         event: eventName,
         payload: payload
