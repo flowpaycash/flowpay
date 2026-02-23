@@ -1,7 +1,99 @@
 import * as Sentry from "@sentry/astro";
-import { getOrder } from "../../../services/database/sqlite.mjs";
+import {
+  getOrder,
+  updateOrderStatus,
+} from "../../../services/database/sqlite.mjs";
 import { getCorsHeaders, secureLog } from "../../../services/api/config.mjs";
 import { applyRateLimit } from "../../../services/api/rate-limiter.mjs";
+
+const WOOVI_PAID_STATUSES = new Set([
+  "COMPLETED",
+  "PAID",
+  "CONFIRMED",
+  "RECEIVED",
+]);
+
+async function syncCreatedOrderFromWoovi(chargeId) {
+  const apiKey = process.env.WOOVI_API_KEY?.trim();
+  const apiUrl = (process.env.WOOVI_API_URL || "https://api.woovi.com").replace(
+    /\/$/,
+    ""
+  );
+
+  if (!apiKey) {
+    return { synced: false };
+  }
+
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/v1/charge/${encodeURIComponent(chargeId)}`,
+      {
+        method: "GET",
+        headers: { Authorization: apiKey },
+        signal: AbortSignal.timeout(8000),
+      }
+    );
+
+    if (!response.ok) {
+      return { synced: false, httpStatus: response.status };
+    }
+
+    const payload = await response.json();
+    const charge = payload?.charge || null;
+    const providerStatus = String(charge?.status || "").toUpperCase();
+
+    if (!WOOVI_PAID_STATUSES.has(providerStatus)) {
+      return { synced: false, providerStatus };
+    }
+
+    updateOrderStatus(chargeId, "PIX_PAID", {
+      paid_at: new Date(charge?.paidAt || Date.now()).toISOString(),
+    });
+    updateOrderStatus(chargeId, "PENDING_REVIEW");
+
+    secureLog("info", "Charge reconciliada via consulta Woovi", {
+      chargeId,
+      providerStatus,
+    });
+
+    // Mantém trilha do funil de receita mesmo quando webhook não atualiza.
+    try {
+      const { notifyNexus } = await import(
+        "../../../services/api/nexus-bridge.mjs"
+      );
+      notifyNexus("PAYMENT_RECEIVED", {
+        transactionId: chargeId,
+        orderId: chargeId,
+        amount: Number(charge?.value || 0) / 100,
+        currency: "BRL",
+        metadata: {
+          source: "flowpay_charge_polling_reconciliation",
+          providerStatus,
+          providerIdentifier: charge?.identifier || null,
+          paidAt: charge?.paidAt || null,
+        },
+      }).catch((error) => {
+        secureLog("warn", "Falha ao notificar Nexus no fallback de charge", {
+          chargeId,
+          error: error.message,
+        });
+      });
+    } catch (error) {
+      secureLog("warn", "Nexus bridge indisponivel no fallback de charge", {
+        chargeId,
+        error: error.message,
+      });
+    }
+
+    return { synced: true, providerStatus };
+  } catch (error) {
+    secureLog("warn", "Erro ao consultar Woovi em /api/charge/[id]", {
+      chargeId,
+      error: error.message,
+    });
+    return { synced: false, error: error.message };
+  }
+}
 
 export const GET = async ({ params, request, clientAddress }) => {
   const headers = getCorsHeaders({
@@ -35,7 +127,7 @@ export const GET = async ({ params, request, clientAddress }) => {
   });
 
   try {
-    const order = getOrder(id);
+    let order = getOrder(id);
 
     if (!order) {
       Sentry.addBreadcrumb({
@@ -48,6 +140,13 @@ export const GET = async ({ params, request, clientAddress }) => {
         status: 404,
         headers: { ...headers, "Content-Type": "application/json" },
       });
+    }
+
+    if (order.status === "CREATED") {
+      const reconcile = await syncCreatedOrderFromWoovi(id);
+      if (reconcile.synced) {
+        order = getOrder(id) || order;
+      }
     }
 
     Sentry.addBreadcrumb({

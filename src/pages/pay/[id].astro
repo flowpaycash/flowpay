@@ -681,7 +681,7 @@ const creatorName = button?.user_name || 'FlowPay';
 
       // Poll for payment status
       let pollCount = 0;
-      const maxPolls = 120; // 6 minutes
+      const maxPolls = 400; // ~20 minutes
       const pollInterval = setInterval(async () => {
         pollCount++;
         if (pollCount > maxPolls) {
@@ -694,9 +694,14 @@ const creatorName = button?.user_name || 'FlowPay';
           const res = await fetch(`/api/charge/${transactionId}`);
           const data = await res.json();
 
-          if (data.status === 'PIX_PAID' || data.status === 'PENDING_REVIEW' || data.status === 'APPROVED') {
+          if (data.status === 'PIX_PAID' || data.status === 'PENDING_REVIEW' || data.status === 'APPROVED' || data.status === 'SETTLED') {
+            clearInterval(pollInterval);
             if (statusBar) statusBar.classList.add('paid');
-            if (statusText) statusText.textContent = 'Pagamento recebido! Processando...';
+            if (statusText) statusText.textContent = 'Pagamento confirmado!';
+            if (qrState) qrState.hidden = true;
+            const successState = document.getElementById('pix-success-state');
+            if (successState) successState.hidden = false;
+            return;
           }
 
           if (data.status === 'COMPLETED') {

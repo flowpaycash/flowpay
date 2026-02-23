@@ -8,6 +8,78 @@ import {
 } from "../../services/database/sqlite.mjs";
 import crypto from "crypto";
 
+const WEBHOOK_SIGNATURE_HEADERS = [
+  "x-woovi-signature",
+  "x-openpix-signature",
+  "x-webhook-signature",
+  "x-signature",
+];
+
+const WOOVI_PAID_STATUSES = new Set([
+  "COMPLETED",
+  "PAID",
+  "CONFIRMED",
+  "RECEIVED",
+]);
+
+function normalizeSignature(signature) {
+  if (!signature || typeof signature !== "string") return "";
+  return signature.replace(/^sha256=/i, "").trim();
+}
+
+function timingSafeEqualString(a, b) {
+  if (!a || !b) return false;
+  const aBuffer = Buffer.from(a, "utf8");
+  const bBuffer = Buffer.from(b, "utf8");
+  return (
+    aBuffer.length === bBuffer.length &&
+    crypto.timingSafeEqual(aBuffer, bBuffer)
+  );
+}
+
+async function verifyPaidStatusFromWoovi(correlationID) {
+  const apiKey = process.env.WOOVI_API_KEY?.trim();
+  const apiUrl = (process.env.WOOVI_API_URL || "https://api.woovi.com").replace(
+    /\/$/,
+    ""
+  );
+
+  if (!apiKey || !correlationID) {
+    return { verified: false };
+  }
+
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/v1/charge/${encodeURIComponent(correlationID)}`,
+      {
+        method: "GET",
+        headers: { Authorization: apiKey },
+        signal: AbortSignal.timeout(8000),
+      }
+    );
+
+    if (!response.ok) {
+      return { verified: false, httpStatus: response.status };
+    }
+
+    const payload = await response.json();
+    const charge = payload?.charge || null;
+    const status = String(charge?.status || "").toUpperCase();
+
+    return {
+      verified: WOOVI_PAID_STATUSES.has(status),
+      status,
+      charge,
+    };
+  } catch (error) {
+    secureLog("warn", "Woovi fallback verification failed", {
+      correlationID,
+      error: error.message,
+    });
+    return { verified: false, error: error.message };
+  }
+}
+
 export const POST = async ({ request, clientAddress }) => {
   const headers = getCorsHeaders({
     headers: Object.fromEntries(request.headers),
@@ -63,13 +135,35 @@ export const POST = async ({ request, clientAddress }) => {
     }
 
     const rawBody = await request.text();
-    const signature = request.headers.get("x-woovi-signature");
+    const signatureHeaderUsed = WEBHOOK_SIGNATURE_HEADERS.find((headerName) =>
+      request.headers.get(headerName)
+    );
+    const signature = normalizeSignature(
+      signatureHeaderUsed ? request.headers.get(signatureHeaderUsed) : null
+    );
     const WEBHOOK_SECRET = process.env.WOOVI_WEBHOOK_SECRET;
 
-    if (!signature || !WEBHOOK_SECRET) {
+    let payload = null;
+    try {
+      payload = JSON.parse(rawBody);
+    } catch (parseError) {
+      secureLog("warn", "Webhook com payload JSON invalido", {
+        error: parseError.message,
+      });
+      return new Response(JSON.stringify({ error: "Invalid payload" }), {
+        status: 400,
+        headers: { ...headers, "Content-Type": "application/json" },
+      });
+    }
+
+    const eventType = payload?.event;
+    const chargeFromPayload = payload?.data?.charge || {};
+    const correlationIDFromPayload = chargeFromPayload?.correlationID;
+
+    if (!WEBHOOK_SECRET) {
       secureLog(
-        "info",
-        "Astro Webhook: Ping ou falta de secret - retornando 200 para validacao"
+        "warn",
+        "Webhook sem WOOVI_WEBHOOK_SECRET configurado - retornando 200 para validacao"
       );
       return new Response(JSON.stringify({ status: "ready" }), {
         status: 200,
@@ -77,52 +171,94 @@ export const POST = async ({ request, clientAddress }) => {
       });
     }
 
-    // HMAC validation (timing-safe)
-    const hmac = crypto.createHmac("sha256", WEBHOOK_SECRET);
-    const digest = hmac.update(rawBody).digest("base64");
+    let webhookVerified = false;
+    let verificationMethod = "none";
+    let fallbackCharge = null;
 
-    const sigBuffer = Buffer.from(signature);
-    const digestBuffer = Buffer.from(digest);
+    if (signature) {
+      // HMAC validation with support for Base64, Base64URL and HEX variants.
+      const digestBase64 = crypto
+        .createHmac("sha256", WEBHOOK_SECRET)
+        .update(rawBody)
+        .digest("base64");
+      const digestBase64Url = crypto
+        .createHmac("sha256", WEBHOOK_SECRET)
+        .update(rawBody)
+        .digest("base64url");
+      const digestHex = crypto
+        .createHmac("sha256", WEBHOOK_SECRET)
+        .update(rawBody)
+        .digest("hex");
 
-    if (
-      sigBuffer.length !== digestBuffer.length ||
-      !crypto.timingSafeEqual(sigBuffer, digestBuffer)
-    ) {
-      secureLog("error", "Astro Webhook: Invalid Signature");
-      Sentry.withScope((scope) => {
-        scope.setLevel("error");
-        scope.setTag("security.violation", "invalid_hmac_signature");
-        scope.setTag("source", "woovi_webhook");
-        scope.setContext("request", {
-          ip: normalizedIP,
-          signature_received: signature
-            ? signature.substring(0, 10) + "..."
-            : "none",
-        });
-        Sentry.captureMessage(
-          "Woovi Webhook: assinatura HMAC invalida — possivel tentativa de forja",
-          "error"
-        );
-      });
-      return new Response(JSON.stringify({ error: "Invalid signature" }), {
-        status: 401,
-        headers,
-      });
+      if (
+        timingSafeEqualString(signature, digestBase64) ||
+        timingSafeEqualString(signature, digestBase64Url) ||
+        timingSafeEqualString(signature, digestHex)
+      ) {
+        webhookVerified = true;
+        verificationMethod = `hmac:${signatureHeaderUsed}`;
+      }
     }
 
-    const { data, event: eventType } = JSON.parse(rawBody);
-    const charge = data.charge;
-    const correlationID = charge.correlationID;
+    // Fallback seguro: se assinatura falhar/ausente, valida no provedor oficial.
+    if (!webhookVerified && correlationIDFromPayload) {
+      const fallbackCheck = await verifyPaidStatusFromWoovi(
+        correlationIDFromPayload
+      );
+      if (fallbackCheck.verified) {
+        webhookVerified = true;
+        verificationMethod = "provider-recheck";
+        fallbackCharge = fallbackCheck.charge;
+      }
+    }
+
+    if (!webhookVerified) {
+      if (!signature && !eventType) {
+        secureLog(
+          "info",
+          "Astro Webhook: Ping sem assinatura - retornando 200 para validacao"
+        );
+        return new Response(JSON.stringify({ status: "ready" }), {
+          status: 200,
+          headers: { ...headers, "Content-Type": "application/json" },
+        });
+      }
+
+      secureLog("error", "Astro Webhook: assinatura ausente/invalida", {
+        signature_header: signatureHeaderUsed || "none",
+        signature_preview: signature ? `${signature.slice(0, 10)}...` : "none",
+        eventType: eventType || "unknown",
+        correlationID: correlationIDFromPayload || "unknown",
+        available_x_headers: Array.from(request.headers.keys())
+          .filter((headerName) => headerName.startsWith("x-"))
+          .slice(0, 12),
+      });
+
+      return new Response(
+        JSON.stringify({ error: "Unauthorized webhook payload" }),
+        {
+          status: 401,
+          headers: { ...headers, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const charge = {
+      ...(chargeFromPayload || {}),
+      ...(fallbackCharge || {}),
+    };
+    const correlationID = charge?.correlationID || correlationIDFromPayload;
 
     secureLog("info", `Astro Webhook recebido: ${eventType}`, {
       correlationID,
+      verificationMethod,
     });
 
     Sentry.addBreadcrumb({
       category: "webhook.woovi",
       message: `Evento recebido: ${eventType}`,
       level: "info",
-      data: { eventType, correlationID },
+      data: { eventType, correlationID, verificationMethod },
     });
 
     if (eventType === "charge.paid" || eventType === "charge.confirmed") {

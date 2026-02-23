@@ -415,7 +415,7 @@
 
           // System info
           document.getElementById("sys-node").textContent =
-            data.node || process?.version || "—";
+            data.node || "—";
           document.getElementById("sys-env").textContent =
             data.env || "production";
           document.getElementById("sys-uptime").textContent = data.uptime
@@ -491,21 +491,26 @@
             cache: "no-store",
           });
           const data = await res.json();
+          const dbState = data.db || (data.status === "ok" ? "ok" : "fail");
+          const emailState =
+            data.email || (data.env_status?.RESEND_API_KEY ? "ok" : "fail");
+          const nexusState =
+            data.nexus || (data.env_status?.NEXUS_SECRET ? "ok" : "offline");
 
           setH(
             "h-db",
-            data.db === "ok" ? "Conectado" : "Falha",
-            data.db === "ok" ? "ok" : "err"
+            dbState === "ok" ? "Conectado" : "Falha",
+            dbState === "ok" ? "ok" : "err"
           );
           setH(
             "h-email",
-            data.email === "ok" ? "Configurado" : "Falha",
-            data.email === "ok" ? "ok" : "warn"
+            emailState === "ok" ? "Configurado" : "Falha",
+            emailState === "ok" ? "ok" : "warn"
           );
           setH(
             "h-nexus",
-            data.nexus === "ok" ? "Online" : "Offline",
-            data.nexus === "ok" ? "ok" : "warn"
+            nexusState === "ok" ? "Online" : "Offline",
+            nexusState === "ok" ? "ok" : "warn"
           );
         } catch {
           ["h-db", "h-email", "h-nexus"].forEach((id) =>
