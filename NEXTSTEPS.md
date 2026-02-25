@@ -45,95 +45,66 @@
 
 ---
 
-## SPRINT 2 · ESTABILIZAÇÃO
+## SPRINT 2 · ESTABILIZAÇÃO & UI/UX
 
 ### ✅ E1 · Mapear todos os estados de erro no frontend
 **CONCLUÍDO (PR #18)**
-- Estados de NETWORK_ERROR e TIMEOUT agora possuem UX dedicada.
-- Implementado fallback de formulário local para evitar recarregamento de página.
-- Adicionado CODEOWNERS para proteção de arquivos críticos.
-
-**Prompt para o agente:**
-```
-Liste todos os status possíveis que uma order pode ter 
-no sqlite.mjs. Para cada um, me diz se existe handler 
-no frontend de pay/[id].astro. Formato: 
-STATUS | EXISTE HANDLER | COMPORTAMENTO ATUAL
-```
-
----
 
 ### ✅ E2 · Rate Limiting no Cadastro
 **CONCLUÍDO (PR #19)**
-- Implementado `rate-limiter-flexible` com Redis.
-- Limites independentes por IP e Email.
-- Fail-open garantido em caso de indisponibilidade do Redis.
-
----
 
 ### ✅ E3 · TTL do Magic Link visível pro usuário
 **CONCLUÍDO (PR #19)**
-- Template de e-mail atualizado para exibir expiração em minutos.
-- `magic-verify.js` com mensagens de erro claras para tokens expirados.
-
----
 
 ### ✅ E4 · Verificar Redis como fonte primária no magic-verify.js
 **CONCLUÍDO (PR #19)**
-- `magic-verify.js` agora consulta o Redis antes do SQLite (Redis-First).
-- TTL nativo do Redis gerencia expiração sem necessidade de cleanup manual.
+
+### ✅ E5 · Mobile-First Bento Experience & Infrastructure Fixes
+**CONCLUÍDO (PR #20)**
+- Refatorada página `/para-quem` com layout **Bento Grid** responsivo e premium.
+- Implementado adapter de **Light Theme** para o Navbar (Acqua Glassmorphism).
+- Corrigida compatibilidade com **Web3Auth v9** (`privateKeyProvider`).
+- Resolvidos warnings de ESM em arquivos de configuração (`jest`, `playwright`).
+- Resolvidos warnings globais no `admin.js` (`window['viewTransaction']`).
+- Otimizado script de build para evitar **OOM (Out of Memory)** na Railway.
 
 ---
 
-## SPRINT 3 · ESCALA
+## SPRINT 3 · ESCALA & MÉTRICAS
 
-### 🟢 A1 · Migrar Polling → Server-Sent Events (SSE)
-**Polling a cada 3s funciona, mas não escala com volume.**
-
-```
-Threshold para migrar: ~50 checkouts simultâneos
-Implementação: GET /api/charge/[id]/stream (SSE)
-Frontend: EventSource API (nativo, sem lib)
-Fallback: manter polling como fallback se SSE falhar
-```
-
-**Não é urgente. É o próximo salto de arquitetura.**
+### ✅ A3 · Notificação por E-mail para o Vendedor
+**CONCLUÍDO (PR #20)**
+- Implementado disparo automático de e-mail para o vendedor ao concluir pagamento (`vendedor-notificacao.mjs`).
+- Template dinâmico com valor, nome do produto e nome do comprador.
 
 ---
 
-### 🟢 A2 · Dashboard de Métricas do Vendedor
-**Hoje o vendedor não vê nada além dos botões criados.**
+### 🔴 A2 · Dashboard de Métricas do Vendedor (Painel Premium)
+**Próximo passo imediato para fechar o ciclo de autogestão.**
 
 ```
-Métricas mínimas viáveis:
-- Total recebido (BRL)
-- Número de pagamentos confirmados
-- Taxa de conversão (gerou PIX vs confirmou)
-- Últimas transações com status
+[ ] Implementar API de métricas agregadas (Total 24h/Mensal, Conversão)
+[ ] Criar componente de visualização de dados (Charts simples ou Grid de Stats)
+[ ] Permitir download de relatório financeiro em JSON/CSV
+[ ] Integrar com o layout Bento Grid para manter consistência visual
 ```
 
 ---
 
-### 🟢 A3 · Webhook de Notificação para o Vendedor
-**Hoje só o comprador recebe email. O vendedor não é notificado.**
-
-```
-[ ] Ao COMPLETED: disparar email ao vendedor via Resend
-    template: "Novo pagamento recebido · R$ X"
-[ ] Futuro: webhook configurável pelo vendedor (URL própria)
-```
+### ✅ A1 · Migrar Polling → Server-Sent Events (SSE)
+**CONCLUÍDO (PR #21)**
+- Implementado endpoint `/api/charge/[id]/stream` com Redis Pub/Sub.
+- Frontend agora usa `EventSource` com fallback automático para polling 3s.
+- Reduzido overhead de rede e latência na confirmação de pagamento.
 
 ---
 
 ### 🟢 A4 · Auto-aprovação com KYC mínimo
-**Hoje AUTO_APPROVE=true aprova qualquer email. Sem critério de confiança.**
+**Hoje AUTO_APPROVE=true aprova qualquer email.**
 
 ```
-Critérios possíveis (escolher um):
-- Email verificado (clicou no link de confirmação)
-- CPF válido no cadastro
-- Allowlist de domínios corporativos
-- Score baseado em comportamento (futuro)
+[ ] Adicionar verificação de CPF real na API de registro
+[ ] Integrar com serviço de validação de e-mail (evitar descartáveis)
 ```
 
 ---
@@ -141,37 +112,27 @@ Critérios possíveis (escolher um):
 ## BACKLOG · SEM URGÊNCIA
 
 ### ⬜ B1 · Migração SQLite → Postgres
-**Só faz sentido com múltiplas instâncias em paralelo.**
 WAL + Railway NVMe aguenta o estágio atual.
-Trigger: quando Railway precisar de múltiplos workers.
 
 ---
 
 ### ⬜ B2 · SDK FlowPay para desenvolvedores
-**Hoje integração é via link ou API REST direta.**
-SDK npm que abstrai create-charge + polling em uma chamada.
+SDK npm que abstrai create-charge + polling.
 
 ---
 
 ### ⬜ B3 · Página de status pública
-**status.flowpay.cash mostrando uptime de Woovi, Redis, Railway.**
-Reduz suporte quando há incidente externo.
+status.flowpay.cash mostrando uptime de Woovi, Redis, Railway.
 
 ---
 
 ## MAPA DE DEPENDÊNCIAS
 
 ```
-S1 (smoke test)
-  └→ S2 (ativar auto-approve)
-       └→ E2 (rate limit cadastro)
-
-E4 (Redis no verify)
-  └→ A1 (SSE)
-
-E1 (mapear erros)
-  └→ A3 (notificação vendedor)
-       └→ A2 (dashboard)
+S1 (smoke test) ──→ S2 (ativar auto-approve)
+                      │
+                      └→ A2 (Dashboard Métricas)
+                           └→ A1 (SSE)
 ```
 
 ---
@@ -179,8 +140,8 @@ E1 (mapear erros)
 ## RESUMO EXECUTIVO
 
 ```
-HOJE        → ✅ S1 + S2 (smoke test + ativar auto-approve)
-ESTA SEMANA → ✅ E1 + E2 + E3 + E4 (erros, rate limit, TTL, Redis-verify)
-PRÓXIMAS    → 🟡 A3 (email vendedor) + 🟢 A2 (dashboard métricas)
-TRIMESTRE   → 🟢 A1 (SSE)
+HOJE             → ✅ Bento Grid + Infra Fixes + Seller Email
+ESTA SEMANA      → 🔴 A2 (Dashboard de Métricas / Painel Vendedor)
+PRÓXIMAS         → 🟡 A1 (SSE) + 🟢 A4 (KYC Básico)
+TRIMESTRE        → 🟢 Expansão para Multichain (Base/Optimism)
 ```

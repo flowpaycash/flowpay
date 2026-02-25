@@ -29,7 +29,15 @@ function createRedisClient() {
         });
 
         client.on('connect', () => {
-            secureLog('info', 'Redis client connected to the network');
+            secureLog('info', 'Redis client connecting...');
+        });
+
+        client.on('ready', () => {
+            secureLog('info', 'Redis client ready and synchronized');
+        });
+
+        client.on('reconnecting', () => {
+            secureLog('warn', 'Redis client reconnecting...');
         });
 
         return client;

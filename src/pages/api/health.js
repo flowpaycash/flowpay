@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/astro";
 import { getDatabase } from "../../services/database/sqlite.mjs";
+import { redis } from "../../services/api/redis-client.mjs";
 import { getCapabilityStatus } from "../../services/compliance/capability-status.mjs";
 
 export const GET = async () => {
@@ -28,6 +29,7 @@ export const GET = async () => {
     NEXUS_BRIDGE_ENABLED: process.env.NEXUS_BRIDGE_ENABLED !== "false",
   };
 
+  const redisStatus = !redis ? "disabled" : redis.status === "ready" ? "ok" : redis.status;
   const email = envStatus.RESEND_API_KEY ? "ok" : "fail";
   const nexus = !envStatus.NEXUS_BRIDGE_ENABLED
     ? "disabled"
@@ -36,9 +38,10 @@ export const GET = async () => {
       : "offline";
 
   const responseBody = {
-    status: db === "ok" ? "ok" : "degraded",
+    status: (db === "ok" && (redisStatus === "ok" || redisStatus === "disabled")) ? "ok" : "degraded",
     time: new Date().toISOString(),
     db,
+    redis: redisStatus,
     email,
     nexus,
     node: process.version,

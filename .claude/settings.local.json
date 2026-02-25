@@ -41,7 +41,8 @@
       "Bash(gh label:*)",
       "Bash(xargs cat:*)",
       "Bash(git check-ignore:*)",
-      "Bash(node --version:*)"
+      "Bash(node --version:*)",
+      "Bash(git rebase:*)"
     ]
   }
 }

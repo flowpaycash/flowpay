@@ -1,6 +1,7 @@
 import Database from "better-sqlite3";
 import * as fs from "fs";
 import * as path from "path";
+import { redis } from "../api/redis-client.mjs";
 import { createError, ERROR_TYPES } from "../api/error-handler.mjs";
 
 // 🏛️ AUTONOMOUS DATABASE PATH RESOLUTION
@@ -361,8 +362,16 @@ export function updateOrderStatus(charge_id, status, extra) {
       `);
 
         const info = stmt.run(...values);
-        if (info.changes === 0) {
-            // Order update passed but no rows changed
+
+        // 🚀 NOTIFY SSE via Redis Pub/Sub
+        if (info.changes > 0 && redis) {
+            redis.publish(`charge_update:${charge_id}`, JSON.stringify({
+                charge_id,
+                status,
+                updated_at: new Date().toISOString()
+            })).catch(err => {
+                // Silently fail if redis publish fails
+            });
         }
     });
 }
