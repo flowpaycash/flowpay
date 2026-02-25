@@ -1,11 +1,18 @@
 ---
-
+import { Image } from "astro:assets";
+import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
 ---
 
 <section id="para-quem" class="forwhom-section">
   <div class="forwhom-container">
     <h2 class="forwhom-title">
-      Pra quem é o <span class="gradient-text">FlowPay</span>?
+      Pra quem é o <Image
+        src={headerLogo}
+        alt="FlowPay"
+        class="title-logo"
+        height={44}
+        loading="lazy"
+      />?
     </h2>
 
     <div class="forwhom-table">
@@ -84,11 +91,13 @@
     text-align: center;
   }
 
-  .gradient-text {
-    background: linear-gradient(90deg, #ff007a 0%, #ff4da6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .title-logo {
+    display: inline-block;
+    height: 0.85em;
+    width: auto;
+    vertical-align: middle;
+    margin-bottom: 0.1em;
+    filter: brightness(1.05) drop-shadow(0 0 8px rgba(255, 0, 122, 0.25));
   }
 
   .forwhom-table {
