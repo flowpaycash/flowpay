@@ -1,15 +1,33 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { Image } from 'astro:assets';
-import flowpayLogo from '../../public/img/flowpay-logo.png';
+import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import flowpayLogo from "../assets/img/flowpay-logo.png";
 ---
 
-<Layout title="Dashboard — FlowPay" description="Crie botões de pagamento com PIX e cripto." noindex={true}>
+<Layout
+  title="Dashboard — FlowPay"
+  description="Crie botões de pagamento com PIX e cripto."
+  noindex={true}
+>
   <main class="dash-page">
     <div class="dash-bg-glow"></div>
 
-    <a href="/" class="back-home-btn" id="back-home-link" aria-label="Voltar para a home">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <a
+      href="/"
+      class="back-home-btn"
+      id="back-home-link"
+      aria-label="Voltar para a home"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
       Voltar
@@ -19,17 +37,37 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
     <div id="screen-auth" class="screen active">
       <div class="dash-card auth-card">
         <a href="/" class="dash-logo-link" aria-label="Voltar para a home">
-          <Image src={flowpayLogo} alt="FlowPay" class="dash-logo" height={80} loading="eager" />
+          <Image
+            src={flowpayLogo}
+            alt="FlowPay"
+            class="dash-logo"
+            height={80}
+            loading="eager"
+          />
         </a>
-        <h1 class="dash-title">Área do <span class="gradient-text">Vendedor</span></h1>
-        <p class="dash-sub">Digite seu e-mail cadastrado para acessar o painel.</p>
+        <h1 class="dash-title">
+          Área do <span class="gradient-text">Vendedor</span>
+        </h1>
+        <p class="dash-sub">
+          Digite seu e-mail cadastrado para acessar o painel.
+        </p>
         <form id="auth-form" class="auth-form" novalidate>
-          <input type="email" id="auth-email" placeholder="seu@email.com" required autocomplete="email" />
+          <input
+            type="email"
+            id="auth-email"
+            placeholder="seu@email.com"
+            required
+            autocomplete="email"
+          />
           <div id="auth-success" class="msg-success" hidden></div>
           <div id="auth-error" class="msg-error" hidden></div>
-          <button type="submit" class="btn-primary" id="auth-btn">Acessar painel</button>
+          <button type="submit" class="btn-primary" id="auth-btn"
+            >Acessar painel</button
+          >
         </form>
-        <p class="register-hint">Não tem conta? <a href="/registro">Cadastre-se</a></p>
+        <p class="register-hint">
+          Não tem conta? <a href="/registro">Cadastre-se</a>
+        </p>
       </div>
     </div>
 
@@ -38,7 +76,10 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
       <div class="dash-card center-card">
         <div class="status-icon">⏳</div>
         <h2>Cadastro em análise</h2>
-        <p>Sua conta está aguardando aprovação pela nossa equipe. Você receberá uma resposta em até 24h.</p>
+        <p>
+          Sua conta está aguardando aprovação pela nossa equipe. Você receberá
+          uma resposta em até 24h.
+        </p>
         <a href="/" class="btn-ghost">Voltar ao início</a>
       </div>
     </div>
@@ -48,7 +89,10 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
       <div class="dash-card center-card">
         <div class="status-icon">❌</div>
         <h2>Cadastro não aprovado</h2>
-        <p>Seu cadastro não foi aprovado. Entre em contato com o suporte para mais informações.</p>
+        <p>
+          Seu cadastro não foi aprovado. Entre em contato com o suporte para
+          mais informações.
+        </p>
         <a href="/" class="btn-ghost">Voltar ao início</a>
       </div>
     </div>
@@ -57,7 +101,13 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
     <div id="screen-dashboard" class="screen" hidden>
       <header class="dash-header">
         <div class="dash-brand">
-          <Image src={flowpayLogo} alt="FlowPay" class="dash-logo-sm" height={32} loading="eager" />
+          <Image
+            src={flowpayLogo}
+            alt="FlowPay"
+            class="dash-logo-sm"
+            height={32}
+            loading="eager"
+          />
           <span class="dash-title-sm">FlowPay</span>
         </div>
         <div class="dash-user-info">
@@ -67,27 +117,62 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
       </header>
 
       <div class="dash-content">
+        <!-- Stats overview (A2) -->
+        <section class="dash-section stats-grid">
+          <div class="dash-card stat-card">
+            <span class="stat-label">Total Recebido</span>
+            <div class="stat-value" id="stat-total-volume">R$ 0,00</div>
+          </div>
+          <div class="dash-card stat-card">
+            <span class="stat-label">Vendas</span>
+            <div class="stat-value" id="stat-paid-count">0</div>
+          </div>
+          <div class="dash-card stat-card">
+            <span class="stat-label">Conversão</span>
+            <div class="stat-value" id="stat-conversion">0%</div>
+          </div>
+        </section>
+
         <!-- Create button form -->
         <section class="dash-section">
           <h2 class="section-title">Criar botão de pagamento</h2>
-          <p class="section-sub">Configure seu link e compartilhe com seus clientes para receber PIX ou cripto.</p>
+          <p class="section-sub">
+            Configure seu link e compartilhe com seus clientes para receber PIX
+            ou cripto.
+          </p>
 
           <div class="dash-card form-card">
             <form id="create-btn-form" novalidate>
               <div class="field-group">
                 <label>Título do pagamento *</label>
-                <input type="text" id="btn-title" placeholder="Ex: Consultoria 1h, Produto X..." required maxlength="100" />
+                <input
+                  type="text"
+                  id="btn-title"
+                  placeholder="Ex: Consultoria 1h, Produto X..."
+                  required
+                  maxlength="100"
+                />
               </div>
 
               <div class="field-group">
                 <label>Descrição (opcional)</label>
-                <textarea id="btn-desc" placeholder="Descreva o que o cliente está pagando..." rows="3" maxlength="500"></textarea>
+                <textarea
+                  id="btn-desc"
+                  placeholder="Descreva o que o cliente está pagando..."
+                  rows="3"
+                  maxlength="500"></textarea>
               </div>
 
               <div class="field-row">
                 <div class="field-group half">
                   <label>Valor fixo (BRL)</label>
-                  <input type="number" id="btn-amount" placeholder="0,00" min="1" step="0.01" />
+                  <input
+                    type="number"
+                    id="btn-amount"
+                    placeholder="0,00"
+                    min="1"
+                    step="0.01"
+                  />
                 </div>
                 <div class="field-group half align-end">
                   <label>&nbsp;</label>
@@ -102,12 +187,21 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
                 <label>Métodos de pagamento *</label>
                 <div class="checkbox-group">
                   <label class="check-item">
-                    <input type="checkbox" name="payment_method" value="pix" checked />
+                    <input
+                      type="checkbox"
+                      name="payment_method"
+                      value="pix"
+                      checked
+                    />
                     <span class="check-box"></span>
                     <span>PIX</span>
                   </label>
                   <label class="check-item">
-                    <input type="checkbox" name="payment_method" value="crypto" />
+                    <input
+                      type="checkbox"
+                      name="payment_method"
+                      value="crypto"
+                    />
                     <span class="check-box"></span>
                     <span>Cripto (USDT/USDC)</span>
                   </label>
@@ -117,7 +211,12 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
               <div id="crypto-fields" class="crypto-fields" hidden>
                 <div class="field-group">
                   <label>Endereço da carteira cripto *</label>
-                  <input type="text" id="btn-crypto-addr" placeholder="0x... ou endereço da rede" autocomplete="off" />
+                  <input
+                    type="text"
+                    id="btn-crypto-addr"
+                    placeholder="0x... ou endereço da rede"
+                    autocomplete="off"
+                  />
                 </div>
                 <div class="field-group">
                   <label>Rede</label>
@@ -133,7 +232,9 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
 
               <button type="submit" class="btn-primary" id="create-btn">
                 <span class="btn-text">Gerar link de pagamento</span>
-                <span class="btn-loader" hidden><span class="spinner"></span> Criando...</span>
+                <span class="btn-loader" hidden
+                  ><span class="spinner"></span> Criando...</span
+                >
               </button>
             </form>
           </div>
@@ -142,7 +243,9 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
         <!-- Result embed -->
         <div id="embed-result" class="dash-card embed-card" hidden>
           <h3 class="embed-title">✅ Link criado com sucesso!</h3>
-          <p class="embed-sub">Compartilhe o link ou embed o botão em qualquer site:</p>
+          <p class="embed-sub">
+            Compartilhe o link ou embed o botão em qualquer site:
+          </p>
 
           <div class="field-group">
             <label>Link direto</label>
@@ -155,12 +258,18 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
           <div class="field-group">
             <label>Código embed (iframe)</label>
             <div class="copy-row">
-              <textarea id="embed-code" readonly class="copy-input code-area" rows="3"></textarea>
+              <textarea
+                id="embed-code"
+                readonly
+                class="copy-input code-area"
+                rows="3"></textarea>
               <button class="btn-copy" id="copy-embed-btn">Copiar</button>
             </div>
           </div>
 
-          <a id="preview-link" href="#" target="_blank" class="btn-preview">Abrir prévia</a>
+          <a id="preview-link" href="#" target="_blank" class="btn-preview"
+            >Abrir prévia</a
+          >
         </div>
 
         <!-- Existing buttons list -->
@@ -170,734 +279,1120 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
             <p class="empty-state">Nenhum link criado ainda.</p>
           </div>
         </section>
+
+        <!-- Finalized Transactions (A2) -->
+        <section class="dash-section" id="transactions-section">
+          <h2 class="section-title">Transações recentes</h2>
+          <div id="transactions-list" class="transactions-list">
+            <p class="empty-state">Nenhuma transação processada.</p>
+          </div>
+        </section>
       </div>
 
       <footer class="dash-footer">
-        <p>&copy; 2026 FlowPay Autonomous Systems</p>
+        <p>
+          &copy; 2026 FlowOFF Agency - Architecture by NΞØ Protocol
+          [neoprotocol.space]<br />Flowoff Marketing e Assessoria Digital LTDA -
+          43.376.355/0001-92
+        </p>
       </footer>
     </div>
   </main>
-</Layout>
 
-<style>
-  /* Mobile-first: tap target 44pt, safe area aware */
-  .back-home-btn {
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 16px);
-    left: calc(env(safe-area-inset-left, 0px) + 16px);
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    min-height: 44px;
-    padding: 0 16px;
-    color: rgba(255, 255, 255, 0.65);
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-    z-index: 10;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  @media (hover: hover) {
-    .back-home-btn:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-  }
-
-  .back-home-btn:active {
-    background: rgba(255, 255, 255, 0.15);
-    transform: scale(0.96);
-    transition: transform 0.1s ease;
-  }
-
-  @media (min-width: 768px) {
+  <style>
+    /* Mobile-first: tap target 44pt, safe area aware */
     .back-home-btn {
-      top: 24px;
-      left: 24px;
-      min-height: unset;
-      padding: 8px 14px;
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 16px);
+      left: calc(env(safe-area-inset-left, 0px) + 16px);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 44px;
+      padding: 0 16px;
+      color: rgba(255, 255, 255, 0.65);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+      z-index: 10;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    @media (hover: hover) {
+      .back-home-btn:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    .back-home-btn:active {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(0.96);
+      transition: transform 0.1s ease;
+    }
+
+    @media (min-width: 768px) {
+      .back-home-btn {
+        top: 24px;
+        left: 24px;
+        min-height: unset;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        border-radius: 10px;
+      }
+    }
+
+    .dash-logo-link {
+      display: block;
+      margin-bottom: 0;
+      text-decoration: none;
+    }
+
+    .dash-page {
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 40px;
+    }
+
+    .dash-bg-glow {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      height: 60vh;
+      background: radial-gradient(
+        ellipse at top,
+        rgba(255, 0, 122, 0.08) 0%,
+        transparent 70%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .screen {
+      position: relative;
+      z-index: 1;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    /* Auth screen */
+    .auth-card {
+      max-width: 420px;
+      margin: 80px auto 0;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .dash-logo {
+      height: 80px;
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 0 15px rgba(255, 0, 122, 0.4));
+    }
+    .dash-logo-sm {
+      height: 32px;
+    }
+
+    .dash-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #ff007a, #ff4da6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .dash-sub {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .auth-form input {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .auth-form input:focus {
+      border-color: rgba(255, 0, 122, 0.5);
+    }
+    .auth-form input::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    .register-hint {
+      margin-top: 1.25rem;
       font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.35);
+    }
+    .register-hint a {
+      color: rgba(255, 0, 122, 0.8);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .register-hint a:hover {
+      text-decoration: underline;
+    }
+
+    /* Status screens */
+    .center-card {
+      max-width: 400px;
+      margin: 100px auto 0;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    .status-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .center-card h2 {
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .center-card p {
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Dashboard header */
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      top: 0;
+      background: rgba(5, 5, 5, 0.85);
+      backdrop-filter: blur(20px);
+      z-index: 10;
+    }
+
+    .dash-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dash-title-sm {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .dash-user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-greeting {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Content layout */
+    .dash-content {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .dash-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .section-sub {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.45);
+      line-height: 1.6;
+    }
+
+    /* Cards */
+    .dash-card {
+      background: rgba(15, 15, 15, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 1.75rem;
+    }
+
+    /* Stats Grid (A2) */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .stat-card {
+      padding: 1.25rem !important;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+    .stat-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    /* Form elements */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-bottom: 1.1rem;
+    }
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 10px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
     }
-  }
 
-  .dash-logo-link {
-    display: block;
-    margin-bottom: 0;
-    text-decoration: none;
-  }
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      border-color: rgba(255, 0, 122, 0.45);
+    }
+    .field-group input::placeholder,
+    .field-group textarea::placeholder {
+      color: rgba(255, 255, 255, 0.22);
+    }
+    .field-group select option {
+      background: #1a1a1a;
+    }
 
-  .dash-page {
-    position: relative;
-    min-height: 100vh;
-    overflow-x: hidden;
-    padding-bottom: 40px;
-  }
+    .field-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .field-group.half {
+      flex: 1;
+    }
+    .field-group.align-end {
+      justify-content: flex-end;
+    }
 
-  .dash-bg-glow {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100vw;
-    height: 60vh;
-    background: radial-gradient(ellipse at top, rgba(255, 0, 122, 0.08) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.88rem !important;
+      color: rgba(255, 255, 255, 0.6) !important;
+      font-weight: 500 !important;
+      text-transform: none !important;
+      letter-spacing: 0 !important;
+      padding: 12px 0;
+    }
 
-  .screen { position: relative; z-index: 1; }
-  .screen.active { display: block; }
+    .toggle-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #ff007a;
+    }
 
-  /* Auth screen */
-  .auth-card {
-    max-width: 420px;
-    margin: 80px auto 0;
-    text-align: center;
-    padding: 3rem 2rem;
-  }
+    .checkbox-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 4px 0;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      user-select: none;
+    }
+    .check-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #ff007a;
+    }
 
-  .dash-logo { height: 80px; margin-bottom: 1.5rem; filter: drop-shadow(0 0 15px rgba(255, 0, 122, 0.4)); }
-  .dash-logo-sm { height: 32px; }
+    .crypto-fields {
+      background: rgba(0, 212, 255, 0.04);
+      border: 1px solid rgba(0, 212, 255, 0.12);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
 
-  .dash-title {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.03em;
-    margin-bottom: 0.5rem;
-  }
+    /* Buttons */
+    .btn-primary {
+      background: linear-gradient(135deg, #ff007a, #ff4da6);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s;
+      box-shadow: 0 0 20px rgba(255, 0, 122, 0.2);
+      margin-top: 0.5rem;
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 0 35px rgba(255, 0, 122, 0.4);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
-  .gradient-text {
-    background: linear-gradient(90deg, #ff007a, #ff4da6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+    .btn-ghost {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 11px 22px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
 
-  .dash-sub {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
-    line-height: 1.6;
-  }
+    .btn-ghost-sm {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 6px 14px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .btn-ghost-sm:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
 
-  .auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+    /* Embed result */
+    .embed-card {
+      border-color: rgba(0, 255, 136, 0.15);
+    }
+    .embed-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #00ff88;
+      margin-bottom: 0.5rem;
+    }
+    .embed-sub {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 1.25rem;
+    }
 
-  .auth-form input {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    padding: 14px 16px;
-    color: #fff;
-    font-size: 0.95rem;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.2s;
-  }
+    .copy-row {
+      display: flex;
+      gap: 8px;
+    }
+    .copy-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.82rem;
+      font-family: "Courier New", monospace;
+      resize: none;
+      outline: none;
+    }
+    .code-area {
+      font-size: 0.75rem;
+    }
 
-  .auth-form input:focus { border-color: rgba(255, 0, 122, 0.5); }
-  .auth-form input::placeholder { color: rgba(255, 255, 255, 0.25); }
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 0 16px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
 
-  .register-hint {
-    margin-top: 1.25rem;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.35);
-  }
-  .register-hint a { color: rgba(255, 0, 122, 0.8); font-weight: 600; text-decoration: none; }
-  .register-hint a:hover { text-decoration: underline; }
+    .btn-preview {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 10px 20px;
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 10px;
+      color: rgba(0, 212, 255, 0.9);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-preview:hover {
+      background: rgba(0, 212, 255, 0.18);
+    }
 
-  /* Status screens */
-  .center-card {
-    max-width: 400px;
-    margin: 100px auto 0;
-    text-align: center;
-    padding: 3rem 2rem;
-  }
-  .status-icon { font-size: 3rem; margin-bottom: 1rem; }
-  .center-card h2 { font-size: 1.5rem; color: #fff; font-weight: 700; margin-bottom: 0.75rem; }
-  .center-card p { color: rgba(255, 255, 255, 0.55); line-height: 1.7; margin-bottom: 1.5rem; }
+    /* Buttons list */
+    .buttons-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .empty-state {
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 2rem;
+    }
 
-  /* Dashboard header */
-  .dash-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    position: sticky;
-    top: 0;
-    background: rgba(5, 5, 5, 0.85);
-    backdrop-filter: blur(20px);
-    z-index: 10;
-  }
+    .btn-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
 
-  .dash-brand { display: flex; align-items: center; gap: 10px; }
-  .dash-title-sm { font-size: 1.1rem; font-weight: 700; color: #fff; }
-  .dash-user-info { display: flex; align-items: center; gap: 12px; }
-  .user-greeting { font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); }
+    .tx-status-paid {
+      color: #00c864 !important;
+    }
+    .tx-status-pending {
+      color: rgba(255, 255, 255, 0.4) !important;
+    }
+    .status-pill {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .status-pill.tx-status-paid {
+      background: rgba(0, 200, 100, 0.1);
+    }
 
-  /* Content layout */
-  .dash-content {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 32px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
+    .btn-item-info {
+      flex: 1;
+    }
+    .btn-item-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .btn-item-meta {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.4);
+    }
 
-  .dash-section { display: flex; flex-direction: column; gap: 16px; }
-  .section-title { font-size: 1.2rem; font-weight: 700; color: #fff; }
-  .section-sub { font-size: 0.88rem; color: rgba(255, 255, 255, 0.45); line-height: 1.6; }
+    .btn-item-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
 
-  /* Cards */
-  .dash-card {
-    background: rgba(15, 15, 15, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 1.75rem;
-  }
+    .btn-item-link a {
+      font-size: 0.8rem;
+      color: rgba(255, 0, 122, 0.8);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .btn-item-link a:hover {
+      text-decoration: underline;
+    }
 
-  /* Form elements */
-  .field-group { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.1rem; }
-  .field-group:last-child { margin-bottom: 0; }
+    /* Messages */
+    .msg-error {
+      background: rgba(255, 50, 50, 0.1);
+      border: 1px solid rgba(255, 50, 50, 0.25);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: #ff7070;
+      margin-bottom: 0.5rem;
+    }
 
-  .field-group label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.55);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
+    .msg-success {
+      background: rgba(0, 255, 136, 0.12);
+      border: 1px solid rgba(0, 255, 136, 0.35);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: #8effc4;
+      margin-bottom: 0.5rem;
+    }
 
-  .field-group input,
-  .field-group select,
-  .field-group textarea {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: #fff;
-    font-size: 0.92rem;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.2s;
-    resize: vertical;
-  }
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+    }
 
-  .field-group input:focus,
-  .field-group select:focus,
-  .field-group textarea:focus { border-color: rgba(255, 0, 122, 0.45); }
-  .field-group input::placeholder,
-  .field-group textarea::placeholder { color: rgba(255, 255, 255, 0.22); }
-  .field-group select option { background: #1a1a1a; }
+    .dash-footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: rgba(255, 255, 255, 0.15);
+      font-size: 0.75rem;
+    }
 
-  .field-row { display: flex; gap: 1rem; }
-  .field-group.half { flex: 1; }
-  .field-group.align-end { justify-content: flex-end; }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-  .toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-size: 0.88rem !important;
-    color: rgba(255, 255, 255, 0.6) !important;
-    font-weight: 500 !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-    padding: 12px 0;
-  }
+    @media (max-width: 480px) {
+      .field-row {
+        flex-direction: column;
+      }
+      .dash-card {
+        padding: 1.25rem;
+      }
+      .auth-card {
+        margin-top: 40px;
+      }
+    }
+  </style>
 
-  .toggle-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: #ff007a; }
+  <script>
+    const JSON_HEADERS = { "Content-Type": "application/json" };
 
-  .checkbox-group { display: flex; gap: 1rem; flex-wrap: wrap; padding: 4px 0; }
-  .check-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
-    user-select: none;
-  }
-  .check-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #ff007a; }
+    document.addEventListener("DOMContentLoaded", async () => {
+      setupAuthForm();
+      await bootstrapSession();
+    });
 
-  .crypto-fields {
-    background: rgba(0, 212, 255, 0.04);
-    border: 1px solid rgba(0, 212, 255, 0.12);
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
+    async function bootstrapSession() {
+      try {
+        const res = await fetch("/api/user/status", {
+          method: "GET",
+          credentials: "same-origin",
+          cache: "no-store",
+        });
 
-  /* Buttons */
-  .btn-primary {
-    background: linear-gradient(135deg, #ff007a, #ff4da6);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 15px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    width: 100%;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: all 0.3s;
-    box-shadow: 0 0 20px rgba(255, 0, 122, 0.2);
-    margin-top: 0.5rem;
-  }
-  .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 35px rgba(255, 0, 122, 0.4); }
-  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        if (!res.ok) {
+          showScreen("auth");
+          return;
+        }
 
-  .btn-ghost {
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 10px;
-    padding: 11px 22px;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: all 0.2s;
-  }
-  .btn-ghost:hover { background: rgba(255, 255, 255, 0.12); }
+        const data = await res.json();
+        routeUserByStatus(data);
+      } catch {
+        showScreen("auth");
+      }
+    }
 
-  .btn-ghost-sm {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    padding: 6px 14px;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.82rem;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.2s;
-  }
-  .btn-ghost-sm:hover { border-color: rgba(255, 255, 255, 0.25); color: #fff; }
-
-  /* Embed result */
-  .embed-card { border-color: rgba(0, 255, 136, 0.15); }
-  .embed-title { font-size: 1.1rem; font-weight: 700; color: #00ff88; margin-bottom: 0.5rem; }
-  .embed-sub { font-size: 0.85rem; color: rgba(255, 255, 255, 0.45); margin-bottom: 1.25rem; }
-
-  .copy-row { display: flex; gap: 8px; }
-  .copy-input {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 10px 12px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.82rem;
-    font-family: 'Courier New', monospace;
-    resize: none;
-    outline: none;
-  }
-  .code-area { font-size: 0.75rem; }
-
-  .btn-copy {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    padding: 0 16px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    white-space: nowrap;
-    transition: all 0.2s;
-  }
-  .btn-copy:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
-
-  .btn-preview {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 10px 20px;
-    background: rgba(0, 212, 255, 0.1);
-    border: 1px solid rgba(0, 212, 255, 0.2);
-    border-radius: 10px;
-    color: rgba(0, 212, 255, 0.9);
-    text-decoration: none;
-    font-size: 0.88rem;
-    font-weight: 600;
-    transition: all 0.2s;
-  }
-  .btn-preview:hover { background: rgba(0, 212, 255, 0.18); }
-
-  /* Buttons list */
-  .buttons-list { display: flex; flex-direction: column; gap: 12px; }
-  .empty-state { color: rgba(255, 255, 255, 0.3); font-size: 0.9rem; text-align: center; padding: 2rem; }
-
-  .btn-item {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
-    padding: 1rem 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .btn-item-info { flex: 1; }
-  .btn-item-title { font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
-  .btn-item-meta { font-size: 0.8rem; color: rgba(255, 255, 255, 0.4); }
-
-  .btn-item-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .btn-item-link a {
-    font-size: 0.8rem;
-    color: rgba(255, 0, 122, 0.8);
-    text-decoration: none;
-    font-weight: 600;
-  }
-  .btn-item-link a:hover { text-decoration: underline; }
-
-  /* Messages */
-  .msg-error {
-    background: rgba(255, 50, 50, 0.1);
-    border: 1px solid rgba(255, 50, 50, 0.25);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 0.85rem;
-    color: #ff7070;
-    margin-bottom: 0.5rem;
-  }
-
-  .msg-success {
-    background: rgba(0, 255, 136, 0.12);
-    border: 1px solid rgba(0, 255, 136, 0.35);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 0.85rem;
-    color: #8effc4;
-    margin-bottom: 0.5rem;
-  }
-
-  /* Spinner */
-  .spinner {
-    display: inline-block;
-    width: 14px; height: 14px;
-    border: 2px solid rgba(255,255,255,.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-    vertical-align: middle;
-  }
-
-  .dash-footer {
-    text-align: center;
-    padding: 1.5rem;
-    color: rgba(255, 255, 255, 0.15);
-    font-size: 0.75rem;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  @media (max-width: 480px) {
-    .field-row { flex-direction: column; }
-    .dash-card { padding: 1.25rem; }
-    .auth-card { margin-top: 40px; }
-  }
-</style>
-
-<script>
-  const JSON_HEADERS = { 'Content-Type': 'application/json' };
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    setupAuthForm();
-    await bootstrapSession();
-  });
-
-  async function bootstrapSession() {
-    try {
-      const res = await fetch('/api/user/status', {
-        method: 'GET',
-        credentials: 'same-origin',
-        cache: 'no-store',
-      });
-
-      if (!res.ok) {
-        showScreen('auth');
+    function routeUserByStatus(data: any) {
+      if (!data || !data.status) {
+        showScreen("auth");
         return;
       }
 
-      const data = await res.json();
-      routeUserByStatus(data);
-    } catch {
-      showScreen('auth');
-    }
-  }
+      if (data.status === "PENDING_APPROVAL") {
+        showScreen("pending");
+        return;
+      }
 
-  function routeUserByStatus(data: any) {
-    if (!data || !data.status) {
-      showScreen('auth');
-      return;
-    }
+      if (data.status === "REJECTED") {
+        showScreen("rejected");
+        return;
+      }
 
-    if (data.status === 'PENDING_APPROVAL') {
-      showScreen('pending');
-      return;
-    }
+      if (data.status === "APPROVED") {
+        showDashboard(data.name || data.email || "Cliente");
+        return;
+      }
 
-    if (data.status === 'REJECTED') {
-      showScreen('rejected');
-      return;
+      showScreen("auth");
     }
 
-    if (data.status === 'APPROVED') {
-      showDashboard(data.name || data.email || 'Cliente');
-      return;
+    function showScreen(id: string) {
+      document
+        .querySelectorAll(".screen")
+        .forEach((s: any) => (s.hidden = true));
+      const target = document.getElementById(`screen-${id}`);
+      if (target) target.hidden = false;
+      const backBtn = document.getElementById(
+        "back-home-link"
+      ) as HTMLElement | null;
+      if (backBtn) backBtn.hidden = id === "dashboard";
     }
 
-    showScreen('auth');
-  }
+    function setupAuthForm() {
+      const form = document.getElementById("auth-form") as HTMLFormElement;
+      const authBtn = document.getElementById("auth-btn") as HTMLButtonElement;
+      const authError = document.getElementById("auth-error") as HTMLElement;
+      const authSuccess = document.getElementById(
+        "auth-success"
+      ) as HTMLElement;
 
-  function showScreen(id: string) {
-    document.querySelectorAll('.screen').forEach((s: any) => s.hidden = true);
-    const target = document.getElementById(`screen-${id}`);
-    if (target) target.hidden = false;
-    const backBtn = document.getElementById('back-home-link') as HTMLElement | null;
-    if (backBtn) backBtn.hidden = id === 'dashboard';
-  }
+      if (!form || form.dataset.bound === "true") return;
+      form.dataset.bound = "true";
 
-  function setupAuthForm() {
-    const form = document.getElementById('auth-form') as HTMLFormElement;
-    const authBtn = document.getElementById('auth-btn') as HTMLButtonElement;
-    const authError = document.getElementById('auth-error') as HTMLElement;
-    const authSuccess = document.getElementById('auth-success') as HTMLElement;
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = (
+          document.getElementById("auth-email") as HTMLInputElement
+        ).value.trim();
+        if (!email) return;
 
-    if (!form || form.dataset.bound === 'true') return;
-    form.dataset.bound = 'true';
+        authBtn.disabled = true;
+        authBtn.textContent = "Enviando...";
+        authError.hidden = true;
+        authSuccess.hidden = true;
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = (document.getElementById('auth-email') as HTMLInputElement).value.trim();
-      if (!email) return;
+        try {
+          const res = await fetch("/api/auth/magic-start", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: JSON_HEADERS,
+            body: JSON.stringify({ email }),
+          });
+          const data = await res.json();
 
-      authBtn.disabled = true;
-      authBtn.textContent = 'Enviando...';
-      authError.hidden = true;
-      authSuccess.hidden = true;
-
-      try {
-        const res = await fetch('/api/auth/magic-start', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: JSON_HEADERS,
-          body: JSON.stringify({ email })
-        });
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          authSuccess.textContent = 'Link mágico enviado. Verifique seu e-mail para entrar no painel.';
-          authSuccess.hidden = false;
-        } else {
-          authError.textContent = data.error || 'Não foi possível enviar o link de acesso.';
+          if (res.ok && data.success) {
+            authSuccess.textContent =
+              "Link mágico enviado. Verifique seu e-mail para entrar no painel.";
+            authSuccess.hidden = false;
+          } else {
+            authError.textContent =
+              data.error || "Não foi possível enviar o link de acesso.";
+            authError.hidden = false;
+          }
+        } catch {
+          authError.textContent = "Erro de conexão. Tente novamente.";
           authError.hidden = false;
+        } finally {
+          authBtn.disabled = false;
+          authBtn.textContent = "Acessar painel";
         }
-      } catch {
-        authError.textContent = 'Erro de conexão. Tente novamente.';
-        authError.hidden = false;
-      } finally {
-        authBtn.disabled = false;
-        authBtn.textContent = 'Acessar painel';
-      }
-    });
-  }
-
-  async function showDashboard(name: string) {
-    showScreen('dashboard');
-    (document.getElementById('user-name-display') as HTMLElement).textContent = `Olá, ${name.split(' ')[0]}`;
-
-    const logoutBtn = document.getElementById('logout-btn') as HTMLButtonElement | null;
-    if (logoutBtn) {
-      logoutBtn.onclick = async () => {
-        await fetch('/api/auth/logout', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: JSON_HEADERS,
-        }).catch(() => {});
-        (document.getElementById('auth-success') as HTMLElement).hidden = true;
-        (document.getElementById('auth-error') as HTMLElement).hidden = true;
-        (document.getElementById('auth-form') as HTMLFormElement).reset();
-        (document.getElementById('buttons-list') as HTMLElement).innerHTML = '<p class="empty-state">Nenhum link criado ainda.</p>';
-        showScreen('auth');
-      };
+      });
     }
 
-    setupCreateForm();
-    loadExistingButtons();
-  }
+    async function showDashboard(name: string) {
+      showScreen("dashboard");
+      (
+        document.getElementById("user-name-display") as HTMLElement
+      ).textContent = `Olá, ${name.split(" ")[0]}`;
 
-  function getUserHeaders() {
-    return JSON_HEADERS;
-  }
-
-  function setupCreateForm() {
-    const form = document.getElementById('create-btn-form') as HTMLFormElement;
-    const createBtn = document.getElementById('create-btn') as HTMLButtonElement;
-    const btnText = createBtn.querySelector('.btn-text') as HTMLElement;
-    const btnLoader = createBtn.querySelector('.btn-loader') as HTMLElement;
-    const createError = document.getElementById('create-error') as HTMLElement;
-    const cryptoFields = document.getElementById('crypto-fields') as HTMLElement;
-    const amountInput = document.getElementById('btn-amount') as HTMLInputElement;
-    const fixedCheckbox = document.getElementById('btn-fixed') as HTMLInputElement;
-
-    if (!form || form.dataset.bound === 'true') return;
-    form.dataset.bound = 'true';
-
-    // Show/hide crypto fields based on checkbox
-    document.querySelectorAll('input[name="payment_method"]').forEach((cb: any) => {
-      cb.addEventListener('change', () => {
-        const cryptoChecked = (document.querySelector('input[value="crypto"]') as HTMLInputElement)?.checked;
-        cryptoFields.hidden = !cryptoChecked;
-      });
-    });
-
-    // Show/hide amount based on fixed checkbox
-    fixedCheckbox.addEventListener('change', () => {
-      amountInput.required = fixedCheckbox.checked;
-      (amountInput.closest('.field-group') as HTMLElement).style.opacity = fixedCheckbox.checked ? '1' : '0.4';
-    });
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      createError.hidden = true;
-
-      const title = (document.getElementById('btn-title') as HTMLInputElement).value.trim();
-      const description = (document.getElementById('btn-desc') as HTMLTextAreaElement).value.trim();
-      const amount_brl = parseFloat(amountInput.value) || null;
-      const amount_fixed = fixedCheckbox.checked;
-      const payment_methods = Array.from(document.querySelectorAll('input[name="payment_method"]:checked')).map((el: any) => el.value);
-      const crypto_address = (document.getElementById('btn-crypto-addr') as HTMLInputElement).value.trim();
-      const crypto_network = (document.getElementById('btn-crypto-net') as HTMLSelectElement).value;
-
-      if (!title) {
-        createError.textContent = 'Título é obrigatório.';
-        createError.hidden = false;
-        return;
-      }
-      if (payment_methods.length === 0) {
-        createError.textContent = 'Selecione pelo menos um método de pagamento.';
-        createError.hidden = false;
-        return;
-      }
-      if (amount_fixed && (!amount_brl || amount_brl <= 0)) {
-        createError.textContent = 'Informe um valor maior que zero.';
-        createError.hidden = false;
-        return;
-      }
-      if (payment_methods.includes('crypto') && !crypto_address) {
-        createError.textContent = 'Informe o endereço de carteira cripto.';
-        createError.hidden = false;
-        return;
+      const logoutBtn = document.getElementById(
+        "logout-btn"
+      ) as HTMLButtonElement | null;
+      if (logoutBtn) {
+        logoutBtn.onclick = async () => {
+          await fetch("/api/auth/logout", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: JSON_HEADERS,
+          }).catch(() => {});
+          (document.getElementById("auth-success") as HTMLElement).hidden =
+            true;
+          (document.getElementById("auth-error") as HTMLElement).hidden = true;
+          (document.getElementById("auth-form") as HTMLFormElement).reset();
+          (document.getElementById("buttons-list") as HTMLElement).innerHTML =
+            '<p class="empty-state">Nenhum link criado ainda.</p>';
+          showScreen("auth");
+        };
       }
 
-      createBtn.disabled = true;
-      btnText.hidden = true;
-      btnLoader.hidden = false;
+      setupCreateForm();
+      loadExistingButtons();
+      loadMetrics();
+    }
 
+    async function loadMetrics() {
       try {
-        const res = await fetch('/api/user/buttons', {
-          method: 'POST',
-          credentials: 'same-origin',
+        const res = await fetch("/api/user/metrics", {
+          method: "GET",
+          credentials: "same-origin",
           headers: getUserHeaders(),
-          body: JSON.stringify({ title, description, amount_brl, amount_fixed, payment_methods, crypto_address, crypto_network })
         });
-
         const data = await res.json();
 
-        if (res.ok && data.success) {
-          showEmbedResult(data.embed_url, data.embed_code);
-          form.reset();
-          cryptoFields.hidden = true;
-          loadExistingButtons();
-        } else {
-          createError.textContent = data.error || 'Erro ao criar botão.';
-          createError.hidden = false;
+        if (!data.success) return;
+
+        const { metrics } = data;
+
+        // Update Top Stats
+        const volEl = document.getElementById("stat-total-volume");
+        const countEl = document.getElementById("stat-paid-count");
+        const convEl = document.getElementById("stat-conversion");
+
+        if (volEl)
+          volEl.textContent = `R$ ${Number(metrics.total_volume).toFixed(2)}`;
+        if (countEl) countEl.textContent = String(metrics.paid_count);
+        if (convEl) {
+          const conv =
+            metrics.total_orders > 0
+              ? (metrics.paid_count / metrics.total_orders) * 100
+              : 0;
+          convEl.textContent = `${conv.toFixed(1)}%`;
         }
-      } catch {
-        createError.textContent = 'Erro de conexão. Tente novamente.';
-        createError.hidden = false;
-      } finally {
-        createBtn.disabled = false;
-        btnText.hidden = false;
-        btnLoader.hidden = true;
+
+        // Update Recent Transactions
+        const txList = document.getElementById("transactions-list");
+        if (!txList) return;
+
+        if (metrics.recent_transactions.length === 0) {
+          txList.innerHTML =
+            '<p class="empty-state">Nenhuma transação encontrada.</p>';
+          return;
+        }
+
+        txList.innerHTML = metrics.recent_transactions
+          .map((tx: any) => {
+            const date = new Date(tx.created_at).toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const statusClass =
+              tx.status.toLowerCase().includes("paid") ||
+              tx.status === "COMPLETED"
+                ? "tx-status-paid"
+                : "tx-status-pending";
+
+            return `
+            <div class="btn-item">
+              <div class="btn-item-info">
+                <div class="btn-item-title">${escHtml(tx.product_name || "Sem título")}</div>
+                <div class="btn-item-meta">${date} · ${tx.customer_name || "Cliente"}</div>
+              </div>
+              <div class="btn-item-link">
+                <span class="btn-item-meta ${statusClass}">R$ ${Number(tx.amount_brl).toFixed(2)}</span>
+                <span class="status-pill ${statusClass}">${tx.status}</span>
+              </div>
+            </div>
+          `;
+          })
+          .join("");
+      } catch (e) {
+        console.error("Erro ao carregar métricas:", e);
       }
-    });
-  }
+    }
 
-  function showEmbedResult(url: string, code: string) {
-    const embedResult = document.getElementById('embed-result') as HTMLElement;
-    (document.getElementById('embed-url') as HTMLInputElement).value = url;
-    (document.getElementById('embed-code') as HTMLTextAreaElement).value = code;
-    (document.getElementById('preview-link') as HTMLAnchorElement).href = url;
-    embedResult.hidden = false;
-    embedResult.scrollIntoView({ behavior: 'smooth' });
+    function getUserHeaders() {
+      return JSON_HEADERS;
+    }
 
-    document.getElementById('copy-url-btn')?.addEventListener('click', () => {
-      navigator.clipboard.writeText(url).then(() => {
-        (document.getElementById('copy-url-btn') as HTMLButtonElement).textContent = 'Copiado!';
-        setTimeout(() => (document.getElementById('copy-url-btn') as HTMLButtonElement).textContent = 'Copiar', 2000);
+    function setupCreateForm() {
+      const form = document.getElementById(
+        "create-btn-form"
+      ) as HTMLFormElement;
+      const createBtn = document.getElementById(
+        "create-btn"
+      ) as HTMLButtonElement;
+      const btnText = createBtn.querySelector(".btn-text") as HTMLElement;
+      const btnLoader = createBtn.querySelector(".btn-loader") as HTMLElement;
+      const createError = document.getElementById(
+        "create-error"
+      ) as HTMLElement;
+      const cryptoFields = document.getElementById(
+        "crypto-fields"
+      ) as HTMLElement;
+      const amountInput = document.getElementById(
+        "btn-amount"
+      ) as HTMLInputElement;
+      const fixedCheckbox = document.getElementById(
+        "btn-fixed"
+      ) as HTMLInputElement;
+
+      if (!form || form.dataset.bound === "true") return;
+      form.dataset.bound = "true";
+
+      // Show/hide crypto fields based on checkbox
+      document
+        .querySelectorAll('input[name="payment_method"]')
+        .forEach((cb: any) => {
+          cb.addEventListener("change", () => {
+            const cryptoChecked = (
+              document.querySelector(
+                'input[value="crypto"]'
+              ) as HTMLInputElement
+            )?.checked;
+            cryptoFields.hidden = !cryptoChecked;
+          });
+        });
+
+      // Show/hide amount based on fixed checkbox
+      fixedCheckbox.addEventListener("change", () => {
+        amountInput.required = fixedCheckbox.checked;
+        (amountInput.closest(".field-group") as HTMLElement).style.opacity =
+          fixedCheckbox.checked ? "1" : "0.4";
       });
-    }, { once: true });
 
-    document.getElementById('copy-embed-btn')?.addEventListener('click', () => {
-      navigator.clipboard.writeText(code).then(() => {
-        (document.getElementById('copy-embed-btn') as HTMLButtonElement).textContent = 'Copiado!';
-        setTimeout(() => (document.getElementById('copy-embed-btn') as HTMLButtonElement).textContent = 'Copiar', 2000);
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        createError.hidden = true;
+
+        const title = (
+          document.getElementById("btn-title") as HTMLInputElement
+        ).value.trim();
+        const description = (
+          document.getElementById("btn-desc") as HTMLTextAreaElement
+        ).value.trim();
+        const amount_brl = parseFloat(amountInput.value) || null;
+        const amount_fixed = fixedCheckbox.checked;
+        const payment_methods = Array.from(
+          document.querySelectorAll('input[name="payment_method"]:checked')
+        ).map((el: any) => el.value);
+        const crypto_address = (
+          document.getElementById("btn-crypto-addr") as HTMLInputElement
+        ).value.trim();
+        const crypto_network = (
+          document.getElementById("btn-crypto-net") as HTMLSelectElement
+        ).value;
+
+        if (!title) {
+          createError.textContent = "Título é obrigatório.";
+          createError.hidden = false;
+          return;
+        }
+        if (payment_methods.length === 0) {
+          createError.textContent =
+            "Selecione pelo menos um método de pagamento.";
+          createError.hidden = false;
+          return;
+        }
+        if (amount_fixed && (!amount_brl || amount_brl <= 0)) {
+          createError.textContent = "Informe um valor maior que zero.";
+          createError.hidden = false;
+          return;
+        }
+        if (payment_methods.includes("crypto") && !crypto_address) {
+          createError.textContent = "Informe o endereço de carteira cripto.";
+          createError.hidden = false;
+          return;
+        }
+
+        createBtn.disabled = true;
+        btnText.hidden = true;
+        btnLoader.hidden = false;
+
+        try {
+          const res = await fetch("/api/user/buttons", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: getUserHeaders(),
+            body: JSON.stringify({
+              title,
+              description,
+              amount_brl,
+              amount_fixed,
+              payment_methods,
+              crypto_address,
+              crypto_network,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            showEmbedResult(data.embed_url, data.embed_code);
+            form.reset();
+            cryptoFields.hidden = true;
+            loadExistingButtons();
+          } else {
+            createError.textContent = data.error || "Erro ao criar botão.";
+            createError.hidden = false;
+          }
+        } catch {
+          createError.textContent = "Erro de conexão. Tente novamente.";
+          createError.hidden = false;
+        } finally {
+          createBtn.disabled = false;
+          btnText.hidden = false;
+          btnLoader.hidden = true;
+        }
       });
-    }, { once: true });
-  }
+    }
 
-  async function loadExistingButtons() {
-    const list = document.getElementById('buttons-list') as HTMLElement;
-    try {
-      const res = await fetch('/api/user/buttons', {
-        method: 'GET',
-        credentials: 'same-origin',
-        headers: getUserHeaders(),
-      });
-      const data = await res.json();
+    function showEmbedResult(url: string, code: string) {
+      const embedResult = document.getElementById(
+        "embed-result"
+      ) as HTMLElement;
+      (document.getElementById("embed-url") as HTMLInputElement).value = url;
+      (document.getElementById("embed-code") as HTMLTextAreaElement).value =
+        code;
+      (document.getElementById("preview-link") as HTMLAnchorElement).href = url;
+      embedResult.hidden = false;
+      embedResult.scrollIntoView({ behavior: "smooth" });
 
-      if (!data.success || data.buttons.length === 0) {
-        list.innerHTML = '<p class="empty-state">Nenhum link criado ainda.</p>';
-        return;
-      }
+      document.getElementById("copy-url-btn")?.addEventListener(
+        "click",
+        () => {
+          navigator.clipboard.writeText(url).then(() => {
+            (
+              document.getElementById("copy-url-btn") as HTMLButtonElement
+            ).textContent = "Copiado!";
+            setTimeout(
+              () =>
+                ((
+                  document.getElementById("copy-url-btn") as HTMLButtonElement
+                ).textContent = "Copiar"),
+              2000
+            );
+          });
+        },
+        { once: true }
+      );
 
-      const baseUrl = window.location.origin;
-      list.innerHTML = data.buttons.map((b: any) => {
-        const methods = JSON.parse(b.payment_methods || '["pix"]').join(', ').toUpperCase();
-        const amount = b.amount_brl ? `R$ ${Number(b.amount_brl).toFixed(2)}` : 'Valor livre';
-        const payUrl = `${baseUrl}/pay/${b.button_id}`;
-        return `
+      document.getElementById("copy-embed-btn")?.addEventListener(
+        "click",
+        () => {
+          navigator.clipboard.writeText(code).then(() => {
+            (
+              document.getElementById("copy-embed-btn") as HTMLButtonElement
+            ).textContent = "Copiado!";
+            setTimeout(
+              () =>
+                ((
+                  document.getElementById("copy-embed-btn") as HTMLButtonElement
+                ).textContent = "Copiar"),
+              2000
+            );
+          });
+        },
+        { once: true }
+      );
+    }
+
+    async function loadExistingButtons() {
+      const list = document.getElementById("buttons-list") as HTMLElement;
+      try {
+        const res = await fetch("/api/user/buttons", {
+          method: "GET",
+          credentials: "same-origin",
+          headers: getUserHeaders(),
+        });
+        const data = await res.json();
+
+        if (!data.success || data.buttons.length === 0) {
+          list.innerHTML =
+            '<p class="empty-state">Nenhum link criado ainda.</p>';
+          return;
+        }
+
+        const baseUrl = window.location.origin;
+        list.innerHTML = data.buttons
+          .map((b: any) => {
+            const methods = JSON.parse(b.payment_methods || '["pix"]')
+              .join(", ")
+              .toUpperCase();
+            const amount = b.amount_brl
+              ? `R$ ${Number(b.amount_brl).toFixed(2)}`
+              : "Valor livre";
+            const payUrl = `${baseUrl}/pay/${b.button_id}`;
+            return `
           <div class="btn-item">
             <div class="btn-item-info">
               <div class="btn-item-title">${escHtml(b.title)}</div>
@@ -909,13 +1404,19 @@ import flowpayLogo from '../../public/img/flowpay-logo.png';
             </div>
           </div>
         `;
-      }).join('');
-    } catch {
-      list.innerHTML = '<p class="empty-state">Erro ao carregar links.</p>';
+          })
+          .join("");
+      } catch {
+        list.innerHTML = '<p class="empty-state">Erro ao carregar links.</p>';
+      }
     }
-  }
 
-  function escHtml(str: string) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-</script>
+    function escHtml(str: string) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+  </script>
+</Layout>

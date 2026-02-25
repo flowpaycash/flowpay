@@ -47,18 +47,11 @@
 
 ## SPRINT 2 · ESTABILIZAÇÃO
 
-### 🟡 E1 · Mapear todos os estados de erro no frontend
-**Hoje só SETTLEMENT_FAILED está tratado. Os outros estados de falha ainda são limbo.**
-
-Estados que precisam de handler:
-
-```
-TIMEOUT          → pollCount > maxPolls (já tem texto, falta UX)
-CANCELLED        → se existir no modelo de dados
-REFUNDED         → se existir no modelo de dados
-WOOVI_ERROR      → falha na API externa antes do QR
-NETWORK_ERROR    → catch silencioso no fetch (hoje é silent fail)
-```
+### ✅ E1 · Mapear todos os estados de erro no frontend
+**CONCLUÍDO (PR #18)**
+- Estados de NETWORK_ERROR e TIMEOUT agora possuem UX dedicada.
+- Implementado fallback de formulário local para evitar recarregamento de página.
+- Adicionado CODEOWNERS para proteção de arquivos críticos.
 
 **Prompt para o agente:**
 ```
@@ -70,45 +63,25 @@ STATUS | EXISTE HANDLER | COMPORTAMENTO ATUAL
 
 ---
 
-### 🟡 E2 · Rate Limiting no Cadastro
-**Hoje qualquer IP pode fazer spam de POST /api/auth/registro.**
-Redis já está disponível — implementação trivial.
-
-```
-Limite sugerido: 5 tentativas por IP por hora
-Biblioteca: rate-limiter-flexible (usa Redis nativamente)
-Onde aplicar: middleware antes de registro.js
-```
+### ✅ E2 · Rate Limiting no Cadastro
+**CONCLUÍDO (PR #19)**
+- Implementado `rate-limiter-flexible` com Redis.
+- Limites independentes por IP e Email.
+- Fail-open garantido em caso de indisponibilidade do Redis.
 
 ---
 
-### 🟡 E3 · TTL do Magic Link visível pro usuário
-**O token expira em 15 minutos mas o email não avisa isso.**
-Usuário que abre o link depois de 15min recebe erro genérico.
-
-```
-[ ] Adicionar ao template de email: "Este link expira em 15 minutos"
-[ ] magic-verify.js: se token expirado, retornar mensagem clara
-    ao invés de "token inválido"
-[ ] Considerar endpoint de reenvio de magic link
-```
+### ✅ E3 · TTL do Magic Link visível pro usuário
+**CONCLUÍDO (PR #19)**
+- Template de e-mail atualizado para exibir expiração em minutos.
+- `magic-verify.js` com mensagens de erro claras para tokens expirados.
 
 ---
 
-### 🟡 E4 · Verificar Redis como fonte primária no magic-verify.js
-**Hoje magic-verify.js lê só do SQLite. Redis é escrito mas não lido.**
-O dual-write do auto-approve não fecha o loop enquanto a verificação
-ignora o Redis.
-
-```
-Fluxo ideal:
-1. magic-verify.js → tenta Redis primeiro (mais rápido, tem TTL)
-2. Se Redis miss → fallback SQLite
-3. Se ambos miss → token inválido
-
-Benefício: tokens expiram automaticamente no Redis sem 
-precisar de job de limpeza no SQLite.
-```
+### ✅ E4 · Verificar Redis como fonte primária no magic-verify.js
+**CONCLUÍDO (PR #19)**
+- `magic-verify.js` agora consulta o Redis antes do SQLite (Redis-First).
+- TTL nativo do Redis gerencia expiração sem necessidade de cleanup manual.
 
 ---
 
@@ -206,9 +179,8 @@ E1 (mapear erros)
 ## RESUMO EXECUTIVO
 
 ```
-HOJE        → S1 + S2 (smoke test + ativar auto-approve)
-ESTA SEMANA → E1 + E2 + E3 (erros, rate limit, TTL visível)
-PRÓXIMAS    → E4 + A3 (Redis no verify + email vendedor)
-TRIMESTRE   → A1 + A2 (SSE + dashboard)
-FUTURO      → B1 + B2 + B3
+HOJE        → ✅ S1 + S2 (smoke test + ativar auto-approve)
+ESTA SEMANA → ✅ E1 + E2 + E3 + E4 (erros, rate limit, TTL, Redis-verify)
+PRÓXIMAS    → 🟡 A3 (email vendedor) + 🟢 A2 (dashboard métricas)
+TRIMESTRE   → 🟢 A1 (SSE)
 ```

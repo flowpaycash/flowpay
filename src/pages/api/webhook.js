@@ -411,7 +411,7 @@ export const POST = async ({ request, clientAddress }) => {
           });
         });
 
-        // Email notification
+        // Email notification (Customer)
         if (customerEmail) {
           try {
             const { sendEmail } =
@@ -441,15 +441,41 @@ export const POST = async ({ request, clientAddress }) => {
           } catch (emailErr) {
             secureLog(
               "error",
-              "Webhook: Erro ao carregar servico de e-mail ou template",
+              "Webhook: Erro ao carregar servico de e-mail ou template (Buyer)",
               { error: emailErr.message }
             );
-            Sentry.withScope((scope) => {
-              scope.setLevel("warning");
-              scope.setTag("source", "woovi_webhook");
-              scope.setTag("failure", "email_service_load");
-              scope.setContext("charge", { correlationID });
-              Sentry.captureException(emailErr);
+          }
+        }
+
+        // Notificação do Vendedor (A3)
+        if (order && order.product_ref && order.product_ref !== "manual") {
+          try {
+            const { vendedorNotificacaoTemplate } = await import("../../services/api/email/templates/vendedor-notificacao.mjs");
+            const { getPaymentButton } = await import("../../services/database/sqlite.mjs");
+            const sellerData = getPaymentButton(order.product_ref);
+
+            if (sellerData && sellerData.user_email) {
+              const { sendEmail } = await import("../../services/api/email-service.mjs");
+
+              void sendEmail({
+                to: sellerData.user_email,
+                subject: `Novo pagamento de R$ ${(charge.value / 100).toFixed(2)} recebido!`,
+                html: vendedorNotificacaoTemplate({
+                  sellerName: sellerData.user_name || "Vendedor",
+                  amount: charge.value / 100,
+                  productName: sellerData.title || order.product_name || "Link de Pagamento",
+                  customerName: order.customer_name || null
+                })
+              }).catch((err) => {
+                secureLog("error", "Webhook: Erro ao notificar vendedor por e-mail", {
+                  error: err.message,
+                  sellerEmail: sellerData.user_email
+                });
+              });
+            }
+          } catch (sellerErr) {
+            secureLog("error", "Webhook: Erro ao carregar templates para o vendedor", {
+              error: sellerErr.message
             });
           }
         }

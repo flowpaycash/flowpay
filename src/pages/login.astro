@@ -1,11 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { Image } from 'astro:assets';
-import brandLogo from '../../public/img/flowpay-logo.png';
+import { Image } from "astro:assets";
+import brandLogo from "../assets/img/flowpay-logo.png";
 ---
 
 <Layout
-  title="FlowPay - Acesse"
+  title="FlowPay - Acesso"
   description="Entre no FlowPay e conecte-se ao futuro dos pagamentos."
   noindex={true}
 >
@@ -13,7 +13,16 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     <div class="login-bg-glow"></div>
 
     <a href="/" class="back-home-btn" aria-label="Voltar para a home">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
       Voltar
@@ -21,7 +30,12 @@ import brandLogo from '../../public/img/flowpay-logo.png';
 
     <div class="login-content">
       <a href="/" class="login-brand" aria-label="Voltar para a home">
-        <Image src={brandLogo} alt="FlowPay Logo" class="login-logo" height={80} />
+        <Image
+          src={brandLogo}
+          alt="FlowPay Logo"
+          class="login-logo"
+          height={80}
+        />
       </a>
 
       <div class="login-card">
@@ -77,7 +91,11 @@ import brandLogo from '../../public/img/flowpay-logo.png';
       </div>
 
       <footer class="login-footer">
-        <p>&copy; 2026 FlowPay Autonomous Systems</p>
+        <p>
+          &copy; 2026 FlowOFF Agency - Architecture by NΞØ Protocol
+          [neoprotocol.space]<br />Flowoff Marketing e Assessoria Digital LTDA -
+          43.376.355/0001-92
+        </p>
       </footer>
     </div>
   </main>
@@ -91,7 +109,8 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: calc(env(safe-area-inset-top, 0px) + 80px) 20px calc(env(safe-area-inset-bottom, 0px) + 40px);
+    padding: calc(env(safe-area-inset-top, 0px) + 80px) 20px
+      calc(env(safe-area-inset-bottom, 0px) + 40px);
   }
 
   @media (min-width: 768px) {
@@ -118,7 +137,10 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease;
     z-index: 10;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -209,7 +231,9 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     width: auto;
     filter: drop-shadow(0 0 15px rgba(255, 0, 122, 0.6))
       drop-shadow(0 0 30px rgba(0, 212, 255, 0.3));
-    transition: filter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition:
+      filter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   @media (min-width: 768px) {
@@ -308,7 +332,11 @@ import brandLogo from '../../public/img/flowpay-logo.png';
     font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
-    transition: box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.2s ease, border-color 0.2s ease;
+    transition:
+      box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      background 0.2s ease,
+      border-color 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -416,8 +444,6 @@ import brandLogo from '../../public/img/flowpay-logo.png';
       transform: translateY(0);
     }
   }
-
-
 </style>
 
 <script>
