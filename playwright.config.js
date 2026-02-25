@@ -14,9 +14,9 @@
 //   pnpm exec playwright install --with-deps chromium
 // ════════════════════════════════════════════════════════════════
 
-const { defineConfig, devices } = require("@playwright/test");
+import { defineConfig, devices } from "@playwright/test";
 
-module.exports = defineConfig({
+export default defineConfig({
     // ── Test discovery ──────────────────────────────────────────
     testDir: "./tests/e2e",
     testMatch: ["**/*.spec.js"],

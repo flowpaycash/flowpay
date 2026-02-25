@@ -673,10 +673,10 @@ async function safeJson(response) {
   }
 }
 
-window.executeSettlement = completeOrder;
-window.loadPendingUsers = loadPendingUsers;
-window.loadSettlementOrders = () => loadTransactions(true);
-window.viewTransaction = function (id) {
+window['executeSettlement'] = completeOrder;
+window['loadPendingUsers'] = loadPendingUsers;
+window['loadSettlementOrders'] = () => loadTransactions(true);
+window['viewTransaction'] = function (id) {
   const t = transactions.find(
     (x) => x.charge_id === id || String(x.id) === String(id)
   );

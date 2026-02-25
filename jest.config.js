@@ -1,5 +1,5 @@
 // Jest Configuration for FLOWPay
-module.exports = {
+export default {
   testMatch: ["**/tests/**/*.test.js"],
 
   testPathIgnorePatterns: [

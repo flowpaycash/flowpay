@@ -114,7 +114,7 @@ import flowpayLogo from "../../public/img/logos/flowpay-header-logo.png";
     left: 0;
     right: 0;
     height: 72px;
-    /* iOS Acqua-like Glassmorphism */
+    /* iOS Acqua-like Glassmorphism (Dark Default) */
     background: rgba(15, 15, 20, 0.45);
     backdrop-filter: blur(40px) saturate(210%);
     -webkit-backdrop-filter: blur(40px) saturate(210%);
@@ -128,6 +128,25 @@ import flowpayLogo from "../../public/img/logos/flowpay-header-logo.png";
     align-items: center;
     padding: 0 40px;
     transition: all 0.3s ease;
+  }
+
+  /* Light Theme Adapter */
+  :global(body.light-theme) .premium-nav {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.03),
+      inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  }
+
+  :global(body.light-theme) .nav-item {
+    color: #1d1d1f;
+  }
+
+  :global(body.light-theme) .nav-item:hover {
+    color: #ff007a;
   }
 
   .nav-wrapper {
@@ -152,8 +171,16 @@ import flowpayLogo from "../../public/img/logos/flowpay-header-logo.png";
     transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  :global(body.light-theme) .brand-logo img {
+    filter: brightness(0) drop-shadow(0 0 5px rgba(255, 0, 122, 0.1));
+  }
+
   .premium-nav.scrolled .brand-logo img {
     filter: grayscale(100%) blur(1px) opacity(0.6);
+  }
+
+  :global(body.light-theme) .premium-nav.scrolled .brand-logo img {
+    filter: grayscale(100%) opacity(0.2);
   }
 
   .nav-divider {
@@ -289,6 +316,20 @@ import flowpayLogo from "../../public/img/logos/flowpay-header-logo.png";
     transition: background 0.2s ease;
   }
 
+  :global(body.light-theme) .mobile-nav-item {
+    color: #1d1d1f;
+  }
+
+  :global(body.light-theme) .mobile-menu-overlay {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(40px) saturate(210%);
+    -webkit-backdrop-filter: blur(40px) saturate(210%);
+  }
+
+  :global(body.light-theme) .mobile-menu-header {
+    color: var(--light-text-secondary);
+  }
+
   .mobile-nav-item svg {
     color: #ff007a;
     opacity: 0.8;
@@ -296,6 +337,10 @@ import flowpayLogo from "../../public/img/logos/flowpay-header-logo.png";
 
   .mobile-nav-item:active {
     background: rgba(255, 255, 255, 0.05);
+  }
+
+  :global(body.light-theme) .mobile-nav-item:active {
+    background: rgba(0, 0, 0, 0.03);
   }
 
   .mobile-menu-divider {

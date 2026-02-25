@@ -1,6 +1,7 @@
 // bundle ESM local, CSP 'self' friendly
 // lê config do window.NEO_CONFIG (gerado do neo.json) se existir
 import { Web3Auth } from "@web3auth/modal";
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 
 type NeoConfig = {
   web3auth?: {
@@ -22,7 +23,15 @@ const chainConfig = {
   rpcTarget: cfg.crypto?.rpc || "https://rpc.ankr.com/eth",
 };
 
-const web3auth = new Web3Auth({ clientId, web3AuthNetwork, chainConfig });
+const privateKeyProvider = new EthereumPrivateKeyProvider({
+  config: { chainConfig },
+});
+
+const web3auth = new Web3Auth({
+  clientId,
+  web3AuthNetwork,
+  privateKeyProvider: privateKeyProvider as any,
+});
 await web3auth.initModal();
 
 export async function connectWallet() {
