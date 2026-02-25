@@ -74,7 +74,7 @@ echo "$BARE"
 
 echo ""
 echo "🚀 Para usar a versão smart, os layouts já apontam para:"
-echo "   <script is:inline src=\"/assets/neo.config.js\"></script>"
+echo "   <script is:inline src=\"/api/neo-config\"></script>"
 echo "   <script is:inline type=\"module\" src=\"/assets/js/web3auth.smart.js\"></script>"
 echo ""
 echo "💡 Dependências bundadas: react-i18next, viem, buffer"
