@@ -279,6 +279,35 @@
               </div>
             </div>
 
+            <!-- Data Sovereignty & Backup -->
+            <div class="settings-section">
+              <div class="section-title">
+                <span class="dot"></span>Soberania de Dados & Backup
+              </div>
+              <div class="section-desc">
+                Exporte uma cópia completa e criptograficamente íntegra do banco
+                de dados (SQLite + Gzip).
+              </div>
+              <div class="config-grid">
+                <div
+                  class="config-item"
+                  style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center;"
+                >
+                  <div>
+                    <div class="config-key">Base de Dados Atual</div>
+                    <div class="config-value">flowpay.db (SQLite WAL Mode)</div>
+                  </div>
+                  <button
+                    class="btn-run-health"
+                    onclick="downloadFullBackup()"
+                    id="backup-btn"
+                  >
+                    📦 Baixar Backup Completo
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <!-- ENV Config -->
             <div class="settings-section">
               <div class="section-title">
@@ -414,8 +443,7 @@
           const data = await res.json();
 
           // System info
-          document.getElementById("sys-node").textContent =
-            data.node || "—";
+          document.getElementById("sys-node").textContent = data.node || "—";
           document.getElementById("sys-env").textContent =
             data.env || "production";
           document.getElementById("sys-uptime").textContent = data.uptime
@@ -532,6 +560,45 @@
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;");
+      }
+
+      async function downloadFullBackup() {
+        const btn = document.getElementById("backup-btn");
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "📦 Gerando Backup...";
+
+        try {
+          const res = await fetch("/api/admin/backup", {
+            method: "POST",
+            credentials: "same-origin",
+          });
+
+          if (!res.ok) throw new Error("Falha ao gerar backup");
+
+          const blob = await res.blob();
+          const fileName =
+            res.headers
+              .get("Content-Disposition")
+              ?.split("filename=")[1]
+              ?.replace(/"/g, "") || "flowpay-backup.sqlite.gz";
+
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          showNotification("✅ Backup baixado com sucesso!", "success");
+        } catch (err) {
+          showNotification("❌ Erro ao baixar backup: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
       }
 
       let notifTimer;

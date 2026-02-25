@@ -61,11 +61,17 @@ export const GET = async ({ request, cookies }) => {
       )
       .get();
 
+    const { getGlobalPoEMetrics } = await import("../../../services/database/sqlite.mjs");
+    const poe = getGlobalPoEMetrics();
+
     const metrics = {
       total_wallets: users.total,
       guest_access_24h: guests.total,
       payments_24h: payments.total,
       volume_24h: payments.volume || 0,
+      poe_total_batches: poe.total_batches,
+      poe_anchored_batches: poe.anchored_batches,
+      poe_proved_txs: poe.proved_transactions
     };
 
     Sentry.addBreadcrumb({

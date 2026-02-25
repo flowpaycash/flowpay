@@ -724,3 +724,23 @@ export function getUserMetrics(userId) {
         };
     });
 }
+
+/**
+ * PoE (Proof of Integrity) global metrics for Admin
+ */
+export function getGlobalPoEMetrics() {
+    return dbOp(() => {
+        const db = getDatabase();
+
+        const batches = db.prepare("SELECT COUNT(*) as total FROM poe_batches").get();
+        const anchored = db.prepare("SELECT COUNT(*) as total FROM poe_batches WHERE anchored_at IS NOT NULL").get();
+        const ordersWithPoe = db.prepare("SELECT COUNT(*) as total FROM orders WHERE poe_batch_id IS NOT NULL").get();
+
+        return {
+            total_batches: batches.total || 0,
+            anchored_batches: anchored.total || 0,
+            proved_transactions: ordersWithPoe.total || 0
+        };
+    });
+}
+

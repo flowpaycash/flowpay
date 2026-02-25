@@ -250,6 +250,7 @@ async function loadMetrics() {
       setEl("paid-count", m.payments_24h ?? 0);
       setEl("processed-count", m.total_wallets ?? 0);
       setEl("total-value", `R$ ${Number(m.volume_24h || 0).toFixed(2)}`);
+      setEl("poe-count", m.poe_proved_txs ?? 0);
     }
   } catch (error) {
     if (error.message !== "UNAUTHORIZED") {
