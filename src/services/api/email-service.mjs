@@ -3,7 +3,7 @@ import { secureLog } from "./config.mjs";
 
 const RESEND_API_URL = "https://api.resend.com/emails";
 const RESEND_DOMAINS_URL = "https://api.resend.com/domains";
-const DEFAULT_FROM = "FlowPay <noreply@flowpay.cash>";
+const DEFAULT_FROM = "FlowPay <atendimento@flowpay.cash>";
 const DOMAIN_CHECK_TTL_MS = Number(
   process.env.EMAIL_DOMAIN_CHECK_TTL_MS || 10 * 60 * 1000
 );
