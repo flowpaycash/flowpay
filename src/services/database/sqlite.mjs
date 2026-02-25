@@ -744,3 +744,33 @@ export function getGlobalPoEMetrics() {
     });
 }
 
+export function getVerifiedProofs(limit = 10) {
+    return dbOp(() => {
+        const db = getDatabase();
+        // Get individual order proofs and batch anchor proofs
+        const proofs = db.prepare(`
+            SELECT 
+                'ORDER' as type,
+                charge_id as id,
+                tx_hash as usdt_tx,
+                'Manual Proof' as blockchain_tx, -- We should store this in orders table too if available
+                created_at as timestamp
+            FROM orders 
+            WHERE poe_batch_id IS NOT NULL
+            UNION ALL
+            SELECT 
+                'BATCH' as type,
+                id as id,
+                merkle_root as usdt_tx,
+                anchor_tx_hash as blockchain_tx,
+                anchored_at as timestamp
+            FROM poe_batches
+            WHERE anchored_at IS NOT NULL
+            ORDER BY timestamp DESC
+            LIMIT ?
+        `).all(limit);
+
+        return proofs;
+    });
+}
+

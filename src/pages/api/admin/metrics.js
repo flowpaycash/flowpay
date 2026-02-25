@@ -61,8 +61,9 @@ export const GET = async ({ request, cookies }) => {
       )
       .get();
 
-    const { getGlobalPoEMetrics } = await import("../../../services/database/sqlite.mjs");
+    const { getGlobalPoEMetrics, getVerifiedProofs } = await import("../../../services/database/sqlite.mjs");
     const poe = getGlobalPoEMetrics();
+    const recent_proofs = getVerifiedProofs(5);
 
     const metrics = {
       total_wallets: users.total,
@@ -71,7 +72,8 @@ export const GET = async ({ request, cookies }) => {
       volume_24h: payments.volume || 0,
       poe_total_batches: poe.total_batches,
       poe_anchored_batches: poe.anchored_batches,
-      poe_proved_txs: poe.proved_transactions
+      poe_proved_txs: poe.proved_transactions,
+      recent_proofs
     };
 
     Sentry.addBreadcrumb({

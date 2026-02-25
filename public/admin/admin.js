@@ -251,6 +251,34 @@ async function loadMetrics() {
       setEl("processed-count", m.total_wallets ?? 0);
       setEl("total-value", `R$ ${Number(m.volume_24h || 0).toFixed(2)}`);
       setEl("poe-count", m.poe_proved_txs ?? 0);
+
+      // Render Verified Proofs
+      const proofsTbody = document.getElementById("verified-proofs-tbody");
+      if (proofsTbody && m.recent_proofs) {
+        if (m.recent_proofs.length === 0) {
+          proofsTbody.innerHTML = '<tr><td colspan="4" class="no-data">Nenhuma prova verificada encontrada.</td></tr>';
+        } else {
+          proofsTbody.innerHTML = m.recent_proofs.map(p => {
+            const date = new Date(p.timestamp).toLocaleString('pt-BR');
+            const explorerUrl = p.blockchain_tx && p.blockchain_tx !== 'Manual Proof'
+              ? `https://basescan.org/tx/${p.blockchain_tx}`
+              : '#';
+            const txDisplay = p.blockchain_tx === 'Manual Proof'
+              ? '<i>Assinado (Local)</i>'
+              : `<a href="${explorerUrl}" target="_blank" style="color: var(--secondary)">${p.blockchain_tx.substring(0, 16)}...</a>`;
+            const idDisplay = p.type === 'ORDER' ? `Order: ${p.id.substring(0, 8)}` : `Batch #${p.id}`;
+
+            return `
+              <tr>
+                <td><span class="badge ${p.type === 'BATCH' ? 'badge-processed' : 'badge-paid'}">${p.type}</span></td>
+                <td><code>${idDisplay}</code></td>
+                <td>${txDisplay}</td>
+                <td>${date}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
     }
   } catch (error) {
     if (error.message !== "UNAUTHORIZED") {

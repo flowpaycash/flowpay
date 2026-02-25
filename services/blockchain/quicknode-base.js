@@ -2,15 +2,15 @@
 // Endpoint Base (EVM) para escrita de provas on-chain
 // Função: registrar fatos, confirmar estados, auditar
 
-const { createPublicClient, createWalletClient, http } = require('viem');
-const { privateKeyToAccount } = require('viem/accounts');
-const { base } = require('viem/chains');
-const { secureLog } = require('../../src/services/api/config.mjs');
+import { createPublicClient, createWalletClient, http } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
+import { base } from 'viem/chains';
+import { secureLog } from '../../src/services/api/config.mjs';
 
-class QuickNodeBase {
+export class QuickNodeBase {
   constructor() {
     // RPC URL do endpoint Base
-    this.rpcUrl = process.env.QUICKNODE_BASE_RPC || '';
+    this.rpcUrl = process.env.QUICKNODE_BASE_RPC_URL || process.env.QUICKNODE_BASE_RPC || '';
 
     if (!this.rpcUrl) {
       secureLog('warn', 'QUICKNODE_BASE_RPC não configurado - provas on-chain desabilitadas');
@@ -181,15 +181,9 @@ class QuickNodeBase {
 // Singleton instance
 let baseInstance = null;
 
-function getQuickNodeBase() {
+export function getQuickNodeBase() {
   if (!baseInstance) {
     baseInstance = new QuickNodeBase();
   }
   return baseInstance;
 }
-
-module.exports = {
-  QuickNodeBase,
-  getQuickNodeBase
-};
-

@@ -1,9 +1,9 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 /**
  * Merkle Tree implementation for Proof-of-Execution (PoE)
  */
-class MerkleTree {
+export class MerkleTree {
     /**
      * @param {string[]} leaves - Array of hex strings (hashes)
      */
@@ -93,5 +93,3 @@ class MerkleTree {
         return `0x${hash}` === root;
     }
 }
-
-module.exports = { MerkleTree };

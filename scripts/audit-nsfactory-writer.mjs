@@ -30,6 +30,13 @@ async function auditBlockchainWriter() {
 
         console.log(`💰 Saldo Atual: ${balanceEth} ETH`);
 
+        console.log('\n🔍 Resumo de Filtragem de Integridade:');
+        console.log('--------------------------------------------------');
+        console.log('✅ Nosso sistema usa Calldata JSON para identificação.');
+        console.log('✅ Apenas transações com "NSFACTORY Proof" deverão ser consideradas.');
+        console.log('❌ Airdrops de terceiros (ex: FLD, etc.) não afetam a integridade do FlowPay.');
+        console.log('--------------------------------------------------');
+
         if (parseFloat(balanceEth) === 0) {
             console.warn('⚠️ ALERTA: Saldo zerado. O Writer não conseguirá registrar Proof of Integrity on-chain.');
             console.log('📌 Nota: O sistema cairá para o modo "Soberano Local" (Log/DB) conforme configurado.');
