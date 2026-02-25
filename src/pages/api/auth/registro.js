@@ -1,9 +1,12 @@
+import crypto from 'crypto';
 import { getCorsHeaders, secureLog } from '../../../services/api/config.mjs';
 import { applyRateLimit } from '../../../services/api/rate-limiter.mjs';
-import { createUser, getUserByEmail } from '../../../services/database/sqlite.mjs';
+import { createUser, getUserByEmail, approveUser, saveAuthToken } from '../../../services/database/sqlite.mjs';
 import { sendEmail } from '../../../services/api/email-service.mjs';
 import { registroTemplate } from '../../../services/api/email/templates/registro.mjs';
 import { adminNovoCadastroTemplate } from '../../../services/api/email/templates/admin-notificacao.mjs';
+import { aprovacaoTemplate } from '../../../services/api/email/templates/aprovacao.mjs';
+import { redis } from '../../../services/api/redis-client.mjs';
 
 export const POST = async ({ request, clientAddress }) => {
     const headers = getCorsHeaders({ headers: Object.fromEntries(request.headers) });
@@ -52,27 +55,74 @@ export const POST = async ({ request, clientAddress }) => {
 
         secureLog('info', 'Novo cadastro recebido', { userId, email: cleanEmail, document_type });
 
-        // Confirmação para o usuário (fire-and-forget)
-        void sendEmail({
-            to: cleanEmail,
-            subject: 'Cadastro recebido — FlowPay',
-            html: registroTemplate({ name: cleanName }),
-        }).then((result) => {
-            if (!result.success) {
-                secureLog('warn', 'Falha no envio de e-mail de confirmação de cadastro', {
+        // Confirmação para o usuário
+        const shouldAutoApprove = process.env.AUTO_APPROVE === 'true' || cleanEmail.endsWith('@flowpay.cash');
+
+        if (shouldAutoApprove) {
+            console.log('[AUTO-APPROVE]', cleanEmail, userId);
+            try {
+                approveUser(userId, "system_auto");
+
+                const token = crypto.randomBytes(32).toString('hex');
+                const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+                if (redis) {
+                    await redis.set(`magic:${cleanEmail}`, token, 'EX', 900).catch(err => {
+                        secureLog('warn', 'Redis set falhou no auto-approve, fallback to sqlite only', { error: err.message });
+                    });
+                }
+
+                // Fallback / sync para Magic Link nativo compatível com verify
+                saveAuthToken(cleanEmail, token, expiresAt);
+
+                const domain = process.env.URL || "https://flowpay.cash";
+                const magicLink = `${domain}/auth/verify?token=${token}`;
+
+                void sendEmail({
+                    to: cleanEmail,
+                    subject: 'Sua conta FlowPay foi aprovada! Acesse com seu link mágico',
+                    html: aprovacaoTemplate({
+                        name: cleanName,
+                        loginUrl: magicLink,
+                        expiresHours: 0.25
+                    })
+                }).then((result) => {
+                    if (!result.success) {
+                        secureLog('warn', 'Falha no envio de e-mail de aprovação', {
+                            userId, email: cleanEmail, error: result.error
+                        });
+                    }
+                }).catch((err) => {
+                    secureLog('error', 'Erro inesperado no envio de e-mail de auto-aprovação', {
+                        userId, email: cleanEmail, error: err.message
+                    });
+                });
+            } catch (autoApproveErr) {
+                secureLog('error', 'Erro na auto-aprovação', { error: autoApproveErr.message });
+                // Fallback para fluxo pendente, continua
+            }
+        } else {
+            void sendEmail({
+                to: cleanEmail,
+                subject: 'Cadastro recebido — FlowPay',
+                html: registroTemplate({ name: cleanName }),
+            }).then((result) => {
+                if (!result.success) {
+                    secureLog('warn', 'Falha no envio de e-mail de confirmação de cadastro', {
+                        userId,
+                        email: cleanEmail,
+                        error: result.error || 'unknown_email_error',
+                        attempts: result.attempts || []
+                    });
+                }
+            }).catch((err) => {
+                secureLog('error', 'Erro inesperado no envio de e-mail de cadastro', {
                     userId,
                     email: cleanEmail,
-                    error: result.error || 'unknown_email_error',
-                    attempts: result.attempts || []
+                    error: err.message
                 });
-            }
-        }).catch((err) => {
-            secureLog('error', 'Erro inesperado no envio de e-mail de cadastro', {
-                userId,
-                email: cleanEmail,
-                error: err.message
             });
-        });
+        }
 
         // Notificação para o admin (fire-and-forget)
         const adminEmail = process.env.ADMIN_NOTIFY_EMAIL;
@@ -109,10 +159,10 @@ export const POST = async ({ request, clientAddress }) => {
 
         return new Response(JSON.stringify({
             success: true,
-            message: 'Cadastro enviado. Aguarde aprovação em até 24h.',
+            message: shouldAutoApprove ? 'Cadastro aprovado!' : 'Cadastro recebido. Aguardando aprovação.',
             userId
         }), {
-            status: 201,
+            status: shouldAutoApprove ? 200 : 201,
             headers: { ...headers, 'Content-Type': 'application/json' }
         });
 
