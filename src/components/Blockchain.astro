@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
+import nsfactory3d from "../../assets/parceiros/logo_line_black2.png";
+import partnerLogo from "../../assets/parceiros/Logotype-BASE/Base_lockup_white.png";
 ---
 
 <section id="blockchain" class="home-highlight">
@@ -13,13 +14,13 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
       <h2 class="highlight-title">
         <span class="brand-row">
           <span class="nsfactory-inline">
-            <span class="nsfactory-glow"></span>
             <Image
               src={nsfactory3d}
               alt="NEØ Smart Factory — infraestrutura on-chain"
               class="nsfactory-img"
               loading="lazy"
-              height={120}
+              width={20}
+              height={20}
             />
           </span>
           <strong class="highlight-brand">NEØ Smart Factory™</strong>
@@ -39,6 +40,16 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
         <strong>NEØ Smart Factory™</strong>. Sem custódia. Sem intermediário
         retendo. O valor se move e o registro fica para sempre.
       </p>
+
+      <div class="partner-row">
+        <span>Powered by</span>
+        <Image
+          src={partnerLogo}
+          alt="Base Ecosystem"
+          height={22}
+          class="partner-img"
+        />
+      </div>
     </div>
     <div class="blockchain-logos">
       <div
@@ -442,7 +453,35 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
 
   @media (min-width: 768px) {
     .home-highlight-text {
-      margin: 0 auto 4rem;
+      margin: 0 auto;
+    }
+  }
+
+  .partner-row {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .partner-img {
+    height: 20px;
+    width: auto;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+
+  @media (hover: hover) {
+    .partner-row:hover .partner-img {
+      opacity: 1;
     }
   }
 
@@ -603,53 +642,23 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 72px;
-    height: 72px;
+    width: 48px;
+    height: 48px;
     flex-shrink: 0;
     animation: fadeInUp 0.8s ease-out 0.3s both;
   }
 
   @media (min-width: 480px) {
     .nsfactory-inline {
-      width: 90px;
-      height: 90px;
+      width: 56px;
+      height: 56px;
     }
   }
 
   @media (min-width: 768px) {
     .nsfactory-inline {
-      width: 110px;
-      height: 110px;
-    }
-  }
-
-  .nsfactory-inline .nsfactory-glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 180%;
-    height: 180%;
-    background: radial-gradient(
-      circle,
-      rgba(255, 200, 0, 0.22) 0%,
-      rgba(0, 212, 255, 0.08) 55%,
-      transparent 70%
-    );
-    filter: blur(20px);
-    z-index: 0;
-    pointer-events: none;
-    animation: nsfactoryGlow 5s ease-in-out infinite alternate;
-  }
-
-  @keyframes nsfactoryGlow {
-    0% {
-      opacity: 0.6;
-      transform: translate(-50%, -50%) scale(1);
-    }
-    100% {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.15);
+      width: 68px;
+      height: 68px;
     }
   }
 
@@ -659,8 +668,6 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 0 12px rgba(255, 200, 0, 0.5))
-      drop-shadow(0 0 28px rgba(0, 212, 255, 0.18));
     animation:
       floatNsf 7s ease-in-out infinite,
       fadeInUp 0.8s ease-out 0.3s both;
@@ -669,8 +676,7 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
 
   @media (hover: hover) {
     .nsfactory-img:hover {
-      filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.7))
-        drop-shadow(0 0 45px rgba(0, 212, 255, 0.3));
+      /* Optional: Add a subtle effect or leave empty */
     }
   }
 
