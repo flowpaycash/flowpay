@@ -11,6 +11,7 @@
 	lint lint-soft \
 	env-check audit audit-soft ci \
 	status db-reset logs \
+	pwa-gen pwa-sync \
 	tunnel-neo-agent tunnel-flowpay tunnel-nexus tunnel-neobot tunnel-status
 
 SHELL := /bin/bash
@@ -197,7 +198,30 @@ status: ## Show project status overview
 	@test -f "$(ENV_FILE)" && echo -e "  $(ENV_FILE): $(GREEN)present$(NC)" || echo -e "  $(ENV_FILE): $(RED)missing$(NC)"
 	@echo ""
 
-# ── Deployment ───────────────────────────────────────
+# ── PWA Assets ───────────────────────────────────────
+
+pwa-gen: ## Generate PWA icons and splash screens from SVG
+	@echo -e "$(CYAN)Generating PWA assets...$(NC)"
+	@npx pwa-asset-generator assets/pwa/favicon.svg assets/pwa/ \
+		-m assets/pwa/site.webmanifest \
+		--index assets/pwa/splash-tags.html \
+		--opaque false --icon-only false
+	@echo -e "$(GREEN)Generation complete.$(NC)"
+
+pwa-sync: ## Sync generated PWA assets to public directory
+	@echo -e "$(CYAN)Syncing PWA assets to public...$(NC)"
+	@mkdir -p public/assets/splash public/assets/icons public/assets/manifest
+	@rm -rf public/assets/splash/*
+	@cp assets/pwa/apple-splash-* public/assets/splash/
+	@cp assets/pwa/apple-icon-180.png public/assets/icons/
+	@cp assets/pwa/manifest-icon-*.png public/assets/manifest/
+	@cp assets/pwa/favicon-96x96.png public/assets/icons/
+	@cp assets/pwa/web-app-manifest-*.png public/assets/icons/
+	@cp assets/pwa/favicon.ico public/favicon.ico
+	@cp assets/pwa/favicon.svg public/favicon.svg
+	@echo -e "$(GREEN)Sync complete.$(NC)"
+
+ # ── Deployment ───────────────────────────────────────
 
 logs: ## Tail production logs from Railway
 	@command -v railway >/dev/null 2>&1 || (echo -e "$(RED)Railway CLI not found.$(NC)" && exit 1)

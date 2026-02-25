@@ -4,9 +4,9 @@
   "description": "FlowPay - Integração com Woovi API para pagamentos Pix",
   "main": "index.js",
   "scripts": {
-    "dev": "astro dev",
-    "prebuild": "rm -rf .astro",
-    "build": "astro check && astro build",
+    "dev": "pnpm exec astro dev",
+    "prebuild": "rm -rf .astro 2>/dev/null || true",
+    "build": "pnpm exec astro check && pnpm exec astro build",
     "preview": "pnpm run build && pnpm dlx serve dist -p 4321",
     "astro": "astro",
     "start": "node ./dist/server/entry.mjs",

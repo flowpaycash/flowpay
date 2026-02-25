@@ -1,4 +1,4 @@
-# FLOWPAY ⟁ SETTLEMENT ENGINE
+# FLOWPAY CORE ⟁ SETTLEMENT ENGINE
 
 ```text
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -7,7 +7,7 @@
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 .                                                         .
 .   Node      : mio-flowpay                               .
-.   Infra     : Railway ⟁ NΞØ Tunnel ⟁ NΞØ Nexus          .
+.   Infra     : Railway ⟁ NΞØ Tunnel ⟁ NΞØ Nexus         .
 .   Version   : v1.0.1                                    .
 .                                                         .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -20,15 +20,15 @@ Converting Web2 liquidity into Web3 sovereignty.
 
 ## VISÃO ARQUITETURAL
 
-**FlowPay** é o motor de liquidação determinística do ecossistema NΞØ. 
-Orquestra a conversão de capital Web2 (PIX/WooVi) em ativos Web3, 
-utilizando uma arquitetura de **Relayer Proxy** isolada para garantir a 
+**FlowPay** é o motor de liquidação determinística do ecossistema NΞØ.
+Orquestra a conversão de capital Web2 (PIX/WooVi) em ativos Web3,
+utilizando uma arquitetura de **Relayer Proxy** isolada para garantir a
 soberania das chaves privadas.
 
 ```text
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 .   S Y S T E M   F L O W                                 .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 .                                                         .
 .   ⦿ WOOVI API (PIX) ....... Webhook Ingress             .
 .   ⍟ FLOWPAY ENGINE ........ HMAC-SHA256 Validation      .
@@ -36,7 +36,7 @@ soberania das chaves privadas.
 .   ◱ SMART FACTORY ......... Digital Asset Minting       .
 .   ⟠ PROOF OF INTEGRITY .... Blockchain Settlement       .
 .                                                         .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ```
 
 ────────────────────────────────────────
@@ -63,32 +63,33 @@ soberania das chaves privadas.
 
 ## NAVIGATION
 
-```text
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+```
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 .   GUIDE ............. PURPOSE ............. ACTION      .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 .                                                         .
-.   SETUP.md .......... Node Operation ....... [ VIEW ]    .
-.   NEXTSTEPS.md ...... Roadmap / Fixes ...... [ VIEW ]    .
-.   DOCS INDEX ........ Tech Library ......... [ VIEW ]    .
+.   SETUP.md .......... Node Operation ....... [ VIEW ]   .
+.   NEXTSTEPS.md ...... Roadmap / Fixes ...... [ VIEW ]   .
+.   DOCS INDEX ........ Tech Library ......... [ VIEW ]   .
 .                                                         .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ```
 
-────────────────────────────────────────
+++++++++++──────────────────────────────
 
 ## STATUS LEGAL & IP
 
-- Lead Architect ... Eurycles Ramos Neto / NODE NEØ
+- Lead Architect ... NEØ MELLO
 - Sovereignty ...... Architecture sealed and timestamped.
 - Licenses ........ MIT (Engine) / CC BY 4.0 (Docs).
 
-────────────────────────────────────────
+++++++++++──────────────────────────────
 
+```
 ▓▓▓ NΞØ MELLØ
-
 ────────────────────────────────────────
 Core Architect · NΞØ Protocol
 
 "Settlement finalized. Sovereign assets unlocked."
 ────────────────────────────────────────
+```

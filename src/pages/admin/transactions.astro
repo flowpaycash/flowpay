@@ -559,7 +559,7 @@
           .join("");
       }
 
-      async function completeOrder(chargeId, btn) {
+      window["completeOrder"] = async function completeOrder(chargeId, btn) {
         if (!confirm("Confirmar conclusão desta transação?")) return;
         btn.disabled = true;
         btn.textContent = "...";
@@ -579,7 +579,10 @@
           btn.disabled = false;
           btn.textContent = "✓ Concluir";
         }
-      }
+      };
+
+      window["loadTransactions"] = loadTransactions;
+      window["setFilter"] = setFilter;
 
       function esc(str) {
         return String(str || "")

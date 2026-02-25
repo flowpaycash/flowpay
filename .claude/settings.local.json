@@ -31,7 +31,17 @@
       "Bash(git stash:*)",
       "Bash(git stash pop:*)",
       "Bash(gh run list:*)",
-      "Bash(railway status:*)"
+      "Bash(railway status:*)",
+      "Bash(railway deployment list:*)",
+      "Bash(railway logs:*)",
+      "Bash(railway up:*)",
+      "Bash(railway variables:*)",
+      "Bash(pnpm astro check:*)",
+      "Bash(gh label create:*)",
+      "Bash(gh label:*)",
+      "Bash(xargs cat:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(node --version:*)"
     ]
   }
 }

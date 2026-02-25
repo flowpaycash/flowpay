@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/astro";
 
 const SENTRY_DSN =
   import.meta.env.PUBLIC_SENTRY_DSN ||
-  "https://7794b30fca5fa43d77da7314bdc29748@o4510916616519680.ingest.us.sentry.io/4510916639653888";
+  "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@o000000.ingest.sentry.io/000000";
 
 Sentry.init({
   dsn: SENTRY_DSN,
