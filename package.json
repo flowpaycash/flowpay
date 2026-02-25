@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "pnpm exec astro dev",
     "prebuild": "rm -rf .astro 2>/dev/null || true",
-    "build": "pnpm exec astro check && pnpm exec astro build",
+    "build": "([ -n \"$PORT\" ] || [ -n \"$RAILWAY_STATIC_URL\" ] || pnpm exec astro check) && NODE_OPTIONS='--max-old-space-size=4096' pnpm exec astro build",
     "preview": "pnpm run build && pnpm dlx serve dist -p 4321",
     "astro": "astro",
     "start": "node ./dist/server/entry.mjs",
