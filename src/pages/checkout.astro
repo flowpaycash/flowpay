@@ -48,6 +48,15 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
           </p>
         </div>
 
+        <!-- Error State -->
+        <div id="error-state" hidden>
+          <h3 class="error-title">Problema na emissão</h3>
+          <p class="error-subtitle">
+            Houve um problema na emissão do seu ativo. Seu pagamento foi
+            recebido. Entre em contato: suporte@flowpay.cash
+          </p>
+        </div>
+
         <!-- Final Success -->
         <div id="success-state" hidden>
           <h3 class="success-title">Ativo Emitido!</h3>
@@ -131,6 +140,17 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
     margin-top: 0.5rem;
   }
 
+  .error-title {
+    color: #ff4da6;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .error-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.5rem;
+  }
+
   .success-actions {
     margin-top: 1.5rem;
   }
@@ -169,6 +189,7 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
       qr: document.getElementById("qr-container"),
       proc: document.getElementById("processing-state"),
       success: document.getElementById("success-state"),
+      error: document.getElementById("error-state"),
       qrImg: document.getElementById("qr-image"),
       brCopy: document.getElementById("br-code-copy"),
       steps: document.querySelectorAll(".step"),
@@ -248,6 +269,7 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
             pollingArea.qr.hidden = false;
             pollingArea.proc.hidden = true;
             pollingArea.success.hidden = true;
+            if (pollingArea.error) pollingArea.error.hidden = true;
 
             pollingArea.qrImg.src = data.pix_data.qr_code;
             pollingArea.brCopy.value = data.pix_data.br_code;
@@ -280,6 +302,12 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
                     pollingArea.success.hidden = false;
                     updateStepper(4);
 
+                    clearInterval(pollInterval);
+                    pollInterval = null;
+                  } else if (statusData.status === "SETTLEMENT_FAILED") {
+                    pollingArea.proc.hidden = true;
+                    pollingArea.qr.hidden = false;
+                    if (pollingArea.error) pollingArea.error.hidden = false;
                     clearInterval(pollInterval);
                     pollInterval = null;
                   }

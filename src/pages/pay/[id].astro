@@ -25,6 +25,7 @@ const amountBrl = button?.amount_brl ? Number(button.amount_brl).toFixed(2) : nu
 const cryptoAddress = button?.crypto_address || '';
 const cryptoNetwork = button?.crypto_network || 'polygon';
 const creatorName = button?.user_name || 'FlowPay';
+const creatorAvatar = button?.user_avatar || '';
 ---
 
 <Layout
@@ -48,6 +49,7 @@ const creatorName = button?.user_name || 'FlowPay';
         <!-- Header -->
         <div class="pay-header">
           <Image src={flowpayLogo} alt="FlowPay" class="pay-logo" height={40} loading="eager" />
+          {creatorAvatar && <img src={creatorAvatar} alt={creatorName} class="creator-avatar" height="40" loading="eager" />}
         </div>
 
         <!-- Payment card -->
@@ -134,6 +136,13 @@ const creatorName = button?.user_name || 'FlowPay';
                 <div class="success-check">✅</div>
                 <h3 class="success-title">Pagamento confirmado!</h3>
                 <p class="success-msg">Seu pagamento foi recebido e está sendo processado pela FlowPay.</p>
+              </div>
+              
+              <!-- Error state -->
+              <div id="pix-error-state" hidden>
+                <div class="success-check" style="color: #ff4da6;">❌</div>
+                <h3 class="success-title" style="color: #ff4da6;">Problema na emissão</h3>
+                <p class="success-msg">Houve um problema na emissão do seu ativo. Seu pagamento foi recebido. Entre em contato: suporte@flowpay.cash</p>
               </div>
             </div>
           )}
@@ -709,6 +718,15 @@ const creatorName = button?.user_name || 'FlowPay';
             if (qrState) qrState.hidden = true;
             const successState = document.getElementById('pix-success-state');
             if (successState) successState.hidden = false;
+          } else if (data.status === 'SETTLEMENT_FAILED') {
+            clearInterval(pollInterval);
+            const errorState = document.getElementById('pix-error-state');
+            if (errorState) errorState.hidden = false;
+            if (qrState) qrState.hidden = false;
+            if (statusBar) statusBar.classList.add('paid');
+            if (statusText) statusText.textContent = 'Falha na emissão do ativo';
+            const successState = document.getElementById('pix-success-state');
+            if (successState) successState.hidden = true;
           }
         } catch { /* silent */ }
       }, 3000);
