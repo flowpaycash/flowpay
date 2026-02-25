@@ -63,34 +63,34 @@ export async function connectWallet() {
         const infuraApiKey = config.infura?.apiKey || '';
 
         // Criar Smart Account (Account Abstraction)
-        const smartAccount = await toMetaMaskSmartAccount({
+        const smartAccount = await (toMetaMaskSmartAccount as any)({
             client: publicClient,
             implementation: Implementation.Hybrid,
             address,
             signer: {
                 address,
-                async signMessage({ message }: { message: any }) {
+                async signMessage({ message }: { message: string | { raw: string | Uint8Array } }) {
                     return window.ethereum.request({
                         method: 'personal_sign',
                         params: [typeof message === 'string' ? message : (message.raw || message), address],
                     });
                 },
-                async signTypedData(typedData: any) {
+                async signTypedData(typedData: Record<string, unknown>) {
                     return window.ethereum.request({
                         method: 'eth_signTypedData_v4',
                         params: [address, JSON.stringify(typedData)],
                     });
                 }
-            } as any
+            }
         });
 
-        let bundlerClient;
+        let bundlerClient: any = null;
         if (infuraApiKey) {
             try {
-                bundlerClient = createInfuraBundlerClient({
+                bundlerClient = (createInfuraBundlerClient as any)({
                     chain: polygon,
                     apiKey: infuraApiKey,
-                } as any);
+                });
                 console.log("⛽ Bundler Infura ativo");
             } catch (err) {
                 console.warn("⚠️ Falha ao carregar Bundler Infura:", err);

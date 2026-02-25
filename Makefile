@@ -79,6 +79,11 @@ build: ## Production build (type-check + build)
 	@pnpm run build
 	@echo -e "$(GREEN)Build complete.$(NC)"
 
+build-metamask: ## Build MetaMask AA bundle
+	@echo -e "$(CYAN)Building MetaMask AA bundle...$(NC)"
+	@sh scripts/build-metamask.sh
+	@echo -e "$(GREEN)MetaMask AA build complete.$(NC)"
+
 rebuild: clean build ## Clean and build from scratch
 
 # ── Tests ────────────────────────────────────────────
