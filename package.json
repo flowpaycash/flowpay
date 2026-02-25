@@ -1,6 +1,6 @@
 {
   "name": "flowpay",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "description": "FlowPay - Integração com Woovi API para pagamentos Pix",
   "main": "index.js",
   "scripts": {
