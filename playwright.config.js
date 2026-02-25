@@ -14,12 +14,12 @@
 //   pnpm exec playwright install --with-deps chromium
 // ════════════════════════════════════════════════════════════════
 
-const { defineConfig, devices } = require('@playwright/test');
+const { defineConfig, devices } = require("@playwright/test");
 
 module.exports = defineConfig({
     // ── Test discovery ──────────────────────────────────────────
-    testDir: './tests/e2e',
-    testMatch: ['**/*.spec.js'],
+    testDir: "./tests/e2e",
+    testMatch: ["**/*.spec.js"],
 
     // ── Global settings ─────────────────────────────────────────
     // Allow each test up to 60 s — PIX polling needs breathing room

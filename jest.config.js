@@ -1,9 +1,7 @@
 // Jest Configuration for FLOWPay
 module.exports = {
-  // Diretório de testes
   testMatch: ["**/tests/**/*.test.js"],
 
-  // Ignorar arquivos desnecessários
   testPathIgnorePatterns: [
     "/node_modules/",
     "/.railway/",

@@ -15,9 +15,9 @@ type NeoConfig = {
 
 const cfg: NeoConfig = (window as any).NEO_CONFIG || {};
 const clientId = cfg.web3auth?.client_id || "REPLACE_ME";
-const web3AuthNetwork = cfg.web3auth?.network || "sapphire_mainnet";
+const web3AuthNetwork = (cfg.web3auth?.network || "sapphire_mainnet") as any;
 const chainConfig = {
-  chainNamespace: "eip155",
+  chainNamespace: "eip155" as any,
   chainId: cfg.crypto?.chainId || "0x1",
   rpcTarget: cfg.crypto?.rpc || "https://rpc.ankr.com/eth",
 };

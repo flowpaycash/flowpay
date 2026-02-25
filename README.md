@@ -8,7 +8,7 @@
 .                                                         .
 .   Node      : mio-flowpay                               .
 .   Infra     : Railway ⟁ NΞØ Tunnel ⟁ NΞØ Nexus         .
-.   Version   : v1.2.0 (Sprint 4 Concluído)                 .
+.   Version   : v1.2.0 (Sprint 4 Concluído)                .
 .                                                         .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ```
