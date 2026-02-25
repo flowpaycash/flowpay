@@ -7,7 +7,9 @@ import Footer from "../components/Footer.astro";
 
 // Sections — adicione, remova ou reordene livremente abaixo
 import Hero from "../components/Hero.astro";
+import ForWhom from "../components/ForWhom.astro";
 import Features from "../components/Features.astro";
+import Pricing from "../components/Pricing.astro";
 import Blockchain from "../components/Blockchain.astro";
 import CTA from "../components/CTA.astro";
 
@@ -96,13 +98,19 @@ const faqSchema = {
   <!-- [1] Hero — apresentação principal e CTAs -->
   <Hero />
 
-  <!-- [2] Features — como funciona (3 passos) -->
+  <!-- [2] ForWhom — pra quem é o FlowPay -->
+  <ForWhom />
+
+  <!-- [3] Features — como funciona (3 passos) -->
   <Features />
 
-  <!-- [3] Blockchain — redes e infraestrutura -->
+  <!-- [4] Pricing — custos transparentes -->
+  <Pricing />
+
+  <!-- [5] Blockchain — redes e infraestrutura -->
   <Blockchain />
 
-  <!-- [4] CTA — chamada final para cadastro -->
+  <!-- [6] CTA — chamada final para cadastro -->
   <CTA />
 
   <!-- Footer -->

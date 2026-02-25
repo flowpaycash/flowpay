@@ -1,5 +1,6 @@
 ---
-
+import { Image } from "astro:assets";
+import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
 ---
 
 <section id="blockchain" class="home-highlight">
@@ -19,11 +20,23 @@
         </span>
       </h2>
     </div>
+
+    <div class="nsfactory-visual">
+      <div class="nsfactory-glow"></div>
+      <Image
+        src={nsfactory3d}
+        alt="NEØ Smart Factory — infraestrutura on-chain"
+        class="nsfactory-img"
+        loading="lazy"
+        height={320}
+      />
+    </div>
+
     <div class="home-highlight-glass">
       <p class="home-highlight-text">
-        A FlowPay conecta você automaticamente aos maiores mercados digitais do
-        planeta. Uma infraestrutura global otimizada para velocidade e
-        segurança.
+        Cada transação recebe prova de execução registrada on-chain via
+        <strong>NEØ Smart Factory™</strong>. Sem custódia. Sem intermediário
+        retendo. O valor se move e o registro fica para sempre.
       </p>
     </div>
     <div class="blockchain-logos">
@@ -572,6 +585,85 @@
     .blockchain-logos {
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
+    }
+  }
+
+  /* ── NEØ Smart Factory visual ── */
+  .nsfactory-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2.5rem auto 1rem;
+    width: 100%;
+    max-width: min(380px, calc(100vw - 48px));
+    animation: fadeInUp 0.8s ease-out 0.3s both;
+  }
+
+  @media (min-width: 768px) {
+    .nsfactory-visual {
+      max-width: 480px;
+      margin: 3rem auto 1.5rem;
+    }
+  }
+
+  .nsfactory-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 200, 0, 0.18) 0%,
+      rgba(0, 212, 255, 0.08) 50%,
+      transparent 70%
+    );
+    filter: blur(40px);
+    z-index: 0;
+    pointer-events: none;
+    animation: nsfactoryGlow 5s ease-in-out infinite alternate;
+  }
+
+  @keyframes nsfactoryGlow {
+    0% {
+      opacity: 0.6;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.15);
+    }
+  }
+
+  .nsfactory-img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.35))
+      drop-shadow(0 0 50px rgba(0, 212, 255, 0.15));
+    animation:
+      floatNsf 7s ease-in-out infinite,
+      fadeInUp 0.8s ease-out 0.3s both;
+    transition: filter 0.4s ease;
+  }
+
+  @media (hover: hover) {
+    .nsfactory-img:hover {
+      filter: drop-shadow(0 0 30px rgba(255, 200, 0, 0.55))
+        drop-shadow(0 0 70px rgba(0, 212, 255, 0.25));
+    }
+  }
+
+  @keyframes floatNsf {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-14px);
     }
   }
 </style>

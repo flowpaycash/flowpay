@@ -1,0 +1,184 @@
+---
+
+---
+
+<section id="para-quem" class="forwhom-section">
+  <div class="forwhom-container">
+    <h2 class="forwhom-title">
+      Pra quem é o <span class="gradient-text">FlowPay</span>?
+    </h2>
+
+    <div class="forwhom-table">
+      <div class="forwhom-row header">
+        <span>Você é</span>
+        <span>O que muda</span>
+      </div>
+
+      <div class="forwhom-row">
+        <div class="row-who">
+          <span class="row-icon">🎥</span>
+          <span>Criador / Influencer</span>
+        </div>
+        <div class="row-what">
+          Vende pelo link, recebe sem depender de plataforma
+        </div>
+      </div>
+
+      <div class="forwhom-row">
+        <div class="row-who">
+          <span class="row-icon">🛒</span>
+          <span>E-commerce</span>
+        </div>
+        <div class="row-what">
+          Checkout PIX com liquidação imediata, sem D+2
+        </div>
+      </div>
+
+      <div class="forwhom-row">
+        <div class="row-who">
+          <span class="row-icon">🏢</span>
+          <span>Freelancer / Empresa</span>
+        </div>
+        <div class="row-what">
+          Emite cobrança, recebe sem intermediário retendo
+        </div>
+      </div>
+
+      <div class="forwhom-row last">
+        <div class="row-who">
+          <span class="row-icon">👤</span>
+          <span>Qualquer pessoa</span>
+        </div>
+        <div class="row-what">
+          Cria um link de pagamento em 2 minutos
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .forwhom-section {
+    padding: 5rem 1.25rem;
+    position: relative;
+  }
+
+  @media (min-width: 768px) {
+    .forwhom-section {
+      padding: 7rem 2rem;
+    }
+  }
+
+  .forwhom-container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .forwhom-title {
+    font-size: clamp(1.8rem, 5vw, 2.75rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #ff007a 0%, #ff4da6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .forwhom-table {
+    background: rgba(15, 15, 15, 0.5);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .forwhom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 1.1rem 1.75rem;
+    min-height: 44px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 1rem;
+    transition: background 0.15s ease;
+  }
+
+  .forwhom-row.last {
+    border-bottom: none;
+  }
+
+  @media (hover: hover) {
+    .forwhom-row:not(.header):hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  }
+
+  @media (min-width: 480px) {
+    .forwhom-row {
+      padding: 1.25rem 2.5rem;
+    }
+  }
+
+  .forwhom-row.header {
+    padding: 0.75rem 1.75rem;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  @media (min-width: 480px) {
+    .forwhom-row.header {
+      padding: 0.75rem 2.5rem;
+    }
+  }
+
+  .forwhom-row.header span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  .row-who {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .row-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .row-what {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 479px) {
+    .forwhom-row {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+      padding: 1rem 1.25rem;
+    }
+
+    .forwhom-row.header {
+      display: none;
+    }
+
+    .row-what {
+      padding-left: 1.85rem;
+    }
+  }
+</style>

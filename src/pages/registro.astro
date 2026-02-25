@@ -366,6 +366,7 @@ import brandLogo from "@assets/img/flowpay-logo.png";
   .type-btn {
     flex: 1;
     padding: 10px;
+    min-height: 44px;
     border: none;
     background: transparent;
     color: rgba(255, 255, 255, 0.5);
@@ -375,6 +376,8 @@ import brandLogo from "@assets/img/flowpay-logo.png";
     border-radius: 10px;
     transition: all 0.2s;
     font-family: inherit;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .type-btn.active {

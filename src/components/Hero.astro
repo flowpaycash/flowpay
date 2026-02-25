@@ -17,27 +17,20 @@ import flowpayLogo from "../../public/img/flowpay-logo.png";
     </div>
 
     <h1 class="premium-title">
-      Receba por PIX. <span class="gradient-text"
-        >Converta em cripto. Automático.</span
+      Receba por PIX.<br /><span class="gradient-text"
+        >Do jeito mais simples possível.</span
       >
     </h1>
 
     <p class="premium-subtitle">
-      Sem configuração complicada. <strong>PIX</strong> Sem banco segurando seu dinheiro.
-      em <strong>CRIPTO</strong>.
-      <br />
-      <br />
-      <span
-        style="font-weight: 300; opacity: 0.8; font-size: 1.15rem; color: #ff0091;"
-        >Sem intermediários custodiando seu dinheiro. Desempenho instantâneo.
-        Auto-custódia.</span
-      >
-      <br />
+      Crie links de pagamento em minutos. Receba em reais ou converta
+      automaticamente para cripto — você escolhe.
     </p>
+
     <div class="hero-glass-cta">
       <div class="cta-actions">
         <a href="/registro" class="btn-premium primary">
-          Criar / Acessar Conta
+          Criar meu link de pagamento
           <svg
             width="20"
             height="20"
@@ -51,7 +44,14 @@ import flowpayLogo from "../../public/img/flowpay-logo.png";
               points="12 5 19 12 12 19"></polyline></svg
           >
         </a>
+        <a href="#features" class="btn-premium secondary">
+          Ver como funciona
+        </a>
       </div>
+      <p class="hero-social-proof">
+        Usado por criadores, lojas e empresas que preferem controle a repasse
+        atrasado.
+      </p>
     </div>
   </div>
 
@@ -382,11 +382,35 @@ import flowpayLogo from "../../public/img/flowpay-logo.png";
       }
     }
 
-    @media (max-width: 479px) {
+    .hero-social-proof {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.35);
+      text-align: center;
+      letter-spacing: 0.01em;
+      line-height: 1.5;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      padding-top: 20px;
+      margin: 0;
+    }
+
+    @media (max-width: 767px) {
+      .cta-actions {
+        flex-direction: column;
+        gap: 12px;
+      }
+
       .btn-premium {
         width: 100%;
         justify-content: center;
       }
+    }
+
+    @media (max-width: 479px) {
+      .hero-glass-cta {
+        padding: 20px 16px;
+        gap: 20px;
+      }
+
       .stat-value {
         font-size: 1.5rem;
       }
