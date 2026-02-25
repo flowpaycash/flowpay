@@ -15,9 +15,8 @@ sequenceDiagram
     participant DB as SQLite (Autonomous)
     participant Woovi as Gateway PIX
     participant PoE as PoE Service
-    participant Nexus as Nexus Bridge
-    participant Bridge as Neobot Bridge
-    participant Bot as Neobot Core
+    participant Nexus as NΞØ Nexus (Tunnel)
+    participant Bot as NeoBot Core
 
     User->>UI: Escolhe plano & Preenche dados
     UI->>API: POST /api/orders
@@ -37,15 +36,15 @@ sequenceDiagram
         API->>Nexus: notifyNexus(PAYMENT_RECEIVED)
     end
 
-    API->>Bridge: triggerNeobotUnlock(id)
+    API->>Bot: triggerUnlock(id) [JWT Auth]
     
     loop Retry Policy (3x)
-        Bridge->>Bot: POST /tools/invoke (Unlock)
+        Bot->>Bot: Process Signature/Minting
         alt Success
-            Bot-->>Bridge: 200 OK + Receipt
-            Bridge->>DB: UPDATE order (Status: COMPLETED)
+            Bot-->>API: 200 OK + Receipt
+            API->>DB: UPDATE order (Status: COMPLETED)
         else Failure
-            Bridge->>Bridge: Exponential Backoff
+            Bot->>Bot: Exponential Backoff
         end
     end
 
@@ -100,10 +99,10 @@ C4Context
     }
 
     System_Ext(woovi, "Woovi API", "Gateway PIX")
-    System_Ext(nexus, "Nexus Bridge", "Monitor de Ecossistema")
+    System_Ext(nexus, "NΞØ Nexus", "Monitor de Ecossistema (Tunnel)")
     
     System_Boundary(c2, "Smart Factory Core") {
-        System_Ext(neobot, "Neobot", "Executor de Skills e Gestor de Chaves")
+        System_Ext(neobot, "NeoBot Core", "Executor de Skills e Gestor de Chaves")
         SystemDb(blockchain, "Base L2", "Soberania on-chain")
     }
 
@@ -111,8 +110,8 @@ C4Context
     Rel(web, api, "Cria ordem", "REST")
     Rel(api, db, "Salva estado", "SQL")
     Rel(woovi, api, "Notifica pagamento", "Webhook/HMAC")
-    Rel(api, nexus, "Sincroniza evento", "HMAC/Bridge")
-    Rel(api, neobot, "Dispara Unlock", "API Key/Authenticated")
+    Rel(api, nexus, "Sincroniza evento", "HMAC/Tunnel")
+    Rel(api, neobot, "Dispara Unlock", "JWT Auth")
     Rel(neobot, blockchain, "Minta Ativos / PoE Anchor", "Web3")
 ```
 
