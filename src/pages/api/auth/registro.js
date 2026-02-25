@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { getCorsHeaders, secureLog } from '../../../services/api/config.mjs';
-import { applyRateLimit } from '../../../services/api/rate-limiter.mjs';
+import { registroLimiterIP, registroLimiterEmail } from '../../../services/api/rate-limiter.mjs';
 import { createUser, getUserByEmail, approveUser, saveAuthToken } from '../../../services/database/sqlite.mjs';
 import { sendEmail } from '../../../services/api/email-service.mjs';
 import { registroTemplate } from '../../../services/api/email/templates/registro.mjs';
@@ -11,12 +11,35 @@ import { redis } from '../../../services/api/redis-client.mjs';
 export const POST = async ({ request, clientAddress }) => {
     const headers = getCorsHeaders({ headers: Object.fromEntries(request.headers) });
 
-    const rateLimitResult = await applyRateLimit('registro')({
-        headers: Object.fromEntries(request.headers),
-        context: { clientIP: clientAddress }
-    });
-    if (rateLimitResult && rateLimitResult.statusCode === 429) {
-        return new Response(rateLimitResult.body, { status: 429, headers });
+    // Extrair IP real (Railway usa proxy)
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+        || request.headers.get('cf-connecting-ip')
+        || clientAddress
+        || 'unknown';
+
+    // Checar rate limit por IP ANTES de ler o JSON
+    if (registroLimiterIP) {
+        try {
+            await registroLimiterIP.consume(ip);
+        } catch (rejRes) {
+            if (rejRes && rejRes.msBeforeNextReset !== undefined) {
+                const secs = Math.round(rejRes.msBeforeNextReset / 1000) || 1;
+                return new Response(JSON.stringify({
+                    error: 'Muitas tentativas. Tente novamente em ' + Math.ceil(secs / 60) + ' minutos.'
+                }), {
+                    status: 429,
+                    headers: {
+                        ...headers,
+                        'Content-Type': 'application/json',
+                        'Retry-After': String(secs)
+                    }
+                });
+            }
+            // Se for erro de conexão do Redis, cai aqui e continua (Fail Open)
+            secureLog('warn', '[RATE-LIMIT] Falha no limiter de IP (Fail Open)', { error: rejRes?.message || rejRes });
+        }
+    } else {
+        secureLog('warn', '[RATE-LIMIT] Redis indisponível, limitação de IP desativada.');
     }
 
     try {
@@ -32,6 +55,31 @@ export const POST = async ({ request, clientAddress }) => {
 
         const cleanEmail = email.toLowerCase().trim();
         const cleanName = name.trim().substring(0, 100);
+
+        // Checar rate limit por email APÓS extrair e sanitizar o email
+        if (registroLimiterEmail) {
+            try {
+                await registroLimiterEmail.consume(cleanEmail);
+            } catch (rejRes) {
+                if (rejRes && rejRes.msBeforeNextReset !== undefined) {
+                    const secs = Math.round(rejRes.msBeforeNextReset / 1000) || 1;
+                    return new Response(JSON.stringify({
+                        error: 'Este email atingiu o limite de tentativas de cadastro. Tente novamente em ' + Math.ceil(secs / 60) + ' minutos.'
+                    }), {
+                        status: 429,
+                        headers: {
+                            ...headers,
+                            'Content-Type': 'application/json',
+                            'Retry-After': String(secs)
+                        }
+                    });
+                }
+                // Se for erro de conexão do Redis, cai aqui e continua (Fail Open)
+                secureLog('warn', '[RATE-LIMIT] Falha no limiter de Email (Fail Open)', { error: rejRes?.message || rejRes });
+            }
+        } else {
+            secureLog('warn', '[RATE-LIMIT] Redis indisponível, limitação de Email desativada.');
+        }
 
         // Check if email already registered
         const existing = getUserByEmail(cleanEmail);
@@ -67,7 +115,11 @@ export const POST = async ({ request, clientAddress }) => {
                 const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
                 if (redis) {
-                    await redis.set(`magic:${cleanEmail}`, token, 'EX', 900).catch(err => {
+                    // Armazena por e-mail (para controle de reenvio) e por token (para verificacao rapida)
+                    await Promise.all([
+                        redis.set(`magic:${cleanEmail}`, token, 'EX', 900),
+                        redis.set(`auth_token:${token}`, cleanEmail, 'EX', 900)
+                    ]).catch(err => {
                         secureLog('warn', 'Redis set falhou no auto-approve, fallback to sqlite only', { error: err.message });
                     });
                 }
