@@ -57,6 +57,36 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
           </p>
         </div>
 
+        <!-- Network Error State -->
+        <div id="pix-network-error" hidden>
+          <div class="success-check" style="color: #ffaa00;">⚠️</div>
+          <h3 class="success-title" style="color: #ffaa00;">
+            Problema de conexão
+          </h3>
+          <p class="success-msg">
+            Seu pagamento pode ter sido processado. Verifique seu email ou entre
+            em contato: suporte@flowpay.cash
+          </p>
+        </div>
+
+        <!-- Timeout State -->
+        <div id="pix-timeout-state" hidden>
+          <div class="success-check" style="color: #ffaa00;">⏱</div>
+          <h3 class="success-title" style="color: #ffaa00;">PIX expirado</h3>
+          <p class="success-msg">
+            O tempo de pagamento expirou. Gere um novo PIX para continuar.
+          </p>
+          <button
+            id="btn-retry-pix"
+            class="btn-pay"
+            style="margin-top: 1rem; background: rgba(255,170,0,.15); 
+            border: 1px solid rgba(255,170,0,.25); color: #ffaa00;
+            box-shadow: none;"
+          >
+            → Gerar novo PIX
+          </button>
+        </div>
+
         <!-- Final Success -->
         <div id="success-state" hidden>
           <h3 class="success-title">Ativo Emitido!</h3>
@@ -71,7 +101,7 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
     </section>
 
     <footer class="checkout-footer">
-      <p>&copy; 2026 FlowPay Autonomous Systems</p>
+      <p>&copy; 2026 FlowPay Autonomous Payments Systems</p>
     </footer>
   </main>
 </CheckoutLayout>
@@ -185,6 +215,11 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
 
     // Polling Control
     let pollInterval = null;
+    let pollCount = 0;
+    let consecutiveErrors = 0;
+    const MAX_CONSECUTIVE_ERRORS = 5;
+    const maxPolls = 400;
+
     const pollingArea = {
       qr: document.getElementById("qr-container"),
       proc: document.getElementById("processing-state"),
@@ -278,9 +313,48 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
 
             if (!pollInterval) {
               // Polling started for charge
+              pollCount = 0;
+              consecutiveErrors = 0;
+
               pollInterval = setInterval(async () => {
+                pollCount++;
+                if (pollCount > maxPolls) {
+                  clearInterval(pollInterval);
+                  const qrContainer = document.getElementById("qr-container");
+                  if (qrContainer) qrContainer.hidden = true;
+                  const timeoutState =
+                    document.getElementById("pix-timeout-state");
+                  if (timeoutState) timeoutState.hidden = false;
+                  return;
+                }
+
                 try {
                   const res = await fetch(`/api/charge/${data.id_transacao}`);
+
+                  if (res.status === 404) {
+                    clearInterval(pollInterval);
+                    if (pollingArea.error) {
+                      pollingArea.error.querySelector(
+                        ".error-subtitle"
+                      ).textContent = "Cobrança não encontrada.";
+                      pollingArea.error.hidden = false;
+                    }
+                    if (pollingArea.qr) pollingArea.qr.hidden = false;
+                    return;
+                  }
+                  if (res.status >= 500) {
+                    consecutiveErrors++;
+                    if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
+                      clearInterval(pollInterval);
+                      const networkError =
+                        document.getElementById("pix-network-error");
+                      if (networkError) networkError.hidden = false;
+                      if (pollingArea.qr) pollingArea.qr.hidden = true;
+                    }
+                    return;
+                  }
+
+                  consecutiveErrors = 0;
                   const statusData = await res.json();
 
                   if (
@@ -312,7 +386,15 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
                     pollInterval = null;
                   }
                 } catch (e) {
-                  // Poll error handled silently
+                  consecutiveErrors++;
+                  if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
+                    clearInterval(pollInterval);
+                    const networkError =
+                      document.getElementById("pix-network-error");
+                    if (networkError) networkError.hidden = false;
+                    if (pollingArea.qr) pollingArea.qr.hidden = true;
+                    return;
+                  }
                 }
               }, 3000);
             }
@@ -325,5 +407,28 @@ import StatusStepper from "../components/checkout/StatusStepper.astro";
         }
       });
     }
+
+    // Retry button logic
+    document.getElementById("btn-retry-pix")?.addEventListener("click", () => {
+      const timeoutState = document.getElementById("pix-timeout-state");
+      const formState = document.getElementById("step-details");
+      const stepConfirm = document.getElementById("step-confirm");
+
+      if (timeoutState) timeoutState.hidden = true;
+      if (stepConfirm) stepConfirm.hidden = true;
+      if (formState) formState.hidden = false;
+
+      document.getElementById("pix-form")?.reset();
+
+      const submit = document.getElementById("pix-submit");
+      if (submit) {
+        submit.disabled = false;
+        submit.innerHTML = "→ Gerar PIX";
+      }
+
+      if (svc) {
+        svc.send({ type: "RESET" }); // Voltar a state machine se possivel, se nao ignorar
+      }
+    });
   });
 </script>

@@ -144,6 +144,37 @@ const creatorAvatar = button?.user_avatar || '';
                 <h3 class="success-title" style="color: #ff4da6;">Problema na emissão</h3>
                 <p class="success-msg">Houve um problema na emissão do seu ativo. Seu pagamento foi recebido. Entre em contato: suporte@flowpay.cash</p>
               </div>
+
+              <!-- Network Error State -->
+              <div id="pix-network-error" hidden>
+                <div class="success-check" style="color: #ffaa00;">⚠️</div>
+                <h3 class="success-title" style="color: #ffaa00;">
+                  Problema de conexão
+                </h3>
+                <p class="success-msg">
+                  Seu pagamento pode ter sido processado. 
+                  Verifique seu email ou entre em contato: 
+                  suporte@flowpay.cash
+                </p>
+              </div>
+
+              <!-- Timeout State -->
+              <div id="pix-timeout-state" hidden>
+                <div class="success-check" style="color: #ffaa00;">⏱</div>
+                <h3 class="success-title" style="color: #ffaa00;">
+                  PIX expirado
+                </h3>
+                <p class="success-msg">
+                  O tempo de pagamento expirou. 
+                  Gere um novo PIX para continuar.
+                </p>
+                <button id="btn-retry-pix" class="btn-pay" 
+                  style="margin-top: 1rem; background: rgba(255,170,0,.15); 
+                  border: 1px solid rgba(255,170,0,.25); color: #ffaa00;
+                  box-shadow: none;">
+                  → Gerar novo PIX
+                </button>
+              </div>
             </div>
           )}
 
@@ -574,7 +605,7 @@ const creatorAvatar = button?.user_avatar || '';
   }
 </style>
 
-<script is:inline define:vars={{ buttonId: button?.button_id, amountFixed, amountBrl, hasPix, hasCrypto, cryptoAddress }}>
+<script is:inline define:vars={{ buttonId: id, amountFixed, amountBrl, hasPix, hasCrypto, cryptoAddress }}>
   document.addEventListener('DOMContentLoaded', () => {
     // Tab switching
     if (hasPix && hasCrypto) {
@@ -690,17 +721,47 @@ const creatorAvatar = button?.user_avatar || '';
 
       // Poll for payment status
       let pollCount = 0;
+      let consecutiveErrors = 0;
+      const MAX_CONSECUTIVE_ERRORS = 5;
       const maxPolls = 400; // ~20 minutes
       const pollInterval = setInterval(async () => {
         pollCount++;
         if (pollCount > maxPolls) {
           clearInterval(pollInterval);
-          if (statusText) statusText.textContent = 'Tempo expirado. Gere um novo PIX.';
+          if (qrState) qrState.hidden = true;
+          const timeoutState = document.getElementById('pix-timeout-state');
+          if (timeoutState) timeoutState.hidden = false;
           return;
         }
 
         try {
           const res = await fetch(`/api/charge/${transactionId}`);
+          
+          if (res.status === 404) {
+            clearInterval(pollInterval);
+            const errorState = document.getElementById('pix-error-state');
+            if (errorState) {
+              const errorText = errorState.querySelector('.success-msg');
+              if (errorText) errorText.textContent = "Cobrança não encontrada.";
+              errorState.hidden = false;
+            }
+            if (qrState) qrState.hidden = false;
+            if (statusBar) statusBar.classList.add('paid');
+            if (statusText) statusText.textContent = 'Cobrança não encontrada';
+            return;
+          }
+          if (res.status >= 500) {
+            consecutiveErrors++;
+            if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
+              clearInterval(pollInterval);
+              const networkError = document.getElementById('pix-network-error');
+              if (networkError) networkError.hidden = false;
+              if (qrState) qrState.hidden = true;
+            }
+            return;
+          }
+
+          consecutiveErrors = 0;
           const data = await res.json();
 
           if (data.status === 'PIX_PAID' || data.status === 'PENDING_REVIEW' || data.status === 'APPROVED' || data.status === 'SETTLED') {
@@ -728,8 +789,34 @@ const creatorAvatar = button?.user_avatar || '';
             const successState = document.getElementById('pix-success-state');
             if (successState) successState.hidden = true;
           }
-        } catch { /* silent */ }
+        } catch (e) {
+          consecutiveErrors++;
+          if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
+            clearInterval(pollInterval);
+            const networkError = document.getElementById('pix-network-error');
+            if (networkError) networkError.hidden = false;
+            if (qrState) qrState.hidden = true;
+            return;
+          }
+        }
       }, 3000);
     }
+
+    // Retry button logic
+    document.getElementById('btn-retry-pix')?.addEventListener('click', () => {
+      const timeoutState = document.getElementById('pix-timeout-state');
+      const formState = document.getElementById('pix-form-state');
+      
+      if (timeoutState) timeoutState.hidden = true;
+      if (formState) formState.hidden = false;
+      
+      document.getElementById('pix-form')?.reset();
+      
+      const submit = document.getElementById('pix-submit');
+      if (submit) {
+        submit.disabled = false;
+        submit.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Gerar PIX';
+      }
+    });
   });
 </script>

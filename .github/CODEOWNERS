@@ -1,0 +1,19 @@
+# Arquivos validados em produção — requer review antes de alterar
+
+# Checkout e estados de UX (testados 14/14 hoje)
+src/pages/pay/[id].astro                    @flowpaycash
+src/pages/checkout.astro                    @flowpaycash
+
+# Auth e auto-aprovação
+src/pages/api/auth/registro.js              @flowpaycash
+src/services/api/redis-client.mjs           @flowpaycash
+
+# Webhook crítico — coração do sistema
+src/pages/api/webhook.js                    @flowpaycash
+src/pages/api/webhook/nexus.js              @flowpaycash
+
+# Banco de dados — qualquer alteração aqui é cirúrgica
+src/services/database/sqlite.mjs            @flowpaycash
+
+# Variáveis de ambiente documentadas
+.env.example                                @flowpaycash
