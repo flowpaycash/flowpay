@@ -1,0 +1,657 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import { Image } from "astro:assets";
+import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
+
+const personas = [
+  {
+    icon: "🎥",
+    title: "Criadores & Influencers",
+    description: "Sua audiência é global, seus ganhos devem ser soberanos.",
+    details: [
+      "Links de pagamento diretos para sua Bio.",
+      "Receba sem depender de aprovações de Big Techs.",
+      "Saques instantâneos para sua conta PIX ou Wallet.",
+      "Gestão simplificada de assinaturas e doações.",
+    ],
+    highlight: "Soberania Digital",
+  },
+  {
+    icon: "🛒",
+    title: "E-commerce & Lojistas",
+    description:
+      "Venda mais com o método que o brasileiro ama, com a segurança que o futuro exige.",
+    details: [
+      "Integração via API robusta e Webhooks em tempo real.",
+      "Liquidação D+0: o dinheiro cai na hora, sem retenção.",
+      "Menores taxas do mercado para recebimento via PIX.",
+      "Redução drástica de chargebacks comparado ao cartão.",
+    ],
+    highlight: "Fluxo de Caixa Real",
+  },
+  {
+    icon: "🏢",
+    title: "Freelancers & Agências",
+    description: "Profissionalismo na cobrança, agilidade no recebimento.",
+    details: [
+      "Emissão de faturas profissionais com QR Code PIX.",
+      "Receba de clientes internacionais via Stablecoins (USDT/USDC).",
+      "Histórico de transações transparente e pronto para contabilidade.",
+      "Múltiplos usuários por conta para sua equipe.",
+    ],
+    highlight: "Gestão Profissional",
+  },
+];
+
+const transparencyItems = [
+  {
+    label: "Taxas Transparentes",
+    value: "0.99%",
+    sub: "Por transação PIX",
+    desc: "Sem mensalidade, sem taxa de adesão, sem letras miúdas.",
+  },
+  {
+    label: "Tempo de Liquidação",
+    value: "Instantâneo",
+    sub: "PIX e Cripto",
+    desc: "Seu capital não fica 'dormindo' em nossa conta.",
+  },
+  {
+    label: "Infraestrutura",
+    value: "PoE",
+    sub: "Proof of Execution",
+    desc: "Cada transação é ancorada na blockchain para auditoria pública.",
+  },
+];
+---
+
+<Layout
+  title="Para Quem — FlowPay"
+  description="Descubra como a FlowPay transforma o recebimento de valores para criadores, empresas e freelancers com transparência e tecnologia de ponta."
+  bodyClass="page-para-quem light-theme"
+>
+  <Navbar />
+
+  <main class="main-content">
+    <!-- Hero Section -->
+    <section class="hero-light">
+      <div class="container">
+        <span class="badge">SOLUÇÕES SOBERANAS</span>
+        <h1>
+          Tecnologia que serve ao <br /><span class="text-gradient"
+            >seu negócio.</span
+          >
+        </h1>
+        <p class="subtitle">
+          Desenhamos a FlowPay para ser o braço financeiro de quem não quer
+          perder tempo com burocracia e intermediários lentos.
+        </p>
+      </div>
+    </section>
+
+    <!-- Persona Grid -->
+    <section class="persona-section">
+      <div class="container">
+        <div class="persona-grid">
+          {
+            personas.map((p) => (
+              <div class="persona-card">
+                <div class="card-icon">{p.icon}</div>
+                <div class="card-tag">{p.highlight}</div>
+                <h3>{p.title}</h3>
+                <p>{p.description}</p>
+                <ul>
+                  {p.details.map((detail) => (
+                    <li>
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ff007a"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Transparency Section -->
+    <section class="transparency-section">
+      <div class="container">
+        <div class="transparency-box">
+          <div class="transparency-header">
+            <h2>
+              Transparência é o <br />nosso <span class="text-pill"
+                >Standard</span
+              >
+            </h2>
+            <p>
+              Não escondemos entrelinhas. O FlowPay opera sob o NΞØ Protocol,
+              garantindo que você seja o único dono do seu fluxo.
+            </p>
+          </div>
+
+          <div class="transparency-grid">
+            {
+              transparencyItems.map((item) => (
+                <div class="transparency-item">
+                  <span class="t-label">{item.label}</span>
+                  <div class="t-value-group">
+                    <span class="t-value">{item.value}</span>
+                    <span class="t-sub">{item.sub}</span>
+                  </div>
+                  <p class="t-desc">{item.desc}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detailed Pricing Section -->
+    <section class="detailed-pricing">
+      <div class="container">
+        <div class="pricing-header">
+          <span class="badge">TABELA DE TAXAS</span>
+          <h2>
+            Custos simples. <br /><span class="text-gradient"
+              >Sem surpresas.</span
+            >
+          </h2>
+        </div>
+
+        <div class="pricing-cards">
+          <div class="p-card">
+            <div class="p-card-header">
+              <span class="p-method">PIX ➔ PIX</span>
+              <div class="p-price">2,49%</div>
+              <p>Por pagamento recebido</p>
+            </div>
+            <div class="p-card-body">
+              <ul>
+                <li>Liquidação Instantânea</li>
+                <li>Sem taxa de adesão</li>
+                <li>Sem mensalidade</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="p-card featured">
+            <div class="p-card-header">
+              <span class="p-method">PIX ➔ CRIPTO</span>
+              <div class="p-price">0,5%</div>
+              <p>Diferencial de conversão</p>
+            </div>
+            <div class="p-card-body">
+              <ul>
+                <li>USDT / USDC Direto na Wallet</li>
+                <li>Proteção contra inflação</li>
+                <li>Soberania Financeira</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <p class="pricing-footer-note">
+          * Para volumes acima de R$ 50k/mês, <a
+            href="mailto:neo@neoprotocol.space">entre em contato</a
+          > para taxas personalizadas.
+        </p>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+      <div class="container">
+        <div class="cta-card">
+          <h2>Pronto para assumir o controle?</h2>
+          <p>
+            Leva menos de 2 minutos para configurar seu primeiro link de
+            pagamento.
+          </p>
+          <div class="cta-buttons">
+            <a href="/registro" class="btn-primary-light">Criar Minha Conta</a>
+            <a href="/#features" class="btn-secondary-light">Ver Recursos</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  :root {
+    --light-bg: #fbfbfd;
+    --light-text: #1d1d1f;
+    --light-text-secondary: #424245;
+    --light-border: rgba(0, 0, 0, 0.08);
+  }
+
+  .page-para-quem {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+  }
+
+  .main-content {
+    padding-top: 120px;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #ff007a 0%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-pill {
+    display: inline-block;
+    padding: 0 15px;
+    background: rgba(255, 0, 122, 0.05);
+    color: #ff007a;
+    border-radius: 99px;
+    border: 1px solid rgba(255, 0, 122, 0.1);
+  }
+
+  /* Hero Light */
+  .hero-light {
+    text-align: center;
+    padding: 5rem 0;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 5px 12px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--light-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-light h1 {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    color: var(--light-text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* Persona Grid */
+  .persona-section {
+    padding: 4rem 0;
+  }
+
+  .persona-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  .persona-card {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 28px;
+    border: 1px solid var(--light-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .persona-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  }
+
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #ff007a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .persona-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .persona-card p {
+    color: var(--light-text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+
+  .persona-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .persona-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    color: var(--light-text);
+    font-weight: 500;
+  }
+
+  .persona-card li svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* Transparency Section */
+  .transparency-section {
+    padding: 6rem 0;
+  }
+
+  .transparency-box {
+    background: #000;
+    color: #fff;
+    border-radius: 32px;
+    padding: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .transparency-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 0, 122, 0.15) 0%,
+      transparent 50%
+    );
+    pointer-events: none;
+  }
+
+  .transparency-header {
+    margin-bottom: 4rem;
+    max-width: 600px;
+  }
+
+  .transparency-header h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .transparency-header p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+  }
+
+  .transparency-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+  }
+
+  .transparency-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .t-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #ff007a;
+    font-weight: 700;
+  }
+
+  .t-value-group {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .t-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .t-sub {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .t-desc {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  /* Detailed Pricing */
+  .detailed-pricing {
+    padding: 6rem 0;
+    background: #fff;
+  }
+
+  .pricing-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .pricing-header h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto 3rem;
+  }
+
+  .p-card {
+    background: #fbfbfd;
+    border: 1px solid var(--light-border);
+    border-radius: 24px;
+    padding: 2.5rem;
+    transition: transform 0.3s ease;
+  }
+
+  .p-card.featured {
+    background: #fff;
+    border-color: #ff007a;
+    box-shadow: 0 10px 30px rgba(255, 0, 122, 0.08);
+    position: relative;
+  }
+
+  .p-card.featured::after {
+    content: "RECOMENDADO";
+    position: absolute;
+    top: -12px;
+    right: 24px;
+    background: #ff007a;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 99px;
+    letter-spacing: 0.05em;
+  }
+
+  .p-method {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--light-text-secondary);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .p-price {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--light-text);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .p-card p {
+    font-size: 0.9rem;
+    color: var(--light-text-secondary);
+    margin-bottom: 2rem;
+  }
+
+  .p-card-body ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .p-card-body li {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    color: var(--light-text);
+    font-weight: 500;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .p-card-body li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #ff007a;
+    font-weight: 800;
+  }
+
+  .pricing-footer-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--light-text-secondary);
+  }
+
+  /* Final CTA */
+  .final-cta {
+    padding-bottom: 8rem;
+  }
+
+  .cta-card {
+    background: linear-gradient(135deg, #ff007a 0%, #ff4da6 100%);
+    padding: 5rem;
+    border-radius: 40px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 20px 40px rgba(255, 0, 122, 0.2);
+  }
+
+  .cta-card h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  .cta-card p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin-bottom: 3rem;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn-primary-light {
+    background: #fff;
+    color: #ff007a;
+    padding: 1.2rem 2.5rem;
+    border-radius: 16px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+  }
+
+  .btn-secondary-light {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 1.2rem 2.5rem;
+    border-radius: 16px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary-light:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-secondary-light:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    .transparency-box {
+      padding: 2.5rem;
+    }
+    .transparency-header h2 {
+      font-size: 2.25rem;
+    }
+    .cta-card {
+      padding: 3rem 1.5rem;
+    }
+    .cta-card h2 {
+      font-size: 2rem;
+    }
+    .cta-buttons {
+      flex-direction: column;
+    }
+  }
+</style>

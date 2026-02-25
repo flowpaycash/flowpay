@@ -6,11 +6,11 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
 <section id="para-quem" class="forwhom-section">
   <div class="forwhom-container">
     <h2 class="forwhom-title">
-      Pra quem é o <Image
+      Pra quem é <Image
         src={headerLogo}
         alt="FlowPay"
         class="title-logo"
-        height={44}
+        height={65}
         loading="lazy"
       />?
     </h2>
@@ -56,9 +56,7 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
           <span class="row-icon">👤</span>
           <span>Qualquer pessoa</span>
         </div>
-        <div class="row-what">
-          Cria um link de pagamento em 2 minutos
-        </div>
+        <div class="row-what">Cria um link de pagamento em 2 minutos</div>
       </div>
     </div>
   </div>
@@ -68,6 +66,14 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
   .forwhom-section {
     padding: 5rem 1.25rem;
     position: relative;
+    background-color: #fbfbfd;
+    background-image:
+      radial-gradient(at 0% 0%, rgba(255, 0, 122, 0.03) 0px, transparent 50%),
+      radial-gradient(
+        at 100% 100%,
+        rgba(0, 212, 255, 0.03) 0px,
+        transparent 50%
+      );
   }
 
   @media (min-width: 768px) {
@@ -84,7 +90,7 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
   .forwhom-title {
     font-size: clamp(1.8rem, 5vw, 2.75rem);
     font-weight: 800;
-    color: #fff;
+    color: #1d1d1f;
     letter-spacing: -0.03em;
     line-height: 1.15;
     margin-bottom: 3rem;
@@ -97,16 +103,22 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
     width: auto;
     vertical-align: middle;
     margin-bottom: 0.1em;
-    filter: brightness(1.05) drop-shadow(0 0 8px rgba(255, 0, 122, 0.25));
+    filter: drop-shadow(0 0 8px rgba(255, 0, 122, 0.15));
+  }
+
+  /* Se a logo for muito branca e sumir no fundo claro, podemos inverter ou dar um leve shuffle */
+  :global(.light-mode) .title-logo {
+    filter: invert(1) hue-rotate(180deg) brightness(0.8);
   }
 
   .forwhom-table {
-    background: rgba(15, 15, 15, 0.5);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 20px;
     overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
   }
 
   .forwhom-row {
@@ -115,7 +127,7 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
     align-items: center;
     padding: 1.1rem 1.75rem;
     min-height: 44px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     gap: 1rem;
     transition: background 0.15s ease;
   }
@@ -126,7 +138,7 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
 
   @media (hover: hover) {
     .forwhom-row:not(.header):hover {
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(0, 0, 0, 0.015);
     }
   }
 
@@ -138,7 +150,7 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
 
   .forwhom-row.header {
     padding: 0.75rem 1.75rem;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(0, 0, 0, 0.02);
   }
 
   @media (min-width: 480px) {
@@ -152,7 +164,7 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.25);
+    color: rgba(0, 0, 0, 0.4);
   }
 
   .row-who {
@@ -161,7 +173,7 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
     gap: 10px;
     font-size: 0.95rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
+    color: #1d1d1f;
   }
 
   .row-icon {
@@ -171,7 +183,7 @@ import headerLogo from "../../public/img/logos/flowpay-header-logo.png";
 
   .row-what {
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.45);
+    color: #424245;
     line-height: 1.4;
   }
 
