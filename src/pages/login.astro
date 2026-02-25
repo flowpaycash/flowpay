@@ -28,73 +28,103 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
       Voltar
     </a>
 
-    <div class="login-content">
-      <a href="/" class="login-brand" aria-label="Voltar para a home">
-        <Image
-          src={flowpayLogo}
-          alt="FlowPay Logo"
-          class="login-logo"
-          height={80}
-        />
-      </a>
-
-      <div class="login-card">
+    <div class="login-container">
+      <header class="login-header">
+        <a href="/" class="login-brand" aria-label="Voltar para a home">
+          <Image
+            src={flowpayLogo}
+            alt="FlowPay Logo"
+            class="login-logo"
+            height={64}
+          />
+        </a>
         <h1 class="login-title">
           Acesse o <span class="gradient-text">FlowPay</span>
         </h1>
         <p class="login-subtitle">
-          Conecte sua carteira para começar a operar com liquidez instantânea e
-          auto-custódia.
+          Escolha como deseja se conectar à sua conta soberana.
         </p>
+      </header>
 
-        <div class="login-actions">
-          <button class="btn-premium primary" id="login-web3auth">
+      <div class="bento-login-grid">
+        {/* Main Access: Web3Auth */}
+        <button
+          class="bento-card login-card primary-access"
+          id="login-web3auth"
+        >
+          <div class="card-content">
+            <div class="icon-box">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <div class="text-group">
+              <span class="card-label">Recomendado</span>
+              <h3 class="card-title">Acesso Seguro</h3>
+              <p class="card-desc">
+                Email, Google ou Redes Sociais via Web3Auth.
+              </p>
+            </div>
+          </div>
+          <div class="card-action">
+            <span>Conectar</span>
             <svg
-              width="20"
-              height="20"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              stroke-width="3"
             >
-              <rect x="1" y="1" width="22" height="22" rx="2.18" ry="2.18"
-              ></rect>
-              <line x1="7" y1="1" x2="7" y2="23"></line>
+              <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
-            Conectar com Web3Auth
-          </button>
-
-          <button
-            class="btn-premium secondary"
-            id="login-metamask-aa"
-            style="background: rgba(246, 133, 27, 0.1); border-color: rgba(246, 133, 27, 0.2);"
-          >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Alpha_software_logo.svg"
-              width="20"
-              height="20"
-              alt="MetaMask"
-            />
-            MetaMask (Smart Account)
-          </button>
-
-          <div class="login-divider">
-            <span>ou</span>
           </div>
+        </button>
 
-          <a href="/cadastro" class="btn-premium secondary" id="login-guest">
-            Criar Cadastro
-          </a>
-        </div>
+        {/* Secondary Access: MetaMask */}
+        <button
+          class="bento-card login-card secondary-access"
+          id="login-metamask-aa"
+        >
+          <div class="card-content">
+            <div class="icon-box mm">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Alpha_software_logo.svg"
+                alt="MetaMask"
+              />
+            </div>
+            <div class="text-group">
+              <h3 class="card-title">MetaMask</h3>
+              <p class="card-desc">Smart Account (ERC-4337) otimizada.</p>
+            </div>
+          </div>
+          <div class="card-action">
+            <span>Usar Carteira</span>
+          </div>
+        </button>
+
+        {/* Support / Help */}
+        <a href="/cadastro" class="bento-card login-card guest-access">
+          <div class="card-content">
+            <div class="text-group">
+              <h3 class="card-title">Ainda não tem conta?</h3>
+              <p class="card-desc">Abra sua conta FlowPay em minutos.</p>
+            </div>
+          </div>
+          <div class="card-action">
+            <span>Cadastrar</span>
+          </div>
+        </a>
       </div>
 
       <footer class="login-footer">
         <p>
-          &copy; 2026 FlowOFF Agency - Architecture by NΞØ Protocol
-          [neoprotocol.space]<br />Flowoff Marketing e Assessoria Digital LTDA -
-          43.376.355/0001-92
+          &copy; 2026 FlowOFF Agency • Powered by <strong>NΞØ Protocol</strong>
         </p>
       </footer>
     </div>
@@ -108,199 +138,56 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    padding: calc(env(safe-area-inset-top, 0px) + 80px) 20px
-      calc(env(safe-area-inset-bottom, 0px) + 40px);
+    overflow-x: hidden;
+    padding: 2rem 1.25rem;
+    background: #050505;
   }
 
-  @media (min-width: 768px) {
-    .login-page {
-      padding: 80px 20px 40px;
-    }
-  }
-
-  /* Mobile-first: tap target 44pt, safe area aware */
-  .back-home-btn {
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 16px);
-    left: calc(env(safe-area-inset-left, 0px) + 16px);
+  .login-container {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    z-index: 2;
     display: flex;
-    align-items: center;
-    gap: 7px;
-    min-height: 44px;
-    padding: 0 16px;
-    color: rgba(255, 255, 255, 0.65);
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition:
-      color 0.2s ease,
-      background 0.2s ease,
-      border-color 0.2s ease;
-    z-index: 10;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  @media (hover: hover) {
-    .back-home-btn:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-  }
-
-  .back-home-btn:active {
-    background: rgba(255, 255, 255, 0.15);
-    transform: scale(0.96);
-    transition: transform 0.1s ease;
-  }
-
-  @media (min-width: 768px) {
-    .back-home-btn {
-      top: 24px;
-      left: 24px;
-      min-height: unset;
-      padding: 8px 14px;
-      font-size: 0.85rem;
-      border-radius: 10px;
-    }
+    flex-direction: column;
+    gap: 2.5rem;
   }
 
   .login-bg-glow {
     position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100vw;
-    height: 100vw;
-    background: radial-gradient(
-      circle at center,
-      rgba(255, 0, 122, 0.12) 0%,
-      transparent 60%
-    );
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .login-content {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 440px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  .login-brand {
-    animation:
-      floatingLogo 6s ease-in-out infinite,
-      fadeInDown 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-    position: relative;
-    display: inline-block;
-    text-decoration: none;
-  }
-
-  .login-brand::before {
-    content: "";
-    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 140%;
-    height: 140%;
+    width: 100vw;
+    height: 100vh;
     background: radial-gradient(
-      circle,
-      rgba(255, 0, 122, 0.2) 0%,
+      circle at center,
+      rgba(0, 212, 255, 0.08) 0%,
+      rgba(255, 0, 122, 0.03) 30%,
       transparent 70%
     );
-    filter: blur(30px);
-    z-index: -1;
-    animation: logoGlowPulse 4s ease-in-out infinite alternate;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .login-header {
+    text-align: center;
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .login-logo {
-    height: 80px;
+    height: 64px;
     width: auto;
-    filter: drop-shadow(0 0 15px rgba(255, 0, 122, 0.6))
-      drop-shadow(0 0 30px rgba(0, 212, 255, 0.3));
-    transition:
-      filter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-      transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-
-  @media (min-width: 768px) {
-    .login-logo {
-      height: 120px;
-    }
-  }
-
-  @media (hover: hover) {
-    .login-logo:hover {
-      transform: scale(1.08) rotate(2deg);
-      filter: drop-shadow(0 0 25px rgba(255, 0, 122, 0.8))
-        drop-shadow(0 0 50px rgba(0, 212, 255, 0.5));
-    }
-  }
-
-  @keyframes floatingLogo {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-12px);
-    }
-  }
-
-  @keyframes logoGlowPulse {
-    0% {
-      opacity: 0.5;
-      transform: translate(-50%, -50%) scale(1);
-    }
-    100% {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-  }
-
-  .login-card {
-    background: rgba(15, 15, 15, 0.4);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 2rem 1.5rem;
-    box-shadow:
-      0 25px 50px rgba(0, 0, 0, 0.4),
-      inset 0 1px 1px rgba(255, 255, 255, 0.1);
-    width: 100%;
-    text-align: center;
-    animation: fadeInUp 0.8s ease-out 0.3s both;
-  }
-
-  @media (min-width: 480px) {
-    .login-card {
-      border-radius: 32px;
-      padding: 3rem 2.5rem;
-    }
+    margin-bottom: 2rem;
+    filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.2));
   }
 
   .login-title {
-    font-size: clamp(1.75rem, 5vw, 2.25rem);
+    font-size: clamp(2rem, 8vw, 2.5rem);
     font-weight: 800;
-    color: #ffffff;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin-bottom: 1rem;
-    text-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    letter-spacing: -0.04em;
+    margin-bottom: 0.75rem;
   }
 
   .gradient-text {
@@ -311,133 +198,182 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
   }
 
   .login-subtitle {
-    font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    max-width: 360px;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
   }
 
-  .login-actions {
+  /* Bento Grid Layout */
+  .bento-login-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both;
+  }
+
+  .bento-card {
+    background: rgba(20, 20, 20, 0.5);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 1.75rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    justify-content: space-between;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer;
+    text-align: left;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
   }
 
-  .btn-premium {
-    padding: 16px 24px;
-    border-radius: 16px;
-    font-size: 1rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition:
-      box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      background 0.2s ease,
-      border-color 0.2s ease;
+  .bento-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(30, 30, 30, 0.6);
+  }
+
+  .primary-access {
+    grid-column: span 2;
+    background: linear-gradient(
+      145deg,
+      rgba(255, 0, 122, 0.1),
+      rgba(20, 20, 20, 0.5)
+    );
+    border: 1px solid rgba(255, 0, 122, 0.2);
+    padding: 2rem;
+  }
+
+  .primary-access:hover {
+    border-color: rgba(255, 0, 122, 0.4);
+    box-shadow: 0 15px 40px rgba(255, 0, 122, 0.1);
+  }
+
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    width: 100%;
-    min-height: 52px;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
+    background: rgba(255, 0, 122, 0.1);
+    color: #ff007a;
+    margin-bottom: 1.5rem;
   }
 
-  .btn-premium.primary {
-    background: linear-gradient(135deg, #ff007a, #ff4da6);
-    color: white;
-    box-shadow: 0 0 30px rgba(255, 0, 122, 0.3);
+  .icon-box.mm {
+    background: rgba(246, 133, 27, 0.1);
   }
 
-  @media (hover: hover) {
-    .btn-premium.primary:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 0 50px rgba(255, 0, 122, 0.5);
-    }
+  .icon-box img {
+    width: 28px;
+    height: 28px;
   }
 
-  .btn-premium.primary:active {
-    transform: scale(0.96);
-    transition: transform 0.1s ease;
-  }
-
-  .btn-premium.secondary {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-  }
-
-  @media (hover: hover) {
-    .btn-premium.secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-  }
-
-  .btn-premium.secondary:active {
-    transform: scale(0.96);
-    transition: transform 0.1s ease;
-  }
-
-  .login-divider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 0.25rem 0;
-  }
-
-  .login-divider::before,
-  .login-divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .login-divider span {
-    color: rgba(255, 255, 255, 0.3);
-    font-size: 0.8rem;
-    font-weight: 600;
+  .card-label {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255, 0, 122, 0.2);
+    color: #ff4da6;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-desc {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.4;
+  }
+
+  .card-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .guest-access {
+    grid-column: span 2;
+    text-decoration: none;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .guest-access .card-action {
+    margin-top: 0;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 8px 16px;
+    border-radius: 10px;
+  }
+
+  .back-home-btn {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+  }
+
+  .back-home-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 
   .login-footer {
-    animation: fadeInUp 0.8s ease-out 0.6s both;
-    padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 0.85rem;
+    animation: fadeInUp 1s ease-out 0.3s both;
   }
 
-  .login-footer p {
-    color: rgba(255, 255, 255, 0.2);
-    font-size: 0.75rem;
-    font-weight: 500;
+  @media (max-width: 480px) {
+    .bento-login-grid {
+      grid-template-columns: 1fr;
+    }
+    .secondary-access {
+      grid-column: span 2;
+    }
+    .login-container {
+      gap: 2rem;
+    }
   }
 
   @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-30px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
@@ -513,7 +449,7 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
         handleLogin(
           loginBtn,
           "script-web3auth",
-          "/assets/js/web3auth.js",
+          "/assets/js/web3auth.smart.js",
           "web3auth"
         )
       );
