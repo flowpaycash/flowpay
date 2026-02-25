@@ -2,6 +2,7 @@
   "name": "flowpay",
   "version": "1.2.0",
   "description": "FlowPay - PIX e Cripto para recebimentos instantâneos",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "pnpm exec astro dev",
@@ -50,6 +51,7 @@
     "better-sqlite3": "^12.6.2",
     "buffer": "^6.0.3",
     "ioredis": "^5.9.3",
+    "rate-limiter-flexible": "^9.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "siwe": "^3.0.0",

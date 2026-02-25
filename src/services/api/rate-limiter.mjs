@@ -3,6 +3,26 @@
 
 import crypto from "crypto";
 import { secureLog } from "./config.mjs";
+import { RateLimiterRedis } from 'rate-limiter-flexible';
+import { redis } from './redis-client.mjs';
+
+// Limiter por IP (5 tentativas/hora)
+export const registroLimiterIP = redis ? new RateLimiterRedis({
+  storeClient: redis,
+  keyPrefix: 'rl_registro_ip',
+  points: 5,
+  duration: 3600,
+  blockDuration: 3600,
+}) : null;
+
+// Limiter por Email (3 tentativas/hora)
+export const registroLimiterEmail = redis ? new RateLimiterRedis({
+  storeClient: redis,
+  keyPrefix: 'rl_registro_email',
+  points: 3,
+  duration: 3600,
+  blockDuration: 7200,
+}) : null;
 
 // Configuracoes de rate limiting por endpoint
 export const RATE_LIMITS = {
@@ -72,7 +92,7 @@ async function getRedis() {
 }
 
 // Inicia a conexao em background ao carregar o modulo
-getRedis().catch(() => {});
+getRedis().catch(() => { });
 
 // --- Fallback em memoria (usado se Redis estiver indisponivel) ---------
 
