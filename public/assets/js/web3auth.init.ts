@@ -1,6 +1,16 @@
 // bundle ESM local, CSP 'self' friendly - OTIMIZADO
 import { Web3Auth } from "@web3auth/modal";
 
+declare global {
+  interface Window {
+    NEO_CONFIG?: any;
+    __web3auth?: any;
+    __provider?: any;
+    connectWallet?: () => Promise<boolean>;
+    disconnectWallet?: () => Promise<void>;
+  }
+}
+
 const cfg = (window.NEO_CONFIG ?? {}) as {
   web3auth?: { client_id?: string; network?: string };
   crypto?: { rpc?: string; chainId?: string };
@@ -10,35 +20,18 @@ const clientId = cfg.web3auth?.client_id || "REPLACE_ME";
 const web3AuthNetwork = (cfg.web3auth?.network || "sapphire_mainnet") as any;
 
 // Configuração minimalista para reduzir bundle size
-const web3auth = new Web3Auth({ 
-  clientId, 
+const options: any = {
+  clientId,
   web3AuthNetwork,
   uiConfig: {
     logoLight: "https://flowpay.cash/assets/logos/flowpay-logo.png",
     logoDark: "https://flowpay.cash/assets/logos/flowpay-logo.png",
     // Apenas métodos essenciais para reduzir dependências
     loginMethodsOrder: ["google", "email_passwordless"],
-    // Desabilitar recursos pesados
-    displayErrorsOnModal: false,
-    addPreviousLoginHint: false,
-    displayInstalledExternalWallets: false,
-    displayExternalWalletsCount: false
-  },
-  // Configurações para reduzir bundle
-  modalConfig: {
-    hideWalletDiscovery: true, // Reduz dependências externas
-    connectors: {
-              // Apenas auth connector para reduzir bundle
-        auth: {
-          label: "Autenticação",
-          loginMethods: {
-            google: {},
-            email_passwordless: {}
-          }
-        }
-    }
   }
-});
+};
+
+const web3auth = new Web3Auth(options);
 
 async function boot() {
   try {
