@@ -111,15 +111,15 @@ const allSchemas = [...defaultStructuredData, ...extraSchema];
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
 
     <!-- Primary Meta -->
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta
-      name="author"
-      content="FlowOFF — FLOWOFF MARKETING E ASSESSORIA DIGITAL LTDA"
-    />
+    <meta name="author" content="NEO NODE" />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Robots -->
@@ -404,8 +404,8 @@ const allSchemas = [...defaultStructuredData, ...extraSchema];
       }
     </style>
 
-    <!-- Web3 Config & Auth -->
-    <script is:inline src="/assets/neo.config.js"></script>
+    <!-- Configuração Dinâmica Global (Web3Auth, Infura, etc) injetada do Backend SSR -->
+    <script is:inline src="/api/neo-config"></script>
     <script is:inline type="module" src="/assets/js/web3auth.smart.js"></script>
 
     <script>

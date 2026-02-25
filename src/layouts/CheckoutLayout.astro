@@ -296,7 +296,8 @@ const {
     </style>
 
     <!-- Web3 Config & Auth -->
-    <script is:inline src="/assets/neo.config.js"></script>
+    <!-- Configuração Dinâmica Global (Web3Auth, Infura, etc) injetada do Backend SSR -->
+    <script is:inline src="/api/neo-config"></script>
     <script is:inline type="module" src="/assets/js/web3auth.smart.js"></script>
   </head>
   <body>
