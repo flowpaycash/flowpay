@@ -11,7 +11,19 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
         Cada transação flui instantaneamente através da
       </p>
       <h2 class="highlight-title">
-        <strong class="highlight-brand">NEØ Smart Factory™</strong>
+        <span class="brand-row">
+          <span class="nsfactory-inline">
+            <span class="nsfactory-glow"></span>
+            <Image
+              src={nsfactory3d}
+              alt="NEØ Smart Factory — infraestrutura on-chain"
+              class="nsfactory-img"
+              loading="lazy"
+              height={120}
+            />
+          </span>
+          <strong class="highlight-brand">NEØ Smart Factory™</strong>
+        </span>
         <span class="highlight-description">
           nossa tecnologia exclusiva que protege seu dinheiro com a mesma
           segurança que protege os maiores patrimônios <span
@@ -19,17 +31,6 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
           >
         </span>
       </h2>
-    </div>
-
-    <div class="nsfactory-visual">
-      <div class="nsfactory-glow"></div>
-      <Image
-        src={nsfactory3d}
-        alt="NEØ Smart Factory — infraestrutura on-chain"
-        class="nsfactory-img"
-        loading="lazy"
-        height={320}
-      />
     </div>
 
     <div class="home-highlight-glass">
@@ -588,39 +589,54 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
     }
   }
 
-  /* ── NEØ Smart Factory visual ── */
-  .nsfactory-visual {
+  /* ── NEØ Smart Factory inline ── */
+  .brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .nsfactory-inline {
     position: relative;
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin: 2.5rem auto 1rem;
-    width: 100%;
-    max-width: min(380px, calc(100vw - 48px));
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
     animation: fadeInUp 0.8s ease-out 0.3s both;
   }
 
-  @media (min-width: 768px) {
-    .nsfactory-visual {
-      max-width: 480px;
-      margin: 3rem auto 1.5rem;
+  @media (min-width: 480px) {
+    .nsfactory-inline {
+      width: 90px;
+      height: 90px;
     }
   }
 
-  .nsfactory-glow {
+  @media (min-width: 768px) {
+    .nsfactory-inline {
+      width: 110px;
+      height: 110px;
+    }
+  }
+
+  .nsfactory-inline .nsfactory-glow {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 120%;
-    height: 120%;
+    width: 180%;
+    height: 180%;
     background: radial-gradient(
       circle,
-      rgba(255, 200, 0, 0.18) 0%,
-      rgba(0, 212, 255, 0.08) 50%,
+      rgba(255, 200, 0, 0.22) 0%,
+      rgba(0, 212, 255, 0.08) 55%,
       transparent 70%
     );
-    filter: blur(40px);
+    filter: blur(20px);
     z-index: 0;
     pointer-events: none;
     animation: nsfactoryGlow 5s ease-in-out infinite alternate;
@@ -641,9 +657,10 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
     position: relative;
     z-index: 1;
     width: 100%;
-    height: auto;
-    filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.35))
-      drop-shadow(0 0 50px rgba(0, 212, 255, 0.15));
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 12px rgba(255, 200, 0, 0.5))
+      drop-shadow(0 0 28px rgba(0, 212, 255, 0.18));
     animation:
       floatNsf 7s ease-in-out infinite,
       fadeInUp 0.8s ease-out 0.3s both;
@@ -652,8 +669,8 @@ import nsfactory3d from "../../assets/parceiros/nsfactory_3d_002_yellow.png";
 
   @media (hover: hover) {
     .nsfactory-img:hover {
-      filter: drop-shadow(0 0 30px rgba(255, 200, 0, 0.55))
-        drop-shadow(0 0 70px rgba(0, 212, 255, 0.25));
+      filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.7))
+        drop-shadow(0 0 45px rgba(0, 212, 255, 0.3));
     }
   }
 
