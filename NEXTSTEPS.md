@@ -99,6 +99,8 @@ Priority-ordered execution plan for security and scalability.
 . Admin Panel .......... Interface /users ....... [ ⦿ ]   .
 . CSP Refactor ......... Sentry Unblocked ....... [ ⦿ ]   .
 . CSS Preload .......... Render-blocking Fix .... [ ⦿ ]   .
+. PWA Assets ........... iOS Splash/Icons Fix ... [ ⦿ ]   .
+. Build Env ............ Astro Warnings Clean ... [ ⦿ ]   .
 .                                                         .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ```
