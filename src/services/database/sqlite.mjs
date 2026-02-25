@@ -681,3 +681,37 @@ export function upsertWalletSession(address, chainId) {
     });
 }
 
+export function getUserMetrics(userId) {
+    return dbOp(() => {
+        const db = getDatabase();
+
+        // 1. Métricas agregadas
+        const stats = db.prepare(`
+            SELECT 
+                COUNT(*) as total_orders,
+                SUM(CASE WHEN status IN ('COMPLETED', 'PAID', 'CONFIRMED', 'RECEIVED') THEN 1 ELSE 0 END) as paid_count,
+                SUM(CASE WHEN status IN ('COMPLETED', 'PAID', 'CONFIRMED', 'RECEIVED') THEN amount_brl ELSE 0 END) as total_volume
+            FROM orders o
+            JOIN payment_buttons pb ON o.product_ref = pb.button_id
+            WHERE pb.user_id = ?
+        `).get(userId);
+
+        // 2. Últimas 10 transações
+        const recent = db.prepare(`
+            SELECT 
+                o.charge_id, o.amount_brl, o.status, o.created_at, o.product_name, o.customer_name
+            FROM orders o
+            JOIN payment_buttons pb ON o.product_ref = pb.button_id
+            WHERE pb.user_id = ?
+            ORDER BY o.created_at DESC
+            LIMIT 10
+        `).all(userId);
+
+        return {
+            total_orders: stats.total_orders || 0,
+            paid_count: stats.paid_count || 0,
+            total_volume: stats.total_volume || 0,
+            recent_transactions: recent || []
+        };
+    });
+}
