@@ -1,8 +1,11 @@
 import { getCorsHeaders, secureLog } from "../../../../services/api/config.mjs";
 import { getOrder, updateOrderStatus } from "../../../../services/database/sqlite.mjs";
-import { redis } from "../../../../services/api/redis-client.mjs";
-import { Redis } from 'ioredis';
+import { subscribeChannel } from "../../../../services/api/redis-client.mjs";
 import * as Sentry from "@sentry/astro";
+
+// Maximum SSE connection lifetime (10 minutes).
+// PIX charges typically expire in 30-60 minutes; clients can reconnect.
+const MAX_CONNECTION_MS = 10 * 60 * 1000;
 
 // Constants for polling fallback if Redis fails or for initial sync
 const WOOVI_PAID_STATUSES = new Set([
@@ -66,13 +69,25 @@ export const GET = async ({ params, request }) => {
     const stream = new ReadableStream({
         async start(controller) {
             const encoder = new TextEncoder();
+            let cleaned = false;
 
             const sendEvent = (data) => {
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+                if (cleaned) return;
+                try {
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+                } catch (e) {
+                    // Stream already closed
+                    cleanup();
+                }
             };
 
             const sendHeartbeat = () => {
-                controller.enqueue(encoder.encode(': heartbeat\n\n'));
+                if (cleaned) return;
+                try {
+                    controller.enqueue(encoder.encode(': heartbeat\n\n'));
+                } catch (e) {
+                    cleanup();
+                }
             };
 
             // 1. Initial lookup
@@ -95,53 +110,50 @@ export const GET = async ({ params, request }) => {
             // 4. If terminal, close
             const terminalStates = ['PIX_PAID', 'PENDING_REVIEW', 'APPROVED', 'SETTLED', 'COMPLETED', 'SETTLEMENT_FAILED'];
             if (terminalStates.includes(order.status)) {
-                // Wait a bit to ensure client receives it before closing
                 setTimeout(() => {
                     try { controller.close(); } catch (e) { }
                 }, 1000);
                 return;
             }
 
-            // 5. Setup Redis Subscriber
-            let subClient = null;
-            const isRailway = process.env.RAILWAY_STATIC_URL !== undefined || process.env.RAILWAY_ENVIRONMENT !== undefined;
-            const redisUrl = process.env.REDIS_URL || (isRailway ? 'redis://redis.railway.internal:6379' : null);
+            // 5. Setup Redis subscription via shared singleton
+            let unsubscribe = null;
+            try {
+                unsubscribe = await subscribeChannel(`charge_update:${id}`, (message) => {
+                    try {
+                        const data = JSON.parse(message);
+                        sendEvent({ status: data.status, tx_hash: data.tx_hash || null });
 
-            if (redisUrl) {
-                try {
-                    subClient = new Redis(redisUrl, {
-                        lazyConnect: true // Don't connect until needed
-                    });
-
-                    await subClient.connect();
-                    await subClient.subscribe(`charge_update:${id}`);
-
-                    subClient.on('message', (channel, message) => {
-                        try {
-                            const data = JSON.parse(message);
-                            sendEvent({ status: data.status, tx_hash: data.tx_hash || null });
-
-                            if (terminalStates.includes(data.status)) {
-                                cleanup();
-                                controller.close();
-                            }
-                        } catch (e) {
-                            secureLog('error', 'SSE Redis message parse error', { error: e.message });
+                        if (terminalStates.includes(data.status)) {
+                            cleanup();
+                            try { controller.close(); } catch (e) { }
                         }
-                    });
-                } catch (redisErr) {
-                    secureLog('warn', 'SSE Redis subscription failed, client will rely on SSE heartbeats + potential re-connect', { error: redisErr.message });
-                }
+                    } catch (e) {
+                        secureLog('error', 'SSE Redis message parse error', { error: e.message });
+                    }
+                });
+            } catch (redisErr) {
+                secureLog('warn', 'SSE Redis subscription failed, relying on heartbeats', { error: redisErr.message });
             }
 
-            // 6. Heartbeat and Cleanup
+            // 6. Heartbeat, timeout, and cleanup
             const heartbeatInterval = setInterval(sendHeartbeat, 30000);
 
+            // Server-side max lifetime to prevent leaked connections
+            const maxLifetimeTimeout = setTimeout(() => {
+                sendEvent({ status: 'timeout', message: 'Connection timeout, please reconnect' });
+                cleanup();
+                try { controller.close(); } catch (e) { }
+            }, MAX_CONNECTION_MS);
+
             const cleanup = () => {
+                if (cleaned) return;
+                cleaned = true;
                 clearInterval(heartbeatInterval);
-                if (subClient) {
-                    subClient.unsubscribe().catch(() => { });
-                    subClient.quit().catch(() => { });
+                clearTimeout(maxLifetimeTimeout);
+                if (unsubscribe) {
+                    unsubscribe().catch(() => {});
+                    unsubscribe = null;
                 }
             };
 

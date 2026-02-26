@@ -9,7 +9,8 @@ export const GET = async ({ request }) => {
             chainId: "0x89" // Polygon
         },
         infura: {
-            apiKey: process.env.INFURA_API_KEY || ""
+            // API key is proxied server-side — never exposed to browser
+            bundlerEndpoint: process.env.INFURA_API_KEY ? '/api/infura-bundler' : ''
         }
     };
 

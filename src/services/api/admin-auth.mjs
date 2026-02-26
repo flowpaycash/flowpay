@@ -31,12 +31,8 @@ export function verifyAdminPassword(passwordAttempt) {
     return false;
   }
 
-  const expected = Buffer.from(adminPassword, "utf8");
-  const provided = Buffer.from(passwordAttempt, "utf8");
-
-  if (expected.length !== provided.length) {
-    return false;
-  }
+  const expected = crypto.createHash("sha256").update(adminPassword).digest();
+  const provided = crypto.createHash("sha256").update(passwordAttempt).digest();
 
   return crypto.timingSafeEqual(expected, provided);
 }

@@ -104,7 +104,7 @@ export const POST = async ({ request, clientAddress }) => {
         secureLog('info', 'Novo cadastro recebido', { userId, email: cleanEmail, document_type });
 
         // Confirmação para o usuário
-        const shouldAutoApprove = process.env.AUTO_APPROVE === 'true' || cleanEmail.endsWith('@flowpay.cash');
+        const shouldAutoApprove = process.env.AUTO_APPROVE === 'true';
 
         if (shouldAutoApprove) {
             console.log('[AUTO-APPROVE]', cleanEmail, userId);

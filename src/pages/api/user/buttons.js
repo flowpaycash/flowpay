@@ -10,7 +10,7 @@ function validateUserSession(request) {
 
     let token = null;
     if (sessionCookie) {
-        token = sessionCookie.split('=')[1];
+        token = sessionCookie.split('=').slice(1).join('=');
     } else {
         // 2. Fallback to header if cookie is missing (for API compatibility)
         token = request.headers.get('x-user-token');

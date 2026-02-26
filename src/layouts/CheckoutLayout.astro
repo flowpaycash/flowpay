@@ -20,10 +20,7 @@ const {
     />
     <meta name="description" content={description} />
     <title>{title}</title>
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' https://*.web3auth.io https://*.quicknode.com https://*.woovi.com https://cloudflareinsights.com https://*.sentry.io; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.web3auth.io https://static.cloudflareinsights.com; img-src 'self' data: https://*; worker-src 'self' blob:;"
-    />
+    <!-- CSP is enforced via HTTP header in middleware.js — no meta tag needed -->
 
     <!-- PWA Support -->
     <link rel="manifest" href="/manifest.json" />

@@ -9,7 +9,7 @@ function extractSessionToken(request) {
     .split(";")
     .find((c) => c.trim().startsWith("flowpay_session="));
   if (sessionCookie) {
-    return sessionCookie.split("=")[1];
+    return sessionCookie.split("=").slice(1).join("=");
   }
   return request.headers.get("x-user-token");
 }

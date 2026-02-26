@@ -39,6 +39,12 @@ Thumbs.db
 secrets/
 .secrets/
 
+# Runtime databases
+data/*.db
+data/**/*.db
+data/**/*.db-shm
+data/**/*.db-wal
+
 # Backup files
 *.backup
 *.bak
@@ -51,3 +57,7 @@ secrets/
 .claude
 
 api-1.json
+
+# Test HTML files should never be in public/
+public/*-test.html
+public/test-*.html

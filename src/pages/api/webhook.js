@@ -173,7 +173,6 @@ export const POST = async ({ request, clientAddress }) => {
 
     let webhookVerified = false;
     let verificationMethod = "none";
-    let fallbackCharge = null;
 
     if (signature) {
       // HMAC validation with support for Base64, Base64URL and HEX variants.
@@ -200,17 +199,10 @@ export const POST = async ({ request, clientAddress }) => {
       }
     }
 
-    // Fallback seguro: se assinatura falhar/ausente, valida no provedor oficial.
-    if (!webhookVerified && correlationIDFromPayload) {
-      const fallbackCheck = await verifyPaidStatusFromWoovi(
-        correlationIDFromPayload
-      );
-      if (fallbackCheck.verified) {
-        webhookVerified = true;
-        verificationMethod = "provider-recheck";
-        fallbackCharge = fallbackCheck.charge;
-      }
-    }
+    // No fallback verification — HMAC signature is required.
+    // The IP allowlist (WOOVI_ALLOWED_IPS) is the defense-in-depth layer.
+    // Reconciliation of missed webhooks should be done via a scheduled job,
+    // not by accepting unverified inbound requests.
 
     if (!webhookVerified) {
       if (!signature && !eventType) {
@@ -243,10 +235,7 @@ export const POST = async ({ request, clientAddress }) => {
       );
     }
 
-    const charge = {
-      ...(chargeFromPayload || {}),
-      ...(fallbackCharge || {}),
-    };
+    const charge = chargeFromPayload || {};
     const correlationID = charge?.correlationID || correlationIDFromPayload;
 
     secureLog("info", `Astro Webhook recebido: ${eventType}`, {

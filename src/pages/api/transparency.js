@@ -1,6 +1,14 @@
+import crypto from 'crypto';
 import { getDatabase } from '../../services/database/sqlite.mjs';
 import { getCorsHeaders } from '../../services/api/config.mjs';
 import { getCapabilityStatus } from '../../services/compliance/capability-status.mjs';
+
+// Derive an opaque public ID from the internal charge_id.
+// This prevents enumeration of internal IDs while still allowing
+// external observers to verify consistency across transparency snapshots.
+function opaqueId(chargeId) {
+  return crypto.createHash('sha256').update(`flowpay:${chargeId}`).digest('hex').slice(0, 16);
+}
 
 export const GET = async ({ request }) => {
   const headers = getCorsHeaders({ headers: Object.fromEntries(request.headers) });
@@ -96,7 +104,7 @@ export const GET = async ({ request }) => {
         },
       },
       recent_settlements: recentSettlements.map((o) => ({
-        charge_id: o.charge_id,
+        id: opaqueId(o.charge_id),
         amount_brl: parseFloat(o.amount_brl).toFixed(2),
         status: o.status,
         tx_hash: o.tx_hash,

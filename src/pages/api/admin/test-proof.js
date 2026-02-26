@@ -1,11 +1,18 @@
 import { getWriteProof } from '../../../../services/blockchain/write-proof.js';
-import { secureLog } from '../../../../src/services/api/config.mjs';
+import { requireAdminSession, withAdminNoStoreHeaders } from '../../../services/api/admin-auth.mjs';
+import { getCorsHeaders, secureLog } from '../../../services/api/config.mjs';
 
-export const POST = async ({ request }) => {
-    // Para facilitar o teste do arquiteto, vamos permitir este trigger via POST
-    // Mas em prod isso seria protegido por requireAdminSession
+export const POST = async ({ request, cookies }) => {
+    const headers = withAdminNoStoreHeaders({
+        ...getCorsHeaders({ headers: Object.fromEntries(request.headers) }),
+        'Content-Type': 'application/json'
+    });
 
-    console.log('🚀 Triggering manual on-chain proof from API');
+    if (!requireAdminSession(cookies)) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers });
+    }
+
+    secureLog('info', 'Admin triggered manual on-chain proof');
 
     const poe = getWriteProof();
 
@@ -33,7 +40,7 @@ export const POST = async ({ request }) => {
             branding: 'NSFACTORY Proof: FLOWPAY Integrity Check'
         }), {
             status: 200,
-            headers: { 'Content-Type': 'application/json' }
+            headers
         });
     } catch (err) {
         secureLog('error', 'API Manual Proof failed', { error: err.message });
@@ -43,7 +50,7 @@ export const POST = async ({ request }) => {
             tip: 'Verifique se a wallet BLOCKCHAIN_WRITER tem ETH na Base'
         }), {
             status: 500,
-            headers: { 'Content-Type': 'application/json' }
+            headers
         });
     }
 };

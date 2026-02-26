@@ -60,7 +60,7 @@ export async function connectWallet() {
         console.log("🚀 Inicializando MetaMask Smart Account (AA)...");
 
         const config = window.NEO_CONFIG || {};
-        const infuraApiKey = config.infura?.apiKey || '';
+        const bundlerEndpoint = config.infura?.bundlerEndpoint || '';
 
         // Criar Smart Account (Account Abstraction)
         const smartAccount = await (toMetaMaskSmartAccount as any)({
@@ -85,13 +85,25 @@ export async function connectWallet() {
         });
 
         let bundlerClient: any = null;
-        if (infuraApiKey) {
+        if (bundlerEndpoint) {
             try {
                 bundlerClient = (createInfuraBundlerClient as any)({
                     chain: polygon,
-                    apiKey: infuraApiKey,
+                    // Bundler requests are proxied through server-side endpoint
+                    transport: custom({
+                        async request({ method, params }: { method: string; params: unknown[] }) {
+                            const res = await fetch(bundlerEndpoint, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ method, params }),
+                            });
+                            const data = await res.json();
+                            if (data.error) throw new Error(data.error.message || 'Bundler error');
+                            return data.result;
+                        }
+                    }),
                 });
-                console.log("⛽ Bundler Infura ativo");
+                console.log("⛽ Bundler Infura ativo (proxied)");
             } catch (err) {
                 console.warn("⚠️ Falha ao carregar Bundler Infura:", err);
             }
