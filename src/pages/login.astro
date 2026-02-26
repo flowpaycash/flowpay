@@ -108,6 +108,36 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
           </div>
         </button>
 
+        {/* Magic Link Email */}
+        <div class="bento-card login-card magic-link-access" id="magic-link-card">
+          <div class="card-content">
+            <div class="icon-box ml">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <polyline points="22,4 12,13 2,4"></polyline>
+              </svg>
+            </div>
+            <div class="text-group">
+              <h3 class="card-title">Acesso por E-mail</h3>
+              <p class="card-desc">Receba um link mágico no seu e-mail cadastrado.</p>
+            </div>
+          </div>
+          <form id="magic-link-form" class="magic-form">
+            <input
+              type="email"
+              id="magic-email"
+              placeholder="seu@email.com"
+              required
+              autocomplete="email"
+              class="magic-input"
+            />
+            <button type="submit" class="magic-submit" id="magic-submit-btn">
+              Enviar Link
+            </button>
+          </form>
+          <p id="magic-feedback" class="magic-feedback" style="display: none;"></p>
+        </div>
+
         {/* Support / Help */}
         <a href="/cadastro" class="bento-card login-card guest-access">
           <div class="card-content">
@@ -308,6 +338,87 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
     color: #fff;
   }
 
+  .magic-link-access {
+    grid-column: span 2;
+    background: linear-gradient(
+      145deg,
+      rgba(0, 212, 255, 0.06),
+      rgba(20, 20, 20, 0.5)
+    );
+    border: 1px solid rgba(0, 212, 255, 0.15);
+  }
+
+  .magic-link-access:hover {
+    border-color: rgba(0, 212, 255, 0.3);
+  }
+
+  .icon-box.ml {
+    background: rgba(0, 212, 255, 0.1);
+    color: #00d4ff;
+  }
+
+  .magic-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .magic-input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .magic-input:focus {
+    border-color: rgba(0, 212, 255, 0.4);
+  }
+
+  .magic-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .magic-submit {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(0, 212, 255, 0.15);
+    color: #00d4ff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .magic-submit:hover {
+    background: rgba(0, 212, 255, 0.25);
+  }
+
+  .magic-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .magic-feedback {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .magic-feedback.success {
+    color: #28a745;
+  }
+
+  .magic-feedback.error {
+    color: #ff4d6a;
+  }
+
   .guest-access {
     grid-column: span 2;
     text-decoration: none;
@@ -406,6 +517,74 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
       });
     }
 
+    /**
+     * After wallet connects, authenticate via SIWE to create a server-side session.
+     * 1. Get wallet address from window.__walletAddress
+     * 2. Request SIWE challenge from /api/auth/siwe-challenge
+     * 3. Sign the SIWE message using the wallet provider
+     * 4. Verify signature via /api/auth/siwe-verify (sets session cookie)
+     */
+    async function authenticateWithSIWE(): Promise<boolean> {
+      const address = (window as any).__walletAddress;
+      const provider = (window as any).__provider;
+
+      if (!address || !provider) {
+        console.error("SIWE: endereço ou provider não disponível");
+        return false;
+      }
+
+      // 1. Request challenge (nonce + domain info)
+      const challengeRes = await fetch("/api/auth/siwe-challenge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address }),
+      });
+
+      if (!challengeRes.ok) {
+        const err = await challengeRes.json().catch(() => ({}));
+        throw new Error(err.error || "Falha ao obter desafio SIWE");
+      }
+
+      const challenge = await challengeRes.json();
+      const { nonce, domain, origin, chainId, expiresAt } = challenge;
+
+      // 2. Build SIWE message string (EIP-4361 format)
+      const issuedAt = new Date().toISOString();
+      const siweMessage = [
+        `${domain} wants you to sign in with your Ethereum account:`,
+        address,
+        "",
+        "Autenticação FlowPay",
+        "",
+        `URI: ${origin}`,
+        `Version: 1`,
+        `Chain ID: ${chainId}`,
+        `Nonce: ${nonce}`,
+        `Issued At: ${issuedAt}`,
+        `Expiration Time: ${expiresAt}`,
+      ].join("\n");
+
+      // 3. Sign the message via provider (works with Web3Auth + MetaMask)
+      const signature = await provider.request({
+        method: "personal_sign",
+        params: [siweMessage, address],
+      });
+
+      // 4. Verify on server (creates session cookie)
+      const verifyRes = await fetch("/api/auth/siwe-verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: siweMessage, signature }),
+      });
+
+      if (!verifyRes.ok) {
+        const err = await verifyRes.json().catch(() => ({}));
+        throw new Error(err.error || "Falha na verificação SIWE");
+      }
+
+      return true;
+    }
+
     async function handleLogin(
       btn: HTMLButtonElement,
       scriptId: string,
@@ -417,20 +596,37 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
       const originalContent = btn.innerHTML;
       btn.disabled = true;
       btn.style.opacity = "0.7";
-      btn.innerHTML = `<span class="loading-spinner"></span> Carregando...`;
+      btn.innerHTML = `<span class="loading-spinner"></span> Conectando...`;
 
       try {
         await loadScriptOnce(scriptId, scriptSrc);
 
         if (typeof window !== "undefined" && (window as any).connectWallet) {
-          const success = await (window as any).connectWallet();
-          if (success) {
-            window.location.href = "/cadastro";
-          } else {
-            // Reset se não teve sucesso (ex: usuário cancelou)
+          const connected = await (window as any).connectWallet();
+          if (!connected) {
             btn.disabled = false;
             btn.style.opacity = "1";
             btn.innerHTML = originalContent;
+            return;
+          }
+
+          // Wallet connected — now authenticate via SIWE
+          btn.innerHTML = `<span class="loading-spinner"></span> Autenticando...`;
+
+          try {
+            await authenticateWithSIWE();
+            // Session cookie set — redirect to dashboard
+            window.location.href = "/dashboard";
+          } catch (siweErr: any) {
+            console.error("SIWE auth falhou:", siweErr);
+            // Wallet connected but SIWE failed — still allow registration
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            btn.innerHTML = originalContent;
+            alert(
+              siweErr.message ||
+              "Falha na autenticação. Se não tem conta, cadastre-se primeiro."
+            );
           }
         }
       } catch (err) {
@@ -439,11 +635,12 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
         btn.style.opacity = "1";
         btn.innerHTML = originalContent;
         alert(
-          `Erro ao carregar módulo de autenticação. Por favor, tente novamente.`
+          "Erro ao carregar módulo de autenticação. Por favor, tente novamente."
         );
       }
     }
 
+    // Wallet login buttons
     if (loginBtn) {
       loginBtn.addEventListener("click", () =>
         handleLogin(
@@ -466,15 +663,50 @@ import flowpayLogo from "@assets/img/flowpay-logo.png";
       );
     }
 
-    const guestBtn = document.getElementById("login-guest");
-    if (guestBtn) {
-      guestBtn.addEventListener("click", () => {
-        // Log access in background
-        fetch("/api/auth/guest-log", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "guest_login" }),
-        }).catch(() => {}); // Silent fail, don't block user
+    // Magic link email form
+    const magicForm = document.getElementById("magic-link-form") as HTMLFormElement;
+    const magicEmail = document.getElementById("magic-email") as HTMLInputElement;
+    const magicSubmit = document.getElementById("magic-submit-btn") as HTMLButtonElement;
+    const magicFeedback = document.getElementById("magic-feedback") as HTMLParagraphElement;
+
+    if (magicForm) {
+      magicForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = magicEmail.value.trim();
+        if (!email) return;
+
+        magicSubmit.disabled = true;
+        magicSubmit.textContent = "Enviando...";
+        magicFeedback.style.display = "none";
+
+        try {
+          const res = await fetch("/api/auth/magic-start", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+
+          const data = await res.json();
+
+          magicFeedback.style.display = "block";
+
+          if (res.ok && data.success) {
+            magicFeedback.className = "magic-feedback success";
+            magicFeedback.textContent = "Link enviado! Verifique seu e-mail.";
+            magicEmail.disabled = true;
+          } else {
+            magicFeedback.className = "magic-feedback error";
+            magicFeedback.textContent = data.error || data.message || "Erro ao enviar link.";
+            magicSubmit.disabled = false;
+            magicSubmit.textContent = "Enviar Link";
+          }
+        } catch {
+          magicFeedback.style.display = "block";
+          magicFeedback.className = "magic-feedback error";
+          magicFeedback.textContent = "Erro de conexão. Tente novamente.";
+          magicSubmit.disabled = false;
+          magicSubmit.textContent = "Enviar Link";
+        }
       });
     }
   });

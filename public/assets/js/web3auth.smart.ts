@@ -8,6 +8,7 @@ declare global {
     disconnectWallet?: () => Promise<void>;
     __web3auth?: Web3Auth | null;
     __provider?: any;
+    __walletAddress?: string;
   }
 }
 
@@ -87,6 +88,19 @@ export async function connectWallet() {
   try {
     const provider = await window.__web3auth.connect();
     window.__provider = provider;
+
+    // Extract wallet address from provider for SIWE flow
+    if (provider) {
+      try {
+        const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+        if (accounts?.[0]) {
+          window.__walletAddress = accounts[0];
+        }
+      } catch (addrErr) {
+        console.warn("⚠️ Não foi possível obter endereço da wallet:", addrErr);
+      }
+    }
+
     return !!provider;
   } catch (e) {
     console.error("❌ Falha ao conectar:", e);

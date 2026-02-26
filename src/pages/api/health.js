@@ -2,8 +2,9 @@ import * as Sentry from "@sentry/astro";
 import { getDatabase } from "../../services/database/sqlite.mjs";
 import { redis } from "../../services/api/redis-client.mjs";
 import { getCapabilityStatus } from "../../services/compliance/capability-status.mjs";
+import { getAdminSession } from "../../services/api/admin-auth.mjs";
 
-export const GET = async () => {
+export const GET = async ({ cookies }) => {
   const start = Date.now();
   Sentry.logger.info("Health check", { source: "api/health" });
 
@@ -37,6 +38,7 @@ export const GET = async () => {
       ? "ok"
       : "offline";
 
+  // Public response: only operational status for uptime monitors
   const responseBody = {
     status: (db === "ok" && (redisStatus === "ok" || redisStatus === "disabled")) ? "ok" : "degraded",
     time: new Date().toISOString(),
@@ -44,16 +46,21 @@ export const GET = async () => {
     redis: redisStatus,
     email,
     nexus,
-    node: process.version,
-    env: process.env.NODE_ENV || "production",
     uptime: Math.floor(process.uptime()),
-    env_status: envStatus,
-    env_values: {
+  };
+
+  // Sensitive details only for authenticated admins
+  const isAdmin = getAdminSession(cookies);
+  if (isAdmin) {
+    responseBody.node = process.version;
+    responseBody.env = process.env.NODE_ENV || "production";
+    responseBody.env_status = envStatus;
+    responseBody.env_values = {
       URL: process.env.URL || process.env.RAILWAY_PUBLIC_DOMAIN || "—",
       NODE_ENV: process.env.NODE_ENV || "production",
-    },
-    capabilities: getCapabilityStatus(),
-  };
+    };
+    responseBody.capabilities = getCapabilityStatus();
+  }
 
   Sentry.metrics.count("user_action", 1);
   Sentry.metrics.distribution("api_response_time", Date.now() - start);

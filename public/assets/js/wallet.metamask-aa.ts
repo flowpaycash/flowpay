@@ -11,6 +11,7 @@ declare global {
         __smartAccount?: any;
         __bundlerClient?: any;
         __provider?: any;
+        __walletAddress?: string;
     }
 }
 
@@ -112,6 +113,7 @@ export async function connectWallet() {
         window.__smartAccount = smartAccount;
         window.__bundlerClient = bundlerClient;
         window.__provider = window.ethereum;
+        window.__walletAddress = address;
 
         console.log("✅ Smart Account conectada:", smartAccount.address);
 

@@ -36,7 +36,10 @@ export default defineConfig({
     },
     ssr: {
       external: ["better-sqlite3"],
-      noExternal: ["@sentry/astro", "@sentry/core", "@sentry/browser"],
+      noExternal: ["@sentry/astro", "@sentry/core", "@sentry/browser", "@sentry/node"],
+    },
+    optimizeDeps: {
+      include: ["@sentry/astro", "@sentry/browser"],
     },
   },
   image: {
