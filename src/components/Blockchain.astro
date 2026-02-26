@@ -1,7 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import nsfactory3d from "../../assets/parceiros/logo_line_black2.png";
+import nsfactoryhorizontal from "../../assets/parceiros/nsfactory_flowpay.png";
 import partnerLogo from "../../assets/parceiros/Logotype-BASE/Base_lockup_white.png";
+import mockupProof from "../../assets/marketing/mockup-b.png";
 ---
 
 <section id="blockchain" class="home-highlight">
@@ -13,23 +14,26 @@ import partnerLogo from "../../assets/parceiros/Logotype-BASE/Base_lockup_white.
       </p>
       <h2 class="highlight-title">
         <span class="brand-row">
-          <span class="nsfactory-inline">
+          <span
+            class="nsfactory-inline"
+            onclick="showProof()"
+            role="button"
+            aria-label="Ver prova on-chain"
+          >
             <Image
-              src={nsfactory3d}
+              src={nsfactoryhorizontal}
               alt="NEØ Smart Factory — infraestrutura on-chain"
               class="nsfactory-img"
               loading="lazy"
-              width={20}
-              height={20}
+              width={495}
+              height={60}
             />
           </span>
-          <strong class="highlight-brand">NEØ Smart Factory™</strong>
         </span>
         <span class="highlight-description">
-          nossa tecnologia exclusiva que protege seu dinheiro com a mesma
-          segurança que protege os maiores patrimônios <span
-            class="gradient-text-cyan">digitais do Mundo</span
-          >
+          <span class="gradient-text-pink"> Faz parte de nossa rede,</span> e com
+          tecnologia exclusiva que tenha lastro em ativos reais, protegendo seu dinheiro
+          com a mesma segurança que protege os maiores patrimônios digitais do Mundo.
         </span>
       </h2>
     </div>
@@ -145,7 +149,7 @@ import partnerLogo from "../../assets/parceiros/Logotype-BASE/Base_lockup_white.
   </div>
 </section>
 
-<script>
+<script define:vars={{ mockupProofSrc: mockupProof.src }}>
   if (typeof window !== "undefined") {
     // Audio Context Singleton
     let audioCtx: AudioContext | null = null;
@@ -338,6 +342,31 @@ import partnerLogo from "../../assets/parceiros/Logotype-BASE/Base_lockup_white.
 
       document.body.appendChild(modal);
 
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.remove();
+      });
+    };
+
+    (window as any).showProof = function () {
+      const modal = document.createElement("div");
+      modal.className = "blockchain-modal proof-modal";
+      modal.innerHTML = `
+        <div class="modal-content proof-content">
+          <div class="modal-header">
+            <h3>Prova de Registro On-chain</h3>
+            <button class="modal-close" onclick="this.closest('.blockchain-modal').remove()">×</button>
+          </div>
+          <div class="modal-body glass-body">
+            <div class="proof-image-container">
+              <img src="${mockupProofSrc}" alt="Mockup da prova on-chain" class="proof-img-full" />
+            </div>
+            <p class="proof-footer-text">
+              Cada operação na NEØ Smart Factory gera um hash imutável que garante a integridade e propriedade dos seus ativos em tempo real.
+            </p>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
       modal.addEventListener("click", (e) => {
         if (e.target === modal) modal.remove();
       });
@@ -642,23 +671,30 @@ import partnerLogo from "../../assets/parceiros/Logotype-BASE/Base_lockup_white.
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
+    width: 180px;
+    height: auto;
+    aspect-ratio: 495 / 60;
+    cursor: pointer;
     animation: fadeInUp 0.8s ease-out 0.3s both;
+    transition:
+      transform 0.3s ease,
+      filter 0.3s ease;
+  }
+
+  .nsfactory-inline:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.4));
   }
 
   @media (min-width: 480px) {
     .nsfactory-inline {
-      width: 56px;
-      height: 56px;
+      width: 220px;
     }
   }
 
   @media (min-width: 768px) {
     .nsfactory-inline {
-      width: 68px;
-      height: 68px;
+      width: 280px;
     }
   }
 
@@ -688,5 +724,52 @@ import partnerLogo from "../../assets/parceiros/Logotype-BASE/Base_lockup_white.
     50% {
       transform: translateY(-14px);
     }
+  }
+
+  /* ── Proof Modal Specifics ── */
+  .proof-modal .modal-content {
+    max-width: 900px;
+    width: 95%;
+  }
+
+  .proof-image-container {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
+    padding: 10px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+  }
+
+  .proof-img-full {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-body {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.02) 0%,
+      transparent 100%
+    );
+  }
+
+  .proof-footer-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .gradient-text-pink {
+    background: linear-gradient(135deg, #ff007a, #ff4d94);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
   }
 </style>

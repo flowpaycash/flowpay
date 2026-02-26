@@ -42,7 +42,12 @@
       "Bash(xargs cat:*)",
       "Bash(git check-ignore:*)",
       "Bash(node --version:*)",
-      "Bash(git rebase:*)"
+      "Bash(git rebase:*)",
+      "Bash(git rm:*)",
+      "Bash(git status:*)",
+      "Bash(git tag:*)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot"
     ]
   }
 }
