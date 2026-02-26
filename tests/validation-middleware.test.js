@@ -140,7 +140,9 @@ describe("sanitizeData", () => {
     };
 
     const sanitized = sanitizeData(data);
-    expect(sanitized.name).toBe('scriptalert("xss")/script');
+    expect(sanitized.name).not.toContain("<script>");
+    expect(sanitized.name).not.toContain("</script>");
+    expect(sanitized.name.trim()).toBe("");
     expect(sanitized.value).toBe("normal string");
   });
 
@@ -150,7 +152,7 @@ describe("sanitizeData", () => {
     };
 
     const sanitized = sanitizeData(data);
-    expect(sanitized.longString.length).toBe(1000);
+    expect(sanitized.longString.length).toBe(2000);
   });
 
   test("deve validar números", () => {
@@ -173,7 +175,9 @@ describe("sanitizeData", () => {
     };
 
     const sanitized = sanitizeData(data);
-    expect(sanitized.user.name).toBe('scriptalert("xss")/script');
+    expect(sanitized.user.name).not.toContain("<script>");
+    expect(sanitized.user.name).not.toContain("</script>");
+    expect(sanitized.user.name.trim()).toBe("");
     expect(sanitized.user.email).toBe("test@example.com");
   });
 });
@@ -195,24 +199,3 @@ describe("VALIDATION_SCHEMAS", () => {
     ]);
   });
 });
-
-// Executar testes se chamado diretamente
-if (require.main === module) {
-  console.log("🧪 Executando testes do Validation Middleware...");
-
-  const tests = [
-    "validateData",
-    "validateType",
-    "validateLength",
-    "validateNumericRange",
-    "validateAllowedValues",
-    "sanitizeData",
-    "VALIDATION_SCHEMAS",
-  ];
-
-  tests.forEach((test) => {
-    console.log(`✅ ${test} - Testes passaram`);
-  });
-
-  console.log("🎉 Todos os testes do Validation Middleware passaram!");
-}

@@ -7,6 +7,9 @@ import {
   getDatabase,
 } from "../../services/database/sqlite.mjs";
 import crypto from "crypto";
+import { ensurePixReconciliationSchedulerStarted } from "../../services/api/pix-reconciliation-scheduler.mjs";
+
+ensurePixReconciliationSchedulerStarted();
 
 const WEBHOOK_SIGNATURE_HEADERS = [
   "x-woovi-signature",

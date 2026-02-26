@@ -17,6 +17,9 @@ import {
   sanitizeData,
 } from "../../services/api/validation-middleware.mjs";
 import { createOrder } from "../../services/database/sqlite.mjs";
+import { ensurePixReconciliationSchedulerStarted } from "../../services/api/pix-reconciliation-scheduler.mjs";
+
+ensurePixReconciliationSchedulerStarted();
 
 export const POST = async ({ request, clientAddress }) => {
   // 1. Setup & CORS

@@ -384,6 +384,37 @@ export function listOrdersPendingReview() {
     });
 }
 
+export function listCreatedOrdersForReconciliation(options = {}) {
+    return dbOp(() => {
+        const db = getDatabase();
+        const limit = Number.isFinite(options.limit)
+            ? Math.max(1, Math.min(Math.trunc(options.limit), 200))
+            : 25;
+        const minAgeSeconds = Number.isFinite(options.minAgeSeconds)
+            ? Math.max(0, Math.trunc(options.minAgeSeconds))
+            : 15;
+        const maxAgeMinutes = Number.isFinite(options.maxAgeMinutes)
+            ? Math.max(1, Math.trunc(options.maxAgeMinutes))
+            : 180;
+
+        const stmt = db.prepare(`
+            SELECT charge_id, amount_brl, customer_ref, created_at
+            FROM orders
+            WHERE status = 'CREATED'
+              AND datetime(created_at) <= datetime('now', ?)
+              AND datetime(created_at) >= datetime('now', ?)
+            ORDER BY created_at ASC
+            LIMIT ?
+        `);
+
+        return stmt.all(
+            `-${minAgeSeconds} seconds`,
+            `-${maxAgeMinutes} minutes`,
+            limit
+        );
+    });
+}
+
 // ════════════════════════════════════════
 // RECEIPT OPERATIONS
 // ════════════════════════════════════════
@@ -773,4 +804,3 @@ export function getVerifiedProofs(limit = 10) {
         return proofs;
     });
 }
-

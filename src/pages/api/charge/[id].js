@@ -5,6 +5,9 @@ import {
 } from "../../../services/database/sqlite.mjs";
 import { getCorsHeaders, secureLog } from "../../../services/api/config.mjs";
 import { applyRateLimit } from "../../../services/api/rate-limiter.mjs";
+import { ensurePixReconciliationSchedulerStarted } from "../../../services/api/pix-reconciliation-scheduler.mjs";
+
+ensurePixReconciliationSchedulerStarted();
 
 const WOOVI_PAID_STATUSES = new Set([
   "COMPLETED",

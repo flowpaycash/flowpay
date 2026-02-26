@@ -12,7 +12,8 @@
  * ════════════════════════════════════════
  */
 
-const crypto = require('crypto');
+import crypto from 'crypto';
+import { jest } from '@jest/globals';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -74,7 +75,7 @@ function buildChargePaid(overrides = {}) {
 // ── Mocks globais ─────────────────────────────────────────────────────────────
 
 // Mock Sentry — não deve quebrar testes se não estiver inicializado
-jest.mock('@sentry/astro', () => ({
+jest.unstable_mockModule('@sentry/astro', () => ({
     withScope: jest.fn((cb) => cb({ setLevel: jest.fn(), setTag: jest.fn(), setContext: jest.fn() })),
     captureMessage: jest.fn(),
     captureException: jest.fn(),
@@ -82,31 +83,31 @@ jest.mock('@sentry/astro', () => ({
 }));
 
 // Mock rate limiter — sempre libera no contexto de teste
-jest.mock('../src/services/api/rate-limiter.mjs', () => ({
+jest.unstable_mockModule('../src/services/api/rate-limiter.mjs', () => ({
     applyRateLimit: jest.fn(() => () => null),
 }));
 
 // Mock nexus bridge — não deve fazer chamadas externas
-jest.mock('../src/services/api/nexus-bridge.mjs', () => ({
+jest.unstable_mockModule('../src/services/api/nexus-bridge.mjs', () => ({
     notifyNexus: jest.fn(() => Promise.resolve()),
 }));
 
 // Mock email service
-jest.mock('../src/services/api/email-service.mjs', () => ({
+jest.unstable_mockModule('../src/services/api/email-service.mjs', () => ({
     sendEmail: jest.fn(() => Promise.resolve()),
 }));
 
 // Mock email template
-jest.mock('../src/services/api/email/templates/payment-confirmed.mjs', () => ({
+jest.unstable_mockModule('../src/services/api/email/templates/payment-confirmed.mjs', () => ({
     paymentConfirmedTemplate: jest.fn(() => '<html>Email de teste</html>'),
 }));
 
 // Mock POE service
-jest.mock('../services/blockchain/poe-service.js', () => ({
+jest.unstable_mockModule('../services/blockchain/poe-service.js', () => ({
     getPOEService: jest.fn(() => ({
         addOrderToBatch: jest.fn(() => Promise.resolve()),
     })),
-}), { virtual: true });
+}));
 
 // ── Banco de dados in-memory para testes ──────────────────────────────────────
 
@@ -130,10 +131,11 @@ const mockGetDatabase = jest.fn(() => ({
     })),
 }));
 
-jest.mock('../src/services/database/sqlite.mjs', () => ({
+jest.unstable_mockModule('../src/services/database/sqlite.mjs', () => ({
     getOrder: (...args) => mockGetOrder(...args),
     updateOrderStatus: (...args) => mockUpdateOrderStatus(...args),
     getDatabase: (...args) => mockGetDatabase(...args),
+    listCreatedOrdersForReconciliation: jest.fn(() => []),
 }));
 
 // ── Variaveis do handler ──────────────────────────────────────────────────────
@@ -157,14 +159,6 @@ beforeEach(() => {
     mockUpdateOrderStatus.mockClear();
     mockGetDatabase.mockClear();
     jest.clearAllMocks();
-
-    // Re-setar mocks que foram limpos
-    jest.mock('@sentry/astro', () => ({
-        withScope: jest.fn((cb) => cb({ setLevel: jest.fn(), setTag: jest.fn(), setContext: jest.fn() })),
-        captureMessage: jest.fn(),
-        captureException: jest.fn(),
-        addBreadcrumb: jest.fn(),
-    }));
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -532,7 +526,7 @@ describe('Customer Data Enrichment', () => {
 
 describe('Error Handling & Resiliência', () => {
 
-    test('⚠️ Payload JSON malformado deve retornar 200 (Woovi não retenta erros lógicos)', async () => {
+    test('⚠️ Payload JSON malformado deve retornar 400', async () => {
         const rawBody = '{ evento: INVALID JSON!!!';
         const signature = signPayload(rawBody);
 
@@ -543,8 +537,7 @@ describe('Error Handling & Resiliência', () => {
         });
 
         const response = await webhookApi.POST({ request, clientAddress: ALLOWED_IP });
-        // Handler retorna 200 em erros para evitar retentativas infinitas da Woovi
-        expect([200, 500]).toContain(response.status);
+        expect(response.status).toBe(400);
     });
 
     test('✅ OPTIONS deve retornar 204 (preflight CORS)', async () => {

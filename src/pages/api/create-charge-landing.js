@@ -21,6 +21,9 @@ import {
   sanitizeData,
 } from "../../services/api/validation-middleware.mjs";
 import { createOrder } from "../../services/database/sqlite.mjs";
+import { ensurePixReconciliationSchedulerStarted } from "../../services/api/pix-reconciliation-scheduler.mjs";
+
+ensurePixReconciliationSchedulerStarted();
 
 /**
  * Gera wallet deterministica a partir do CPF usando Account Abstraction.

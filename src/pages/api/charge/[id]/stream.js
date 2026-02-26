@@ -2,6 +2,9 @@ import { getCorsHeaders, secureLog } from "../../../../services/api/config.mjs";
 import { getOrder, updateOrderStatus } from "../../../../services/database/sqlite.mjs";
 import { subscribeChannel } from "../../../../services/api/redis-client.mjs";
 import * as Sentry from "@sentry/astro";
+import { ensurePixReconciliationSchedulerStarted } from "../../../../services/api/pix-reconciliation-scheduler.mjs";
+
+ensurePixReconciliationSchedulerStarted();
 
 // Maximum SSE connection lifetime (10 minutes).
 // PIX charges typically expire in 30-60 minutes; clients can reconnect.
