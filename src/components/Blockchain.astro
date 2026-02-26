@@ -16,9 +16,10 @@ import mockupProof from "../../assets/marketing/mockup-b.png";
         <span class="brand-row">
           <span
             class="nsfactory-inline"
-            onclick="showProof()"
+            onclick="showProof(this)"
             role="button"
             aria-label="Ver prova on-chain"
+            data-proof-src={mockupProof.src}
           >
             <Image
               src={nsfactoryhorizontal}
@@ -149,7 +150,7 @@ import mockupProof from "../../assets/marketing/mockup-b.png";
   </div>
 </section>
 
-<script define:vars={{ mockupProofSrc: mockupProof.src }}>
+<script>
   if (typeof window !== "undefined") {
     // Audio Context Singleton
     let audioCtx: AudioContext | null = null;
@@ -347,7 +348,8 @@ import mockupProof from "../../assets/marketing/mockup-b.png";
       });
     };
 
-    (window as any).showProof = function () {
+    (window as any).showProof = function (el: HTMLElement) {
+      const mockupProofSrc = el.getAttribute("data-proof-src");
       const modal = document.createElement("div");
       modal.className = "blockchain-modal proof-modal";
       modal.innerHTML = `
