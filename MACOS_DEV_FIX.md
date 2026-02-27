@@ -19,10 +19,10 @@ O SIP protege certos diretórios. A solução mais simples é mover o projeto pa
 mkdir -p ~/Projects
 
 # 2. Mover o projeto
-mv /Users/nettomello/neomello/01-neo-protocol-org/flowpay ~/Projects/flowpay
+mv /Users/nettomello/neomello/flowpay ~/Projects/flowpay
 
 # 3. Criar symlink para manter compatibilidade (opcional)
-ln -s ~/Projects/flowpay /Users/nettomello/neomello/01-neo-protocol-org/flowpay
+ln -s ~/Projects/flowpay /Users/nettomello/neomello/flowpay
 
 # 4. Navegar para o novo local
 cd ~/Projects/flowpay

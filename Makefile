@@ -28,7 +28,7 @@ VERSION := $(shell node -p "require('./package.json').version" 2>/dev/null || ec
 ENV_FILE ?= .env
 REQUIRED_ENV ?= ADMIN_PASSWORD
 OPTIONAL_ENV ?= OPENPIX_APPID
-TUNNEL_DIR ?= /Users/nettomello/neomello/01-neo-protocol-org/neo-tunnel
+TUNNEL_DIR ?= /Users/nettomello/neomello/NEO-PROTOCOL/neo-tunnel
 
 # ── Help ─────────────────────────────────────────────
 
